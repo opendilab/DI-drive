@@ -62,6 +62,7 @@ We appreciate all contributions to improve DI-drive, both algorithms and system 
 DI-engine released under the Apache 2.0 license.
 ## Citation
 
+```latex
 @misc{didrive,
     title={{DI-drive: OpenDILab} Decision Intelligence platform for Autonomous Driving simulation},
     author={DI-drive Contributors},
@@ -69,3 +70,4 @@ DI-engine released under the Apache 2.0 license.
     howpublished = {\url{https://github.com/opendilab/DI-drive}},
     year={2021},
 }
+```
