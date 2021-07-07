@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<scenarios>
+    <scenario name="FollowLeadingVehicle_1" type="FollowLeadingVehicle" town="Town04">
+        <ego_vehicle x="388.9" y="-140" z="0" yaw="90" model="vehicle.lincoln.mkz2017" />
+		    <route>
+                <waypoint x="388.9" y="-140" z="0" yaw="90" />
+                <waypoint x="388.9" y="-60" z="0" yaw="90" />
+			</route>
+        <weather cloudiness="0" precipitation="0" precipitation_deposits="0" wind_intensity="0" sun_azimuth_angle="0" sun_altitude_angle="75" />
+    </scenario>
+</scenarios>

@@ -1,0 +1,20 @@
+<scenarios>
+    <scenario name="CutIn_1" type="CutIn" town="Town03">
+        <ego_vehicle x="78.809303283691406" y="3.779301166534424" z="0.0" yaw="0.855804443359375" model="vehicle.lincoln.mkz2017" />
+		    <route>
+                <waypoint x="78.809303283691406" y="3.7674" z="0.0" yaw="0.8558" />
+                <waypoint x="160" y="3.7674" z="0.0" yaw="0.8558" />
+			</route>
+        <other_actor x="60.7843933" y="7.6975560" z="0.0" yaw="0.8558" model="vehicle.tesla.model3" direction="right"/>
+        <weather cloudiness="0" precipitation="0" precipitation_deposits="0" wind_intensity="0" sun_azimuth_angle="0" sun_altitude_angle="75" />
+    </scenario>
+    <scenario name="CutIn_2" type="CutIn" town="Town04">
+        <ego_vehicle x="304.4" y="17.4" z="2.5" yaw="180" model="vehicle.lincoln.mkz2017" />
+		    <route>
+                <waypoint x="304.4" y="17.4" z="2.5" yaw="180" />
+                <waypoint x="180" y="16.4" z="2.5" yaw="180" />
+			</route>
+        <other_actor x="336.6" y="14.4" z="2.5" yaw="-179" model="vehicle.tesla.model3" direction="right"/>
+        <weather cloudiness="0" precipitation="0" precipitation_deposits="0" wind_intensity="0" sun_azimuth_angle="0" sun_altitude_angle="75" />
+    </scenario>
+</scenarios>

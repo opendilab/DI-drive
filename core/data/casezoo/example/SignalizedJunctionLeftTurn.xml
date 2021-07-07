@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<scenarios>
+    <scenario name="SignalizedJunctionLeftTurn_1" type="SignalizedJunctionLeftTurn" town="Town05">
+        <ego_vehicle x="-85" y="-0.8" z="0.3" yaw="180" model="vehicle.lincoln.mkz2017" />
+		    <route>
+                <waypoint x="-85" y="-0.8" z="0.3" yaw="180" />
+                <waypoint x="-173" y="-0.8" z="0.3" yaw="180" />
+			</route>
+        <other_actor x="-153.6" y="3.0" z="0.3" yaw="0" model="vehicle.tesla.model3" />
+        <weather cloudiness="0" precipitation="0" precipitation_deposits="0" wind_intensity="0" sun_azimuth_angle="0" sun_altitude_angle="75" />
+    </scenario>
+    <scenario name="SignalizedJunctionLeftTurn_2" type="SignalizedJunctionLeftTurn" town="Town05">
+        <ego_vehicle x="26.7452" y="-125.1812" z="0.0" yaw="90" model="vehicle.lincoln.mkz2017" />
+		    <route>
+                <waypoint x="26.7452" y="-105.1812" z="0.0" yaw="90" />
+                <waypoint x="26.7452" y="-20.8" z="0.0" yaw="90" />
+			</route>
+        <other_actor x="17.2805" y="-88.3678" z="0.0" yaw="0" model="vehicle.tesla.model3" />
+        <weather cloudiness="0" precipitation="0" precipitation_deposits="0" wind_intensity="0" sun_azimuth_angle="0" sun_altitude_angle="75" />
+    </scenario>
+</scenarios>

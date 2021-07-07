@@ -1,0 +1,36 @@
+{
+    "available_scenarios": [
+        {
+            "Town05": [
+                {
+                    "available_event_configurations": [
+                        {
+                            "transform": {
+                                "pitch": "0",
+                                "x": "10.0236759",
+                                "y": "-186.9456024",
+                                "yaw": "0.0",
+                                "z": "0.1822114"
+                            }
+                        }
+                    ],
+                    "scenario_type": "ControlLoss"
+                },
+                {
+                    "available_event_configurations": [
+                        {
+                            "transform": {
+                                "pitch": "0",
+                                "x": "-188.0466766357422",
+                                "y": "70.9295883178711",
+                                "yaw": "-90.01579284667969",
+                                "z": "0.055450439453125"
+                            }
+                        }
+                    ],
+                    "scenario_type": "FollowLeadingVehicle"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,111 @@
+{
+    "available_scenarios": [
+        {
+            "Town03": [
+                {
+                    "available_event_configurations": [
+                        {
+                            "other_actors": {
+                                "front": [
+                                    {
+                                        "pitch": "0",
+                                        "x": "8.5432100",
+                                        "y": "-81.9109420",
+                                        "yaw": "-88.5864562",
+                                        "z": "0.0"
+                                    }
+                                ]
+                            },
+                            "transform": {
+                                "pitch": "0",
+                                "x": "7.6189260",
+                                "y": "-43.7914314",
+                                "yaw": "-88.5864562",
+                                "z": "0.0"
+                            }
+                        }
+                    ],
+                    "scenario_type": "SignalizedJunctionRightTurn"
+                },
+                {
+                    "available_event_configurations": [
+                        {
+                            "transform": {
+                                "pitch": "0",
+                                "x": "-16.2795391",
+                                "y": "-138.6211090",
+                                "yaw": "-178.7727355",
+                                "z": "0.0"
+                            }
+                        }
+                    ],
+                    "scenario_type": "FollowLeadingVehicle"
+                },
+                {
+                    "available_event_configurations": [
+                        {
+                            "transform": {
+                                "pitch": "0",
+                                "x": "-85.1530456",
+                                "y": "-105.6245803",
+                                "yaw": "89.8437347",
+                                "z": "-0.3898314"
+                            }
+                        }
+                    ],
+                    "scenario_type": "ControlLoss"
+                },
+                {
+                    "available_event_configurations": [
+                        {
+                            "other_actors": {
+                                "front": [
+                                    {
+                                        "pitch": "0",
+                                        "x": "-74.2371063",
+                                        "y": "46.8729171",
+                                        "yaw": "269.84375",
+                                        "z": "0.4932205"
+                                    }
+                                ]
+                            },
+                            "transform": {
+                                "pitch": "0",
+                                "x": "-84.9485015",
+                                "y": "-30.6251373",
+                                "yaw": "89.8437347",
+                                "z": "-0.2923143"
+                            }
+                        }
+                    ],
+                    "scenario_type": "SignalizedJunctionRightTurn"
+                },
+                {
+                    "available_event_configurations": [
+                        {
+                            "other_actors": {
+                                "right": [
+                                    {
+                                        "pitch": "0",
+                                        "x": "42.78573226928711",
+                                        "y": "7.6975560",
+                                        "yaw": "-359.1441955",
+                                        "z": "0.0"
+                                    }
+                                ]
+                            },
+                            "transform": {
+                                "pitch": "0",
+                                "x": "55.27797317504883",
+                                "y": "3.846670627593994",
+                                "yaw": "0.855804443359375",
+                                "z": "0.0"
+                            }
+                        }
+                    ],
+                    "scenario_type": "CutIn"
+                }
+            ]
+        }
+    ]
+}

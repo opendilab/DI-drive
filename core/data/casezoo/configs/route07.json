@@ -1,0 +1,86 @@
+{
+    "available_scenarios": [
+        {
+            "Town03": [
+                {
+                    "available_event_configurations": [
+                        {
+                            "other_actors": {
+                                "right": [
+                                    {
+                                        "pitch": "0",
+                                        "x": "10.6856269",
+                                        "y": "-168.7330780",
+                                        "yaw": "-88.5864562",
+                                        "z": "0.0"
+                                    }
+                                ]
+                            },
+                            "transform": {
+                                "pitch": "0",
+                                "x": "-30.0580501",
+                                "y": "-198.2595520",
+                                "yaw": "1.4395599",
+                                "z": "0.0"
+                            }
+                        }
+                    ],
+                    "scenario_type": "SignalizedJunctionRightTurn"
+                },
+                {
+                    "available_event_configurations": [
+                        {
+                            "other_actors": {
+                                "right": [
+                                    {
+                                        "pitch": "0",
+                                        "x": "42.4609849",
+                                        "y": "-203.4393463",
+                                        "yaw": "-178.5604400",
+                                        "z": "0.0"
+                                    }
+                                ]
+                            },
+                            "transform": {
+                                "pitch": "0",
+                                "x": "-30.0580501",
+                                "y": "-198.2595520",
+                                "yaw": "1.4395599",
+                                "z": "0.0"
+                            }
+                        }
+                    ],
+                    "scenario_type": "SignalizedJunctionLeftTurn"
+                },
+                {
+                    "available_event_configurations": [
+                        {
+                            "transform": {
+                                "pitch": "0",
+                                "x": "-6.5267133",
+                                "y": "50.0096588",
+                                "yaw": "89.6374588",
+                                "z": "0.0"
+                            }
+                        }
+                    ],
+                    "scenario_type": "FollowLeadingVehicle"
+                },
+                {
+                    "available_event_configurations": [
+                        {
+                            "transform": {
+                                "pitch": "0",
+                                "x": "-79.6736831",
+                                "y": "179.8425903",
+                                "yaw": "423.0495300",
+                                "z": "0.0"
+                            }
+                        }
+                    ],
+                    "scenario_type": "ControlLoss"
+                }
+            ]
+        }
+    ]
+}

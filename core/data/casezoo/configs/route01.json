@@ -1,0 +1,45 @@
+{
+    "available_scenarios": [
+        {
+            "Town03": [
+                {
+                    "available_event_configurations": [
+                        {
+                            "transform": {
+                                "pitch": "0",
+                                "x": "-57.1067733",
+                                "y": "0.5857556",
+                                "yaw": "0.2946166",
+                                "z": "0.0"
+                            }
+                        }
+                    ],
+                    "scenario_type": "FollowLeadingVehicle"
+                },
+                {
+                    "available_event_configurations": [
+                        {
+                            "other_actors": {
+                                "front": [{
+                                    "pitch": "0",
+                                    "x": "231.2471618",
+                                    "y": "35.1396293",
+                                    "yaw": "90.9993553",
+                                    "z": "0"
+                                }]
+                            },
+                            "transform": {
+                                "pitch": "0",
+                                "x": "231.1228027",
+                                "y": "20.3553142",
+                                "yaw": "91.3932037",
+                                "z": "0"
+                            }
+                        }
+                    ],
+                    "scenario_type": "SignalizedJunctionRightTurn"
+                }
+            ]
+        }
+    ]
+}

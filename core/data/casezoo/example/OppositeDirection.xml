@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<scenarios>
+    <scenario name="OppositeDirection_1" type="OppositeDirection" town="Town04">
+        <ego_vehicle x="255.3" y="-300" z="0" yaw="90" model="vehicle.lincoln.mkz2017" />
+		    <route>
+                <waypoint x="255.3" y="-300" z="0" yaw="90" />
+                <waypoint x="255.3" y="-180" z="0" yaw="90" />
+			</route>
+        <other_actor x="258.7" y="-260.0" z="0" yaw="-90" model="vehicle.tesla.model3" />
+    </scenario>
+</scenarios>

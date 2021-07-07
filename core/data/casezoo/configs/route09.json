@@ -1,0 +1,115 @@
+{
+    "available_scenarios": [
+        {
+            "Town05": [
+                {
+                    "available_event_configurations": [
+                        {
+                            "other_actors": {
+                                "left": [
+                                    {
+                                        "pitch": "0",
+                                        "x": "-30.0000858",
+                                        "y": "-94.9389953",
+                                        "yaw": "-179.9136962",
+                                        "z": "0.0"
+                                    }
+                                ]
+                            },
+                            "transform": {
+                                "pitch": "0",
+                                "x": "-56.2435041",
+                                "y": "-108.5002288",
+                                "yaw": "75.3924942",
+                                "z": "0.05545043"
+                            }
+                        },
+                        {
+                            "other_actors": {
+                                "right": [
+                                    {
+                                        "pitch": "0",
+                                        "x": "-131.4540557",
+                                        "y": "-106.8849868",
+                                        "yaw": "90.3935394",
+                                        "z": "0.0"
+                                    }
+                                ]
+                            },
+                            "transform": {
+                                "pitch": "0",
+                                "x": "104.9999237",
+                                "y": "-95.0519638",
+                                "yaw": "-179.9136962",
+                                "z": "0.0"
+                            }
+                        }
+                    ],
+                    "scenario_type": "SignalizedJunctionRightTurn"
+                },
+                {
+                    "available_event_configurations": [
+                        {
+                            "other_actors": {
+                                "left": [
+                                    {
+                                        "pitch": "0",
+                                        "x": "-170.0013112",
+                                        "y": "-0.5368916",
+                                        "yaw": "179.8605346",
+                                        "z": "0.0"
+                                    }
+                                ],
+                                "right": [
+                                    {
+                                        "pitch": "0",
+                                        "x": "-210.7574768",
+                                        "y": "3.0623211",
+                                        "yaw": "359.8605346",
+                                        "z": "0.0"
+                                    }
+                                ]
+                            },
+                            "transform": {
+                                "pitch": "0",
+                                "x": "-191.5766143",
+                                "y": "-19.9995670",
+                                "yaw": "89.9842071",
+                                "z": "0.0554504"
+                            }
+                        }
+                    ],
+                    "scenario_type": "SignalizedJunctionLeftTurn"
+                },
+                {
+                    "available_event_configurations": [
+                        {
+                            "transform": {
+                                "pitch": "0",
+                                "x": "50.0164184",
+                                "y": "-84.2599716",
+                                "yaw": "358.5557250",
+                                "z": "0.0"
+                            }
+                        }
+                    ],
+                    "scenario_type": "FollowLeadingVehicle"
+                },
+                {
+                    "available_event_configurations": [
+                        {
+                            "transform": {
+                                "pitch": "0",
+                                "x": "151.5618896",
+                                "y": "44.9990425",
+                                "yaw": "89.9474182",
+                                "z": "0.0386047"
+                            }
+                        }
+                    ],
+                    "scenario_type": "ControlLoss"
+                }
+            ]
+        }
+    ]
+}

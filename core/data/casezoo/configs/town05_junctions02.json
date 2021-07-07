@@ -1,0 +1,58 @@
+{
+    "available_scenarios": [
+        {
+            "Town05": [
+				{
+                    "available_event_configurations": [
+                        {
+                            "other_actors": {
+                                "left": [
+                                    {
+                                        "pitch": "0",
+                                        "x": "-47.9046",
+                                        "y": "-74.5513",
+                                        "yaw": "-90.0",
+                                        "z": "0.0554"
+                                    }
+                                ]
+                            },
+                            "transform": {
+                                "pitch": "0",
+                                "x": "-34.7104",
+                                "y": "-84.9461",
+                                "yaw": "180.0",
+                                "z": "0.0"
+                            }
+                        }
+                    ],
+                    "scenario_type": "SignalizedJunctionLeftTurn"
+                },
+				{
+                    "available_event_configurations": [
+                        {
+                            "other_actors": {
+                                "left": [
+                                    {
+                                        "pitch": "0",
+                                        "x": "-124.6775",
+                                        "y": "-74.3290",
+                                        "yaw": "-90.0",
+                                        "z": "0.0"
+                                    }
+                                ]
+                            },
+                            "transform": {
+                                "pitch": "0",
+                                "x": "-109.7102",
+                                "y": "-85.0590",
+                                "yaw": "180.0",
+                                "z": "0.0"
+                            }
+                        }
+                    ],
+                    "scenario_type": "SignalizedJunctionRightTurn"
+                }
+            ]
+        }
+    ]
+}

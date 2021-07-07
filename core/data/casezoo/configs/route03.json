@@ -1,0 +1,147 @@
+{
+    "available_scenarios": [
+        {
+            "Town04": [
+                {
+                    "available_event_configurations": [
+                        {
+                            "other_actors": {
+                                "front": [
+                                    {
+                                        "pitch": "0",
+                                        "x": "10.7798585",
+                                        "y": "34.0469818",
+                                        "yaw": "0.2326507",
+                                        "z": "11.4801864"
+                                    },
+                                    {
+                                        "pitch": "0",
+                                        "x": "20.7798585",
+                                        "y": "34.0469818",
+                                        "yaw": "0.2326507",
+                                        "z": "11.4801864"
+                                    }
+                                ]
+                            },
+                            "transform": {
+                                "pitch": "0",
+                                "x": "-40.511573791503906",
+                                "y": "36.41628456115723",
+                                "yaw": "0.0768280029296875",
+                                "z": "10.099367141723633"
+                            }
+                        }
+                    ],
+                    "scenario_type": "ChangeLane"
+                },
+                {
+                    "available_event_configurations": [
+                        {
+                            "transform": {
+                                "pitch": "0",
+                                "x": "110.20275115966795",
+                                "y": "49.55325317382813",
+                                "yaw": "39.04792785644531",
+                                "z": "10.437543869018556"
+                            }
+                        }
+                    ],
+                    "scenario_type": "FollowLeadingVehicle"
+                },
+                {
+                    "available_event_configurations": [
+                        {
+                            "other_actors": {
+                                "front": [
+                                    {
+                                        "pitch": "0",
+                                        "x": "80.6175842",
+                                        "y": "-173.6977386",
+                                        "yaw": "180.3261260",
+                                        "z": "0.1958923"
+                                    }
+                                ]
+                            },
+                            "transform": {
+                                "pitch": "0",
+                                "x": "40.0024414",
+                                "y": "-170.4288787",
+                                "yaw": "0.3261248",
+                                "z": "0.1958923"
+                            }
+                        }
+                    ],
+                    "scenario_type": "SignalizedJunctionRightTurn"
+                },
+                {
+                    "available_event_configurations": [
+                        {
+                            "other_actors": {
+                                "front": [
+                                    {
+                                        "pitch": "0",
+                                        "x": "220.0132751",
+                                        "y": "-311.2905883",
+                                        "yaw": "180.5897827",
+                                        "z": "0.0043487"
+                                    }
+                               ],
+                                "left": [
+                                    {
+                                        "pitch": "0",
+                                        "x": "202.2678680",
+                                        "y": "-329.9479675",
+                                        "yaw": "91.3144226",
+                                        "z": "0.0195922"
+                                    }
+                                ],
+                                "right": [
+                                    {
+                                        "pitch": "0",
+                                        "x": "204.8522644",
+                                        "y": "-290.0034179",
+                                        "yaw": "271.3144226",
+                                        "z": "0.0195922"
+                                    }
+                                ]
+                            },
+                            "transform": {
+                                "pitch": "0",
+                                "x": "184.9974975",
+                                "y": "-307.6952514",
+                                "yaw": "0.1432800",
+                                "z": "0.0336608"
+                            }
+                        }
+                    ],
+                    "scenario_type": "SignalizedJunctionLeftTurn"
+                },
+                {
+                    "available_event_configurations": [
+                        {
+                            "other_actors": {
+                                "front": [
+                                    {
+                                        "pitch": "0",
+                                        "x": "258.7056274",
+                                        "y": "-260.0039978",
+                                        "yaw": "-89.8232498",
+                                        "z": "0.0195846"
+                                    }
+                                ]
+                            },
+                            "transform": {
+                                "pitch": "0",
+                                "x": "255.3289642",
+                                "y": "-299.9989929",
+                                "yaw": "90.1767501",
+                                "z": "0.0195846"
+                            }
+                        }
+                    ],
+                    "scenario_type": "OppositeDirection"
+                }
+            ]
+        }
+    ]
+}

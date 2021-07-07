@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<scenarios>
+    <scenario name="ChangeLane_1" type="ChangeLane" town="Town04">
+        <ego_vehicle x="284.4" y="16.4" z="2.5" yaw="-173" model="vehicle.lincoln.mkz2017" />
+		    <route>
+                <waypoint x="284.4" y="16.3" z="2.5" yaw="-173" />
+                <waypoint x="124.4" y="14.9" z="-500" yaw="-180" />
+			</route>
+        <other_actor x="264.4" y="16.3" z="-500" yaw="-179" model="vehicle.tesla.model3" />
+        <other_actor x="184.4" y="14.9" z="-500" yaw="-179" model="vehicle.tesla.model3" />
+    </scenario>
+    <scenario name="ChangeLane_2" type="ChangeLane" town="Town04">
+        <ego_vehicle x="-64.99" y="33.8732" z="10.056" yaw="0" model="vehicle.lincoln.mkz2017" />
+		    <route>
+                <waypoint x="-64.99" y="33.8732" z="10.056" yaw="0" />
+                <waypoint x="100" y="34" z="11" yaw="0" />
+			</route>
+        <other_actor x="-35.0294" y="33.9407" z="10.399" yaw="0" model="vehicle.tesla.model3" />
+        <other_actor x="-8.7798" y="34.0469" z="11" yaw="0" model="vehicle.tesla.model3" />
+    </scenario>
+</scenarios>
