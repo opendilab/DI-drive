@@ -1,0 +1,17 @@
+policy
+###########
+
+.. toctree::
+    :maxdepth: 2
+
+
+BaseCarlaPolicy
+================
+.. autoclass:: core.policy.base_carla_policy.BaseCarlaPolicy
+    :members:
+
+
+AutoPolicy
+================
+.. autoclass:: core.policy.AutoPolicy
+    :members: _init_collect, _init_eval, _forward_collect, _forward_eval, _reset_collect, _reset_eval

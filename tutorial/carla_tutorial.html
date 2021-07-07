@@ -1,0 +1,291 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Carla tutorial &mdash; DI-drive 0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Auto policy running and visualization" href="auto_run.html" />
+    <link rel="prev" title="Core Concepts and Processes" href="core_concepts.html" />
+    <link href="../_static/css/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DI-drive
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorial</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="core_concepts.html">Core Concepts and Processes</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Carla tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#basic-concept-of-carla">Basic Concept of Carla</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#quickly-create-carla-server-via-docker">Quickly Create Carla server via Docker</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="auto_run.html">Auto policy running and visualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="il_tutorial.html">Simple Imitation Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rl_tutorial.html">Simple Reinforcement Learning</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../features/index.html">Features</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../model_zoo/index.html">Model Zoo</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api_doc/index.html">API Doc</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/index.html">FAQ</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DI-drive</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Tutorial</a> &raquo;</li>
+        
+      <li>Carla tutorial</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/tutorial/carla_tutorial.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="carla-tutorial">
+<h1>Carla tutorial<a class="headerlink" href="#carla-tutorial" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<p>Carla is currently the mainly used simualtor in DI-drive. This page shows some bacis concepts and
+a quick user guide to run Carla simulator, for quick hands-on use of Carla in DI-drive</p>
+<div class="section" id="basic-concept-of-carla">
+<h2>Basic Concept of Carla<a class="headerlink" href="#basic-concept-of-carla" title="Permalink to this headline">¶</a></h2>
+<p>Carla simulator runs in a client-server architecture. The sever and clients run individually. The server
+contains map, weather, actors and all physical simulation. The clients can control the actors by
+sending commands and ticking world in Carla server by its Python API. The server and clients
+communicate through TCP link, consisting of a host and port provided by server, which can be specified when
+establishing the server.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./CarlaUE4.sh --carla-world-port<span class="o">=</span>N
+</pre></div>
+</div>
+<p>Usually <cite>N</cite> is set as an even number, because the port <cite>N+1</cite> is simultanously occupied to connect the server. Carla 0.9.9.4
+also uses a Traffic Manager port to control global behaviors of vehicles. It is specified at the
+client side. TM client can not only be built by DI-drive via automatically finding free port in current system,
+but also manually set by users.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">carla_env</span> <span class="o">=</span> <span class="n">SimpleCarlaEnv</span><span class="p">(</span><span class="n">env_cfg</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">tm_port</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Carla simulation can run in <strong>sync</strong> mode or <strong>async</strong> mode. In <strong>asynchronous</strong> mode, the server runs
+as fast as possible regardless of the client. In <strong>synchronous</strong> mode, the server and client runs in the
+same fixed time step (common set as 0.1s), while the server will wait for client’s tick before updating
+next step. For reasonable IL and RL trainning, DI-drive set Carla client and server to synchronous mode by default.</p>
+<p>Carla allows multiple clients linking to one server. So make sure your Carla server only has one client
+linked or only one client is sending command, in case of entangled or chaotic simulation.</p>
+<p>When a client is destroyed, the actors and weather it create/change will NOT be released or reset.
+So make sure to call the <code class="docutils literal notranslate"><span class="pre">clean_up</span></code> method in simulator to manually destroy all actors and reset weather
+changed by the client.</p>
+</div>
+<div class="section" id="quickly-create-carla-server-via-docker">
+<h2>Quickly Create Carla server via Docker<a class="headerlink" href="#quickly-create-carla-server-via-docker" title="Permalink to this headline">¶</a></h2>
+<p>It is recommended to run Carla server in <a class="reference external" href="https://www.docker.com">docker</a> which makes the installation
+much easier and can run multiple Carla servers. DI-drive follows guidance in Carla doc which uses
+<a class="reference external" href="https://docs.docker.com/engine/install/ubuntu">docker CE</a> and
+<a class="reference external" href="https://github.com/NVIDIA/nvidia-docker">nvidia docker2</a>.</p>
+<p>Then, just pull the Carla image and run with port.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker pull carlasim/carla:0.9.9.4
+<span class="c1"># by default</span>
+docker run -p <span class="m">2000</span>-2002:9000:9002 --runtime<span class="o">=</span>nvidia --gpus &lt;gpu_id&gt; carlasim/carla:0.9.9.4
+<span class="c1"># with parameters</span>
+docker run -p <span class="m">2000</span>-2002:9000:9002 --runtime<span class="o">=</span>nvidia --gpus &lt;gpu_id&gt; carlasim/carla:0.9.9.4 /bin/bash CarlaUE4.sh &lt;list of paremeters&gt;
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="auto_run.html" class="btn btn-neutral float-right" title="Auto policy running and visualization" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="core_concepts.html" class="btn btn-neutral float-left" title="Core Concepts and Processes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, OpenDILab.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

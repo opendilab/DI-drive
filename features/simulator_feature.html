@@ -1,0 +1,601 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Simulator Features &mdash; DI-drive 0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Policy Features" href="policy_feature.html" />
+    <link rel="prev" title="Features" href="index.html" />
+    <link href="../_static/css/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DI-drive
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/index.html">Tutorial</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Features</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Simulator Features</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#carla-simulator-configuring">Carla Simulator Configuring</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#common-configurations">Common configurations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#planner-configurations">Planner configurations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sensor-configurations">Sensor configurations</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#running-status">Running status</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#status">Status</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#navigation">Navigation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#information">Information</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="policy_feature.html">Policy Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="visualize.html">Visualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datasets.html">Datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="carla_benchmark.html">Benchmark Evaluation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="casezoo.html">Casezoo Evaluation</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../model_zoo/index.html">Model Zoo</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api_doc/index.html">API Doc</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/index.html">FAQ</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DI-drive</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Features</a> &raquo;</li>
+        
+      <li>Simulator Features</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/features/simulator_feature.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="simulator-features">
+<h1>Simulator Features<a class="headerlink" href="#simulator-features" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>DI-drive defines simualtor instance to unify the interfaces and standardize sub-modules. As a result, users can customize
+their simulator setting with a config dictionary, and get expected data by calling the instance’s methods.
+DI-drive currently uses Carla 0.9.9.4 for simulating Autonomous Driving. The Interaction between Carla server
+and DI-drive is proceeded through <code class="xref py py-class docutils literal notranslate"><span class="pre">CarlaSimulator</span></code>.
+The simulator contains a world map with roads, buildings and weather. The simulator has a hero vehicle for the user
+to control and get observations. The obervation may come from a <strong>sensor</strong> created in the simulator associated to hero
+vehicle, a <strong>planner</strong> in the simulator to get target waypoints and select road options, and other running status returned
+by methods.</p>
+</div>
+<div class="section" id="carla-simulator-configuring">
+<h2>Carla Simulator Configuring<a class="headerlink" href="#carla-simulator-configuring" title="Permalink to this headline">¶</a></h2>
+<p>All the settings of simualtor can be customized by a config dict. Here
+we show the default setting of the simulator and explain its contents.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">town</span><span class="o">=</span><span class="s1">&#39;Town01&#39;</span><span class="p">,</span>
+    <span class="n">weather</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">,</span>
+    <span class="n">sync_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">delta_seconds</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+    <span class="n">no_rendering</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">auto_pilot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">n_vehicles</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">n_pedestrians</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">disable_two_wheels</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">col_threshold</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span>
+    <span class="n">waypoint_num</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">obs</span><span class="o">=</span><span class="nb">list</span><span class="p">(),</span>
+    <span class="n">planner</span><span class="o">=</span><span class="nb">dict</span><span class="p">(),</span>
+    <span class="n">aug</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Some of the configures can be changed by provided arguments when running
+<a class="reference internal" href="../api_doc/simulators.html#core.simulators.CarlaSimulator" title="core.simulators.carla_simulator.CarlaSimulator"><code class="xref py py-func docutils literal notranslate"><span class="pre">init</span></code></a> method, in order to make difference among episodes.</p>
+</div>
+<div class="section" id="common-configurations">
+<h3>Common configurations<a class="headerlink" href="#common-configurations" title="Permalink to this headline">¶</a></h3>
+<p>Here we explain some common configurations about world map and npc settings in simulator, the instruction of ‘planner’, ‘obs’ and
+‘aug’ are shown next.</p>
+<ul>
+<li><dl class="simple">
+<dt>town</dt><dd><p>Name of the town map used in the simulator.</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>weather</dt><dd><p>Weather setting in the simulator. List as followings. If set to ‘random’, the simulator will randomly choose one.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Value</p></td>
+<td><p>Weather</p></td>
+</tr>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>Clear Noon</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>Cloudy Noon</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>Wet Noon</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>Wet Cloudy Noon</p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p>Mid Rainy Noon</p></td>
+</tr>
+<tr class="row-odd"><td><p>6</p></td>
+<td><p>Hard Rain Noon</p></td>
+</tr>
+<tr class="row-even"><td><p>7</p></td>
+<td><p>Soft Rain Noon</p></td>
+</tr>
+<tr class="row-odd"><td><p>8</p></td>
+<td><p>Clear Sunset</p></td>
+</tr>
+<tr class="row-even"><td><p>9</p></td>
+<td><p>Cloudy Sunset</p></td>
+</tr>
+<tr class="row-odd"><td><p>10</p></td>
+<td><p>Wet Sunset</p></td>
+</tr>
+<tr class="row-even"><td><p>11</p></td>
+<td><p>Wet Cloudy Sunset</p></td>
+</tr>
+<tr class="row-odd"><td><p>12</p></td>
+<td><p>Mid Rain Sunset</p></td>
+</tr>
+<tr class="row-even"><td><p>13</p></td>
+<td><p>Hard Rain Sunset</p></td>
+</tr>
+<tr class="row-odd"><td><p>14</p></td>
+<td><p>Soft Rain Sunset</p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>sync_mode</dt><dd><p>Whether to run the simulator in synchronous mode. It is suggestted to set to TRUE throughout the simulation.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>delta_seconds</dt><dd><p>Time step in seconds between two frames. Only make sense in sync mode. We suggest to remain same throughout the simulation.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>no_rendering</dt><dd><p>Whether to use no rendering mode in carla. If no camera sensor is needed, switching this on may speed up the simulating.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>auto_pilot</dt><dd><p>Whether to use auto-pilot mode to control hero vehicle.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>n_vehicles</dt><dd><p>Num of background vehicles in the world. Will be spawned at a random position.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>n_pedestrians</dt><dd><p>Num of background pedestrians in the world. Will be spawned at a random position.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>disable_two_wheels</dt><dd><p>Whether to disable two-wheel vehicles in NPCs.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>col_threshold</dt><dd><p>The threshold of collision sensor intensity.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>waypoint_num</dt><dd><p>The waypoints num ahead vehicle in waypoint_list of observations.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>verbose</dt><dd><p>Whether print verbosely when running.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Users may need to check Carla documents for detailed information about configs.</p>
+</div>
+<div class="section" id="planner-configurations">
+<h3>Planner configurations<a class="headerlink" href="#planner-configurations" title="Permalink to this headline">¶</a></h3>
+<p>Here we explain the ‘planner’ key in config.</p>
+<p>The Planner in Carla simulator is modified from default Carla planners. A global planner in Carls Python API is used
+to generate route and road options from start to end location. The local planner is defined in DI-drive to add navigation
+into observation. It provides current waypoint location, next waypoint location, road option command
+and distance to final target. Planners may also take nearby walkers, vehicles and traffic lights into account.
+Currently <a class="reference internal" href="../api_doc/utils.html#core.utils.planner.basic_planner.BasicPlanner" title="core.utils.planner.basic_planner.BasicPlanner"><code class="xref py py-class docutils literal notranslate"><span class="pre">BasicPlanner</span></code></a> and
+<a class="reference internal" href="../api_doc/utils.html#core.utils.planner.behavior_planner.BehaviorPlanner" title="core.utils.planner.behavior_planner.BehaviorPlanner"><code class="xref py py-class docutils literal notranslate"><span class="pre">BehaviorPlanner</span></code></a> are supported in DI-drive.
+For more details, check the <a class="reference external" href="../api_doc/utils.html">API docs</a>.</p>
+<p>Some of the default config setting is as following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">planner</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;basic&#39;</span><span class="p">,</span>
+    <span class="n">min_distance</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>
+    <span class="n">resolution</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>
+    <span class="n">fps</span><span class="o">=</span><span class="mf">10.</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><dl class="simple">
+<dt>type</dt><dd><p>Type of local planner</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>min_distance</dt><dd><p>Dictance to find waypoint ahead vehicle.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>resolution</dt><dd><p>Distance between waypoints when tracking route.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can define your own local planner in the simulator. Simply add the planner class in <code class="docutils literal notranslate"><span class="pre">PLANNER_DICT</span></code>
+in simulators.</p>
+</div>
+</div>
+<div class="section" id="sensor-configurations">
+<h3>Sensor configurations<a class="headerlink" href="#sensor-configurations" title="Permalink to this headline">¶</a></h3>
+<p>Here we explain the ‘obs’ and ‘aug’ key in config</p>
+<p>Sensor config is used to set up sensors and get image observation in simulation. There are several types of
+sensors and images available to add into config list. You can add more than one sensor of same type.
+They are tagged by provided ‘name’ key in config dict.</p>
+<p>DI-drive simulator supports several types of sensor in Carla, including ‘rgb’ camera, ‘depth’ camera, ‘segmentation’ camera,
+and ‘lidar’ sensors. We also add ‘bev’ image to paint a bird-eye view image for the hero actor. It contains
+following informations: road lines, lane lines, traffic lights, other vehicles, pedestrians, hero vehicles,
+forward waypoints list. Each stored in one channel (traffic lights in three channels). The simulator can only
+have one bird-eye view image to draw and store in sensor data. Here are the default configs for these sensors:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">camera</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="mi">384</span><span class="p">,</span> <span class="mi">160</span><span class="p">],</span>
+    <span class="n">fov</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span>
+    <span class="n">position</span><span class="o">=</span><span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">],</span>
+    <span class="n">rotation</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+<span class="p">)</span>
+
+<span class="n">lidar</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">channels</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="nb">range</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
+    <span class="n">points_per_second</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+    <span class="n">rotation_frequency</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">upper_fov</span><span class="o">=-</span><span class="mi">3</span><span class="p">,</span>
+    <span class="n">lower_fov</span><span class="o">=-</span><span class="mi">3</span><span class="p">,</span>
+    <span class="n">position</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">],</span>
+    <span class="n">rotation</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="n">draw</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">birdview</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="mi">320</span><span class="p">,</span> <span class="mi">320</span><span class="p">],</span>
+    <span class="n">pixels_per_meter</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">pixels_ahead_vehicle</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>To add these sensors in simulator, you can add elements into ‘obs’ config list and change their default value:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">obs</span><span class="o">=</span><span class="p">[</span>
+    <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;front_rgb&#39;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;rgb&#39;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;top_rgb&#39;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;rgb&#39;</span><span class="p">,</span>
+        <span class="n">position</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">2.8</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">5.5</span><span class="p">],</span>
+        <span class="n">rotation</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">15</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="p">),</span>
+    <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;birdview&#39;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;bev&#39;</span><span class="p">,</span>
+    <span class="p">),</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>Then you can have ‘front_rgb’, ‘top_rgb’, ‘birdview’ image added into sensor data.</p>
+<p>Cameras may need to add augmentation. for example, there may be two cameras with different type and same position
+to add random augmentation. So we need to store an augmentation setting in ‘aug’ key, which specifies the random
+value range of the augmentation.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">aug</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+    <span class="n">position_range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="n">rotation_range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="running-status">
+<h2>Running status<a class="headerlink" href="#running-status" title="Permalink to this headline">¶</a></h2>
+<p>DI-drive simualtor can get and record some running status in each frame, including basic status, navigations,
+information about simulation. They are automatically checked in each frame. Simulator provides interfaces to
+get dictionary about these info, stored in each key.</p>
+<div class="section" id="status">
+<h3>Status<a class="headerlink" href="#status" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p>speed (float): speed in km/h</p></li>
+<li><p>location (np.ndarray): 3D location vector</p></li>
+<li><p>orientation (np.ndarray): 2D orientation vector</p></li>
+<li><p>acceleration (np.ndarray): 3D acceleration vector</p></li>
+<li><p>is_junction (bool): Whether is at junction in Carla map</p></li>
+<li><p>tl_state (int): Traffic light state</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>0: Red</p></li>
+<li><p>1: Yellow</p></li>
+<li><p>2: Green</p></li>
+<li><p>3: Off</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>tl_dis (float): Dictance between vehicle and currrent road end</p></li>
+</ul>
+</div>
+<div class="section" id="navigation">
+<h3>Navigation<a class="headerlink" href="#navigation" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p>agent_state (int): Agent navigation state</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>-1: Void</p></li>
+<li><p>1: Navigating</p></li>
+<li><p>2: Blocked by vehicle</p></li>
+<li><p>3: Blocked by walker</p></li>
+<li><p>4: Blocked by red light</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>command (int): Road option during navigation</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>-1: Void</p></li>
+<li><p>1: Turn left</p></li>
+<li><p>2: Turn right</p></li>
+<li><p>3: Go straight at junction</p></li>
+<li><p>4: Follow lane</p></li>
+<li><p>5: Change lane to left</p></li>
+<li><p>6: Change lane to right</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>node (np.ndarray): 2D location of current waypoint</p></li>
+<li><p>node_forward (np.ndarray): 2D direction of current waypoint</p></li>
+<li><p>target (np.ndarray): 2D location of target waypoint(the next of node)</p></li>
+<li><p>target_forward (np.ndarray): 2D direction of target waypoint</p></li>
+<li><p>waypoint_list (np.ndarray): Array containing waypoints on the route ahead. Each element is a 4D vector, consisting of the position and orientation in x-y coordinates</p></li>
+<li><p>speed_limit (float): Speed limit of current position. It may come from the limit in current road and computed by planner</p></li>
+</ul>
+</div>
+<div class="section" id="information">
+<h3>Information<a class="headerlink" href="#information" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>tick (int): Ticks for time in current episode</p></li>
+<li><p>timestamp (float): Real timestamp run in current episode</p></li>
+<li><p>total_lights (int): Total traffic lights met before</p></li>
+<li><p>total_lights_ran (int): Total red traffic light ran before</p></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="policy_feature.html" class="btn btn-neutral float-right" title="Policy Features" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Features" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, OpenDILab.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

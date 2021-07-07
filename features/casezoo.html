@@ -1,0 +1,318 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Casezoo Evaluation &mdash; DI-drive 0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Model Zoo" href="../model_zoo/index.html" />
+    <link rel="prev" title="Benchmark Evaluation" href="carla_benchmark.html" />
+    <link href="../_static/css/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DI-drive
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/index.html">Tutorial</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Features</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="simulator_feature.html">Simulator Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="policy_feature.html">Policy Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="visualize.html">Visualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datasets.html">Datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="carla_benchmark.html">Benchmark Evaluation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Casezoo Evaluation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-guide">Running Guide</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../model_zoo/index.html">Model Zoo</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api_doc/index.html">API Doc</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/index.html">FAQ</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DI-drive</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Features</a> &raquo;</li>
+        
+      <li>Casezoo Evaluation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/features/casezoo.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="casezoo-evaluation">
+<h1>Casezoo Evaluation<a class="headerlink" href="#casezoo-evaluation" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<p>Casezoo is an essential feature introduced by DI-drive. In short, it is an Auto-driving scenario dataset built
+with Carla and run with DI-drive. We refer to the existing Carla <a class="reference external" href="https://github.com/carla-simulator/scenario_runner">scenario runner</a>
+to set up scenarios, and add interfaces to suit for DI-drive, so as to run Deep Learning method easily.</p>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>Currently Deep Learning literatures in Carla simulator mostly use <strong>Benchmark</strong> env setting to train and evaluate
+their policies. Benchmark defines several suites of routes by a start and end point, devided into three difficulties. Each suite
+specifies running parameters like weathers and amount of other vehicles and walkers in evironment. The ego-vehicle
+need to finish the route navigation with or without any collision. The key concept of Benchmark is that the
+init position of npcs are randomly selected, which makes each episode, even running the same route in a suite,
+is different and uncontrollable. The successful rate represents some charactoristics of the performance, but not
+accurately reflect the ability to handle various cases.</p>
+<p>Carla <a class="reference external" href="https://github.com/carla-simulator/scenario_runner">scenario runner</a> is a toolkit that can run scenarios
+of sevaral form. Scenario runner allows user to make and run single case with the behavior of npc and traffic lights
+controllable and repeatable. However, the default cases in scenario runner is hard to interface with manually
+designed driving policy, and to run a IL &amp; RL environments. DI-drive make the scenario running very simple and
+redesigned cases according to some real driving cases.</p>
+<p><strong>DI-drive Casezoo</strong> is an Auto-driving scenario datasets. It aims to establish specified scenarios to train and
+evaluate with Decision Intelligence policies. The scenario defines NPC vehicles, walkers and traffic light behaviors, together
+with some criteria. It succeeds only if all the behaviors operate obeying <strong>fixed order and logic</strong>, and may fail if
+any criteria raise failure status, so that the success and failue case can exactly show the detail characteristics of the
+evaluated policy. What is more, the case is able to run RL training. The reward comes from standard driving status as
+well as scenario criteria. Di-drive runs Casezoo with a standard form
+environment defined the same as <code class="docutils literal notranslate"><span class="pre">gym.Env</span></code>, together with configuarions in same form with other environments.
+This makes the RL training quickly and conveniently for users.</p>
+<p>In short, the new malicious introduced in DI-drive Casezoo compared with Benchmark and scenario runner includes:</p>
+<ul class="simple">
+<li><p>Scenario designed from real data and road test</p></li>
+<li><p>Scenario operating in fixed logic and order</p></li>
+<li><p>Suitable for IL &amp; RL training</p></li>
+<li><p>Interaced with same interfaces in <code class="docutils literal notranslate"><span class="pre">Env</span></code></p></li>
+</ul>
+</div>
+<div class="section" id="running-guide">
+<h2>Running Guide<a class="headerlink" href="#running-guide" title="Permalink to this headline">¶</a></h2>
+<p>The scenario defines a route to follow in <cite>Town03</cite>, <cite>Town04</cite> and <cite>Town05</cite>, stored in a <cite>.xml</cite> file. There are
+also individual scenarios defined in <cite>python</cite> files. The indivisual scenario can be triggered when hero vehicle
+passes by during navigating in the route. Meanwhile, you can run a single individual scenario in a certain location
+in town maps. They are defined in example <cite>xml</cite> files with specific names at each location. Details of all routes
+and scenarios are shown in
+<a class="reference external" href="https://github.com/opendilab/DI-drive/blob/main//docs/casezoo_instruction.md">Casezoo instruction</a>.</p>
+<p>DI-drive defines <a class="reference internal" href="../api_doc/envs.html#core.envs.ScenarioCarlaEnv" title="core.envs.scenario_carla_env.ScenarioCarlaEnv"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScenarioCarlaEnv</span></code></a>, which uses
+<code class="xref py py-class docutils literal notranslate"><span class="pre">ScenarioSimulator</span></code> to run Casezoo.
+You need to parse the scenario files and get a configuration instance, then pass the configuration into
+the <code class="docutils literal notranslate"><span class="pre">reset</span></code> method of a <code class="docutils literal notranslate"><span class="pre">ScenarioEnv</span></code>. The environment is able to get the scenario type by itself
+and create map, NPCs, behaviors and criteria in the environments. The environment can then be used as
+common RL environments to train and eval.</p>
+<p>Simple usage of route scenario is shown follow:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">core.simulators.srunner.tools.route_parser</span> <span class="kn">import</span> <span class="n">RouteParser</span>
+
+<span class="n">route_file</span> <span class="o">=</span> <span class="s1">&#39;xxx.xml&#39;</span>
+<span class="n">config_file</span> <span class="o">=</span> <span class="s1">&#39;xxx.json&#39;</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">RouteParser</span><span class="o">.</span><span class="n">parse_routes_file</span><span class="p">(</span><span class="n">routes</span><span class="p">,</span> <span class="n">scenario_file</span><span class="p">)</span>
+
+<span class="n">carla_env</span> <span class="o">=</span> <span class="n">ScenarioCarlaEnv</span><span class="p">(</span><span class="n">env_cfg</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+<span class="n">obs</span> <span class="o">=</span> <span class="n">carla_env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Simple usage of single scenario is shown follow:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">core.simulators.srunner.tools.scenario_parser</span> <span class="kn">import</span> <span class="n">ScenarioConfigurationParser</span>
+
+<span class="n">scenario_name</span> <span class="o">=</span> <span class="s1">&#39;xxx&#39;</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">ScenarioConfigurationParser</span><span class="o">.</span><span class="n">parse_scenario_configuration</span><span class="p">(</span><span class="n">scenario_name</span><span class="p">)</span>
+
+<span class="n">carla_env</span> <span class="o">=</span> <span class="n">ScenarioCarlaEnv</span><span class="p">(</span><span class="n">env_cfg</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+<span class="n">obs</span> <span class="o">=</span> <span class="n">carla_env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can run auto policy in scenario environments with <code class="docutils literal notranslate"><span class="pre">demo/auto_run/auto_run_case.py</span></code></p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="../model_zoo/index.html" class="btn btn-neutral float-right" title="Model Zoo" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="carla_benchmark.html" class="btn btn-neutral float-left" title="Benchmark Evaluation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, OpenDILab.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,544 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>simulators &mdash; DI-drive 0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="envs" href="envs.html" />
+    <link rel="prev" title="API Doc" href="index.html" />
+    <link href="../_static/css/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DI-drive
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/index.html">Tutorial</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../features/index.html">Features</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../model_zoo/index.html">Model Zoo</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Doc</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">simulators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#basesimulator">BaseSimulator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#carlasimulator">CarlaSimulator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#carlascenariosimulator">CarlaScenarioSimulator</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="envs.html">envs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="policy.html">policy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.html">data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eval.html">eval</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">utils</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/index.html">FAQ</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DI-drive</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">API Doc</a> &raquo;</li>
+        
+      <li>simulators</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/api_doc/simulators.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="simulators">
+<h1>simulators<a class="headerlink" href="#simulators" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<div class="section" id="basesimulator">
+<h2>BaseSimulator<a class="headerlink" href="#basesimulator" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="core.simulators.base_simulator.BaseSimulator">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">core.simulators.base_simulator.</span></span><span class="sig-name descname"><span class="pre">BaseSimulator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/simulators/base_simulator.html#BaseSimulator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.simulators.base_simulator.BaseSimulator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for simulators.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>cfg (Dict): Config Dict</p></li>
+</ul>
+</dd>
+<dt class="field-even">Interfaces</dt>
+<dd class="field-even"><p>apply_control, run_step</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="core.simulators.base_simulator.BaseSimulator.apply_control">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">apply_control</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">control</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/simulators/base_simulator.html#BaseSimulator.apply_control"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.simulators.base_simulator.BaseSimulator.apply_control" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply control signal to hero vehicle. It will take effect in the next world tick.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><p>control (Dict): Control signal dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.simulators.base_simulator.BaseSimulator.run_step">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">run_step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/simulators/base_simulator.html#BaseSimulator.run_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.simulators.base_simulator.BaseSimulator.run_step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run one step for simulator.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="carlasimulator">
+<h2>CarlaSimulator<a class="headerlink" href="#carlasimulator" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="core.simulators.CarlaSimulator">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">core.simulators.</span></span><span class="sig-name descname"><span class="pre">CarlaSimulator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">carla.libcarla.Client</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'localhost'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">9000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tm_port</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/simulators/carla_simulator.html#CarlaSimulator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.simulators.CarlaSimulator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Common Carla Simulator.
+The simulator contains a hero actor to control, and can add npc vehicles, pedestrians,
+change weathers and maps, and set up sensors of the hero actor due to config.
+The simulator makes a client to Carla server, and interact with server to get informations
+and apply control signals. It can get state, sensor data, navigation and information, and
+record running status including collision, running red light, running off road, running in
+wrong direction, distance and timeout to end waypoint, etc..</p>
+<p>The simulator stores and takes some information from a static class <code class="docutils literal notranslate"><span class="pre">CarlaDataProvider</span></code>, which
+can avoid frequently sending message toCarla server to speed up.</p>
+<p>It uses Carla version 0.9.9.</p>
+<p>When created, it will set up Carla client due to arguments, set simulator basic configurations used all around
+its lifetime, and set some default running configurations. The latter could be changed in each episode.</p>
+<p>If no traffic manager port is provided, it will find random free port in system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>cfg (Dict): Config Dict.</p></li>
+<li><p>client (carla.Client, optional): Already established Carla client. Defaults to None.</p></li>
+<li><p>host (str, optional): TCP host Carla client link to. Defaults to ‘localhost’.</p></li>
+<li><p>port (int, optional): TCP port Carla client link to. Defaults to 9000.</p></li>
+<li><p>tm_port (int, optional): Traffic manager port Carla client link to. Defaults to None.</p></li>
+<li><p>timeout (float, optional): Carla client link timeout. Defaults to 10.0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Interfaces</dt>
+<dd class="field-even"><p>init, get_state, get_sensor_data, get_navigation, get_information, apply_planner,
+apply_control, run_step, clean_up</p>
+</dd>
+<dt class="field-odd">Properties</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>town_name (str): Current town name.</p></li>
+<li><p>hero_player (carla.Actor): hero actor in simulation.</p></li>
+<li><p>collided (bool): Whether collided in current episode.</p></li>
+<li><p>ran_light (bool): Whether ran light in current frame.</p></li>
+<li><p>off_road (bool): Whether ran off road in current frame.</p></li>
+<li><p>wrong_direction (bool): Whether ran in wrong derection in current frame.</p></li>
+<li><p>end_distance (float): Distance to target in current frame.</p></li>
+<li><p>end_timeout (float): Timeout for entire route provided by planner.</p></li>
+<li><p>total_diatance (float): Dictance for entire route provided by planner.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="core.simulators.CarlaSimulator.apply_control">
+<span class="sig-name descname"><span class="pre">apply_control</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">control</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/simulators/carla_simulator.html#CarlaSimulator.apply_control"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.simulators.CarlaSimulator.apply_control" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply control signal for hero player in simulator.
+This will send message to the client and the control takes effect in next tick</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>control (dict, optional): Control signal dict. Default to None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.simulators.CarlaSimulator.apply_planner">
+<span class="sig-name descname"><span class="pre">apply_planner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">end_idx</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><a class="reference internal" href="../_modules/core/simulators/carla_simulator.html#CarlaSimulator.apply_planner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.simulators.CarlaSimulator.apply_planner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Aplly goal waypoint to planner in simulator. The start point is set to current hero vehicle waypoint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>end_idx (int): Index of end waypoint.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dict: [description]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.simulators.CarlaSimulator.clean_up">
+<span class="sig-name descname"><span class="pre">clean_up</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/simulators/carla_simulator.html#CarlaSimulator.clean_up"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.simulators.CarlaSimulator.clean_up" title="Permalink to this definition">¶</a></dt>
+<dd><p>Destroy all actors and sensors in current world. Clear all messages saved in simulator and data provider.
+This will NOT destroy the Carla client, so simulator can use same Carla client to start next episode.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.simulators.CarlaSimulator.get_information">
+<span class="sig-name descname"><span class="pre">get_information</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><a class="reference internal" href="../_modules/core/simulators/carla_simulator.html#CarlaSimulator.get_information"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.simulators.CarlaSimulator.get_information" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get running information inclution time and ran light counts in current world.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Dict: Information dict.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.simulators.CarlaSimulator.get_navigation">
+<span class="sig-name descname"><span class="pre">get_navigation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><a class="reference internal" href="../_modules/core/simulators/carla_simulator.html#CarlaSimulator.get_navigation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.simulators.CarlaSimulator.get_navigation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get navigation info in current world. Most of the contains come from planner.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Dict: Navigation dict.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.simulators.CarlaSimulator.get_sensor_data">
+<span class="sig-name descname"><span class="pre">get_sensor_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><a class="reference internal" href="../_modules/core/simulators/carla_simulator.html#CarlaSimulator.get_sensor_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.simulators.CarlaSimulator.get_sensor_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all sensor data and bird-eye view data if exist in current world. Bird-eye view will be
+converted to an multi-channel image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Dict: Sensor and Bev data dict.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.simulators.CarlaSimulator.get_state">
+<span class="sig-name descname"><span class="pre">get_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><a class="reference internal" href="../_modules/core/simulators/carla_simulator.html#CarlaSimulator.get_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.simulators.CarlaSimulator.get_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get running state from current world. It contains location, orientation, speed, acc,
+and the state of surrounding road info suchas traffic light and junction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Dict: State dict.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.simulators.CarlaSimulator.init">
+<span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/simulators/carla_simulator.html#CarlaSimulator.init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.simulators.CarlaSimulator.init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Init simulator episode with provided args.
+This method takes start and end waypoint indexs to set a navigation goal, and will use planner to build a route
+to generate target waypoint and road options in each tick. It will set world, map, vehicles, pedestrians dut to
+default config, and provided args, which will be stored to replace old config.
+If no collision happens when creating actors, the init will end and return.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>start (int, optional): Index of start waypoint. Defaults to 0.</p></li>
+<li><p>end (int, optional): Index of end waypoint. Defaults to 1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Optional arguments</dt>
+<dd class="field-even"><p>town, weather, n_vehicles, n_pedestrians, autopilot, disable_two_wheels</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.simulators.CarlaSimulator.run_step">
+<span class="sig-name descname"><span class="pre">run_step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/simulators/carla_simulator.html#CarlaSimulator.run_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.simulators.CarlaSimulator.run_step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run one step simulation.
+This will tick Carla world and update informations for all sensors and measurement.</p>
+</dd></dl>
+
+</dd></dl>
+
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Make sure to use <code class="xref py py-func docutils literal notranslate"><span class="pre">clean_up</span></code> before delete an simulator.
+If not, all current actors(vehicles, pedestrians, sensors ect.) will
+remain in Carla client, and may cause error when next simulator link to that client!</p>
+</div>
+</div>
+<div class="section" id="carlascenariosimulator">
+<h2>CarlaScenarioSimulator<a class="headerlink" href="#carlascenariosimulator" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="core.simulators.CarlaScenarioSimulator">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">core.simulators.</span></span><span class="sig-name descname"><span class="pre">CarlaScenarioSimulator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">carla.libcarla.Client</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'localhost'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">9000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tm_port</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">9050</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/simulators/carla_scenario_simulator.html#CarlaScenarioSimulator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.simulators.CarlaScenarioSimulator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Carla simualtor used to run scenarios.
+The simulator loads configs of provided scenario, and create hero actor, npc vehicles, walkers, world map
+according to it. The sensors and running status are set as common Carla simulator.</p>
+<p>When created, it will set up Carla client due to arguments, set simulator basic configurations used all around
+its lifetime, and set some default running configurations.</p>
+<p>If no traffic manager port is provided, it will find random free port in system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>cfg (Dict): Config Dict.</p></li>
+<li><p>client (carla.Client, optional): Already established Carla client. Defaults to None.</p></li>
+<li><p>host (str, optional): TCP host Carla client link to. Defaults to ‘localhost’.</p></li>
+<li><p>port (int, optional): TCP port Carla client link to. Defaults to 9000.</p></li>
+<li><p>tm_port (int, optional): Traffic manager port Carla client link to. Defaults to None.</p></li>
+<li><p>timeout (float, optional): Carla client link timeout. Defaults to 10.0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Interfaces</dt>
+<dd class="field-even"><p>init, get_state, get_sensor_data, get_navigation, get_information, apply_control, run_step, clean_up</p>
+</dd>
+<dt class="field-odd">Properties</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>town_name (str): Current town name.</p></li>
+<li><p>hero_player (carla.Actor): hero actor in simulation.</p></li>
+<li><p>collided (bool): Whether collided in current episode.</p></li>
+<li><p>end_distance (float): Distance to target in current frame.</p></li>
+<li><p>end_timeout (float): Timeout for entire route provided by planner.</p></li>
+<li><p>total_diatance (float): Dictance for entire route provided by planner.</p></li>
+<li><p>scenario_manager (Any): Scenario Manager instance used to get running state.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="core.simulators.CarlaScenarioSimulator.clean_up">
+<span class="sig-name descname"><span class="pre">clean_up</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/simulators/carla_scenario_simulator.html#CarlaScenarioSimulator.clean_up"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.simulators.CarlaScenarioSimulator.clean_up" title="Permalink to this definition">¶</a></dt>
+<dd><p>Destroy all actors and sensors in current world. Clear all messages saved in simulator and data provider,
+and clean up running scenarios. This will NOT destroy theCarla client, so simulator can use same carla
+client to start next episode.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.simulators.CarlaScenarioSimulator.end_scenario">
+<span class="sig-name descname"><span class="pre">end_scenario</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/simulators/carla_scenario_simulator.html#CarlaScenarioSimulator.end_scenario"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.simulators.CarlaScenarioSimulator.end_scenario" title="Permalink to this definition">¶</a></dt>
+<dd><p>End current scenario. Must be called before ending an episode.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.simulators.CarlaScenarioSimulator.get_criteria">
+<span class="sig-name descname"><span class="pre">get_criteria</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">List</span><a class="reference internal" href="../_modules/core/simulators/carla_scenario_simulator.html#CarlaScenarioSimulator.get_criteria"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.simulators.CarlaScenarioSimulator.get_criteria" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get criteria status list of scenario in current frame. Criteria related with hero actor is encounted.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>List: Criteria list of scenario.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.simulators.CarlaScenarioSimulator.init">
+<span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/simulators/carla_scenario_simulator.html#CarlaScenarioSimulator.init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.simulators.CarlaScenarioSimulator.init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Init simulator episode with provided args.
+This method takes an scneario configuration instance to set up scenarios in Carla server. the scenario could be
+a single scenario, or a route scenario together with several scenarios during navigating the route. A scneario
+manager is used to manager and check the running status and tick scenarios. A local planner is set to trace the
+route to generate target waypoint and road options in each tick. It will set world, map, vehicles, pedestrians
+dut to provided args and default configs, and reset running status. If no collision happens when creating
+actors, the init will end and return.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>config (Any): Scenario configuration instance, containing information about the scenarios.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.simulators.CarlaScenarioSimulator.run_step">
+<span class="sig-name descname"><span class="pre">run_step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/simulators/carla_scenario_simulator.html#CarlaScenarioSimulator.run_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.simulators.CarlaScenarioSimulator.run_step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run one step simulation.
+This will tick Carla world and scenarios, update informations for all sensors and measurement.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="envs.html" class="btn btn-neutral float-right" title="envs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="API Doc" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, OpenDILab.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

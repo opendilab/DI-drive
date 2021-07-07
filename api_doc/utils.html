@@ -1,0 +1,601 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>utils &mdash; DI-drive 0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="FAQ" href="../faq/index.html" />
+    <link rel="prev" title="eval" href="eval.html" />
+    <link href="../_static/css/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DI-drive
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/index.html">Tutorial</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../features/index.html">Features</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../model_zoo/index.html">Model Zoo</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Doc</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="simulators.html">simulators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="envs.html">envs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="policy.html">policy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.html">data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eval.html">eval</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">utils</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#basicplanner">BasicPlanner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#behaviorplanner">BehaviorPlanner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#visualizer">Visualizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stuckdetector">StuckDetector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sensorhelper">SensorHelper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#collisionsensor">CollisionSensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#trafficlighthelper">TrafficLightHelper</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/index.html">FAQ</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DI-drive</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">API Doc</a> &raquo;</li>
+        
+      <li>utils</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/api_doc/utils.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="utils">
+<h1>utils<a class="headerlink" href="#utils" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<div class="section" id="basicplanner">
+<h2>BasicPlanner<a class="headerlink" href="#basicplanner" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="core.utils.planner.basic_planner.BasicPlanner">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">core.utils.planner.basic_planner.</span></span><span class="sig-name descname"><span class="pre">BasicPlanner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/utils/planner/basic_planner.html#BasicPlanner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.utils.planner.basic_planner.BasicPlanner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Basic local planner for Carla simualtor. It can set route with a pair of start and end waypoints,
+or directly set with a waypoint list. The planner will provide target waypoint and road option
+in current route position, and record current route distance and end timeout. The planner will
+also judge agent state by checking surrounding vehicles, walkers and traffic lights.</p>
+<p>The route’s element consists of a waypoint and a road option. Local planner uses a waypoint queue
+to store all the unreached waypoints, and a waypoint buffer to store some of the near waypoints to
+speed up searching. In short, <cite>node</cite> waypoint is the waypoint in route that farthest from hero
+vehicle and within <code class="docutils literal notranslate"><span class="pre">min_distance</span></code>, and <cite>target</cite> waypoint is the next waypoint of node waypoint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>cfg (Dict): Config dict.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Interfaces</dt>
+<dd class="field-even"><p>set_destination, set_route, run_step, get_waypoints_list, clean_up</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="core.utils.planner.basic_planner.BasicPlanner.clean_up">
+<span class="sig-name descname"><span class="pre">clean_up</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/utils/planner/basic_planner.html#BasicPlanner.clean_up"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.utils.planner.basic_planner.BasicPlanner.clean_up" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear route, waypoint queue and buffer.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.utils.planner.basic_planner.BasicPlanner.get_incoming_waypoint_and_direction">
+<span class="sig-name descname"><span class="pre">get_incoming_waypoint_and_direction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steps</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">carla.libcarla.Waypoint</span><span class="p"><span class="pre">,</span> </span><span class="pre">core.utils.simulator_utils.carla_agents.navigation.RoadOption</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="../_modules/core/utils/planner/basic_planner.html#BasicPlanner.get_incoming_waypoint_and_direction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.utils.planner.basic_planner.BasicPlanner.get_incoming_waypoint_and_direction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns direction and waypoint at a distance ahead defined by the user.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>steps (int): Number of steps to get the incoming waypoint.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tuple[carla.Waypoint, RoadOption]: Waypoint and road option ahead.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.utils.planner.basic_planner.BasicPlanner.get_waypoints_list">
+<span class="sig-name descname"><span class="pre">get_waypoints_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">waypoint_num</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">carla.libcarla.Waypoint</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="../_modules/core/utils/planner/basic_planner.html#BasicPlanner.get_waypoints_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.utils.planner.basic_planner.BasicPlanner.get_waypoints_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of wapoints from the end of waypoint buffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>waypoint_num (int): Num of waypoint in list.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List[carla.Waypoint]: List of waypoint.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.utils.planner.basic_planner.BasicPlanner.run_step">
+<span class="sig-name descname"><span class="pre">run_step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/utils/planner/basic_planner.html#BasicPlanner.run_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.utils.planner.basic_planner.BasicPlanner.run_step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run one step of local planner. It will update node and target waypoint and road option, and check agent
+states.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.utils.planner.basic_planner.BasicPlanner.set_destination">
+<span class="sig-name descname"><span class="pre">set_destination</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_location</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">carla.libcarla.Location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_location</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">carla.libcarla.Location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clean</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/utils/planner/basic_planner.html#BasicPlanner.set_destination"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.utils.planner.basic_planner.BasicPlanner.set_destination" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method creates a route of a list of waypoints from start location to destination location
+based on the route traced by the global router. If <code class="docutils literal notranslate"><span class="pre">clean</span></code> is set true, it will clean current
+route and waypoint queue.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>start_location (carla.Location): initial position.</p></li>
+<li><p>end_location (carla.Location): final position.</p></li>
+<li><p>clean (bool): Whether to clean current route. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.utils.planner.basic_planner.BasicPlanner.set_route">
+<span class="sig-name descname"><span class="pre">set_route</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">route</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clean</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/utils/planner/basic_planner.html#BasicPlanner.set_route"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.utils.planner.basic_planner.BasicPlanner.set_route" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method add a route into planner to trace. If <code class="docutils literal notranslate"><span class="pre">clean</span></code> is set true, it will clean current
+route and waypoint queue.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>route (List): Route add to planner.</p></li>
+<li><p>clean (bool, optional): Whether to clean current route. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="behaviorplanner">
+<h2>BehaviorPlanner<a class="headerlink" href="#behaviorplanner" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="core.utils.planner.behavior_planner.BehaviorPlanner">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">core.utils.planner.behavior_planner.</span></span><span class="sig-name descname"><span class="pre">BehaviorPlanner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/utils/planner/behavior_planner.html#BehaviorPlanner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.utils.planner.behavior_planner.BehaviorPlanner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Behavior local planner for Carla simualtor. It can set route the same way as <code class="docutils literal notranslate"><span class="pre">BasicPlanner</span></code>. BehaviorPlanner can
+check the speed limitations, traffic lights in evironment, and also take nearby vehicles into account.
+Lane changing
+decisions can be taken by analyzing the surrounding environment, such as overtaking or tailgating avoidance.
+Besides, it can also keep safety distance from a car in front of it by tracking the instantaneous time to collision
+and keeping it in a certain range. Different sets of behaviors are encoded in the agent, from cautious to a more
+aggressive ones.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>cfg (Dict): Config dict.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Interfaces</dt>
+<dd class="field-even"><p>set_destination, set_route, run_step, get_waypoints_list, clean_up</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="core.utils.planner.behavior_planner.BehaviorPlanner.run_step">
+<span class="sig-name descname"><span class="pre">run_step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/utils/planner/behavior_planner.html#BehaviorPlanner.run_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.utils.planner.behavior_planner.BehaviorPlanner.run_step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run one step of local planner. It will update node and target waypoint and road option, and check agent
+states. Besides, it may have some behavior like overtaking, tailgating, safe distance keeping and so on</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="visualizer">
+<h2>Visualizer<a class="headerlink" href="#visualizer" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="core.utils.others.visualizer.Visualizer">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">core.utils.others.visualizer.</span></span><span class="sig-name descname"><span class="pre">Visualizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/utils/others/visualizer.html#Visualizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.utils.others.visualizer.Visualizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Visualizer is used to visualize sensor data and print info during running.
+It can be used to show a sensor image on screen, save a gif or video file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>cfg (Dict): Config dict.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Interfaces</dt>
+<dd class="field-even"><p>init, paint, run_visualize, done</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="core.utils.others.visualizer.Visualizer.done">
+<span class="sig-name descname"><span class="pre">done</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/utils/others/visualizer.html#Visualizer.done"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.utils.others.visualizer.Visualizer.done" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save file or release file writter, destroy windows.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.utils.others.visualizer.Visualizer.init">
+<span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/utils/others/visualizer.html#Visualizer.init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.utils.others.visualizer.Visualizer.init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initlaize visualizer with provided name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>name (str): Name for window or file.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.utils.others.visualizer.Visualizer.paint">
+<span class="sig-name descname"><span class="pre">paint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_dict</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/utils/others/visualizer.html#Visualizer.paint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.utils.others.visualizer.Visualizer.paint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Paint canvas with observation images and data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>image: Rendered image.</p></li>
+<li><p>data_dict(Dict, optional): data dict containing information, state, action and so on</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.utils.others.visualizer.Visualizer.run_visualize">
+<span class="sig-name descname"><span class="pre">run_visualize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/utils/others/visualizer.html#Visualizer.run_visualize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.utils.others.visualizer.Visualizer.run_visualize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run one step visualizer. Update file handler or show screen.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="stuckdetector">
+<h2>StuckDetector<a class="headerlink" href="#stuckdetector" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="core.utils.env_utils.stuck_detector.StuckDetector">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">core.utils.env_utils.stuck_detector.</span></span><span class="sig-name descname"><span class="pre">StuckDetector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">len_thresh</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speed_thresh</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/utils/env_utils/stuck_detector.html#StuckDetector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.utils.env_utils.stuck_detector.StuckDetector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stuck detector used to detect vehicle stuck in simulator. It takes speed as input in each tick.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>len_thresh (int, optional): Speed history length to calculate thresh. Defaults to 200.</p></li>
+<li><p>speed_thresh (float, optional): Speed thresh value. Defaults to 0.1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Interfaces</dt>
+<dd class="field-even"><ul class="simple">
+<li><p>tick, clear</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="core.utils.env_utils.stuck_detector.StuckDetector.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/utils/env_utils/stuck_detector.html#StuckDetector.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.utils.env_utils.stuck_detector.StuckDetector.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear speed history</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.utils.env_utils.stuck_detector.StuckDetector.tick">
+<span class="sig-name descname"><span class="pre">tick</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">speed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/utils/env_utils/stuck_detector.html#StuckDetector.tick"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.utils.env_utils.stuck_detector.StuckDetector.tick" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update one tick</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>speed (float): Current speed</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="sensorhelper">
+<h2>SensorHelper<a class="headerlink" href="#sensorhelper" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="core.utils.simulator_utils.sensor_utils.SensorHelper">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">core.utils.simulator_utils.sensor_utils.</span></span><span class="sig-name descname"><span class="pre">SensorHelper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs_cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aug_cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/utils/simulator_utils/sensor_utils.html#SensorHelper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.utils.simulator_utils.sensor_utils.SensorHelper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interfaces for sensors required for vehicles and data buffer for all sensor data in Carla. The updating for Carla
+sensors are not synchronous. In each tick, the newest sensor data is obtained from sensor data buffer and returned
+to the simulator. This class provides an interface that can easily create, receive data and destroy all
+kinds of sensors in Carla according to config, and apply the same sensor augmantation to all camera sensors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>obs_cfg (Dict): Config dict for sensor</p></li>
+<li><p>aug_cfg (Dict, optional): Config dict for sensor augmentation. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Interfaces</dt>
+<dd class="field-even"><p>setup_sensors, get_sensors_data, clear_up</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="core.utils.simulator_utils.sensor_utils.SensorHelper.clean_up">
+<span class="sig-name descname"><span class="pre">clean_up</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/utils/simulator_utils/sensor_utils.html#SensorHelper.clean_up"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.utils.simulator_utils.sensor_utils.SensorHelper.clean_up" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove and destroy all sensors</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.utils.simulator_utils.sensor_utils.SensorHelper.get_sensors_data">
+<span class="sig-name descname"><span class="pre">get_sensors_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><a class="reference internal" href="../_modules/core/utils/simulator_utils/sensor_utils.html#SensorHelper.get_sensors_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.utils.simulator_utils.sensor_utils.SensorHelper.get_sensors_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all registered sensor data from buffer</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Dict: all newest sensor data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.utils.simulator_utils.sensor_utils.SensorHelper.setup_sensors">
+<span class="sig-name descname"><span class="pre">setup_sensors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">world</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">carla.libcarla.World</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vehicle</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">carla.libcarla.Actor</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/utils/simulator_utils/sensor_utils.html#SensorHelper.setup_sensors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.utils.simulator_utils.sensor_utils.SensorHelper.setup_sensors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the sensors defined in config and attach them to the hero vehicle</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>world (carla.World): Carla world</p></li>
+<li><p>vehicle (carla.Actor): ego vehicle</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="collisionsensor">
+<h2>CollisionSensor<a class="headerlink" href="#collisionsensor" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="core.utils.simulator_utils.sensor_utils.CollisionSensor">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">core.utils.simulator_utils.sensor_utils.</span></span><span class="sig-name descname"><span class="pre">CollisionSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent_actor</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">carla.libcarla.Actor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_threshold</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/utils/simulator_utils/sensor_utils.html#CollisionSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.utils.simulator_utils.sensor_utils.CollisionSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Carla sensor interface used to detect collision info in simulator. Once created,
+it will automatically update every tick.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>parent_actor (carla.Actor): Actor to detect collision</p></li>
+<li><p>col_threshold (float): Threshold value of collided impulse</p></li>
+</ul>
+</dd>
+<dt class="field-even">Interfaces</dt>
+<dd class="field-even"><p>clear</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="core.utils.simulator_utils.sensor_utils.CollisionSensor.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/utils/simulator_utils/sensor_utils.html#CollisionSensor.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.utils.simulator_utils.sensor_utils.CollisionSensor.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear collision sensor in Carla world.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="trafficlighthelper">
+<h2>TrafficLightHelper<a class="headerlink" href="#trafficlighthelper" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="core.utils.simulator_utils.sensor_utils.TrafficLightHelper">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">core.utils.simulator_utils.sensor_utils.</span></span><span class="sig-name descname"><span class="pre">TrafficLightHelper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hero_vehicle</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">carla.libcarla.Actor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/utils/simulator_utils/sensor_utils.html#TrafficLightHelper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.utils.simulator_utils.sensor_utils.TrafficLightHelper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interface of traffic light detector and recorder. It detects next traffic light state,
+calculates distance from hero vehicle to the end of this road, and if hero vehicle crosses
+this line when correlated light is red, it will record running a red light</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>hero_vehicle (carla.Actor): Hero vehicle</p></li>
+</ul>
+</dd>
+<dt class="field-even">Interfaces</dt>
+<dd class="field-even"><ul class="simple">
+<li><p>tick</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="core.utils.simulator_utils.sensor_utils.TrafficLightHelper.tick">
+<span class="sig-name descname"><span class="pre">tick</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/utils/simulator_utils/sensor_utils.html#TrafficLightHelper.tick"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.utils.simulator_utils.sensor_utils.TrafficLightHelper.tick" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tick one step. It will check the next traffic light and its state, update the count number
+of traffic light if needed. It will check the running light event by getting the last waypoints
+in current road and check if the vehicle has crossed them.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="../faq/index.html" class="btn btn-neutral float-right" title="FAQ" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="eval.html" class="btn btn-neutral float-left" title="eval" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, OpenDILab.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

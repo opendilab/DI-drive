@@ -1,0 +1,431 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>core.utils.others.visualizer &mdash; DI-drive 0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link href="../../../../_static/css/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> DI-drive
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation/index.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorial/index.html">Tutorial</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../features/index.html">Features</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../model_zoo/index.html">Model Zoo</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_doc/index.html">API Doc</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../faq/index.html">FAQ</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">DI-drive</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>core.utils.others.visualizer</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for core.utils.others.visualizer</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">easydict</span> <span class="kn">import</span> <span class="n">EasyDict</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+
+<span class="kn">from</span> <span class="nn">core.utils.others.image_helper</span> <span class="kn">import</span> <span class="n">GifMaker</span><span class="p">,</span> <span class="n">VideoMaker</span><span class="p">,</span> <span class="n">show_image</span><span class="p">,</span> <span class="n">check_image</span>
+<span class="kn">from</span> <span class="nn">ding.utils</span> <span class="kn">import</span> <span class="n">deep_merge_dicts</span>
+
+
+<div class="viewcode-block" id="Visualizer"><a class="viewcode-back" href="../../../../api_doc/utils.html#core.utils.others.visualizer.Visualizer">[docs]</a><span class="k">class</span> <span class="nc">Visualizer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Visualizer is used to visualize sensor data and print info during running.</span>
+<span class="sd">    It can be used to show a sensor image on screen, save a gif or video file.</span>
+
+<span class="sd">    :Arguments:</span>
+<span class="sd">        - cfg (Dict): Config dict.</span>
+
+<span class="sd">    :Interfaces: init, paint, run_visualize, done</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_name</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_canvas</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_gif_maker</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_video_maker</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">show_text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">outputs</span><span class="o">=</span><span class="nb">list</span><span class="p">(),</span>
+        <span class="n">save_dir</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="n">frame_skip</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;cfg_type&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cfg</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">default_config</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span> <span class="o">=</span> <span class="n">cfg</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">show_text</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">outputs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_save_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">save_dir</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_frame_skip</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">frame_skip</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_save_dir</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_save_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Visualizer.init"><a class="viewcode-back" href="../../../../api_doc/utils.html#core.utils.others.visualizer.Visualizer.init">[docs]</a>    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initlaize visualizer with provided name.</span>
+
+<span class="sd">        :Arguments:</span>
+<span class="sd">            - name (str): Name for window or file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="k">if</span> <span class="s1">&#39;gif&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outputs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_gif_maker</span> <span class="o">=</span> <span class="n">GifMaker</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s1">&#39;video&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outputs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_video_maker</span> <span class="o">=</span> <span class="n">VideoMaker</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_video_maker</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_save_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Visualizer.paint"><a class="viewcode-back" href="../../../../api_doc/utils.html#core.utils.others.visualizer.Visualizer.paint">[docs]</a>    <span class="k">def</span> <span class="nf">paint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Paint canvas with observation images and data.</span>
+
+<span class="sd">        :Arguments:</span>
+<span class="sd">            - image: Rendered image.</span>
+<span class="sd">            - data_dict(Dict, optional): data dict containing information, state, action and so on</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_outputs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">data_dict</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">data_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">WHITE</span> <span class="o">=</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_canvas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+        <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_canvas</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">min</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">320</span><span class="p">:</span>
+            <span class="n">rate</span> <span class="o">=</span> <span class="mi">320</span> <span class="o">/</span> <span class="nb">min</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_canvas</span> <span class="o">=</span> <span class="n">resize_birdview</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_canvas</span><span class="p">,</span> <span class="n">rate</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">_write</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">canvas</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_canvas</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mf">0.4</span><span class="p">):</span>
+            <span class="n">rows</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="o">*</span> <span class="p">(</span><span class="n">canvas</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">//</span> <span class="mi">15</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="o">*</span> <span class="p">(</span><span class="n">canvas</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">//</span> <span class="mi">15</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">9</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+            <span class="n">cv2</span><span class="o">.</span><span class="n">putText</span><span class="p">(</span><span class="n">canvas</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">rows</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> <span class="n">cv2</span><span class="o">.</span><span class="n">FONT_HERSHEY_SIMPLEX</span><span class="p">,</span> <span class="n">fontsize</span><span class="p">,</span> <span class="n">WHITE</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_canvas</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">600</span><span class="p">:</span>
+            <span class="n">fontsize</span> <span class="o">=</span> <span class="mf">0.8</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fontsize</span> <span class="o">=</span> <span class="mf">0.4</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_text</span><span class="p">:</span>
+            <span class="n">left_text_pos</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="s1">&#39;command&#39;</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="p">:</span>
+                <span class="n">_command</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;VOID&#39;</span><span class="p">,</span>
+                    <span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;LEFT&#39;</span><span class="p">,</span>
+                    <span class="mi">2</span><span class="p">:</span> <span class="s1">&#39;RIGHT&#39;</span><span class="p">,</span>
+                    <span class="mi">3</span><span class="p">:</span> <span class="s1">&#39;STRAIGHT&#39;</span><span class="p">,</span>
+                    <span class="mi">4</span><span class="p">:</span> <span class="s1">&#39;FOLLOW&#39;</span><span class="p">,</span>
+                    <span class="mi">5</span><span class="p">:</span> <span class="s1">&#39;CHANGE LEFT&#39;</span><span class="p">,</span>
+                    <span class="mi">6</span><span class="p">:</span> <span class="s1">&#39;CHANGE RIGHT&#39;</span><span class="p">,</span>
+                <span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;command&#39;</span><span class="p">],</span> <span class="s1">&#39;???&#39;</span><span class="p">)</span>
+                <span class="n">_write</span><span class="p">(</span><span class="s1">&#39;Command: &#39;</span> <span class="o">+</span> <span class="n">_command</span><span class="p">,</span> <span class="n">left_text_pos</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+                <span class="n">left_text_pos</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="s1">&#39;agent_state&#39;</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="p">:</span>
+                <span class="n">_state</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;VOID&#39;</span><span class="p">,</span>
+                    <span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;NAVIGATING&#39;</span><span class="p">,</span>
+                    <span class="mi">2</span><span class="p">:</span> <span class="s1">&#39;BLOCKED_BY_VEHICLE&#39;</span><span class="p">,</span>
+                    <span class="mi">3</span><span class="p">:</span> <span class="s1">&#39;BLOCKED_BY_WALKER&#39;</span><span class="p">,</span>
+                    <span class="mi">4</span><span class="p">:</span> <span class="s1">&#39;BLOCKED_RED_LIGHT&#39;</span><span class="p">,</span>
+                <span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;agent_state&#39;</span><span class="p">],</span> <span class="s1">&#39;???&#39;</span><span class="p">)</span>
+                <span class="n">_write</span><span class="p">(</span><span class="s1">&#39;Agent State: &#39;</span> <span class="o">+</span> <span class="n">_state</span><span class="p">,</span> <span class="n">left_text_pos</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+                <span class="n">left_text_pos</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="s1">&#39;speed&#39;</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="p">:</span>
+                <span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;Speed: </span><span class="si">{:.1f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;speed&#39;</span><span class="p">])</span>
+                <span class="k">if</span> <span class="s1">&#39;speed_limit&#39;</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="p">:</span>
+                    <span class="n">text</span> <span class="o">+=</span> <span class="s1">&#39;/</span><span class="si">{:.1f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;speed_limit&#39;</span><span class="p">])</span>
+                <span class="n">_write</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">left_text_pos</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+                <span class="n">left_text_pos</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="s1">&#39;steer&#39;</span> <span class="ow">in</span> <span class="n">data_dict</span> <span class="ow">and</span> <span class="s1">&#39;throttle&#39;</span> <span class="ow">in</span> <span class="n">data_dict</span> <span class="ow">and</span> <span class="s1">&#39;brake&#39;</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="p">:</span>
+                <span class="n">_write</span><span class="p">(</span><span class="s1">&#39;Steer: </span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;steer&#39;</span><span class="p">]),</span> <span class="n">left_text_pos</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+                <span class="n">_write</span><span class="p">(</span><span class="s1">&#39;Throttle: </span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;throttle&#39;</span><span class="p">]),</span> <span class="n">left_text_pos</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+                <span class="n">_write</span><span class="p">(</span><span class="s1">&#39;Brake: </span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;brake&#39;</span><span class="p">]),</span> <span class="n">left_text_pos</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+                <span class="n">left_text_pos</span> <span class="o">+=</span> <span class="mi">3</span>
+
+            <span class="n">right_text_pos</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="s1">&#39;collided&#39;</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="p">:</span>
+                <span class="n">_write</span><span class="p">(</span><span class="s1">&#39;Collided: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;collided&#39;</span><span class="p">],</span> <span class="n">right_text_pos</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+                <span class="n">right_text_pos</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="s1">&#39;total_lights&#39;</span> <span class="ow">in</span> <span class="n">data_dict</span> <span class="ow">and</span> <span class="s1">&#39;total_lights_ran&#39;</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="p">:</span>
+                <span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;Lights Ran: </span><span class="si">%d</span><span class="s1">/</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;total_lights_ran&#39;</span><span class="p">],</span> <span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;total_lights&#39;</span><span class="p">])</span>
+                <span class="n">_write</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">right_text_pos</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+                <span class="n">right_text_pos</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="s1">&#39;end_distance&#39;</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="p">:</span>
+                <span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;Distance: </span><span class="si">%.1f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;end_distance&#39;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="s1">&#39;total_distance&#39;</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="p">:</span>
+                    <span class="n">text</span> <span class="o">+=</span> <span class="s1">&#39;/</span><span class="si">%.1f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;total_distance&#39;</span><span class="p">]</span>
+                <span class="n">_write</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">right_text_pos</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+                <span class="n">right_text_pos</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="s1">&#39;tick&#39;</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="p">:</span>
+                <span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;Time: </span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;tick&#39;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="s1">&#39;end_timeout&#39;</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="p">:</span>
+                    <span class="n">text</span> <span class="o">+=</span> <span class="s1">&#39;/</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;end_timeout&#39;</span><span class="p">]</span>
+                <span class="n">_write</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">right_text_pos</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+                <span class="n">right_text_pos</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="s1">&#39;reward&#39;</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="p">:</span>
+                <span class="n">_write</span><span class="p">(</span><span class="s1">&#39;Reward: </span><span class="si">%.1f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;reward&#39;</span><span class="p">],</span> <span class="n">right_text_pos</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+                <span class="n">right_text_pos</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">data_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;stuck&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+                <span class="n">_write</span><span class="p">(</span><span class="s1">&#39;Stuck!&#39;</span><span class="p">,</span> <span class="n">right_text_pos</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+                <span class="n">right_text_pos</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">data_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ran_light&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+                <span class="n">_write</span><span class="p">(</span><span class="s1">&#39;Ran light!&#39;</span><span class="p">,</span> <span class="n">right_text_pos</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+                <span class="n">right_text_pos</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">data_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;off_road&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+                <span class="n">_write</span><span class="p">(</span><span class="s1">&#39;Off road!&#39;</span><span class="p">,</span> <span class="n">right_text_pos</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+                <span class="n">right_text_pos</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">data_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;wrong_direction&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+                <span class="n">_write</span><span class="p">(</span><span class="s1">&#39;Wrong direction!&#39;</span><span class="p">,</span> <span class="n">right_text_pos</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+                <span class="n">right_text_pos</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+<div class="viewcode-block" id="Visualizer.run_visualize"><a class="viewcode-back" href="../../../../api_doc/utils.html#core.utils.others.visualizer.Visualizer.run_visualize">[docs]</a>    <span class="k">def</span> <span class="nf">run_visualize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run one step visualizer. Update file handler or show screen.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_canvas</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_count</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_frame_skip</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;gif&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outputs</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_gif_maker</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_canvas</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">&#39;video&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outputs</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_video_maker</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_canvas</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="s1">&#39;show&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outputs</span><span class="p">:</span>
+            <span class="n">show_image</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_canvas</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Visualizer.done"><a class="viewcode-back" href="../../../../api_doc/utils.html#core.utils.others.visualizer.Visualizer.done">[docs]</a>    <span class="k">def</span> <span class="nf">done</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Save file or release file writter, destroy windows.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gif_maker</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_gif_maker</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_save_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_gif_maker</span><span class="o">.</span><span class="n">clear</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_video_maker</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_video_maker</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s1">&#39;show&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outputs</span><span class="p">:</span>
+            <span class="n">cv2</span><span class="o">.</span><span class="n">destroyAllWindows</span><span class="p">()</span></div>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">default_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EasyDict</span><span class="p">:</span>
+        <span class="n">cfg</span> <span class="o">=</span> <span class="n">EasyDict</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">cfg_type</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s1">&#39;Config&#39;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">resize_birdview</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">rate</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
+    <span class="n">img_res_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+        <span class="n">img_slice</span> <span class="o">=</span> <span class="n">img</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
+        <span class="n">img_slice_res</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">img_slice</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">fx</span><span class="o">=</span><span class="n">rate</span><span class="p">,</span> <span class="n">fy</span><span class="o">=</span><span class="n">rate</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="n">cv2</span><span class="o">.</span><span class="n">INTER_NEAREST</span><span class="p">)</span>
+        <span class="n">img_res_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">img_slice_res</span><span class="p">)</span>
+    <span class="n">img_res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">img_res_list</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">img_res</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, OpenDILab.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

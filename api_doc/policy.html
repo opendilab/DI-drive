@@ -1,0 +1,366 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>policy &mdash; DI-drive 0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="models" href="models.html" />
+    <link rel="prev" title="envs" href="envs.html" />
+    <link href="../_static/css/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DI-drive
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/index.html">Tutorial</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../features/index.html">Features</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../model_zoo/index.html">Model Zoo</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Doc</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="simulators.html">simulators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="envs.html">envs</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">policy</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#basecarlapolicy">BaseCarlaPolicy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#autopolicy">AutoPolicy</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.html">data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eval.html">eval</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">utils</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/index.html">FAQ</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DI-drive</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">API Doc</a> &raquo;</li>
+        
+      <li>policy</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/api_doc/policy.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="policy">
+<h1>policy<a class="headerlink" href="#policy" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<div class="section" id="basecarlapolicy">
+<h2>BaseCarlaPolicy<a class="headerlink" href="#basecarlapolicy" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="core.policy.base_carla_policy.BaseCarlaPolicy">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">core.policy.base_carla_policy.</span></span><span class="sig-name descname"><span class="pre">BaseCarlaPolicy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/policy/base_carla_policy.html#BaseCarlaPolicy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.base_carla_policy.BaseCarlaPolicy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for Carla policy interact with environments. The policy is defined in standard DI-engine form which
+has several modes to change its running form, and can interact with several environments controlled by a
+<code class="docutils literal notranslate"><span class="pre">EnvManager</span></code>. The policy is designed to support Supervised Learning, Reinforcement Learning and other method
+as well as expert policy, each may have different kinds of interfaces and modes.</p>
+<p>By default, it has 3 modes: <cite>learn</cite>, <cite>collect</cite> and <cite>eval</cite>. To set policy to a specific mode, call the policy
+with <code class="docutils literal notranslate"><span class="pre">policy.xxx_mode</span></code>. Then all the supported interfaces can be defined in <code class="docutils literal notranslate"><span class="pre">_interface_xxx</span></code> or <code class="docutils literal notranslate"><span class="pre">_interfaces</span></code>
+method. For example, calling <code class="docutils literal notranslate"><span class="pre">policy.collect_mode.forward</span></code> is equal to calling <code class="docutils literal notranslate"><span class="pre">policy._forward_collect</span></code>.
+Some mode-specific interfaces may be defined specially by user.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Interfaces</dt>
+<dd class="field-odd"><p>init, forward, reset, process_transition, get_train_sample</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="autopolicy">
+<h2>AutoPolicy<a class="headerlink" href="#autopolicy" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="core.policy.AutoPolicy">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">core.policy.</span></span><span class="sig-name descname"><span class="pre">AutoPolicy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoPolicy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoPolicy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Autonomous Driving policy follows target waypoint in env observations. It uses a Vehicle PID controller
+for each env with a specific env id related to it. In each updating, all envs should use the correct env id
+to make the PID controller works well, and the controller should be reset when starting a new episode.</p>
+<p>The policy has 2 modes: <cite>collect</cite> and <cite>eval</cite>. Their interfaces operate in the same way. The only difference is
+that in <cite>collect</cite> mode the <code class="docutils literal notranslate"><span class="pre">forward</span></code> method may add noises to steer if set in config.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>cfg (Dict): Config Dict.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Interfaces</dt>
+<dd class="field-even"><p>init, reset, forward</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="core.policy.AutoPolicy._forward_collect">
+<span class="sig-name descname"><span class="pre">_forward_collect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoPolicy._forward_collect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoPolicy._forward_collect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Running forward to get control signal of <cite>collect</cite> mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>data (Dict): Input dict, with env id in keys and related observations in values,</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dict: Control dict stored in values for each provided env id.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.policy.AutoPolicy._forward_eval">
+<span class="sig-name descname"><span class="pre">_forward_eval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoPolicy._forward_eval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoPolicy._forward_eval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Running forward to get control signal of <cite>eval</cite> mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>data (Dict): Input dict, with env id in keys and related observations in values,</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dict: Control dict stored in values for each provided env id.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.policy.AutoPolicy._init_collect">
+<span class="sig-name descname"><span class="pre">_init_collect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoPolicy._init_collect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoPolicy._init_collect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize policy instance of <cite>collect</cite> mode. It will get default settings in config and clear all saved
+controllers and running status.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.policy.AutoPolicy._init_eval">
+<span class="sig-name descname"><span class="pre">_init_eval</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoPolicy._init_eval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoPolicy._init_eval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize policy instance of <cite>eval</cite> mode. It will get default settings in config and clear all saved
+controllers andrunning status.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.policy.AutoPolicy._reset_collect">
+<span class="sig-name descname"><span class="pre">_reset_collect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoPolicy._reset_collect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoPolicy._reset_collect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset policy of <cite>collect</cite> mode. It will reset the controllers in provided env id. Noise will be add
+to the controller according to config.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>data_id (List[int], optional): List of env id to reset. Defaults to None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.policy.AutoPolicy._reset_eval">
+<span class="sig-name descname"><span class="pre">_reset_eval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoPolicy._reset_eval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoPolicy._reset_eval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset policy of <cite>eval</cite> mode. It will reset the controllers in providded env id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>data_id (List[int], optional): List of env id to reset. Defaults to None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="models.html" class="btn btn-neutral float-right" title="models" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="envs.html" class="btn btn-neutral float-left" title="envs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, OpenDILab.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,332 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Auto policy running and visualization &mdash; DI-drive 0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Simple Imitation Learning" href="il_tutorial.html" />
+    <link rel="prev" title="Carla tutorial" href="carla_tutorial.html" />
+    <link href="../_static/css/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DI-drive
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorial</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="core_concepts.html">Core Concepts and Processes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="carla_tutorial.html">Carla tutorial</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Auto policy running and visualization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#running-with-start-and-target-waypoint">Running with start and target waypoint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-with-scenario-in-casezoo">Running with scenario in Casezoo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#visualization">Visualization</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="il_tutorial.html">Simple Imitation Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rl_tutorial.html">Simple Reinforcement Learning</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../features/index.html">Features</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../model_zoo/index.html">Model Zoo</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api_doc/index.html">API Doc</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/index.html">FAQ</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DI-drive</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Tutorial</a> &raquo;</li>
+        
+      <li>Auto policy running and visualization</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/tutorial/auto_run.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="auto-policy-running-and-visualization">
+<h1>Auto policy running and visualization<a class="headerlink" href="#auto-policy-running-and-visualization" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<p>DI-drive provides an <a class="reference internal" href="../api_doc/policy.html#core.policy.AutoPolicy" title="core.policy.auto_policy.AutoPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">AutoPolicy</span></code></a> which can navigate through
+a target waypoint and command in observation. It can be used for data sampling, map and sensor data
+visualization, reward design, etc.</p>
+<p>To quickly run the demo, start a Carla server first. Then you can connect to the server and run policy.</p>
+<div class="section" id="running-with-start-and-target-waypoint">
+<h2>Running with start and target waypoint<a class="headerlink" href="#running-with-start-and-target-waypoint" title="Permalink to this headline">¶</a></h2>
+<p>In this part, the policy runs in <a class="reference internal" href="../api_doc/envs.html#core.envs.SimpleCarlaEnv" title="core.envs.simple_carla_env.SimpleCarlaEnv"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimpleCarlaEnv</span></code></a>.
+It follows a route calculated by provided start and end waypoint index when calling <code class="docutils literal notranslate"><span class="pre">reset</span></code> method.
+Simply run the following command. You may need to change the Carla server host and port in <code class="docutils literal notranslate"><span class="pre">auto_run.py</span></code>
+first.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> ./demo/auto_run
+python auto_run.py
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">autorun_config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">env</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="o">...</span>
+    <span class="p">),</span>
+    <span class="n">server</span><span class="o">=</span><span class="p">[</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">carla_host</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="n">carla_ports</span><span class="o">=</span><span class="p">[</span><span class="mi">9000</span><span class="p">,</span> <span class="mi">9002</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+    <span class="p">],</span>
+    <span class="n">policy</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="o">...</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="running-with-scenario-in-casezoo">
+<h2>Running with scenario in Casezoo<a class="headerlink" href="#running-with-scenario-in-casezoo" title="Permalink to this headline">¶</a></h2>
+<p>In this part, the policy runs in <a class="reference internal" href="../api_doc/envs.html#core.envs.ScenarioCarlaEnv" title="core.envs.scenario_carla_env.ScenarioCarlaEnv"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScenarioCarlaEnv</span></code></a>.
+It runs with provided Casezoo route and config file, or the single scenario name.
+Check <a class="reference external" href="https://github.com/opendilab/DI-drive/blob/main//docs/casezoo_instruction.md">Casezoo instruction</a> for all scenario name and description in Casezoo.</p>
+<p>Simply run the following command.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> ./demo/auto_run
+python auto_run_case.py --host &lt;your Carla server host&gt; --port &lt;your Carla server port&gt; <span class="se">\</span>
+<span class="c1"># Running route with scenario</span>
+--route &lt;route .xml file&gt; &lt;route .json config file&gt;
+<span class="c1"># Running single scenario</span>
+--scenario &lt;scenario name&gt;
+</pre></div>
+</div>
+</div>
+<div class="section" id="visualization">
+<h2>Visualization<a class="headerlink" href="#visualization" title="Permalink to this headline">¶</a></h2>
+<p>We provide two default sensor data to visualize. You can switch the shown image in visualizer by change the
+‘type’ key in the visualize config. The sensor config can be change them whatever you want.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">autorun_config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">env</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">simulator</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="o">...</span>
+            <span class="n">obs</span><span class="o">=</span><span class="p">(</span>
+                <span class="nb">dict</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;rgb&#39;</span><span class="p">,</span>
+                    <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;rgb&#39;</span><span class="p">,</span>
+                    <span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">],</span>
+                    <span class="n">position</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">5.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">2.8</span><span class="p">],</span>
+                    <span class="n">rotation</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">15</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                <span class="p">),</span>
+                <span class="nb">dict</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;birdview&#39;</span><span class="p">,</span>
+                    <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;bev&#39;</span><span class="p">,</span>
+                    <span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="mi">500</span><span class="p">,</span> <span class="mi">500</span><span class="p">],</span>
+                    <span class="n">pixels_per_meter</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+                <span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">),</span>
+        <span class="n">visualize</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;birdview&#39;</span><span class="p">,</span>
+            <span class="n">outputs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;show&#39;</span><span class="p">]</span>
+        <span class="p">),</span>
+    <span class="p">),</span>
+    <span class="o">...</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>If everything works well you can see running screen like this.</p>
+<div class="figure align-center" id="id1">
+<a class="reference internal image-reference" href="../_images/auto_run_rgb.png"><img alt="auto_run_rgb" src="../_images/auto_run_rgb.png" style="width: 500px;" /></a>
+<p class="caption"><span class="caption-text">Visualization of RGB camera</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-center" id="id2">
+<a class="reference internal image-reference" href="../_images/auto_run_bev.png"><img alt="auto_run_bev" src="../_images/auto_run_bev.png" style="width: 500px;" /></a>
+<p class="caption"><span class="caption-text">Visualization of Bird-eye View image</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="il_tutorial.html" class="btn btn-neutral float-right" title="Simple Imitation Learning" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="carla_tutorial.html" class="btn btn-neutral float-left" title="Carla tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, OpenDILab.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

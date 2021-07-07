@@ -1,0 +1,298 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Visualization &mdash; DI-drive 0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Datasets" href="datasets.html" />
+    <link rel="prev" title="Policy Features" href="policy_feature.html" />
+    <link href="../_static/css/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DI-drive
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/index.html">Tutorial</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Features</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="simulator_feature.html">Simulator Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="policy_feature.html">Policy Features</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Visualization</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="datasets.html">Datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="carla_benchmark.html">Benchmark Evaluation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="casezoo.html">Casezoo Evaluation</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../model_zoo/index.html">Model Zoo</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api_doc/index.html">API Doc</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/index.html">FAQ</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DI-drive</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Features</a> &raquo;</li>
+        
+      <li>Visualization</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/features/visualize.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="visualization">
+<h1>Visualization<a class="headerlink" href="#visualization" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<p>DI-drive builds an online visualizer for the user to check the situation of a running simulator and save gif/video files. The
+visualizer is added in the environment’s <code class="xref py py-func docutils literal notranslate"><span class="pre">render</span></code>. When calling this method, if
+a visualizer is created by config settings, it will take a sensor data as canvas and put some info text onto it, including
+actions, road options, agent state, reward, traffic light records and so on. Then
+the canvas can be showed in the screen or saved as a gif or video file to watch.
+A visualizer can be customized by config.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">visualizer</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="nb">type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">show_text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">outputs</span><span class="o">=</span><span class="nb">list</span><span class="p">(),</span>
+    <span class="n">save_dir</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="n">frame_skip</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><dl class="simple">
+<dt>type</dt><dd><p>The observation tag in simulator config’s <code class="docutils literal notranslate"><span class="pre">obs</span></code> key. Visualizer use it as a canvas image.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>show_text</dt><dd><p>Whether to add text above the image. Text information is found in observation or action dict.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>outputs</dt><dd><p>Output types of visualizer, can be one or more items of [‘show’, ‘gif’, ‘video’]</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>save_dir</dt><dd><p>Folder path to save visualized files.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>frame_skip</dt><dd><p>The number of frames skipped between two steps when visualizing. For example, if set to 2, the painting and showing
+will be run every 3 frames.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Here we show some visualization results. You can check how to get these visualizasions in <a class="reference external" href="../tutorial/auto_run.html">auto run</a></p>
+<div class="figure align-center" id="id1">
+<a class="reference internal image-reference" href="../_images/auto_run_rgb.png"><img alt="auto_run_rgb" src="../_images/auto_run_rgb.png" style="width: 500px;" /></a>
+<p class="caption"><span class="caption-text">Visualization of RGB camera</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-center" id="id2">
+<a class="reference internal image-reference" href="../_images/auto_run_bev.png"><img alt="auto_run_bev" src="../_images/auto_run_bev.png" style="width: 500px;" /></a>
+<p class="caption"><span class="caption-text">Visualization of Bird-eye View image</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="datasets.html" class="btn btn-neutral float-right" title="Datasets" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="policy_feature.html" class="btn btn-neutral float-left" title="Policy Features" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, OpenDILab.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
