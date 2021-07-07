@@ -31,7 +31,7 @@ an open-source Autonomous Drining simualtor to operate driving simualtion.
 - DI-engine
 - Carla Python API
 
-Please refer to the [documentation](https://opendilab.github.io/DI-drive/index.html) for details about installation and user guide of **DI-drive**.
+Please refer to the [documentation](https://opendilab.github.io/DI-drive/) for details about installation and user guide of **DI-drive**.
 We provide IL & RL tutorials and full guidance for quickly running existing policies for beginners.
 
 Please refer to [FAQ](https://opendilab.github.io/DI-drive/faq/index.html) for frequently asked questions.
