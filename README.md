@@ -21,7 +21,7 @@ and most importantly, to **put these all together!**
 
 **DI-drive** uses [DI-engine](https://github.com/opendilab/DI-engine), a Reinforcement Learning
 platform to build most of the running modules and demos. **DI-drive** currently supports [Carla](http://carla.org),
-an open-source Autonomous Drining simualtor to operate driving simualtion.
+an open-source Autonomous Driving simulator to operate driving simulation.
 
 ## Installation
 
@@ -49,7 +49,7 @@ Please refer to [FAQ](https://opendilab.github.io/DI-drive/faq/index.html) for f
 
 **DI-drive Casezoo** is a scenario set for training and testing of Autonomous Driving policy in simulator.
 **Casezoo** combines data collected by real vehicles and Shanghai Lingang road license test Scenarios.
-**Casezoo** supports both evaluating and training, whick makes the simulation closer to real driving.
+**Casezoo** supports both evaluating and training, which makes the simulation closer to real driving.
 
 Please see [casezoo instruction](docs/casezoo_instruction.md) for details about **Casezoo**.
 
