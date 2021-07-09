@@ -1,5 +1,14 @@
 <img src="./docs/figs/DI-drive.png" width="200" alt="icon"/>
 
+---
+
+[![GitHub issues](https://img.shields.io/github/issues/opendilab/DI-drive)](https://github.com/opendilab/DI-drive/issues)
+[![GitHub stars](https://img.shields.io/github/stars/opendilab/DI-drive)](https://github.com/opendilab/DI-drive/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/opendilab/DI-drive)](https://github.com/opendilab/DI-drive/network)
+[![GitHub license](https://img.shields.io/github/license/opendilab/DI-drive)](https://github.com/opendilab/DI-drive/blob/master/LICENSE)
+
+Updated on 2021.07.08 DI-drive-v0.1.0 (beta)
+
 DI-drive - Decision Intelligence Platform for Autonomous Driving simulation.
 
 DI-drive is application platform under [OpenDILab](http://opendilab.org/)
@@ -59,7 +68,7 @@ We appreciate all contributions to improve DI-drive, both algorithms and system 
 
 ## License
 
-DI-engine released under the Apache 2.0 license.
+DI-drive released under the Apache 2.0 license.
 ## Citation
 
 ```latex
