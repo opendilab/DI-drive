@@ -2,9 +2,13 @@
 
 ---
 
-[![GitHub issues](https://img.shields.io/github/issues/opendilab/DI-drive)](https://github.com/opendilab/DI-drive/issues)
+![GitHub Org's stars](https://img.shields.io/github/stars/opendilab)
 [![GitHub stars](https://img.shields.io/github/stars/opendilab/DI-drive)](https://github.com/opendilab/DI-drive/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/opendilab/DI-drive)](https://github.com/opendilab/DI-drive/network)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/opendilab/DI-drive)
+[![GitHub issues](https://img.shields.io/github/issues/opendilab/DI-drive)](https://github.com/opendilab/DI-drive/issues)
+[![GitHub pulls](https://img.shields.io/github/issues-pr/opendilab/DI-drive)](https://github.com/opendilab/DI-drive/pulls)
+[![Contributors](https://img.shields.io/github/contributors/opendilab/DI-drive)](https://github.com/opendilab/DI-drive/graphs/contributors)
 [![GitHub license](https://img.shields.io/github/license/opendilab/DI-drive)](https://github.com/opendilab/DI-drive/blob/master/LICENSE)
 
 Updated on 2021.07.08 DI-drive-v0.1.0 (beta)
