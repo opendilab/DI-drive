@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -31,7 +29,6 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
@@ -227,20 +224,24 @@
 <div class="viewcode-block" id="CarlaSimulator"><a class="viewcode-back" href="../../../api_doc/simulators.html#core.simulators.CarlaSimulator">[docs]</a><span class="k">class</span> <span class="nc">CarlaSimulator</span><span class="p">(</span><span class="n">BaseSimulator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Common Carla Simulator.</span>
-<span class="sd">    The simulator contains a hero actor to control, and can add npc vehicles, pedestrians,</span>
-<span class="sd">    change weathers and maps, and set up sensors of the hero actor due to config.</span>
-<span class="sd">    The simulator makes a client to Carla server, and interact with server to get informations</span>
-<span class="sd">    and apply control signals. It can get state, sensor data, navigation and information, and</span>
-<span class="sd">    record running status including collision, running red light, running off road, running in</span>
-<span class="sd">    wrong direction, distance and timeout to end waypoint, etc..</span>
+<span class="sd">    The simulator creates a client to Carla server, and is able to get observation, send</span>
+<span class="sd">    control signals to the hero vehicle and record essential data from the simulated world.</span>
+<span class="sd">    In the intialization period, the simulator may change the environment parameters including</span>
+<span class="sd">    maps and weathers and can add actors (including NPC vehicles, pedestrians as well as sensors</span>
+<span class="sd">    mounted on the hero vehicle),</span>
+<span class="sd">    During the running period the simulator will achieve running state and information about</span>
+<span class="sd">    the hero vehicle (such as running speed, angle, navigation goal and reference path), data</span>
+<span class="sd">    from the sensors (such as camera images, lidar points) as well as runnign status(including</span>
+<span class="sd">    collision, running off road, red light, distance and timeout to end waypoint).</span>
 
-<span class="sd">    The simulator stores and takes some information from a static class ``CarlaDataProvider``, which</span>
-<span class="sd">    can avoid frequently sending message toCarla server to speed up.</span>
+<span class="sd">    Once it is created, it will set up Carla client and set the parameters in the configuration</span>
+<span class="sd">    dict as its default. When actually calling the ``init`` method to start an episode, some of</span>
+<span class="sd">    the configurations may be changed by the input arguments while others remain by default.</span>
 
-<span class="sd">    It uses Carla version 0.9.9.</span>
+<span class="sd">    The simulator stores and gets some information from a static class ``CarlaDataProvider``</span>
+<span class="sd">    to avoid frequently sending message to Carla server and speed up.</span>
 
-<span class="sd">    When created, it will set up Carla client due to arguments, set simulator basic configurations used all around</span>
-<span class="sd">    its lifetime, and set some default running configurations. The latter could be changed in each episode.</span>
+<span class="sd">    Up to now, it uses Carla version 0.9.9.</span>
 
 <span class="sd">    If no traffic manager port is provided, it will find random free port in system.</span>
 

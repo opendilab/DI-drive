@@ -11,7 +11,7 @@ in order to be suitable for various kinds of training and test procedures, i.e. 
 may act differently when sampling data and evaluating, a Supervised Learning policy may have different outputs
 when labels are not equal to control signal.
 As a result of this, DI-drive follows the policy definiation of 
-`DI-engine <https://opendilab.github.io/DI-engine/index.html>`_ which defines
+`DI-engine <http://open-xlab.pages.gitlab.bj.sensetime.com/cell/nerveX/>`_ which defines
 three modes: *collect*, *eval* and *learn*. Different modes of policy may have different
 behavior but share some core modules such as a Neural Network computation graph, and can be
 called with the same interfaces.

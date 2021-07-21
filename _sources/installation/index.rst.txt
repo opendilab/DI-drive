@@ -24,7 +24,7 @@ Get and install DI-engine
 
 We use DI-engine —— distributed Reinforcement Learning system to train and evaluate RL agent.
 
-Follow `DI-engine installation <https://opendilab.github.io/DI-engine/installation/index.html>`_ guide to install DI-engine.
+Follow `DI-engine installation <http://open-xlab.pages.gitlab.bj.sensetime.com/cell/nerveX/installation/index.html>`_ guide to install DI-engine.
 
 Or just simply install from PyPI:
 
@@ -39,7 +39,7 @@ First get and download the official repository with the following command line.
 
 .. code-block:: bash
 
-    git clone https://github.com/opendilab/DI-drive.git
+    git clone https://gitlab.bj.sensetime.com/open-XLab/cell/xad.git
 
 You can also look up tags and checkout corresponding historical version.
 

@@ -46,12 +46,15 @@ In short, the new malicious introduced in DI-drive Casezoo compared with Benchma
 Running Guide
 =================
 
-The scenario defines a route to follow in `Town03`, `Town04` and `Town05`, stored in a `.xml` file. There are
-also individual scenarios defined in `python` files. The indivisual scenario can be triggered when hero vehicle
-passes by during navigating in the route. Meanwhile, you can run a single individual scenario in a certain location
-in town maps. They are defined in example `xml` files with specific names at each location. Details of all routes
-and scenarios are shown in
-`Casezoo instruction <https://github.com/opendilab/DI-drive/blob/main//docs/casezoo_instruction.md>`_.
+The scenario defines a route to follow in `Town03`, `Town04` and `Town05`. The route is stored in a `.xml` file.
+There are also individual scenarios defined in `python` files. The indivisual scenario can be triggered when hero
+vehicle passes by during navigating in the route. The configuarions os these scenarios in each route is stored in
+a `.json` file with the same file name as the route file.
+
+Meanwhile, you can run a single individual scenario in a certain location in town maps. They are defined in example
+`xml` files. Each type of scenario possess sevaral cases at a specific location and a name saved in the `xml` file.
+Details of all routes and scenarios are shown in
+`Casezoo instruction <https://gitlab.bj.sensetime.com/open-XLab/cell/xad/blob/dev/docs/casezoo_instruction.md>`_.
 
 DI-drive defines :class:`ScenarioCarlaEnv <core.envs.scenario_carla_env.ScenarioCarlaEnv>`, which uses
 :class:`ScenarioSimulator <core.simualtors.carla_scenario_simulator.ScenarioSimulator>` to run Casezoo.
@@ -84,6 +87,12 @@ Simple usage of single scenario is shown follow:
 
     carla_env = ScenarioCarlaEnv(env_cfg, host, port)
     obs = carla_env.reset(config)
+
+.. note::
+
+    The name of single scenario (such as **CutIn**) is different from the name of a scenario case
+    (such as **CutIn_1**). The former only defines the type of scenario, the latter can be run as a
+    single case to start an episode in scenario environments.
 
 
 You can run auto policy in scenario environments with ``demo/auto_run/auto_run_case.py``

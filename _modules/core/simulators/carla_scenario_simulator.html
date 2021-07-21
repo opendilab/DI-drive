@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -31,7 +29,6 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
@@ -188,12 +185,15 @@
 
 <div class="viewcode-block" id="CarlaScenarioSimulator"><a class="viewcode-back" href="../../../api_doc/simulators.html#core.simulators.CarlaScenarioSimulator">[docs]</a><span class="k">class</span> <span class="nc">CarlaScenarioSimulator</span><span class="p">(</span><span class="n">CarlaSimulator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Carla simualtor used to run scenarios.</span>
-<span class="sd">    The simulator loads configs of provided scenario, and create hero actor, npc vehicles, walkers, world map</span>
-<span class="sd">    according to it. The sensors and running status are set as common Carla simulator.</span>
+<span class="sd">    Simualtor used to run scenarios in Carla.</span>
+<span class="sd">    The simulator loads the config instance of the provided scenario to start simulation.</span>
+<span class="sd">    It can create hero actor, NPC vehicles, walkers, world map according to it and the</span>
+<span class="sd">    configuration dict. The modification of sensors and planners, and the running status</span>
+<span class="sd">    and informations you can get from it are set the same as ``CarlaSimulator``.</span>
 
-<span class="sd">    When created, it will set up Carla client due to arguments, set simulator basic configurations used all around</span>
-<span class="sd">    its lifetime, and set some default running configurations.</span>
+<span class="sd">    When created, it will set up Carla client and store default configuration the same as</span>
+<span class="sd">    ``CarlaSimulator``, and it can also be change by the input arguments of the ``init``</span>
+<span class="sd">    method.</span>
 
 <span class="sd">    If no traffic manager port is provided, it will find random free port in system.</span>
 

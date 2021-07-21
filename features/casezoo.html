@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -31,7 +29,6 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -230,13 +227,15 @@ This makes the RL training quickly and conveniently for users.</p>
 </div>
 <div class="section" id="running-guide">
 <h2>Running Guide<a class="headerlink" href="#running-guide" title="Permalink to this headline">¶</a></h2>
-<p>The scenario defines a route to follow in <cite>Town03</cite>, <cite>Town04</cite> and <cite>Town05</cite>, stored in a <cite>.xml</cite> file. There are
-also individual scenarios defined in <cite>python</cite> files. The indivisual scenario can be triggered when hero vehicle
-passes by during navigating in the route. Meanwhile, you can run a single individual scenario in a certain location
-in town maps. They are defined in example <cite>xml</cite> files with specific names at each location. Details of all routes
-and scenarios are shown in
-<a class="reference external" href="https://github.com/opendilab/DI-drive/blob/main//docs/casezoo_instruction.md">Casezoo instruction</a>.</p>
-<p>DI-drive defines <a class="reference internal" href="../api_doc/envs.html#core.envs.ScenarioCarlaEnv" title="core.envs.scenario_carla_env.ScenarioCarlaEnv"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScenarioCarlaEnv</span></code></a>, which uses
+<p>The scenario defines a route to follow in <cite>Town03</cite>, <cite>Town04</cite> and <cite>Town05</cite>. The route is stored in a <cite>.xml</cite> file.
+There are also individual scenarios defined in <cite>python</cite> files. The indivisual scenario can be triggered when hero
+vehicle passes by during navigating in the route. The configuarions os these scenarios in each route is stored in
+a <cite>.json</cite> file with the same file name as the route file.</p>
+<p>Meanwhile, you can run a single individual scenario in a certain location in town maps. They are defined in example
+<cite>xml</cite> files. Each type of scenario possess sevaral cases at a specific location and a name saved in the <cite>xml</cite> file.
+Details of all routes and scenarios are shown in
+<a class="reference external" href="https://gitlab.bj.sensetime.com/open-XLab/cell/xad/blob/dev/docs/casezoo_instruction.md">Casezoo instruction</a>.</p>
+<p>DI-drive defines <code class="xref py py-class docutils literal notranslate"><span class="pre">ScenarioCarlaEnv</span></code>, which uses
 <code class="xref py py-class docutils literal notranslate"><span class="pre">ScenarioSimulator</span></code> to run Casezoo.
 You need to parse the scenario files and get a configuration instance, then pass the configuration into
 the <code class="docutils literal notranslate"><span class="pre">reset</span></code> method of a <code class="docutils literal notranslate"><span class="pre">ScenarioEnv</span></code>. The environment is able to get the scenario type by itself
@@ -262,6 +261,12 @@ common RL environments to train and eval.</p>
 <span class="n">carla_env</span> <span class="o">=</span> <span class="n">ScenarioCarlaEnv</span><span class="p">(</span><span class="n">env_cfg</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
 <span class="n">obs</span> <span class="o">=</span> <span class="n">carla_env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The name of single scenario (such as <strong>CutIn</strong>) is different from the name of a scenario case
+(such as <strong>CutIn_1</strong>). The former only defines the type of scenario, the latter can be run as a
+single case to start an episode in scenario environments.</p>
 </div>
 <p>You can run auto policy in scenario environments with <code class="docutils literal notranslate"><span class="pre">demo/auto_run/auto_run_case.py</span></code></p>
 </div>

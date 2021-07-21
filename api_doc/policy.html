@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -31,7 +29,6 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -199,8 +196,8 @@
 <div class="section" id="basecarlapolicy">
 <h2>BaseCarlaPolicy<a class="headerlink" href="#basecarlapolicy" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt class="sig sig-object py" id="core.policy.base_carla_policy.BaseCarlaPolicy">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">core.policy.base_carla_policy.</span></span><span class="sig-name descname"><span class="pre">BaseCarlaPolicy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/policy/base_carla_policy.html#BaseCarlaPolicy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.base_carla_policy.BaseCarlaPolicy" title="Permalink to this definition">¶</a></dt>
+<dt id="core.policy.base_carla_policy.BaseCarlaPolicy">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">core.policy.base_carla_policy.</span></code><code class="sig-name descname"><span class="pre">BaseCarlaPolicy</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/policy/base_carla_policy.html#BaseCarlaPolicy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.base_carla_policy.BaseCarlaPolicy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for Carla policy interact with environments. The policy is defined in standard DI-engine form which
 has several modes to change its running form, and can interact with several environments controlled by a
 <code class="docutils literal notranslate"><span class="pre">EnvManager</span></code>. The policy is designed to support Supervised Learning, Reinforcement Learning and other method
@@ -220,8 +217,8 @@ Some mode-specific interfaces may be defined specially by user.</p>
 <div class="section" id="autopolicy">
 <h2>AutoPolicy<a class="headerlink" href="#autopolicy" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt class="sig sig-object py" id="core.policy.AutoPolicy">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">core.policy.</span></span><span class="sig-name descname"><span class="pre">AutoPolicy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoPolicy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoPolicy" title="Permalink to this definition">¶</a></dt>
+<dt id="core.policy.AutoPolicy">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">core.policy.</span></code><code class="sig-name descname"><span class="pre">AutoPolicy</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoPolicy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoPolicy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Autonomous Driving policy follows target waypoint in env observations. It uses a Vehicle PID controller
 for each env with a specific env id related to it. In each updating, all envs should use the correct env id
 to make the PID controller works well, and the controller should be reset when starting a new episode.</p>
@@ -238,8 +235,8 @@ that in <cite>collect</cite> mode the <code class="docutils literal notranslate"
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="core.policy.AutoPolicy._forward_collect">
-<span class="sig-name descname"><span class="pre">_forward_collect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoPolicy._forward_collect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoPolicy._forward_collect" title="Permalink to this definition">¶</a></dt>
+<dt id="core.policy.AutoPolicy._forward_collect">
+<code class="sig-name descname"><span class="pre">_forward_collect</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoPolicy._forward_collect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoPolicy._forward_collect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Running forward to get control signal of <cite>collect</cite> mode.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Arguments</dt>
@@ -254,8 +251,8 @@ that in <cite>collect</cite> mode the <code class="docutils literal notranslate"
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="core.policy.AutoPolicy._forward_eval">
-<span class="sig-name descname"><span class="pre">_forward_eval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoPolicy._forward_eval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoPolicy._forward_eval" title="Permalink to this definition">¶</a></dt>
+<dt id="core.policy.AutoPolicy._forward_eval">
+<code class="sig-name descname"><span class="pre">_forward_eval</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoPolicy._forward_eval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoPolicy._forward_eval" title="Permalink to this definition">¶</a></dt>
 <dd><p>Running forward to get control signal of <cite>eval</cite> mode.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Arguments</dt>
@@ -270,22 +267,22 @@ that in <cite>collect</cite> mode the <code class="docutils literal notranslate"
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="core.policy.AutoPolicy._init_collect">
-<span class="sig-name descname"><span class="pre">_init_collect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoPolicy._init_collect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoPolicy._init_collect" title="Permalink to this definition">¶</a></dt>
+<dt id="core.policy.AutoPolicy._init_collect">
+<code class="sig-name descname"><span class="pre">_init_collect</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoPolicy._init_collect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoPolicy._init_collect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize policy instance of <cite>collect</cite> mode. It will get default settings in config and clear all saved
 controllers and running status.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="core.policy.AutoPolicy._init_eval">
-<span class="sig-name descname"><span class="pre">_init_eval</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoPolicy._init_eval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoPolicy._init_eval" title="Permalink to this definition">¶</a></dt>
+<dt id="core.policy.AutoPolicy._init_eval">
+<code class="sig-name descname"><span class="pre">_init_eval</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoPolicy._init_eval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoPolicy._init_eval" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize policy instance of <cite>eval</cite> mode. It will get default settings in config and clear all saved
 controllers andrunning status.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="core.policy.AutoPolicy._reset_collect">
-<span class="sig-name descname"><span class="pre">_reset_collect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoPolicy._reset_collect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoPolicy._reset_collect" title="Permalink to this definition">¶</a></dt>
+<dt id="core.policy.AutoPolicy._reset_collect">
+<code class="sig-name descname"><span class="pre">_reset_collect</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoPolicy._reset_collect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoPolicy._reset_collect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reset policy of <cite>collect</cite> mode. It will reset the controllers in provided env id. Noise will be add
 to the controller according to config.</p>
 <dl class="field-list simple">
@@ -298,8 +295,8 @@ to the controller according to config.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="core.policy.AutoPolicy._reset_eval">
-<span class="sig-name descname"><span class="pre">_reset_eval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoPolicy._reset_eval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoPolicy._reset_eval" title="Permalink to this definition">¶</a></dt>
+<dt id="core.policy.AutoPolicy._reset_eval">
+<code class="sig-name descname"><span class="pre">_reset_eval</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoPolicy._reset_eval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoPolicy._reset_eval" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reset policy of <cite>eval</cite> mode. It will reset the controllers in providded env id.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Arguments</dt>

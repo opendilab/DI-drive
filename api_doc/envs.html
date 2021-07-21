@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -31,7 +29,6 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -202,8 +199,8 @@
 <div class="section" id="basecarlaenv">
 <h2>BaseCarlaEnv<a class="headerlink" href="#basecarlaenv" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt class="sig sig-object py" id="core.envs.BaseCarlaEnv">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">core.envs.</span></span><span class="sig-name descname"><span class="pre">BaseCarlaEnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/envs/base_carla_env.html#BaseCarlaEnv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.BaseCarlaEnv" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.BaseCarlaEnv">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">core.envs.</span></code><code class="sig-name descname"><span class="pre">BaseCarlaEnv</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/envs/base_carla_env.html#BaseCarlaEnv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.BaseCarlaEnv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for environments. It is inherited from <cite>gym.Env</cite> and uses the same interfaces.
 All Carla Env class is supposed to inherit from this class.</p>
 <dl class="simple">
@@ -221,26 +218,26 @@ All Carla Env class is supposed to inherit from this class.</p>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="core.envs.BaseCarlaEnv.close">
-<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/envs/base_carla_env.html#BaseCarlaEnv.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.BaseCarlaEnv.close" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.BaseCarlaEnv.close">
+<em class="property"><span class="pre">abstract</span> </em><code class="sig-name descname"><span class="pre">close</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/envs/base_carla_env.html#BaseCarlaEnv.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.BaseCarlaEnv.close" title="Permalink to this definition">¶</a></dt>
 <dd><p>Release all resources in environment and close.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="core.envs.BaseCarlaEnv.reset">
-<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Any</span><a class="reference internal" href="../_modules/core/envs/base_carla_env.html#BaseCarlaEnv.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.BaseCarlaEnv.reset" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.BaseCarlaEnv.reset">
+<em class="property"><span class="pre">abstract</span> </em><code class="sig-name descname"><span class="pre">reset</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Any</span><a class="reference internal" href="../_modules/core/envs/base_carla_env.html#BaseCarlaEnv.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.BaseCarlaEnv.reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reset current environment.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="core.envs.BaseCarlaEnv.seed">
-<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">seed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/envs/base_carla_env.html#BaseCarlaEnv.seed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.BaseCarlaEnv.seed" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.BaseCarlaEnv.seed">
+<em class="property"><span class="pre">abstract</span> </em><code class="sig-name descname"><span class="pre">seed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/envs/base_carla_env.html#BaseCarlaEnv.seed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.BaseCarlaEnv.seed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set random seed.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="core.envs.BaseCarlaEnv.step">
-<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Any</span><a class="reference internal" href="../_modules/core/envs/base_carla_env.html#BaseCarlaEnv.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.BaseCarlaEnv.step" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.BaseCarlaEnv.step">
+<em class="property"><span class="pre">abstract</span> </em><code class="sig-name descname"><span class="pre">step</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Any</span><a class="reference internal" href="../_modules/core/envs/base_carla_env.html#BaseCarlaEnv.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.BaseCarlaEnv.step" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run one step of the environment and return the observation dict.</p>
 </dd></dl>
 
@@ -250,8 +247,8 @@ All Carla Env class is supposed to inherit from this class.</p>
 <div class="section" id="simplecarlaenv">
 <h2>SimpleCarlaEnv<a class="headerlink" href="#simplecarlaenv" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt class="sig sig-object py" id="core.envs.SimpleCarlaEnv">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">core.envs.</span></span><span class="sig-name descname"><span class="pre">SimpleCarlaEnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'localhost'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">9000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tm_port</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/envs/simple_carla_env.html#SimpleCarlaEnv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.SimpleCarlaEnv" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.SimpleCarlaEnv">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">core.envs.</span></code><code class="sig-name descname"><span class="pre">SimpleCarlaEnv</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'localhost'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">9000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tm_port</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/envs/simple_carla_env.html#SimpleCarlaEnv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.SimpleCarlaEnv" title="Permalink to this definition">¶</a></dt>
 <dd><p>A simple deployment of Carla Environment with single hero vehicle. It use <code class="docutils literal notranslate"><span class="pre">CarlaSimulator</span></code> to interact with
 Carla server and gets running status. The observation is obtained from simulator’s state, information and
 sensor data, along with reward which can be calculated and retrived.</p>
@@ -276,14 +273,14 @@ simulator instance. It only creates some data structures to store information wh
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="core.envs.SimpleCarlaEnv.close">
-<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/envs/simple_carla_env.html#SimpleCarlaEnv.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.SimpleCarlaEnv.close" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.SimpleCarlaEnv.close">
+<code class="sig-name descname"><span class="pre">close</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/envs/simple_carla_env.html#SimpleCarlaEnv.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.SimpleCarlaEnv.close" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete simulator &amp; visualizer instances and close the environment.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="core.envs.SimpleCarlaEnv.compute_reward">
-<span class="sig-name descname"><span class="pre">compute_reward</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="../_modules/core/envs/simple_carla_env.html#SimpleCarlaEnv.compute_reward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.SimpleCarlaEnv.compute_reward" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.SimpleCarlaEnv.compute_reward">
+<code class="sig-name descname"><span class="pre">compute_reward</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="../_modules/core/envs/simple_carla_env.html#SimpleCarlaEnv.compute_reward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.SimpleCarlaEnv.compute_reward" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute reward for current frame, with details returned in a dict. In short, in contains goal reward,
 route following reward calculated by route length in current and last frame, some navigation attitude reward
 with respective to target waypoint, and failure reward by checking each failure event.</p>
@@ -295,8 +292,8 @@ with respective to target waypoint, and failure reward by checking each failure 
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="core.envs.SimpleCarlaEnv.get_observations">
-<span class="sig-name descname"><span class="pre">get_observations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><a class="reference internal" href="../_modules/core/envs/simple_carla_env.html#SimpleCarlaEnv.get_observations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.SimpleCarlaEnv.get_observations" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.SimpleCarlaEnv.get_observations">
+<code class="sig-name descname"><span class="pre">get_observations</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><a class="reference internal" href="../_modules/core/envs/simple_carla_env.html#SimpleCarlaEnv.get_observations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.SimpleCarlaEnv.get_observations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get observations from simulator. The sensor data, navigation, state and information in simulator
 are used, while not all these are added into observation dict.</p>
 <dl class="field-list simple">
@@ -307,8 +304,8 @@ are used, while not all these are added into observation dict.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="core.envs.SimpleCarlaEnv.is_failure">
-<span class="sig-name descname"><span class="pre">is_failure</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">bool</span><a class="reference internal" href="../_modules/core/envs/simple_carla_env.html#SimpleCarlaEnv.is_failure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.SimpleCarlaEnv.is_failure" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.SimpleCarlaEnv.is_failure">
+<code class="sig-name descname"><span class="pre">is_failure</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">bool</span><a class="reference internal" href="../_modules/core/envs/simple_carla_env.html#SimpleCarlaEnv.is_failure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.SimpleCarlaEnv.is_failure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if env fails. olliding, being stuck, running light, running off road, running in
 wrong direction according to config. It will certainly happen when time is out.</p>
 <dl class="field-list simple">
@@ -319,8 +316,8 @@ wrong direction according to config. It will certainly happen when time is out.<
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="core.envs.SimpleCarlaEnv.is_success">
-<span class="sig-name descname"><span class="pre">is_success</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">bool</span><a class="reference internal" href="../_modules/core/envs/simple_carla_env.html#SimpleCarlaEnv.is_success"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.SimpleCarlaEnv.is_success" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.SimpleCarlaEnv.is_success">
+<code class="sig-name descname"><span class="pre">is_success</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">bool</span><a class="reference internal" href="../_modules/core/envs/simple_carla_env.html#SimpleCarlaEnv.is_success"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.SimpleCarlaEnv.is_success" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the task succeed. It only happens when hero vehicle is close to target waypoint.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -330,15 +327,15 @@ wrong direction according to config. It will certainly happen when time is out.<
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="core.envs.SimpleCarlaEnv.render">
-<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/envs/simple_carla_env.html#SimpleCarlaEnv.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.SimpleCarlaEnv.render" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.SimpleCarlaEnv.render">
+<code class="sig-name descname"><span class="pre">render</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/envs/simple_carla_env.html#SimpleCarlaEnv.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.SimpleCarlaEnv.render" title="Permalink to this definition">¶</a></dt>
 <dd><p>Render a runtime visualization on screen, save a gif or video according to visualizer config.
 The main canvas is from a specific sensor data. It only works when ‘visualize’ is set in config dict.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="core.envs.SimpleCarlaEnv.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><a class="reference internal" href="../_modules/core/envs/simple_carla_env.html#SimpleCarlaEnv.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.SimpleCarlaEnv.reset" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.SimpleCarlaEnv.reset">
+<code class="sig-name descname"><span class="pre">reset</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><a class="reference internal" href="../_modules/core/envs/simple_carla_env.html#SimpleCarlaEnv.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.SimpleCarlaEnv.reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reset environment to start a new episode, with provided reset params. If there is no simulator, this method will
 create a new simulator instance. The reset param is sent to simulator’s <code class="docutils literal notranslate"><span class="pre">init</span></code> method to reset simulator,
 then reset all statues recording running states, and create a visualizer if needed. It returns the first frame
@@ -351,8 +348,8 @@ observation.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="core.envs.SimpleCarlaEnv.seed">
-<span class="sig-name descname"><span class="pre">seed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/envs/simple_carla_env.html#SimpleCarlaEnv.seed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.SimpleCarlaEnv.seed" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.SimpleCarlaEnv.seed">
+<code class="sig-name descname"><span class="pre">seed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/envs/simple_carla_env.html#SimpleCarlaEnv.seed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.SimpleCarlaEnv.seed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set random seed for environment.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Arguments</dt>
@@ -364,8 +361,8 @@ observation.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="core.envs.SimpleCarlaEnv.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">bool</span><span class="p"><span class="pre">,</span> </span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="../_modules/core/envs/simple_carla_env.html#SimpleCarlaEnv.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.SimpleCarlaEnv.step" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.SimpleCarlaEnv.step">
+<code class="sig-name descname"><span class="pre">step</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">bool</span><span class="p"><span class="pre">,</span> </span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="../_modules/core/envs/simple_carla_env.html#SimpleCarlaEnv.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.SimpleCarlaEnv.step" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run one time step of environment, get observation from simulator and calculate reward. The environment will
 be set to ‘done’ only at success or failure. And if so, all visualizers will end. Its interfaces follow
 the standard definition of <code class="docutils literal notranslate"><span class="pre">gym.Env</span></code>.</p>
@@ -387,8 +384,8 @@ the standard definition of <code class="docutils literal notranslate"><span clas
 <div class="section" id="scenariocarlaenv">
 <h2>ScenarioCarlaEnv<a class="headerlink" href="#scenariocarlaenv" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt class="sig sig-object py" id="core.envs.ScenarioCarlaEnv">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">core.envs.</span></span><span class="sig-name descname"><span class="pre">ScenarioCarlaEnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'localhost'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tm_port</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/envs/scenario_carla_env.html#ScenarioCarlaEnv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.ScenarioCarlaEnv" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.ScenarioCarlaEnv">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">core.envs.</span></code><code class="sig-name descname"><span class="pre">ScenarioCarlaEnv</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'localhost'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tm_port</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/envs/scenario_carla_env.html#ScenarioCarlaEnv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.ScenarioCarlaEnv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Carla Scenario Environment with a single hero vehicle. It uses <code class="docutils literal notranslate"><span class="pre">CarlaScenarioSimulator</span></code> to load scenario
 configurations and interacts with Carla server to get running status. The Env is initialized with a scenario
 config, which could be a route with scenarios or a single scenario. The observation, sensor settings and visualizer
@@ -415,14 +412,14 @@ the simulator instance. It only creates some data structures to store informatio
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="core.envs.ScenarioCarlaEnv.close">
-<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/envs/scenario_carla_env.html#ScenarioCarlaEnv.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.ScenarioCarlaEnv.close" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.ScenarioCarlaEnv.close">
+<code class="sig-name descname"><span class="pre">close</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/envs/scenario_carla_env.html#ScenarioCarlaEnv.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.ScenarioCarlaEnv.close" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete simulator &amp; visualizer instances and close environment.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="core.envs.ScenarioCarlaEnv.compute_reward">
-<span class="sig-name descname"><span class="pre">compute_reward</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/envs/scenario_carla_env.html#ScenarioCarlaEnv.compute_reward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.ScenarioCarlaEnv.compute_reward" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.ScenarioCarlaEnv.compute_reward">
+<code class="sig-name descname"><span class="pre">compute_reward</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/envs/scenario_carla_env.html#ScenarioCarlaEnv.compute_reward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.ScenarioCarlaEnv.compute_reward" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute reward for current frame, and return details in a dict. In short, it contains goal reward,
 route following reward calculated by criteria in current and last frame, and failure reward by checking criteria
 in each frame.</p>
@@ -434,8 +431,8 @@ in each frame.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="core.envs.ScenarioCarlaEnv.get_observations">
-<span class="sig-name descname"><span class="pre">get_observations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/envs/scenario_carla_env.html#ScenarioCarlaEnv.get_observations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.ScenarioCarlaEnv.get_observations" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.ScenarioCarlaEnv.get_observations">
+<code class="sig-name descname"><span class="pre">get_observations</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/envs/scenario_carla_env.html#ScenarioCarlaEnv.get_observations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.ScenarioCarlaEnv.get_observations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get observations from simulator. The sensor data, navigation, state and information in simulator
 are used, while not all these are added into observation dict.</p>
 <dl class="field-list simple">
@@ -446,8 +443,8 @@ are used, while not all these are added into observation dict.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="core.envs.ScenarioCarlaEnv.is_failure">
-<span class="sig-name descname"><span class="pre">is_failure</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">bool</span><a class="reference internal" href="../_modules/core/envs/scenario_carla_env.html#ScenarioCarlaEnv.is_failure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.ScenarioCarlaEnv.is_failure" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.ScenarioCarlaEnv.is_failure">
+<code class="sig-name descname"><span class="pre">is_failure</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">bool</span><a class="reference internal" href="../_modules/core/envs/scenario_carla_env.html#ScenarioCarlaEnv.is_failure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.ScenarioCarlaEnv.is_failure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the task fails. It may happen when behavior tree ends unsuccessfully or some criteria trigger.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -457,8 +454,8 @@ are used, while not all these are added into observation dict.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="core.envs.ScenarioCarlaEnv.is_success">
-<span class="sig-name descname"><span class="pre">is_success</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">bool</span><a class="reference internal" href="../_modules/core/envs/scenario_carla_env.html#ScenarioCarlaEnv.is_success"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.ScenarioCarlaEnv.is_success" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.ScenarioCarlaEnv.is_success">
+<code class="sig-name descname"><span class="pre">is_success</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">bool</span><a class="reference internal" href="../_modules/core/envs/scenario_carla_env.html#ScenarioCarlaEnv.is_success"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.ScenarioCarlaEnv.is_success" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the task succeed. It only happens when behavior tree ends successfully.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -468,15 +465,15 @@ are used, while not all these are added into observation dict.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="core.envs.ScenarioCarlaEnv.render">
-<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/envs/scenario_carla_env.html#ScenarioCarlaEnv.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.ScenarioCarlaEnv.render" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.ScenarioCarlaEnv.render">
+<code class="sig-name descname"><span class="pre">render</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/envs/scenario_carla_env.html#ScenarioCarlaEnv.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.ScenarioCarlaEnv.render" title="Permalink to this definition">¶</a></dt>
 <dd><p>Render a runtime visualization on screen, save a gif video file according to visualizer config.
 The main canvas is from a specific sensor data. It only works when ‘visualize’ is set in config dict.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="core.envs.ScenarioCarlaEnv.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><a class="reference internal" href="../_modules/core/envs/scenario_carla_env.html#ScenarioCarlaEnv.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.ScenarioCarlaEnv.reset" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.ScenarioCarlaEnv.reset">
+<code class="sig-name descname"><span class="pre">reset</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><a class="reference internal" href="../_modules/core/envs/scenario_carla_env.html#ScenarioCarlaEnv.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.ScenarioCarlaEnv.reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reset environment to start a new episode, with provided reset params. If there is no simulator, this method will
 create a new simulator instance. The reset param is sent to simulator’s <code class="docutils literal notranslate"><span class="pre">init</span></code> method to reset simulator,
 then reset all statues recording running states, and create a visualizer if needed. It returns the first frame
@@ -494,8 +491,8 @@ observation.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="core.envs.ScenarioCarlaEnv.seed">
-<span class="sig-name descname"><span class="pre">seed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/envs/scenario_carla_env.html#ScenarioCarlaEnv.seed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.ScenarioCarlaEnv.seed" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.ScenarioCarlaEnv.seed">
+<code class="sig-name descname"><span class="pre">seed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/envs/scenario_carla_env.html#ScenarioCarlaEnv.seed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.ScenarioCarlaEnv.seed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set random seed for environment.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Arguments</dt>
@@ -507,8 +504,8 @@ observation.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="core.envs.ScenarioCarlaEnv.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/envs/scenario_carla_env.html#ScenarioCarlaEnv.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.ScenarioCarlaEnv.step" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.ScenarioCarlaEnv.step">
+<code class="sig-name descname"><span class="pre">step</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/envs/scenario_carla_env.html#ScenarioCarlaEnv.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.ScenarioCarlaEnv.step" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run one time step of environment, get observation from simulator and calculate reward. The environment will
 be set to ‘done’ only at success or failure. And if so, all visualizers will end. Its interfaces follow
 the standard definition of <code class="docutils literal notranslate"><span class="pre">gym.Env</span></code>.</p>
@@ -530,8 +527,8 @@ the standard definition of <code class="docutils literal notranslate"><span clas
 <div class="section" id="carlaenvwrapper">
 <h2>CarlaEnvWrapper<a class="headerlink" href="#carlaenvwrapper" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt class="sig sig-object py" id="core.envs.CarlaEnvWrapper">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">core.envs.</span></span><span class="sig-name descname"><span class="pre">CarlaEnvWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#core.envs.BaseCarlaEnv" title="core.envs.base_carla_env.BaseCarlaEnv"><span class="pre">core.envs.base_carla_env.BaseCarlaEnv</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/envs/carla_env_wrapper.html#CarlaEnvWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.CarlaEnvWrapper" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.CarlaEnvWrapper">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">core.envs.</span></code><code class="sig-name descname"><span class="pre">CarlaEnvWrapper</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">core.envs.base_carla_env.BaseCarlaEnv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/envs/carla_env_wrapper.html#CarlaEnvWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.CarlaEnvWrapper" title="Permalink to this definition">¶</a></dt>
 <dd><p>Environment wrapper to make <code class="docutils literal notranslate"><span class="pre">gym.Env</span></code> align with DI-engine definitions, so as to use utilities in DI-engine.
 It changes <code class="docutils literal notranslate"><span class="pre">step</span></code>, <code class="docutils literal notranslate"><span class="pre">reset</span></code> and <code class="docutils literal notranslate"><span class="pre">info</span></code> method of <code class="docutils literal notranslate"><span class="pre">gym.Env</span></code>, while others are straightly delivered.</p>
 <dl class="field-list simple">
@@ -546,14 +543,14 @@ It changes <code class="docutils literal notranslate"><span class="pre">step</sp
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="core.envs.CarlaEnvWrapper.close">
-<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/envs/carla_env_wrapper.html#CarlaEnvWrapper.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.CarlaEnvWrapper.close" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.CarlaEnvWrapper.close">
+<code class="sig-name descname"><span class="pre">close</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/envs/carla_env_wrapper.html#CarlaEnvWrapper.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.CarlaEnvWrapper.close" title="Permalink to this definition">¶</a></dt>
 <dd><p>Interface of <code class="docutils literal notranslate"><span class="pre">close</span></code> method in env.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="core.envs.CarlaEnvWrapper.info">
-<span class="sig-name descname"><span class="pre">info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">ding.envs.env.base_env.BaseEnvInfo</span><a class="reference internal" href="../_modules/core/envs/carla_env_wrapper.html#CarlaEnvWrapper.info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.CarlaEnvWrapper.info" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.CarlaEnvWrapper.info">
+<code class="sig-name descname"><span class="pre">info</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">ding.envs.env.base_env.BaseEnvInfo</span><a class="reference internal" href="../_modules/core/envs/carla_env_wrapper.html#CarlaEnvWrapper.info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.CarlaEnvWrapper.info" title="Permalink to this definition">¶</a></dt>
 <dd><p>Interface of <code class="docutils literal notranslate"><span class="pre">info</span></code> method to suit DI-engine format env.
 It returns a namedtuple <code class="docutils literal notranslate"><span class="pre">BaseEnvInfo</span></code> defined in DI-engine
 which contains information about observation, action and reward space.</p>
@@ -565,8 +562,8 @@ which contains information about observation, action and reward space.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="core.envs.CarlaEnvWrapper.render">
-<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Any</span><a class="reference internal" href="../_modules/core/envs/carla_env_wrapper.html#CarlaEnvWrapper.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.CarlaEnvWrapper.render" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.CarlaEnvWrapper.render">
+<code class="sig-name descname"><span class="pre">render</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Any</span><a class="reference internal" href="../_modules/core/envs/carla_env_wrapper.html#CarlaEnvWrapper.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.CarlaEnvWrapper.render" title="Permalink to this definition">¶</a></dt>
 <dd><p>Interface of <code class="docutils literal notranslate"><span class="pre">render</span></code> method in env. It simply calls <code class="docutils literal notranslate"><span class="pre">render</span></code> in <code class="docutils literal notranslate"><span class="pre">gym.Env</span></code> and do nothing</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -576,8 +573,8 @@ which contains information about observation, action and reward space.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="core.envs.CarlaEnvWrapper.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Any</span><a class="reference internal" href="../_modules/core/envs/carla_env_wrapper.html#CarlaEnvWrapper.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.CarlaEnvWrapper.reset" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.CarlaEnvWrapper.reset">
+<code class="sig-name descname"><span class="pre">reset</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Any</span><a class="reference internal" href="../_modules/core/envs/carla_env_wrapper.html#CarlaEnvWrapper.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.CarlaEnvWrapper.reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wrapper of <code class="docutils literal notranslate"><span class="pre">reset</span></code> method in env. The observations are converted to <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code> and final reward
 are recorded.</p>
 <dl class="field-list simple">
@@ -588,8 +585,8 @@ are recorded.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="core.envs.CarlaEnvWrapper.seed">
-<span class="sig-name descname"><span class="pre">seed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/envs/carla_env_wrapper.html#CarlaEnvWrapper.seed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.CarlaEnvWrapper.seed" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.CarlaEnvWrapper.seed">
+<code class="sig-name descname"><span class="pre">seed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/envs/carla_env_wrapper.html#CarlaEnvWrapper.seed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.CarlaEnvWrapper.seed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Interface of <code class="docutils literal notranslate"><span class="pre">seed</span></code> method in env.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Arguments</dt>
@@ -601,8 +598,8 @@ are recorded.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="core.envs.CarlaEnvWrapper.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">ding.envs.env.base_env.BaseEnvTimestep</span><a class="reference internal" href="../_modules/core/envs/carla_env_wrapper.html#CarlaEnvWrapper.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.CarlaEnvWrapper.step" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.CarlaEnvWrapper.step">
+<code class="sig-name descname"><span class="pre">step</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">ding.envs.env.base_env.BaseEnvTimestep</span><a class="reference internal" href="../_modules/core/envs/carla_env_wrapper.html#CarlaEnvWrapper.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.CarlaEnvWrapper.step" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wrapper of <code class="docutils literal notranslate"><span class="pre">step</span></code> method in env. This aims to convert the returns of <code class="docutils literal notranslate"><span class="pre">gym.Env</span></code> step method into
 that of <code class="docutils literal notranslate"><span class="pre">ding.envs.BaseEnv</span></code>, from <code class="docutils literal notranslate"><span class="pre">(obs,</span> <span class="pre">reward,</span> <span class="pre">done,</span> <span class="pre">info)</span></code> tuple to a <code class="docutils literal notranslate"><span class="pre">BaseEnvTimestep</span></code>
 namedtuple defined in DI-engine. It will also convert actions, observations and reward into
@@ -625,8 +622,8 @@ namedtuple defined in DI-engine. It will also convert actions, observations and 
 <div class="section" id="benchmarkenvwrapper">
 <h2>BenchmarkEnvWrapper<a class="headerlink" href="#benchmarkenvwrapper" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt class="sig sig-object py" id="core.envs.BenchmarkEnvWrapper">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">core.envs.</span></span><span class="sig-name descname"><span class="pre">BenchmarkEnvWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#core.envs.BaseCarlaEnv" title="core.envs.base_carla_env.BaseCarlaEnv"><span class="pre">core.envs.base_carla_env.BaseCarlaEnv</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/envs/carla_env_wrapper.html#BenchmarkEnvWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.BenchmarkEnvWrapper" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.BenchmarkEnvWrapper">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">core.envs.</span></code><code class="sig-name descname"><span class="pre">BenchmarkEnvWrapper</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">core.envs.base_carla_env.BaseCarlaEnv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/envs/carla_env_wrapper.html#BenchmarkEnvWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.BenchmarkEnvWrapper" title="Permalink to this definition">¶</a></dt>
 <dd><p>Environment Wrapper for Carla Benchmark suite evaluations. It wraps an environment with Benchmark
 suite so that the env will always run with a benchmark suite setting. It has 2 mode to get reset
 params in a suite: ‘random’ will randomly get reset param, ‘order’ will get all reset params in
@@ -640,8 +637,8 @@ order.</p>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="core.envs.BenchmarkEnvWrapper.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Any</span><a class="reference internal" href="../_modules/core/envs/carla_env_wrapper.html#BenchmarkEnvWrapper.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.BenchmarkEnvWrapper.reset" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.BenchmarkEnvWrapper.reset">
+<code class="sig-name descname"><span class="pre">reset</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Any</span><a class="reference internal" href="../_modules/core/envs/carla_env_wrapper.html#BenchmarkEnvWrapper.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.BenchmarkEnvWrapper.reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wrapped <code class="docutils literal notranslate"><span class="pre">reset</span></code> method for env. it will ignore all incoming arguments and choose one
 from suite reset parameters according to config.</p>
 <dl class="field-list simple">
@@ -652,8 +649,8 @@ from suite reset parameters according to config.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="core.envs.BenchmarkEnvWrapper.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Any</span><a class="reference internal" href="../_modules/core/envs/carla_env_wrapper.html#BenchmarkEnvWrapper.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.BenchmarkEnvWrapper.step" title="Permalink to this definition">¶</a></dt>
+<dt id="core.envs.BenchmarkEnvWrapper.step">
+<code class="sig-name descname"><span class="pre">step</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Any</span><a class="reference internal" href="../_modules/core/envs/carla_env_wrapper.html#BenchmarkEnvWrapper.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.envs.BenchmarkEnvWrapper.step" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wrapped <code class="docutils literal notranslate"><span class="pre">step</span></code> method for Env. It will add a print log when the env is done.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Arguments</dt>

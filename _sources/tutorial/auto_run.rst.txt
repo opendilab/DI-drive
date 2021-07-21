@@ -41,7 +41,7 @@ Running with scenario in Casezoo
 
 In this part, the policy runs in :class:`ScenarioCarlaEnv <core.envs.scenario_carla_env.ScenarioCarlaEnv>`.
 It runs with provided Casezoo route and config file, or the single scenario name.
-Check `Casezoo instruction <https://github.com/opendilab/DI-drive/blob/main//docs/casezoo_instruction.md>`_ for all scenario name and description in Casezoo.
+Check `Casezoo instruction <https://gitlab.bj.sensetime.com/open-XLab/cell/xad/blob/dev/docs/casezoo_instruction.md>`_ for all scenario name and description in Casezoo.
 
 Simply run the following command.
 
