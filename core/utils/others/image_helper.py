@@ -1,5 +1,4 @@
 import os
-import numpy
 import cv2
 import imageio
 from pathlib import Path

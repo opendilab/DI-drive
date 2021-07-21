@@ -11,7 +11,7 @@
 [![Contributors](https://img.shields.io/github/contributors/opendilab/DI-drive)](https://github.com/opendilab/DI-drive/graphs/contributors)
 [![GitHub license](https://img.shields.io/github/license/opendilab/DI-drive)](https://github.com/opendilab/DI-drive/blob/master/LICENSE)
 
-Updated on 2021.07.08 DI-drive-v0.1.0 (beta)
+Updated on 2021.07.23 DI-drive-v0.1.0.1 (beta)
 
 DI-drive - Decision Intelligence Platform for Autonomous Driving simulation.
 

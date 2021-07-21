@@ -1,4 +1,3 @@
-from core import policy
 import random
 import py_trees
 import carla

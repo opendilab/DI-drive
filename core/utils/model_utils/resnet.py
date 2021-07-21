@@ -171,7 +171,7 @@ class ResNetv2(nn.Module):
         self.layer2 = self._make_layer(block, 128, layers[1], stride=2)
         self.layer3 = self._make_layer(block, 256, layers[2], stride=2)
         self.layer4 = self._make_layer(block, 512, layers[3], stride=2)
-        self.avgpool = nn.AvgPool2d(2, stride=0)
+        self.avgpool = nn.AvgPool2d(2)
 
         # TODO: THis is a super hardcoding ..., in order to fit my image size on resnet
         if block.__name__ == 'Bottleneck':

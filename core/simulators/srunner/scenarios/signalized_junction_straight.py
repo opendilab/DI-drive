@@ -13,7 +13,6 @@ from __future__ import print_function
 import sys
 
 import py_trees
-import numpy
 import carla
 from core.utils.planner import RoadOption
 

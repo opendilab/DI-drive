@@ -1,8 +1,7 @@
-from six.moves.queue import Queue  # pylint: disable=relative-import
-
 import math
 import py_trees
 import carla
+from six.moves.queue import Queue  # pylint: disable=relative-import
 
 from core.simulators.carla_data_provider import CarlaDataProvider
 from core.simulators.srunner.scenariomanager.scenarioatomics.atomic_behaviors import (

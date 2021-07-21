@@ -51,20 +51,24 @@ PLANNER_DICT = {
 class CarlaSimulator(BaseSimulator):
     """
     Common Carla Simulator.
-    The simulator contains a hero actor to control, and can add npc vehicles, pedestrians,
-    change weathers and maps, and set up sensors of the hero actor due to config.
-    The simulator makes a client to Carla server, and interact with server to get informations
-    and apply control signals. It can get state, sensor data, navigation and information, and
-    record running status including collision, running red light, running off road, running in
-    wrong direction, distance and timeout to end waypoint, etc..
+    The simulator creates a client to Carla server, and is able to get observation, send
+    control signals to the hero vehicle and record essential data from the simulated world.
+    In the intialization period, the simulator may change the environment parameters including
+    maps and weathers and can add actors (including NPC vehicles, pedestrians as well as sensors
+    mounted on the hero vehicle),
+    During the running period the simulator will achieve running state and information about
+    the hero vehicle (such as running speed, angle, navigation goal and reference path), data
+    from the sensors (such as camera images, lidar points) as well as runnign status(including
+    collision, running off road, red light, distance and timeout to end waypoint).
 
-    The simulator stores and takes some information from a static class ``CarlaDataProvider``, which
-    can avoid frequently sending message toCarla server to speed up.
+    Once it is created, it will set up Carla client and set the parameters in the configuration
+    dict as its default. When actually calling the ``init`` method to start an episode, some of
+    the configurations may be changed by the input arguments while others remain by default.
 
-    It uses Carla version 0.9.9.
+    The simulator stores and gets some information from a static class ``CarlaDataProvider``
+    to avoid frequently sending message to Carla server and speed up.
 
-    When created, it will set up Carla client due to arguments, set simulator basic configurations used all around
-    its lifetime, and set some default running configurations. The latter could be changed in each episode.
+    Up to now, it uses Carla version 0.9.9.
 
     If no traffic manager port is provided, it will find random free port in system.
 

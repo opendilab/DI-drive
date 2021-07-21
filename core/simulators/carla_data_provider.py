@@ -438,6 +438,33 @@ class CarlaDataProvider(object):
         return (False, None)
 
     @staticmethod
+    def get_next_traffic_light_from_waypoint(waypoint: carla.Waypoint) -> carla.Actor:
+        # Create list of all waypoints until next intersection
+        list_of_waypoints = []
+        while waypoint and not waypoint.is_intersection:
+            list_of_waypoints.append(waypoint)
+            waypoint = waypoint.next(2.0)[0]
+
+        # If the list is empty, the actor is in an intersection
+        if not list_of_waypoints:
+            return None
+
+        relevant_traffic_light = None
+        distance_to_relevant_traffic_light = float("inf")
+
+        for traffic_light in CarlaDataProvider._traffic_light_map:
+            if hasattr(traffic_light, 'trigger_volume'):
+                tl_t = CarlaDataProvider._traffic_light_map[traffic_light]
+                transformed_tv = tl_t.transform(traffic_light.trigger_volume.location)
+                distance = carla.Location(transformed_tv).distance(list_of_waypoints[-1].transform.location)
+
+                if distance < distance_to_relevant_traffic_light:
+                    relevant_traffic_light = traffic_light
+                    distance_to_relevant_traffic_light = distance
+
+        return relevant_traffic_light
+
+    @staticmethod
     def set_hero_vehicle_route(route: List) -> None:
         """
         Set the route of the ego vehicle

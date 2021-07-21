@@ -12,12 +12,15 @@ from .srunner.scenariomanager.scenario_manager import ScenarioManager
 
 class CarlaScenarioSimulator(CarlaSimulator):
     """
-    Carla simualtor used to run scenarios.
-    The simulator loads configs of provided scenario, and create hero actor, npc vehicles, walkers, world map
-    according to it. The sensors and running status are set as common Carla simulator.
+    Simualtor used to run scenarios in Carla.
+    The simulator loads the config instance of the provided scenario to start simulation.
+    It can create hero actor, NPC vehicles, walkers, world map according to it and the
+    configuration dict. The modification of sensors and planners, and the running status
+    and informations you can get from it are set the same as ``CarlaSimulator``.
 
-    When created, it will set up Carla client due to arguments, set simulator basic configurations used all around
-    its lifetime, and set some default running configurations.
+    When created, it will set up Carla client and store default configuration the same as
+    ``CarlaSimulator``, and it can also be change by the input arguments of the ``init``
+    method.
 
     If no traffic manager port is provided, it will find random free port in system.
 

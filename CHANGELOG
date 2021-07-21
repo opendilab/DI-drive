@@ -1,1 +1,12 @@
-2021.7.8(v0.1.0)
+## v0.1.0.1 (2021.7.21)
+
+- Fix import error in scenario files.
+- Fix CIL running issues (collect/train/eval).
+- Fix a bug in ResNetV2 model.
+- Remove useless data utils in CIL.
+- Change some expressions in simulator API and casezoo doc.
+- Add specific version of scipy in setup.py
+
+## v0.1.0 (2021.7.8)
+
+Initial project

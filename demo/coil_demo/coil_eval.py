@@ -16,7 +16,7 @@ from core.policy import CILPolicy
 from core.utils.others.tcp_helper import parse_carla_tcp
 
 autoeval_config = dict(
-    env_num=5,
+    env_num=1,
     env=dict(
         simulator=dict(
             verbose=False,
@@ -41,17 +41,17 @@ autoeval_config = dict(
         shared_memory=False,
         auto_reset=False,
     ),
-    server=[dict(carla_host='localhost', carla_ports=[9000, 9010, 2])],
+    server=[dict(carla_host='localhost', carla_ports=[5000, 5002, 2])],
     eval=dict(
         suite='FullTown02-v1',
-        episodes_per_suite=10,
+        episodes_per_suite=5,
     ),
     policy=dict(target_speed=40, ),
 )
 
 policy_config = dict(
     model=dict(
-        ckpt_path='./coil_icra/checkpoints/100.pth'
+        ckpt_path='_logs/sample/coil_icra/checkpoints/100.pth'
     ),
     SENSORS=dict(rgb=[3, 88, 200]),
     TARGETS=['steer', 'throttle', 'brake'],

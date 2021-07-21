@@ -8,12 +8,11 @@ Collection of traffic scenarios where the ego vehicle (hero)
 is making a left turn
 """
 
-from six.moves.queue import Queue  # pylint: disable=relative-import
-
-import numpy
+import numpy as np
 import py_trees
 import carla
 from core.utils.planner import RoadOption
+from six.moves.queue import Queue  # pylint: disable=relative-import
 
 from core.simulators.carla_data_provider import CarlaDataProvider
 from core.simulators.srunner.scenariomanager.scenarioatomics.atomic_behaviors import (
@@ -121,7 +120,7 @@ class SignalizedJunctionLeftTurn(BasicScenario):
         init_vector.append(x)
         y = wp_location2.y - wp_location1.y
         init_vector.append(y)
-        init_vector = numpy.array(init_vector)
+        init_vector = np.array(init_vector)
 
         for lane_waypoints in junction.get_waypoints(wp_choice[0].lane_type):
             wp_prev = lane_waypoints[0].previous(2.0)[0]
@@ -136,8 +135,8 @@ class SignalizedJunctionLeftTurn(BasicScenario):
                     junc_vector.append(x)
                     y = wp_next1.transform.location.y - wp_next0.transform.location.y
                     junc_vector.append(y)
-                    junc_vector = numpy.array(junc_vector)
-                    if (numpy.cross(init_vector, junc_vector) < -0.5):
+                    junc_vector = np.array(junc_vector)
+                    if (np.cross(init_vector, junc_vector) < -0.5):
                         wp_choice = lane_waypoints[0].next(1.0)
                         break
                 else:

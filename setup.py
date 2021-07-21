@@ -25,6 +25,7 @@ setup(
         'lmdb',
         'loguru==0.3.0',
         'networkx',
+        'scipy==1.2.1',
         'pandas',
         'py-trees==0.8.3',
         'pygame==1.9.6',

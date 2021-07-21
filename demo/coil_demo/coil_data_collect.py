@@ -1,12 +1,13 @@
 import os
 from functools import partial
-import numpy as np
-import tqdm
-import lmdb
 
-from easydict import EasyDict
+import PIL
+import lmdb
+import numpy as np
 from ding.envs import SyncSubprocessEnvManager
 from ding.utils.default_helper import deep_merge_dicts
+from easydict import EasyDict
+from tqdm import tqdm
 
 from core.data import CarlaBenchmarkCollector
 from core.data.dataset_saver import BenchmarkDatasetSaver
@@ -38,14 +39,12 @@ config = dict(
         stuck_is_failure=True,
     ),
     env_num=1,
-    episode_nums=10,
+    episode_nums=5,
     env_manager=dict(
         auto_reset=False,
         shared_memory=False,
     ),
-    env_wrapper=dict(
-        suite='FullTown01-v1',
-    ),
+    env_wrapper=dict(),
     collector=dict(
         suite='FullTown01-v1',
     ),
@@ -56,14 +55,25 @@ config = dict(
         target_speed=25,
         noise=True,
     ),
-    dir_path='./datasets_train_collector/cils_datasets_train',
+    dir_path='./datasets_train/cils_datasets_train',
 )
 
 main_config = EasyDict(config)
 
 
+def cils_postprocess(sensor_data, *args):
+    rgb = sensor_data['rgb'].copy()
+    rgb = rgb[115:500, :, :]
+    im = PIL.Image.fromarray(rgb)
+    rgb = np.array(im.resize([200, 88], PIL.Image.BICUBIC))
+    sensor_data = {'rgb': rgb}
+    others = {}
+    return sensor_data, others
+
+
 def wrapped_env(env_cfg, wrapper_cfg, host, port, tm_port=None):
     return CarlaEnvWrapper(SimpleCarlaEnv(env_cfg, host, port, tm_port), wrapper_cfg)
+
 
 def post_process(datasets_path):
     epi_folder = [x for x in os.listdir(datasets_path) if x.startswith('epi')]
@@ -117,7 +127,7 @@ def main(cfg, seed=0):
         os.makedirs(cfg.dir_path)
 
     collected_episodes = -1
-    saver = BenchmarkDatasetSaver(cfg.dir_path, cfg.env.simulator.obs)
+    saver = BenchmarkDatasetSaver(cfg.dir_path, cfg.env.simulator.obs, cils_postprocess)
     while collected_episodes < cfg.episode_nums:
         # Sampling data from environments
         print('start collect data')

@@ -60,7 +60,7 @@ class CILPolicy(BaseCarlaPolicy):
         data_id = list(data.keys())
 
         for id in data.keys():
-            data[id]['rgb'] = self._process_sensors(data[id]['rgb'])
+            data[id]['rgb'] = self._process_sensors(data[id]['rgb'].numpy())
 
         data = default_collate(list(data.values()))
 
