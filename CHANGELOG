@@ -3,6 +3,7 @@
 - Fix import error in scenario files.
 - Fix CIL running issues (collect/train/eval).
 - Fix a bug in ResNetV2 model.
+- Fix a typo bug in scenario manager.
 - Remove useless data utils in CIL.
 - Change some expressions in simulator API and casezoo doc.
 - Add specific version of scipy in setup.py
