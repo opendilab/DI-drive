@@ -223,9 +223,9 @@ class ScenarioManager(object):
     def get_scenario_status(self):
         if self.scenario_tree.status == py_trees.common.Status.RUNNING:
             res = 'RUNNING'
-        elif self.scenario_tree.status != py_trees.common.Status.SUCCESS:
+        elif self.scenario_tree.status == py_trees.common.Status.SUCCESS:
             res = 'SUCCESS'
-        elif self.scenario_tree.status != py_trees.common.Status.FAILURE:
+        elif self.scenario_tree.status == py_trees.common.Status.FAILURE:
             res = 'FAILURE'
         else:
             res = 'INVALID'
