@@ -74,6 +74,56 @@ Benchmarking models
     - server: your Carla servers' ip and port
     - suit: set the maps and routes for testing (ex. town2, StraightTown01, ChangeLaneTown04)
     - env_num: how many subprocesses(envs) to use for evaluting
+    
+Evaluation
+==========
+
+Running CARLA Server
+--------------------
+
+With Display
+````````````
+
+.. code:: shell
+
+   ./CarlaUE4.sh --world-port=2000 -opengl # If you run multiple servers at one time, you should modify the world port
+
+Without Display
+```````````````
+
+.. code:: shell
+
+   SDL_VIDEODRIVER=offscreen SDL_HINT_CUDA_DEVICE=0 ./CarlaUE4.sh --world-port=2000 -opengl
+    # If you run multiple servers at one time, you should modify the world port
+
+Evaluation for Town01
+---------------------
+
+.. code:: shell
+
+   cd demo/implicit
+   wget http://opendilab.org/download/DI-drive/implicit/models_town01.tar.gz
+   tar xvf models_town01.tar.gz
+   python eval.py --crop-sky --path-folder-model models_town01
+
+Evaluation for Town04
+---------------------
+
+.. code:: shell
+
+   cd demo/implicit
+   wget http://opendilab.org/download/DI-drive/implicit/models_town04.tar.gz
+   tar xvf models_town04.tar.gz
+   python eval.py --crop-sky --path-folder-model models_town04 # 
+
+Something you need to modify in ``eval.py``:
+
+-  server: your Carla servers' ip and port
+
+-  suit: set the maps and routes for testing (ex. town2, StraightTown01,
+   ChangeLaneTown04)
+
+-  env_num: how many subprocesses(envs) to use for evaluting
 
 Training Cost
 =============
@@ -82,4 +132,3 @@ Training Cost
 2. Pre-train the encoder: about 4 gpu (32G V100) / days
 3. Train the agent(Single Lane): about 60Carla (32G V100) / days
 4. Train the agent(Multiple Lanes): about 100Carla (32G V100) / days
-

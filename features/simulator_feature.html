@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Simulator Features &mdash; DI-drive 0.1 documentation</title>
+  <title>Simulator Features &mdash; DI-drive 0.1.0.1 documentation</title>
   
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.1
+                0.1.0.1
               </div>
             
           
@@ -371,8 +371,8 @@ we show the default setting of the simulator and explain its contents.</p>
 to generate route and road options from start to end location. The local planner is defined in DI-drive to add navigation
 into observation. It provides current waypoint location, next waypoint location, road option command
 and distance to final target. Planners may also take nearby walkers, vehicles and traffic lights into account.
-Currently <code class="xref py py-class docutils literal notranslate"><span class="pre">BasicPlanner</span></code> and
-<code class="xref py py-class docutils literal notranslate"><span class="pre">BehaviorPlanner</span></code> are supported in DI-drive.
+Currently <a class="reference internal" href="../api_doc/utils.html#core.utils.planner.basic_planner.BasicPlanner" title="core.utils.planner.basic_planner.BasicPlanner"><code class="xref py py-class docutils literal notranslate"><span class="pre">BasicPlanner</span></code></a> and
+<a class="reference internal" href="../api_doc/utils.html#core.utils.planner.behavior_planner.BehaviorPlanner" title="core.utils.planner.behavior_planner.BehaviorPlanner"><code class="xref py py-class docutils literal notranslate"><span class="pre">BehaviorPlanner</span></code></a> are supported in DI-drive.
 For more details, check the <a class="reference external" href="../api_doc/utils.html">API docs</a>.</p>
 <p>Some of the default config setting is as following:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">planner</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
