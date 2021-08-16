@@ -3,7 +3,7 @@ import torch
 from easydict import EasyDict
 
 from ding.torch_utils import to_dtype, to_ndarray
-from ding.utils import deep_merge_dicts
+from core.utils.others.config_helper import deep_merge_dicts
 
 
 def pack_birdview(data, packbit=False):

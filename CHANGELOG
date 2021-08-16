@@ -1,3 +1,19 @@
+## v0.1.1 (2021.8.16)
+
+- Update AutoPolicy: better performance in multi-lane maps
+- Add bike avoidance and agent state in behavior planner
+- Add CICT IL method: data, train, eval and test
+- Add CICT doc
+- Add LBC: eval and test
+- Add LBC: doc
+- Add common PID controller
+- Add LBC planner
+- Add transform obs for evaluator
+- Add velocity, angular velocity and rotation in simulator's navigation and data provider
+- Modify initialization of AutoPolicy
+- Fix bugs in default config of all modules
+- Add overview for Implicit Affordance doc
+
 ## v0.1.0.1 (2021.7.21)
 
 - Fix import error in scenario files.

@@ -1,3 +1,5 @@
+# DI-drive
+
 <img src="./docs/figs/DI-drive.png" width="200" alt="icon"/>
 
 ---
@@ -11,7 +13,7 @@
 [![Contributors](https://img.shields.io/github/contributors/opendilab/DI-drive)](https://github.com/opendilab/DI-drive/graphs/contributors)
 [![GitHub license](https://img.shields.io/github/license/opendilab/DI-drive)](https://github.com/opendilab/DI-drive/blob/master/LICENSE)
 
-Updated on 2021.07.23 DI-drive-v0.1.0.1 (beta)
+Updated on 2021.08.16 DI-drive-v0.1.1 (beta)
 
 DI-drive - Decision Intelligence Platform for Autonomous Driving simulation.
 
@@ -20,7 +22,6 @@ DI-drive is application platform under [OpenDILab](http://opendilab.org/)
 ![icon](./docs/figs/big_cam_auto.png)
 
 ## Introduction
-
 
 **DI-drive** is an open-source application platform under **OpenDILab**. DI-drive applies different simulator/datasets/cases in **Decision Intelligence** Training & Testing for **Autonomous Driving** Policy.
 It aims to
@@ -51,10 +52,14 @@ Please refer to [FAQ](https://opendilab.github.io/DI-drive/faq/index.html) for f
 
 ## Model Zoo
 
-#### Imitation Learning
-- [Conditional Imitation Learning](http://vladlen.info/papers/conditional-imitation.pdf)
+### Imitation Learning
 
-#### Reinforcement Learning
+- [Conditional Imitation Learning](https://arxiv.org/abs/1710.02410)
+- [Learning by Cheating](https://arxiv.org/abs/1912.12294)
+- [from Continuous Intention to Continuous Trajectory](https://arxiv.org/abs/2010.10393)
+
+### Reinforcement Learning
+
 - BeV Speed RL
 - [Implicit Affordance](https://arxiv.org/abs/1911.10868)
 
@@ -73,6 +78,7 @@ We appreciate all contributions to improve DI-drive, both algorithms and system 
 ## License
 
 DI-drive released under the Apache 2.0 license.
+
 ## Citation
 
 ```latex
@@ -80,7 +86,7 @@ DI-drive released under the Apache 2.0 license.
     title={{DI-drive: OpenDILab} Decision Intelligence platform for Autonomous Driving simulation},
     author={DI-drive Contributors},
     publisher = {GitHub},
-    howpublished = {\url{https://github.com/opendilab/DI-drive}},
+    howpublished = {\url{`https://github.com/opendilab/DI-drive`}},
     year={2021},
 }
 ```

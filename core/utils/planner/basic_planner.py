@@ -11,6 +11,7 @@ from core.utils.simulator_utils.carla_agents.navigation.global_route_planner imp
 from core.utils.simulator_utils.carla_agents.navigation import RoadOption
 from core.simulators.carla_data_provider import CarlaDataProvider
 from core.utils.simulator_utils.carla_agents.tools.misc import draw_waypoints
+from core.utils.others.config_helper import deep_merge_dicts
 
 
 class AgentState(Enum):
@@ -22,6 +23,7 @@ class AgentState(Enum):
     BLOCKED_BY_VEHICLE = 2
     BLOCKED_BY_WALKER = 3
     BLOCKED_RED_LIGHT = 4
+    BLOCKED_BY_BIKE = 5
 
 
 class BasicPlanner(object):
@@ -52,7 +54,7 @@ class BasicPlanner(object):
     def __init__(self, cfg: Dict) -> None:
         if 'cfg_type' not in cfg:
             self._cfg = self.__class__.default_config()
-            self._cfg.update(cfg)
+            self._cfg = deep_merge_dicts(self._cfg, cfg)
         else:
             self._cfg = cfg
         self._hero_vehicle = CarlaDataProvider.get_hero_actor()
@@ -63,7 +65,7 @@ class BasicPlanner(object):
         self._min_distance = self._cfg.min_distance
         self._fps = self._cfg.fps
 
-        self._route = []
+        self._route = None
         self._waypoints_queue = deque()
         self._buffer_size = 100
         self._waypoints_buffer = deque(maxlen=100)
@@ -238,11 +240,29 @@ class BasicPlanner(object):
 
         # Detect vehicle and light hazard
         vehicle_state, vehicle = CarlaDataProvider.is_vehicle_hazard(self._hero_vehicle)
+        if not vehicle_state:
+            vehicle_state, vehicle = CarlaDataProvider.is_lane_vehicle_hazard(self._hero_vehicle, self.target_road_option)
+        if not vehicle_state:
+            vehicle_state, vehicle = CarlaDataProvider.is_junction_vehicle_hazard(self._hero_vehicle, self.target_road_option)
         if vehicle_state:
             if self._debug:
                 print('!!! VEHICLE BLOCKING AHEAD [{}])'.format(vehicle.id))
 
             self.agent_state = AgentState.BLOCKED_BY_VEHICLE
+
+        bike_state, bike = CarlaDataProvider.is_bike_hazard(self._hero_vehicle)
+        if bike_state:
+            if self._debug:
+                print('!!! BIKE BLOCKING AHEAD [{}])'.format(bike.id))
+
+            self.agent_state = AgentState.BLOCKED_BY_BIKE
+
+        walker_state, walker = CarlaDataProvider.is_walker_hazard(self._hero_vehicle)
+        if walker_state:
+            if self._debug:
+                print('!!! WALKER BLOCKING AHEAD [{}])'.format(walker.id))
+
+            self.agent_state = AgentState.BLOCKED_BY_WALKER
 
         light_state, traffic_light = CarlaDataProvider.is_light_red(self._hero_vehicle)
 
@@ -278,6 +298,14 @@ class BasicPlanner(object):
                 waypoint_list.append(waypoint)
                 num += 1
         return waypoint_list
+
+    def get_direction_list(self, waypoint_num: int) -> List[RoadOption]:
+        num = min(waypoint_num, len(self._waypoints_buffer))
+        direction_list = []
+        for i in range(num):
+            direction = self._waypoints_buffer[i][1].value
+            direction_list.append(direction)
+        return direction_list
 
     def get_incoming_waypoint_and_direction(self, steps: int = 3) -> Tuple[carla.Waypoint, RoadOption]:
         """

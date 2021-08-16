@@ -1,6 +1,7 @@
 from collections import namedtuple, deque
 from typing import List, Dict, Optional, Union, Any, NamedTuple
 
+from core.utils.others.config_helper import deep_merge_dicts
 from ding.policy import Policy
 
 
@@ -21,12 +22,21 @@ class BaseCarlaPolicy(Policy):
 
     config = dict()
 
-    def __init__(self, cfg: Dict) -> None:
+    total_field = set(['learn', 'collect', 'eval'])
+
+    def __init__(self, cfg: dict, model: Any = None, enable_field: Optional[List[str]] = None) -> None:
         if 'cfg_type' not in cfg:
             self._cfg = self.__class__.default_config()
-            self._cfg.update(cfg)
+            self._cfg = deep_merge_dicts(self._cfg, cfg)
         else:
             self._cfg = cfg
+        if enable_field is None:
+            self._enable_field = self.total_field
+        else:
+            self._enable_field = enable_field
+
+        for field in self._enable_field:
+            getattr(self, '_init_' + field)()
 
     def _init_learn(self) -> None:
         pass
@@ -44,6 +54,9 @@ class BaseCarlaPolicy(Policy):
         pass
 
     def _forward_eval(self, data_id: List[int], data: Dict) -> Dict[str, Any]:
+        pass
+
+    def _create_model(self, cfg: dict, model: Any) -> Any:
         pass
 
     def _process_transition(self, obs: Any, model_output: Dict, timestep: NamedTuple) -> Dict[str, Any]:

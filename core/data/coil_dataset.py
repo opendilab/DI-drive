@@ -32,10 +32,10 @@ class CoILDataset(Dataset):
     """ The conditional imitation learning dataset"""
 
     def __init__(
-            self,
-            root_dir,
-            cfg,
-            transform=None,
+        self,
+        root_dir,
+        cfg,
+        transform=None,
     ):
         # Setting the root directory for this dataset
         self.root_dir = root_dir

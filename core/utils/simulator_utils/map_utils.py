@@ -12,7 +12,7 @@ import copy
 
 import carla
 from carla import TrafficLightState as tls
-from ding.utils import deep_merge_dicts
+from core.utils.others.config_helper import deep_merge_dicts
 
 # ==============================================================================
 # -- Constants -----------------------------------------------------------------
@@ -726,7 +726,7 @@ class BeVWrapper(object):
         """
         if 'cfg_type' not in cfg:
             self._cfg = self.__class__.default_config()
-            self._cfg.update(cfg)
+            self._cfg = deep_merge_dicts(self._cfg, cfg)
         else:
             self._cfg = cfg
         self.clock = None

@@ -2,12 +2,12 @@ from __future__ import absolute_import
 
 from setuptools import setup, find_packages
 
-description = """DI-drive: OpenDILab Deep Learning Autonomous Driving Platform"""
+description = """DI-drive: OpenDILab Decision Intelligence Autonomous Driving Platform"""
 
 setup(
     name='DI-drive',
-    version='0.1',
-    description='OpenDILab Deep Learning Autonomous Driving Platform',
+    version='0.1.1',
+    description='OpenDILab Decision Intelligence Autonomous Driving Platform',
     long_description=description,
     author='OpenDILab',
     license='MIT License',
@@ -15,7 +15,7 @@ setup(
     packages=[
         *find_packages(
             include=('core', 'core.*')
-        ),
+            ),
     ],
     install_requires=[
         'ephem',
@@ -25,7 +25,6 @@ setup(
         'lmdb',
         'loguru==0.3.0',
         'networkx',
-        'scipy==1.2.1',
         'pandas',
         'py-trees==0.8.3',
         'pygame==1.9.6',

@@ -215,7 +215,22 @@ class BehaviorPlanner(BasicPlanner):
                 self.agent_state = AgentState.BLOCKED_BY_WALKER
                 return
 
-        # 2.2: Car following behaviors
+        # 2.2: BIke avoidancd behaviors
+        bike_state, bike = CarlaDataProvider.is_bike_hazard(self._hero_vehicle)
+        if bike_state:
+            self.agent_state = AgentState.BLOCKED_BY_BIKE
+
+        # 2.3: Car changelane behaviors
+        lane_vehicle_state, vehicle = CarlaDataProvider.is_lane_vehicle_hazard(self._hero_vehicle, self.target_road_option)
+        if lane_vehicle_state:
+            self.agent_state = AgentState.BLOCKED_BY_VEHICLE
+
+        # 2.4: Car in junction  behaviors
+        junction_vehicle_state, vehicle = CarlaDataProvider.is_junction_vehicle_hazard(self._hero_vehicle, self.target_road_option)
+        if junction_vehicle_state:
+            self.agent_state = AgentState.BLOCKED_BY_VEHICLE
+
+        # 2.5: Car following behaviors
         vehicle_state, vehicle, distance = self._collision_and_car_avoid_manager()
 
         if vehicle_state:

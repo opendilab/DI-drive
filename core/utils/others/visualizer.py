@@ -6,7 +6,7 @@ from easydict import EasyDict
 import copy
 
 from core.utils.others.image_helper import GifMaker, VideoMaker, show_image, check_image
-from ding.utils import deep_merge_dicts
+from core.utils.others.config_helper import deep_merge_dicts
 
 
 class Visualizer(object):
@@ -33,7 +33,7 @@ class Visualizer(object):
     def __init__(self, cfg: Dict) -> None:
         if 'cfg_type' not in cfg:
             self._cfg = self.__class__.default_config()
-            self._cfg.update(cfg)
+            self._cfg = deep_merge_dicts(self._cfg, cfg)
         else:
             self._cfg = cfg
 

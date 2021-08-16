@@ -10,6 +10,8 @@ from easydict import EasyDict
 import gym
 from gym import utils
 
+from core.utils.others.config_helper import deep_merge_dicts
+
 
 class BaseCarlaEnv(gym.Env, utils.EzPickle):
     """
@@ -30,7 +32,7 @@ class BaseCarlaEnv(gym.Env, utils.EzPickle):
     def __init__(self, cfg: Dict, **kwargs) -> None:
         if 'cfg_type' not in cfg:
             self._cfg = self.__class__.default_config()
-            self._cfg.update(cfg)
+            self._cfg = deep_merge_dicts(self._cfg, cfg)
         else:
             self._cfg = cfg
         utils.EzPickle.__init__(self)

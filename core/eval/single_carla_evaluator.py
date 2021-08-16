@@ -23,11 +23,13 @@ class SingleCarlaEvaluator(BaseEvaluator):
     config = dict(
         render=False,
         eval_freq=1000,
+        transform_obs=False,
     )
 
     def __init__(self, cfg: Dict, env: Any, policy: Any) -> None:
         super().__init__(cfg, env, policy)
         self._render = self._cfg.render
+        self._transform_obs = self._cfg.transform_obs
         self._last_eval_iter = 0
 
     def close(self) -> None:
@@ -73,7 +75,8 @@ class SingleCarlaEvaluator(BaseEvaluator):
 
         with self._timer:
             while True:
-                obs = to_tensor(obs, dtype=torch.float32)
+                if self._transform_obs:
+                    obs = to_tensor(obs, dtype=torch.float32)
                 actions = self._policy.forward({0: obs})
                 action = actions[0]['action']
                 timestep = self._env.step(action)

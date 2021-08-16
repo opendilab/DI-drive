@@ -298,8 +298,6 @@ class SimpleCarlaEnv(BaseCarlaEnv):
             self._stuck_detector.tick(state['speed'])
 
         obs.update(sensor_data)
-        if self._ignore_light and 'birdview' in obs:
-            obs['birdview'] = obs['birdview'][..., [0, 1, 5, 6, 8]].copy()
         obs.update(
             {
                 'tick': information['tick'],
@@ -315,9 +313,14 @@ class SimpleCarlaEnv(BaseCarlaEnv):
                 'location': np.float32(state['location']),
                 'orientation': np.float32(state['orientation']),
                 'acceleration': np.float32(state['acceleration']),
+                'velocity': np.float32(state['velocity']),
+                'angular_velocity': np.float32(state['angular_velocity']),
+                'rotation': np.float32(state['rotation']),
                 'is_junction': np.float32(state['is_junction']),
                 'tl_state': state['tl_state'],
                 'tl_dis': np.float32(state['tl_dis']),
+                'waypoint_list': navigation['waypoint_list'],
+                'direction_list': navigation['direction_list'],
             }
         )
 

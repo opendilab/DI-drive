@@ -13,7 +13,7 @@ from collections import deque
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 from core.simulators.carla_data_provider import CarlaDataProvider
-from ding.utils import deep_merge_dicts
+from core.utils.others.config_helper import deep_merge_dicts
 
 DEFAULT_CAMERA_CONFIG = {
     'size': [384, 160],

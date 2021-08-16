@@ -11,6 +11,7 @@ from abc import abstractmethod
 from typing import Any, Dict
 from easydict import EasyDict
 
+from core.utils.others.config_helper import deep_merge_dicts
 from ding.utils import EasyTimer
 
 
@@ -26,7 +27,7 @@ class BaseEvaluator(object):
     ) -> None:
         if 'cfg_type' not in cfg:
             self._cfg = self.__class__.default_config()
-            self._cfg.update(cfg)
+            self._cfg = deep_merge_dicts(self._cfg, cfg)
         else:
             self._cfg = cfg
         self._end_flag = False

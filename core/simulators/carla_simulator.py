@@ -15,7 +15,7 @@ from core.utils.simulator_utils.sensor_utils import SensorHelper, CollisionSenso
 from core.utils.simulator_utils.map_utils import BeVWrapper
 from core.simulators.carla_data_provider import CarlaDataProvider
 from core.utils.simulator_utils.carla_utils import control_to_signal, get_birdview
-from core.utils.planner import BasicPlanner, BehaviorPlanner
+from core.utils.planner import BasicPlanner, BehaviorPlanner, LBCPlannerNew
 from core.utils.others.tcp_helper import find_traffic_manager_port
 
 import carla
@@ -45,6 +45,7 @@ OBS_TYPE_LIST = ['state', 'depth', 'rgb', 'segmentation', 'bev', 'lidar', 'gnss'
 PLANNER_DICT = {
     'basic': BasicPlanner,
     'behavior': BehaviorPlanner,
+    'lbc': LBCPlannerNew,
 }
 
 
@@ -516,9 +517,10 @@ class CarlaSimulator(BaseSimulator):
         location = transform.location
         orientation = transform.get_forward_vector()
         acceleration = CarlaDataProvider.get_acceleration(self._hero_actor)
+        angular_velocity = CarlaDataProvider.get_angular_velocity(self._hero_actor)
+        velocity = CarlaDataProvider.get_speed_vector(self._hero_actor)
 
         light_state = self._traffic_light_helper.active_light_state.value
-
         drive_waypoint = self._map.get_waypoint(
             location,
             project_to_road=False,
@@ -535,6 +537,9 @@ class CarlaSimulator(BaseSimulator):
             'location': np.array([location.x, location.y, location.z]),
             'orientation': np.array([orientation.x, orientation.y]),
             'acceleration': np.array([acceleration.x, acceleration.y, acceleration.z]),
+            'velocity': np.array([velocity.x, velocity.y, velocity.z]),
+            'angular_velocity': np.array([angular_velocity.x, angular_velocity.y, angular_velocity.z]),
+            'rotation': np.array([transform.rotation.pitch, transform.rotation.yaw, transform.rotation.roll]),
             'is_junction': is_junction,
             'tl_state': light_state,
             'tl_dis': self._traffic_light_helper.active_light_dis,
@@ -590,6 +595,7 @@ class CarlaSimulator(BaseSimulator):
         target_location = self._planner.target_waypoint.transform.location
         target_forward = self._planner.target_waypoint.transform.rotation.get_forward_vector()
         waypoint_list = self._planner.get_waypoints_list(self._waypoint_num)
+        direction_list = self._planner.get_direction_list(self._waypoint_num)
         agent_state = self._planner.agent_state
         speed_limit = self._planner.speed_limit
         self._end_distance = self._planner.distance_to_goal
@@ -632,6 +638,7 @@ class CarlaSimulator(BaseSimulator):
             'target_forward': np.array([target_forward.x, target_forward.y]),
             'waypoint_list': np.array(waypoint_location_list),
             'speed_limit': np.array(speed_limit),
+            'direction_list': np.array(direction_list)
         }
         return navigation
 
@@ -674,7 +681,7 @@ class CarlaSimulator(BaseSimulator):
     def clean_up(self) -> None:
         """
         Destroy all actors and sensors in current world. Clear all messages saved in simulator and data provider.
-        This will NOT destroy the Carla client, so simulator can use same Carla client to start next episode.
+        This will NOT destroy the Carla client, so simulator can use same carla client to start next episode.
         """
         for actor in self._actor_map['walker_controller']:
             actor.stop()

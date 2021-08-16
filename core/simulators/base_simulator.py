@@ -9,6 +9,8 @@ from typing import Any, Dict
 from easydict import EasyDict
 import copy
 
+from core.utils.others.config_helper import deep_merge_dicts
+
 
 class BaseSimulator(ABC):
     """
@@ -25,7 +27,7 @@ class BaseSimulator(ABC):
     def __init__(self, cfg: Dict):
         if 'cfg_type' not in cfg:
             self._cfg = self.__class__.default_config()
-            self._cfg.update(cfg)
+            self._cfg = deep_merge_dicts(self._cfg, cfg)
         else:
             self._cfg = cfg
 

@@ -3,6 +3,7 @@ from typing import List, Dict, Optional
 
 from .base_carla_policy import BaseCarlaPolicy
 from core.models import VehiclePIDController, SteerNoiseWrapper
+from core.utils.others.config_helper import deep_merge_dicts
 from ding.torch_utils.data_helper import to_ndarray
 
 DEFAULT_LATERAL_DICT = {'K_P': 1, 'K_D': 0.1, 'K_I': 0, 'dt': 0.1}
@@ -44,14 +45,10 @@ class AutoPolicy(BaseCarlaPolicy):
             self,
             cfg: Dict,
     ) -> None:
-        super().__init__(cfg)
-        self._enable_field = set(['collect', 'eval'])
+        super().__init__(cfg, enable_field=set(['collect', 'eval']))
         self._controller_dict = dict()
         self._last_steer_dict = dict()
-        for field in self._enable_field:
-            getattr(self, '_init_' + field)()
 
-    def _init(self) -> None:
         self.target_speed = self._cfg.target_speed
         self._max_brake = self._cfg.max_brake
         self._max_throttle = self._cfg.max_throttle
@@ -60,8 +57,6 @@ class AutoPolicy(BaseCarlaPolicy):
 
         self._lateral_dict = self._cfg.lateral_dict
         self._longitudinal_dict = self._cfg.longitudinal_dict
-        self._controller_dict.clear()
-        self._last_steer_dict.clear()
 
         self._debug = self._cfg.debug
 
@@ -105,7 +100,7 @@ class AutoPolicy(BaseCarlaPolicy):
         controller = self._controller_dict[data_id]
         if obs['command'] == -1:
             control = self._emergency_stop(data_id)
-        elif obs['agent_state'] == 2 or obs['agent_state'] == 3:
+        elif obs['agent_state'] == 2 or obs['agent_state'] == 3 or obs['agent_state'] == 5:
             control = self._emergency_stop(data_id)
         elif not self._ignore_traffic_light and obs['agent_state'] == 4:
             control = self._emergency_stop(data_id)
@@ -136,20 +131,6 @@ class AutoPolicy(BaseCarlaPolicy):
             'brake': 1.0,
         }
         return control
-
-    def _init_collect(self) -> None:
-        """
-        Initialize policy instance of `collect` mode. It will get default settings in config and clear all saved
-        controllers and running status.
-        """
-        self._init()
-
-    def _init_eval(self) -> None:
-        """
-        Initialize policy instance of `eval` mode. It will get default settings in config and clear all saved
-        controllers andrunning status.
-        """
-        self._init()
 
     def _forward_eval(self, data: Dict) -> Dict:
         """

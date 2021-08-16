@@ -190,3 +190,93 @@ class PIDLateralController():
             _ie = 0.0
 
         return np.clip((self._k_p * _dot) + (self._k_d * _de) + (self._k_i * _ie), -1.0, 1.0)
+
+
+class RWPFLateralController():
+
+    def __init__(self, L=2.405, k_k=1.235, k_theta=0.456, k_e=0.11, alpha=1.8):
+        self.L = L
+        self.k_k = k_k
+        self.k_theta = k_theta
+        self.k_e = k_e
+        self.alpha = alpha
+
+    def rad_lim(self, rad):
+        while (rad > np.pi):
+            rad -= (2 * np.pi)
+        while (rad < -np.pi):
+            rad += (2 * np.pi)
+        return rad
+
+    def run_step(self, current_state, target_state):
+        dx = current_state['x'] - target_state['x']
+        dy = current_state['y'] - target_state['y']
+        tx = np.cos(target_state['theta'])
+        ty = np.sin(target_state['theta'])
+
+        e = dx * ty - dy * tx
+        #theta_e = self.rad_lim(current_state['theta'] - target_state['theta'])
+        theta_e = self.rad_lim(-target_state['theta'])
+
+        w1 = self.k_k * target_state['v'] * target_state['k'] * np.cos(theta_e)
+        w2 = -self.k_theta * np.abs(current_state['v']) * theta_e
+        w3 = (self.k_e * target_state['v'] * np.exp(-theta_e ** 2 / self.alpha)) * e
+        w = (w1 + w2 + w3) * 0.8
+        if current_state['v'] < 0.02:
+            steer = 0
+        else:
+            steer = np.arctan2(w * self.L, current_state['v']) * 2 / np.pi
+
+        #print(e, w, steer)
+        return steer
+
+
+class VehicleCapacController():
+
+    def __init__(
+        self,
+        args_lateral: Dict,
+        args_longitudinal: Dict,
+        max_throttle: float = 0.8,
+        max_brake: float = 0.5,
+        max_steering: float = 0.8
+    ):
+        """
+        Constructor method.
+        """
+        self.max_brake = max_brake
+        self.max_throt = max_throttle
+        self.max_steer = max_steering
+
+        self.past_steering = 0
+        self._lon_controller = PIDLongitudinalController(**args_longitudinal)
+        self._lat_controller = RWPFLateralController(**args_lateral)
+
+    def reset(self):
+        self.past_steering = 0
+
+    def forward(self, current_state: Dict, target_state: Dict) -> Dict:
+        acceleration = self._lon_controller.run_step(current_state['v'], target_state['v'])
+        current_steering = self._lat_controller.run_step(current_state, target_state)
+        control = dict()
+        control['throttle'] = np.clip(acceleration, 0, self.max_throt)
+        control['brake'] = -np.clip(acceleration, -self.max_brake, 0)
+        # Steering regulation: changes cannot happen abruptly, can't steer too much.
+
+        if current_steering > self.past_steering + 0.1:
+            current_steering = self.past_steering + 0.1
+        elif current_steering < self.past_steering - 0.1:
+            current_steering = self.past_steering - 0.1
+
+        steering = np.clip(current_steering, -self.max_steer, self.max_steer)
+        #print(steering, self.past_steering)
+
+        control['steer'] = steering
+        if control['throttle'] > 0 and abs(current_state['v']) < 0.1 and abs(target_state['v']) < 0.1:
+            control['throttle'] = 0.
+            control['brake'] = 1.
+            control['steer'] = 0.
+
+        self.past_steering = steering
+
+        return control

@@ -12,7 +12,7 @@ class DiscreteBenchmarkEnvWrapper(BenchmarkEnvWrapper):
     def reset(self, *args, **kwargs) -> Any:
         obs = super().reset()
         obs_out = {
-            'birdview': obs['birdview'],
+            'birdview': obs['birdview'][..., [0, 1, 5, 6, 8]],
             'speed': (obs['speed'] / 25).astype(np.float32),
         }
         return obs_out
@@ -43,7 +43,7 @@ class DiscreteBenchmarkEnvWrapper(BenchmarkEnvWrapper):
         timestep = super().step(action)
         obs = timestep.obs
         obs_out = {
-            'birdview': obs['birdview'],
+            'birdview': obs['birdview'][..., [0, 1, 5, 6, 8]],
             'speed': (obs['speed'] / 25).astype(np.float32),
         }
         timestep = timestep._replace(obs=obs_out)
@@ -55,7 +55,7 @@ class MultiDiscreteBenchmarkEnvWrapper(BenchmarkEnvWrapper):
     def reset(self, *args, **kwargs) -> Any:
         obs = super().reset()
         obs_out = {
-            'birdview': obs['birdview'],
+            'birdview': obs['birdview'][..., [0, 1, 5, 6, 8]],
             'speed': (obs['speed'] / 25).astype(np.float32),
         }
         return obs_out
@@ -87,7 +87,7 @@ class MultiDiscreteBenchmarkEnvWrapper(BenchmarkEnvWrapper):
         timestep = super().step(action)
         obs = timestep.obs
         obs_out = {
-            'birdview': obs['birdview'],
+            'birdview': obs['birdview'][..., [0, 1, 5, 6, 8]],
             'speed': (obs['speed'] / 25).astype(np.float32),
         }
         timestep = timestep._replace(obs=obs_out)
@@ -99,7 +99,7 @@ class ContinuousBenchmarkEnvWrapper(BenchmarkEnvWrapper):
     def reset(self, *args, **kwargs) -> Any:
         obs = super().reset()
         obs_out = {
-            'birdview': obs['birdview'],
+            'birdview': obs['birdview'][..., [0, 1, 5, 6, 8]],
             'speed': (obs['speed'] / 25).astype(np.float32),
         }
         return obs_out
@@ -110,7 +110,6 @@ class ContinuousBenchmarkEnvWrapper(BenchmarkEnvWrapper):
         action = np.squeeze(action)
         steer = action[0]
         acc = action[1]
-        #acc = math.sqrt((action[1] + 1) * 2) - 1
         if acc > 0:
             throttle, brake = acc, 0
         else:
@@ -124,7 +123,7 @@ class ContinuousBenchmarkEnvWrapper(BenchmarkEnvWrapper):
         timestep = super().step(action)
         obs = timestep.obs
         obs_out = {
-            'birdview': obs['birdview'],
+            'birdview': obs['birdview'][..., [0, 1, 5, 6, 8]],
             'speed': (obs['speed'] / 25).astype(np.float32),
         }
         timestep = timestep._replace(obs=obs_out)

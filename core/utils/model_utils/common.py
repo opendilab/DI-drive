@@ -3,7 +3,121 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import torchvision.transforms as transforms
 import cv2
+
+from .resnet import get_resnet
+
+
+def crop_birdview(birdview, dx=0, dy=0, map_size=320, crop_size=192):
+    """
+    Overview: crop birdview by CROP_SIZE and MAP_SIZE, dx & dy means offset on both dimension
+    """
+    x = 260 - crop_size // 2 + dx
+    y = map_size // 2 + dy
+
+    birdview = birdview[x - crop_size // 2:x + crop_size // 2, y - crop_size // 2:y + crop_size // 2]
+
+    return birdview
+
+
+def select_branch(branches, one_hot):
+    shape = branches.size()
+
+    for i, s in enumerate(shape[2:]):
+        one_hot = torch.stack([one_hot for _ in range(s)], dim=i + 2)
+
+    return torch.sum(one_hot * branches, dim=1)
+
+
+def signed_angle(u, v):
+    theta = math.acos(np.dot(u, v) / (np.linalg.norm(u) * np.linalg.norm(v)))
+
+    if np.cross(u, v)[2] < 0:
+        theta *= -1.0
+
+    return theta
+
+
+def project_point_to_circle(point, c, r):
+    direction = point - c
+    closest = c + (direction / np.linalg.norm(direction)) * r
+
+    return closest
+
+
+class ResnetBase(nn.Module):
+
+    def __init__(self, backbone, input_channel=3, bias_first=True, pretrained=False):
+        super().__init__()
+
+        conv, c = get_resnet(backbone, input_channel=input_channel, bias_first=bias_first, pretrained=pretrained)
+
+        self.conv = conv
+        self.c = c
+
+        self.backbone = backbone
+        self.input_channel = input_channel
+        self.bias_first = bias_first
+
+
+class NormalizeV2(nn.Module):
+
+    def __init__(self, mean, std):
+        super().__init__()
+
+        self.mean = torch.FloatTensor(mean).reshape(1, 3, 1, 1).cuda()
+        self.std = torch.FloatTensor(std).reshape(1, 3, 1, 1).cuda()
+
+    def forward(self, x):
+        return (x - self.mean) / self.std
+
+
+class SpatialSoftmax(nn.Module):
+    # Source: https://gist.github.com/jeasinema/1cba9b40451236ba2cfb507687e08834
+    def __init__(self, height, width, channel, temperature=None, data_format='NCHW'):
+        super().__init__()
+
+        self.data_format = data_format
+        self.height = height
+        self.width = width
+        self.channel = channel
+
+        self.temperature = 1.
+
+        pos_x, pos_y = np.meshgrid(np.linspace(-1., 1., self.height), np.linspace(-1., 1., self.width))
+        pos_x = torch.from_numpy(pos_x.reshape(self.height * self.width)).float()
+        pos_y = torch.from_numpy(pos_y.reshape(self.height * self.width)).float()
+        self.register_buffer('pos_x', pos_x)
+        self.register_buffer('pos_y', pos_y)
+
+    def forward(self, feature):
+        # Output:
+        #   (N, C*2) x_0 y_0 ...
+
+        if self.data_format == 'NHWC':
+            feature = feature.transpose(1, 3).tranpose(2, 3).view(-1, self.height * self.width)
+        else:
+            feature = feature.view(-1, self.height * self.width)
+
+        weight = F.softmax(feature / self.temperature, dim=-1)
+        expected_x = torch.sum(torch.autograd.Variable(self.pos_x) * weight, dim=1, keepdim=True)
+        expected_y = torch.sum(torch.autograd.Variable(self.pos_y) * weight, dim=1, keepdim=True)
+        expected_xy = torch.cat([expected_x, expected_y], 1)
+        # feature_keypoints = expected_xy.view(-1, self.channel*2)
+        feature_keypoints = expected_xy.view(-1, self.channel, 2)
+
+        return feature_keypoints
+
+
+def one_hot(x, num_digits=4, start=1):
+    N = x.size()[0]
+    x = x.long()[:, None] - start
+    x = torch.clamp(x, 0, num_digits - 1)
+    y = torch.FloatTensor(N, num_digits)
+    y.zero_()
+    y.scatter_(1, x, 1)
+    return y
 
 
 class Join(nn.Module):

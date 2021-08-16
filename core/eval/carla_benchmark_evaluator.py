@@ -40,6 +40,7 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
     config = dict(
         benchmark_dir=None,
         result_dir='',
+        transform_obs=False,
         episodes_per_suite=100,
         resume=False,
         suite='FullTown01-v0',
@@ -51,6 +52,7 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
         super().__init__(cfg, env, policy)
         self._benchmark_dir = self._cfg.benchmark_dir
         self._result_dir = self._cfg.result_dir
+        self._transform_obs = self._cfg.transform_obs
         self._episodes_per_suite = self._cfg.episodes_per_suite
         self._resume = self._cfg.resume
         if self._benchmark_dir is None:
@@ -153,7 +155,8 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
             with self._timer:
                 while True:
                     obs = self._env_manager.ready_obs
-                    obs = to_tensor(obs, dtype=torch.float32)
+                    if self._transform_obs:
+                        obs = to_tensor(obs, dtype=torch.float32)
                     policy_output = self._policy.forward(obs, **policy_kwargs)
                     actions = {env_id: output['action'] for env_id, output in policy_output.items()}
                     timesteps = self._env_manager.step(actions)

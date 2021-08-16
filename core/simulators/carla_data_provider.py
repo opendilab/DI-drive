@@ -5,9 +5,22 @@ from six import iteritems
 from typing import Any, Dict, List, Optional, Tuple
 
 import carla
+import shapely
 
 from core.utils.simulator_utils.carla_utils import calculate_speed, convert_waypoint_to_transform
 from core.utils.simulator_utils.carla_agents.tools.misc import is_within_distance_ahead
+from core.utils.simulator_utils.carla_agents.navigation import RoadOption
+
+def _numpy(carla_vector, normalize=False):
+    result = np.float32([carla_vector.x, carla_vector.y])
+
+    if normalize:
+        return result / (np.linalg.norm(result) + 1e-4)
+
+    return result
+
+def _orientation(yaw):
+    return np.float32([np.cos(np.radians(yaw)), np.sin(np.radians(yaw))])
 
 
 class CarlaDataProvider(object):
@@ -26,6 +39,8 @@ class CarlaDataProvider(object):
     _actor_speed_map = dict()
     _actor_transform_map = dict()
     _actor_acceleration_map = dict()
+    _actor_angular_velocity_map = dict()
+    _actor_speed_vector_map = dict()
     _traffic_light_map = dict()
     _carla_actor_pool = dict()
     _hero_vehicle_route = None
@@ -65,6 +80,16 @@ class CarlaDataProvider(object):
         else:
             CarlaDataProvider._actor_acceleration_map[actor] = None
 
+        if actor in CarlaDataProvider._actor_angular_velocity_map:
+            raise KeyError("Vehicle '{}' already registered. Cannot register twice!".format(actor.id))
+        else:
+            CarlaDataProvider._actor_angular_velocity_map[actor] = None
+
+        if actor in CarlaDataProvider._actor_speed_vector_map:
+            raise KeyError("Vehicle '{}' already registered. Cannot register twice!".format(actor.id))
+        else:
+            CarlaDataProvider._actor_speed_vector_map[actor] = None
+
     @staticmethod
     def register_actors(actors: List) -> None:
         """
@@ -89,6 +114,14 @@ class CarlaDataProvider(object):
         for actor in CarlaDataProvider._actor_acceleration_map:
             if actor is not None and actor.is_alive:
                 CarlaDataProvider._actor_acceleration_map[actor] = actor.get_acceleration()
+
+        for actor in CarlaDataProvider._actor_angular_velocity_map:
+            if actor is not None and actor.is_alive:
+                CarlaDataProvider._actor_angular_velocity_map[actor] = actor.get_angular_velocity()
+
+        for actor in CarlaDataProvider._actor_speed_vector_map:
+            if actor is not None and actor.is_alive:
+                CarlaDataProvider._actor_speed_vector_map[actor] = actor.get_velocity()
 
         world = CarlaDataProvider._world
         if world is None:
@@ -143,6 +176,28 @@ class CarlaDataProvider(object):
             if key.id == actor.id:
                 return CarlaDataProvider._actor_acceleration_map[key]
         print('"WARNING: {}.get_acceleration: {} not found!'.format(__name__, actor))
+        return None
+
+    @staticmethod
+    def get_angular_velocity(actor: carla.Actor) -> Optional[carla.Vector3D]:
+        """
+        returns the angular velocity for the given actor
+        """
+        for key in CarlaDataProvider._actor_angular_velocity_map:
+            if key.id == actor.id:
+                return CarlaDataProvider._actor_angular_velocity_map[key]
+        print('"WARNING: {}.get_angular_velocity: {} not found!'.format(__name__, actor))
+        return None
+
+    @staticmethod
+    def get_speed_vector(actor: carla.Actor) -> Optional[carla.Vector3D]:
+        """
+        returns the absolute speed for the given actor
+        """
+        for key in CarlaDataProvider._actor_speed_vector_map:
+            if key.id == actor.id:
+                return CarlaDataProvider._actor_speed_vector_map[key]
+        print('"WARNING: {}.get_speed: {} not found!'.format(__name__, actor))
         return None
 
     @staticmethod
@@ -772,6 +827,221 @@ class CarlaDataProvider(object):
         return (False, None)
 
     @staticmethod
+    def is_junction_vehicle_hazard(vehicle: carla.Actor,
+                                   command: RoadOption) -> Tuple[bool, Optional[carla.Actor]]:
+        """
+        :Arguments:
+            - vehicle: Potential obstacle to check
+            - command: future driving command
+        :Returns: a tuple given by (bool_flag, vehicle), where
+            - bool_flag: True if there is a vehicle ahead blocking us in junction and False otherwise
+            - vehicle: The blocker object itself
+        """
+        vehicle_list = CarlaDataProvider.get_actor_list().filter("*vehicle*")
+        o1 = _orientation(CarlaDataProvider.get_transform(vehicle).rotation.yaw)
+        x1 = vehicle.bounding_box.extent.x
+        p1 = CarlaDataProvider.get_location(vehicle) + CarlaDataProvider.get_transform(vehicle).get_forward_vector()
+        w1 = CarlaDataProvider._map.get_waypoint(p1)
+        s1 = CarlaDataProvider.get_speed(vehicle)
+        if command == RoadOption.RIGHT:
+            shift_angle = 25
+        elif command == RoadOption.LEFT:
+            shift_angle = -25
+        else:
+            shift_angle = 0
+        v1 = (5 * s1 + 6) * _orientation(CarlaDataProvider.get_transform(vehicle).rotation.yaw + shift_angle)
+
+        for target_vehicle in vehicle_list:
+            if target_vehicle.id == vehicle.id:
+                continue
+
+            o2 = _orientation(CarlaDataProvider.get_transform(target_vehicle).rotation.yaw)
+            o2_left  = _orientation(CarlaDataProvider.get_transform(target_vehicle).rotation.yaw - 15)
+            o2_right = _orientation(CarlaDataProvider.get_transform(target_vehicle).rotation.yaw + 15)
+            x2 = target_vehicle.bounding_box.extent.x
+
+            p2 = CarlaDataProvider.get_location(target_vehicle)
+            p2_hat = p2 - (x2 + 2) * CarlaDataProvider.get_transform(target_vehicle).get_forward_vector()
+            w2 = CarlaDataProvider._map.get_waypoint(p2)
+            s2 = CarlaDataProvider.get_speed(target_vehicle)
+
+            v2 = (4 * s2 + 2 * x2 + 7) * o2
+            v2_left  = (4 * s2 + 2 * x2 + 7) * o2_left
+            v2_right = (4 * s2 + 2 * x2 + 7) * o2_right
+
+            angle_between_heading = np.degrees(np.arccos(np.clip(o1.dot(o2), -1, 1)))
+
+            if vehicle.get_location().distance(p2) > 20:
+                continue
+            if w1.is_junction is False and w2.is_junction is False:
+                continue
+            if angle_between_heading < 15.0 or angle_between_heading > 165:
+                continue
+            collides, collision_point = CarlaDataProvider.get_collision(_numpy(p1), v1, _numpy(p2_hat), v2)
+            if collides is None:
+                collides, collision_point = CarlaDataProvider.get_collision(_numpy(p1), v1, _numpy(p2_hat), v2_left)
+            if collides is None:
+                collides, collision_point = CarlaDataProvider.get_collision(_numpy(p1), v1, _numpy(p2_hat), v2_right)
+                continue
+            if collides:
+                return (True, target_vehicle)
+        return (False, None)
+
+    @staticmethod
+    def is_lane_vehicle_hazard(vehicle: carla.Actor,
+                                   command: RoadOption) -> Tuple[bool, Optional[carla.Actor]]:
+        """
+        :Arguments:
+            - vehicle: Potential obstacle to check
+            - command: future driving command
+        :Returns: a tuple given by (bool_flag, vehicle), where
+            - bool_flag: True if there is a vehicle in other lanes blocking us and False otherwise
+            - vehicle: The blocker object itself
+        """
+        vehicle_list = CarlaDataProvider.get_actor_list().filter("*vehicle*")
+        if command != RoadOption.CHANGELANELEFT and command != RoadOption.CHANGELANERIGHT:
+            return (False, None)
+        w1 = CarlaDataProvider._map.get_waypoint(vehicle.get_location())
+        o1 = _orientation(CarlaDataProvider.get_transform(vehicle).rotation.yaw)
+        p1 = CarlaDataProvider.get_location(vehicle)
+
+        yaw_w1 = w1.transform.rotation.yaw
+        lane_width = w1.lane_width
+        location_w1 = w1.transform.location
+
+        lft_shift = 0.5
+        rgt_shift = 0.5
+        if command == RoadOption.CHANGELANELEFT:
+            rgt_shift += 1
+        else:
+            lft_shift += 1
+
+        lft_lane_wp = CarlaDataProvider.rotate_point(carla.Vector3D(lft_shift * lane_width, 0.0, location_w1.z), yaw_w1 + 90)
+        lft_lane_wp = location_w1 + carla.Location(lft_lane_wp)
+        rgt_lane_wp = CarlaDataProvider.rotate_point(carla.Vector3D(rgt_shift * lane_width, 0.0, location_w1.z), yaw_w1 - 90)
+        rgt_lane_wp = location_w1 + carla.Location(rgt_lane_wp)
+
+        for target_vehicle in vehicle_list:
+            if target_vehicle.id == vehicle.id:
+                continue
+
+            w2 = CarlaDataProvider._map.get_waypoint(CarlaDataProvider.get_location(target_vehicle))
+            o2 = _orientation(CarlaDataProvider.get_transform(target_vehicle).rotation.yaw)
+            p2 = CarlaDataProvider.get_location(target_vehicle)
+            x2 = target_vehicle.bounding_box.extent.x
+            p2_hat = p2 - CarlaDataProvider.get_transform(target_vehicle).get_forward_vector() * x2 * 2
+            s2 = CarlaDataProvider.get_speed_vector(target_vehicle) + CarlaDataProvider.get_transform(target_vehicle).get_forward_vector() * x2
+            s2_value = max(12, 2 + 2 * x2 + 3.0 * CarlaDataProvider.get_speed(target_vehicle))
+
+            distance = p1.distance(p2)
+
+            if distance > s2_value:
+                continue
+            if w1.road_id != w2.road_id or w1.lane_id * w2.lane_id < 0:
+                continue
+            if command == RoadOption.CHANGELANELEFT:
+                if w1.lane_id > 0:
+                    if w2.lane_id != w1.lane_id - 1:
+                        continue
+                if w1.lane_id < 0:
+                    if w2.lane_id != w1.lane_id + 1:
+                        continue
+            if command == RoadOption.CHANGELANERIGHT:
+                if w1.lane_id > 0:
+                    if w2.lane_id != w1.lane_id + 1:
+                        continue
+                if w1.lane_id < 0:
+                    if w2.lane_id != w1.lane_id - 1:
+                        continue
+
+            if CarlaDataProvider.is_vehicle_crossing_future(p2_hat, s2, lft_lane_wp, rgt_lane_wp):
+                return (True, target_vehicle)
+        return (False, None)
+
+    @staticmethod
+    def is_bike_hazard(vehicle: carla.Actor) -> Tuple[bool, Optional[carla.Actor]]:
+        """
+        :Arguments:
+            - vehicle: Potential obstacle to check
+        :Returns: a tuple given by (bool_flag, vehicle), where
+            - bool_flag: True if there is a bike ahead blocking us and False otherwise
+            - bike: The blocker object itself
+        """
+        bikes_list = CarlaDataProvider.get_actor_list().filter("*vehicle*")
+        o1 = _orientation(CarlaDataProvider.get_transform(vehicle).rotation.yaw)
+        v1_hat = o1
+        p1 = _numpy(CarlaDataProvider.get_location(vehicle))
+        v1 = 10.0 * o1
+
+        for bike in bikes_list:
+            o2 = _orientation(CarlaDataProvider.get_transform(bike).rotation.yaw)
+            s2 = CarlaDataProvider.get_speed(bike)
+            v2_hat = o2
+            p2 = _numpy(CarlaDataProvider.get_location(bike))
+
+            p2_p1 = p2 - p1
+            distance = np.linalg.norm(p2_p1)
+            p2_p1_hat = p2_p1 / (distance + 1e-4)
+
+            angle_to_car = np.degrees(np.arccos(np.clip(v1_hat.dot(p2_p1_hat),-1, 1)))
+            angle_between_heading = np.degrees(np.arccos(np.clip(o1.dot(o2), -1, 1)))
+
+            # to consider -ve angles too
+            angle_to_car = min(angle_to_car, 360.0 - angle_to_car)
+            angle_between_heading = min(angle_between_heading, 360.0 - angle_between_heading)
+            if angle_to_car > 30:
+                continue
+            if angle_between_heading < 75 and angle_between_heading > 105:
+                continue
+
+            p2_hat = -2.0 * v2_hat + p1
+            v2 = 8.0 * v2_hat
+
+            collides, collision_point = CarlaDataProvider.get_collision(p1, v1, p2_hat, v2)
+
+            if collides:
+                return (True, bike)
+
+        return (False, None)
+
+    @staticmethod
+    def is_walker_hazard(vehicle: carla.Actor) -> Tuple[bool, Optional[carla.Actor]]:
+        """
+        :Arguments:
+            - vehicle: Potential obstacle to check
+        :Returns: a tuple given by (bool_flag, vehicle), where
+            - bool_flag: True if there is a walker ahead blocking us and False otherwise
+            - walker: The blocker object itself
+        """
+        walkers_list = CarlaDataProvider.get_actor_list().filter("*walker*")
+        p1 = _numpy(CarlaDataProvider.get_location(vehicle))
+        v1 = 10.0 * _orientation(CarlaDataProvider.get_transform(vehicle).rotation.yaw)
+
+        for walker in walkers_list:
+            v2_hat = _orientation(CarlaDataProvider.get_transform(walker).rotation.yaw)
+            s2 = CarlaDataProvider.get_speed(walker)
+
+            if s2 < 0.05:
+                v2_hat *= s2
+
+            p2 = -3.0 * v2_hat + _numpy(CarlaDataProvider.get_location(walker))
+            v2 = 8.0 * v2_hat
+
+            collides, collision_point = CarlaDataProvider.get_collision(p1, v1, p2, v2)
+
+            if collides:
+                return (True, walker)
+        return (False, None)
+
+    @staticmethod
+    def is_vehicle_crossing_future(p1, s1, lft_lane, rgt_lane):
+        p1_hat = carla.Location(x=p1.x + 3 * s1.x, y=p1.y + 3 * s1.y)
+        line1 = shapely.geometry.LineString([(p1.x, p1.y), (p1_hat.x, p1_hat.y)])
+        line2 = shapely.geometry.LineString([(lft_lane.x, lft_lane.y), (rgt_lane.x, rgt_lane.y)])
+        inter = line1.intersection(line2)
+        return not inter.is_empty
+
+    @staticmethod
     def get_actors() -> List:
         """
         Return list of actors and their ids
@@ -880,3 +1150,25 @@ class CarlaDataProvider(object):
 
         # Remove all keys with None values
         CarlaDataProvider._carla_actor_pool = dict({k: v for k, v in CarlaDataProvider._carla_actor_pool.items() if v})
+
+    @staticmethod
+    def get_collision(p1, v1, p2, v2):
+        A = np.stack([v1, -v2], 1)
+        b = p2 - p1
+
+        if abs(np.linalg.det(A)) < 1e-3:
+            return False, None
+
+        x = np.linalg.solve(A, b)
+        collides = all(x >= 0) and all(x <= 1) # how many seconds until collision
+
+        return collides, p1 + x[0] * v1
+
+    @staticmethod
+    def rotate_point(point, angle):
+        """
+        rotate a given point by a given angle
+        """
+        x_ = math.cos(math.radians(angle)) * point.x - math.sin(math.radians(angle)) * point.y
+        y_ = math.sin(math.radians(angle)) * point.x + math.cos(math.radians(angle)) * point.y
+        return carla.Vector3D(x_, y_, point.z)
