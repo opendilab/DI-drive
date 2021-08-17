@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>core.envs.carla_env_wrapper &mdash; DI-drive 0.1.0.1 documentation</title>
+  <title>core.envs.carla_env_wrapper &mdash; DI-drive 0.1.1 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.1.0.1
+                0.1.1
               </div>
             
           
@@ -181,6 +181,7 @@
 <span class="kn">from</span> <span class="nn">core.data.benchmark</span> <span class="kn">import</span> <span class="n">ALL_SUITES</span>
 <span class="kn">from</span> <span class="nn">core.eval.carla_benchmark_evaluator</span> <span class="kn">import</span> <span class="n">get_suites_list</span><span class="p">,</span> <span class="n">read_pose_txt</span><span class="p">,</span> <span class="n">get_benchmark_dir</span>
 <span class="kn">from</span> <span class="nn">.base_carla_env</span> <span class="kn">import</span> <span class="n">BaseCarlaEnv</span>
+<span class="kn">from</span> <span class="nn">core.utils.others.config_helper</span> <span class="kn">import</span> <span class="n">deep_merge_dicts</span>
 <span class="kn">from</span> <span class="nn">ding.envs.env.base_env</span> <span class="kn">import</span> <span class="n">BaseEnvTimestep</span><span class="p">,</span> <span class="n">BaseEnvInfo</span>
 <span class="kn">from</span> <span class="nn">ding.envs.common.env_element</span> <span class="kn">import</span> <span class="n">EnvElementInfo</span>
 <span class="kn">from</span> <span class="nn">ding.torch_utils.data_helper</span> <span class="kn">import</span> <span class="n">to_ndarray</span>
@@ -205,7 +206,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">default_config</span><span class="p">()</span>
         <span class="k">elif</span> <span class="s1">&#39;cfg_type&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cfg</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">default_config</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span> <span class="o">=</span> <span class="n">deep_merge_dicts</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="p">,</span> <span class="n">cfg</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span> <span class="o">=</span> <span class="n">cfg</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_env</span> <span class="o">=</span> <span class="n">env</span>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>core.utils.planner.basic_planner &mdash; DI-drive 0.1.0.1 documentation</title>
+  <title>core.utils.planner.basic_planner &mdash; DI-drive 0.1.1 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.1.0.1
+                0.1.1
               </div>
             
           
@@ -184,6 +184,7 @@
 <span class="kn">from</span> <span class="nn">core.utils.simulator_utils.carla_agents.navigation</span> <span class="kn">import</span> <span class="n">RoadOption</span>
 <span class="kn">from</span> <span class="nn">core.simulators.carla_data_provider</span> <span class="kn">import</span> <span class="n">CarlaDataProvider</span>
 <span class="kn">from</span> <span class="nn">core.utils.simulator_utils.carla_agents.tools.misc</span> <span class="kn">import</span> <span class="n">draw_waypoints</span>
+<span class="kn">from</span> <span class="nn">core.utils.others.config_helper</span> <span class="kn">import</span> <span class="n">deep_merge_dicts</span>
 
 
 <span class="k">class</span> <span class="nc">AgentState</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
@@ -195,6 +196,7 @@
     <span class="n">BLOCKED_BY_VEHICLE</span> <span class="o">=</span> <span class="mi">2</span>
     <span class="n">BLOCKED_BY_WALKER</span> <span class="o">=</span> <span class="mi">3</span>
     <span class="n">BLOCKED_RED_LIGHT</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">BLOCKED_BY_BIKE</span> <span class="o">=</span> <span class="mi">5</span>
 
 
 <div class="viewcode-block" id="BasicPlanner"><a class="viewcode-back" href="../../../../api_doc/utils.html#core.utils.planner.basic_planner.BasicPlanner">[docs]</a><span class="k">class</span> <span class="nc">BasicPlanner</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -225,7 +227,7 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="s1">&#39;cfg_type&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cfg</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">default_config</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span> <span class="o">=</span> <span class="n">deep_merge_dicts</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="p">,</span> <span class="n">cfg</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span> <span class="o">=</span> <span class="n">cfg</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">get_hero_actor</span><span class="p">()</span>
@@ -236,7 +238,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_min_distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">min_distance</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">fps</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_route</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_route</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_queue</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_buffer_size</span> <span class="o">=</span> <span class="mi">100</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="n">maxlen</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
@@ -411,11 +413,29 @@
 
         <span class="c1"># Detect vehicle and light hazard</span>
         <span class="n">vehicle_state</span><span class="p">,</span> <span class="n">vehicle</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">is_vehicle_hazard</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">vehicle_state</span><span class="p">:</span>
+            <span class="n">vehicle_state</span><span class="p">,</span> <span class="n">vehicle</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">is_lane_vehicle_hazard</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_road_option</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">vehicle_state</span><span class="p">:</span>
+            <span class="n">vehicle_state</span><span class="p">,</span> <span class="n">vehicle</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">is_junction_vehicle_hazard</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_road_option</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">vehicle_state</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_debug</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;!!! VEHICLE BLOCKING AHEAD [</span><span class="si">{}</span><span class="s1">])&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">vehicle</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">agent_state</span> <span class="o">=</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">BLOCKED_BY_VEHICLE</span>
+
+        <span class="n">bike_state</span><span class="p">,</span> <span class="n">bike</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">is_bike_hazard</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">bike_state</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_debug</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;!!! BIKE BLOCKING AHEAD [</span><span class="si">{}</span><span class="s1">])&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bike</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">agent_state</span> <span class="o">=</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">BLOCKED_BY_BIKE</span>
+
+        <span class="n">walker_state</span><span class="p">,</span> <span class="n">walker</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">is_walker_hazard</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">walker_state</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_debug</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;!!! WALKER BLOCKING AHEAD [</span><span class="si">{}</span><span class="s1">])&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">walker</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">agent_state</span> <span class="o">=</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">BLOCKED_BY_WALKER</span>
 
         <span class="n">light_state</span><span class="p">,</span> <span class="n">traffic_light</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">is_light_red</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="p">)</span>
 
@@ -451,6 +471,14 @@
                 <span class="n">waypoint_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">waypoint</span><span class="p">)</span>
                 <span class="n">num</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">waypoint_list</span></div>
+
+    <span class="k">def</span> <span class="nf">get_direction_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">waypoint_num</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">RoadOption</span><span class="p">]:</span>
+        <span class="n">num</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">waypoint_num</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="p">))</span>
+        <span class="n">direction_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num</span><span class="p">):</span>
+            <span class="n">direction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+            <span class="n">direction_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">direction</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">direction_list</span>
 
 <div class="viewcode-block" id="BasicPlanner.get_incoming_waypoint_and_direction"><a class="viewcode-back" href="../../../../api_doc/utils.html#core.utils.planner.basic_planner.BasicPlanner.get_incoming_waypoint_and_direction">[docs]</a>    <span class="k">def</span> <span class="nf">get_incoming_waypoint_and_direction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">carla</span><span class="o">.</span><span class="n">Waypoint</span><span class="p">,</span> <span class="n">RoadOption</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>

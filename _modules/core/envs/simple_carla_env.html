@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>core.envs.simple_carla_env &mdash; DI-drive 0.1.0.1 documentation</title>
+  <title>core.envs.simple_carla_env &mdash; DI-drive 0.1.1 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.1.0.1
+                0.1.1
               </div>
             
           
@@ -471,8 +471,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_stuck_detector</span><span class="o">.</span><span class="n">tick</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s1">&#39;speed&#39;</span><span class="p">])</span>
 
         <span class="n">obs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">sensor_data</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ignore_light</span> <span class="ow">and</span> <span class="s1">&#39;birdview&#39;</span> <span class="ow">in</span> <span class="n">obs</span><span class="p">:</span>
-            <span class="n">obs</span><span class="p">[</span><span class="s1">&#39;birdview&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">obs</span><span class="p">[</span><span class="s1">&#39;birdview&#39;</span><span class="p">][</span><span class="o">...</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">obs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
             <span class="p">{</span>
                 <span class="s1">&#39;tick&#39;</span><span class="p">:</span> <span class="n">information</span><span class="p">[</span><span class="s1">&#39;tick&#39;</span><span class="p">],</span>
@@ -488,9 +486,14 @@
                 <span class="s1">&#39;location&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">]),</span>
                 <span class="s1">&#39;orientation&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s1">&#39;orientation&#39;</span><span class="p">]),</span>
                 <span class="s1">&#39;acceleration&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s1">&#39;acceleration&#39;</span><span class="p">]),</span>
+                <span class="s1">&#39;velocity&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s1">&#39;velocity&#39;</span><span class="p">]),</span>
+                <span class="s1">&#39;angular_velocity&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s1">&#39;angular_velocity&#39;</span><span class="p">]),</span>
+                <span class="s1">&#39;rotation&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s1">&#39;rotation&#39;</span><span class="p">]),</span>
                 <span class="s1">&#39;is_junction&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s1">&#39;is_junction&#39;</span><span class="p">]),</span>
                 <span class="s1">&#39;tl_state&#39;</span><span class="p">:</span> <span class="n">state</span><span class="p">[</span><span class="s1">&#39;tl_state&#39;</span><span class="p">],</span>
                 <span class="s1">&#39;tl_dis&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s1">&#39;tl_dis&#39;</span><span class="p">]),</span>
+                <span class="s1">&#39;waypoint_list&#39;</span><span class="p">:</span> <span class="n">navigation</span><span class="p">[</span><span class="s1">&#39;waypoint_list&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;direction_list&#39;</span><span class="p">:</span> <span class="n">navigation</span><span class="p">[</span><span class="s1">&#39;direction_list&#39;</span><span class="p">],</span>
             <span class="p">}</span>
         <span class="p">)</span>
 

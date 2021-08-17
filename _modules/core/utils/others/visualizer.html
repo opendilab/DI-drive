@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>core.utils.others.visualizer &mdash; DI-drive 0.1.0.1 documentation</title>
+  <title>core.utils.others.visualizer &mdash; DI-drive 0.1.1 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.1.0.1
+                0.1.1
               </div>
             
           
@@ -179,7 +179,7 @@
 <span class="kn">import</span> <span class="nn">copy</span>
 
 <span class="kn">from</span> <span class="nn">core.utils.others.image_helper</span> <span class="kn">import</span> <span class="n">GifMaker</span><span class="p">,</span> <span class="n">VideoMaker</span><span class="p">,</span> <span class="n">show_image</span><span class="p">,</span> <span class="n">check_image</span>
-<span class="kn">from</span> <span class="nn">ding.utils</span> <span class="kn">import</span> <span class="n">deep_merge_dicts</span>
+<span class="kn">from</span> <span class="nn">core.utils.others.config_helper</span> <span class="kn">import</span> <span class="n">deep_merge_dicts</span>
 
 
 <div class="viewcode-block" id="Visualizer"><a class="viewcode-back" href="../../../../api_doc/utils.html#core.utils.others.visualizer.Visualizer">[docs]</a><span class="k">class</span> <span class="nc">Visualizer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -206,7 +206,7 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="s1">&#39;cfg_type&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cfg</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">default_config</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span> <span class="o">=</span> <span class="n">deep_merge_dicts</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="p">,</span> <span class="n">cfg</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span> <span class="o">=</span> <span class="n">cfg</span>
 

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>core.models.carla_controller &mdash; DI-drive 0.1.0.1 documentation</title>
+  <title>core.models.carla_controller &mdash; DI-drive 0.1.1 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.1.0.1
+                0.1.1
               </div>
             
           
@@ -363,6 +363,96 @@
             <span class="n">_ie</span> <span class="o">=</span> <span class="mf">0.0</span>
 
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_k_p</span> <span class="o">*</span> <span class="n">_dot</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_k_d</span> <span class="o">*</span> <span class="n">_de</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_k_i</span> <span class="o">*</span> <span class="n">_ie</span><span class="p">),</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">RWPFLateralController</span><span class="p">():</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">L</span><span class="o">=</span><span class="mf">2.405</span><span class="p">,</span> <span class="n">k_k</span><span class="o">=</span><span class="mf">1.235</span><span class="p">,</span> <span class="n">k_theta</span><span class="o">=</span><span class="mf">0.456</span><span class="p">,</span> <span class="n">k_e</span><span class="o">=</span><span class="mf">0.11</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.8</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">L</span> <span class="o">=</span> <span class="n">L</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_k</span> <span class="o">=</span> <span class="n">k_k</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_theta</span> <span class="o">=</span> <span class="n">k_theta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_e</span> <span class="o">=</span> <span class="n">k_e</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
+
+    <span class="k">def</span> <span class="nf">rad_lim</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rad</span><span class="p">):</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">rad</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">):</span>
+            <span class="n">rad</span> <span class="o">-=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">rad</span> <span class="o">&lt;</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">):</span>
+            <span class="n">rad</span> <span class="o">+=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">rad</span>
+
+    <span class="k">def</span> <span class="nf">run_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_state</span><span class="p">,</span> <span class="n">target_state</span><span class="p">):</span>
+        <span class="n">dx</span> <span class="o">=</span> <span class="n">current_state</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">target_state</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span>
+        <span class="n">dy</span> <span class="o">=</span> <span class="n">current_state</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">target_state</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span>
+        <span class="n">tx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">target_state</span><span class="p">[</span><span class="s1">&#39;theta&#39;</span><span class="p">])</span>
+        <span class="n">ty</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">target_state</span><span class="p">[</span><span class="s1">&#39;theta&#39;</span><span class="p">])</span>
+
+        <span class="n">e</span> <span class="o">=</span> <span class="n">dx</span> <span class="o">*</span> <span class="n">ty</span> <span class="o">-</span> <span class="n">dy</span> <span class="o">*</span> <span class="n">tx</span>
+        <span class="c1">#theta_e = self.rad_lim(current_state[&#39;theta&#39;] - target_state[&#39;theta&#39;])</span>
+        <span class="n">theta_e</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rad_lim</span><span class="p">(</span><span class="o">-</span><span class="n">target_state</span><span class="p">[</span><span class="s1">&#39;theta&#39;</span><span class="p">])</span>
+
+        <span class="n">w1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_k</span> <span class="o">*</span> <span class="n">target_state</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">target_state</span><span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_e</span><span class="p">)</span>
+        <span class="n">w2</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">k_theta</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">current_state</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">])</span> <span class="o">*</span> <span class="n">theta_e</span>
+        <span class="n">w3</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k_e</span> <span class="o">*</span> <span class="n">target_state</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">theta_e</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">))</span> <span class="o">*</span> <span class="n">e</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="p">(</span><span class="n">w1</span> <span class="o">+</span> <span class="n">w2</span> <span class="o">+</span> <span class="n">w3</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.8</span>
+        <span class="k">if</span> <span class="n">current_state</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.02</span><span class="p">:</span>
+            <span class="n">steer</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">steer</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">w</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="n">current_state</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">])</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+
+        <span class="c1">#print(e, w, steer)</span>
+        <span class="k">return</span> <span class="n">steer</span>
+
+
+<span class="k">class</span> <span class="nc">VehicleCapacController</span><span class="p">():</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">args_lateral</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+        <span class="n">args_longitudinal</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+        <span class="n">max_throttle</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">,</span>
+        <span class="n">max_brake</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">max_steering</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.8</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_brake</span> <span class="o">=</span> <span class="n">max_brake</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_throt</span> <span class="o">=</span> <span class="n">max_throttle</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_steer</span> <span class="o">=</span> <span class="n">max_steering</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">past_steering</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lon_controller</span> <span class="o">=</span> <span class="n">PIDLongitudinalController</span><span class="p">(</span><span class="o">**</span><span class="n">args_longitudinal</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lat_controller</span> <span class="o">=</span> <span class="n">RWPFLateralController</span><span class="p">(</span><span class="o">**</span><span class="n">args_lateral</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">past_steering</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_state</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">target_state</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+        <span class="n">acceleration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lon_controller</span><span class="o">.</span><span class="n">run_step</span><span class="p">(</span><span class="n">current_state</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">],</span> <span class="n">target_state</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">])</span>
+        <span class="n">current_steering</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lat_controller</span><span class="o">.</span><span class="n">run_step</span><span class="p">(</span><span class="n">current_state</span><span class="p">,</span> <span class="n">target_state</span><span class="p">)</span>
+        <span class="n">control</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">control</span><span class="p">[</span><span class="s1">&#39;throttle&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">acceleration</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_throt</span><span class="p">)</span>
+        <span class="n">control</span><span class="p">[</span><span class="s1">&#39;brake&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">acceleration</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">max_brake</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># Steering regulation: changes cannot happen abruptly, can&#39;t steer too much.</span>
+
+        <span class="k">if</span> <span class="n">current_steering</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">past_steering</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">:</span>
+            <span class="n">current_steering</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">past_steering</span> <span class="o">+</span> <span class="mf">0.1</span>
+        <span class="k">elif</span> <span class="n">current_steering</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">past_steering</span> <span class="o">-</span> <span class="mf">0.1</span><span class="p">:</span>
+            <span class="n">current_steering</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">past_steering</span> <span class="o">-</span> <span class="mf">0.1</span>
+
+        <span class="n">steering</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">current_steering</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">max_steer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_steer</span><span class="p">)</span>
+        <span class="c1">#print(steering, self.past_steering)</span>
+
+        <span class="n">control</span><span class="p">[</span><span class="s1">&#39;steer&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">steering</span>
+        <span class="k">if</span> <span class="n">control</span><span class="p">[</span><span class="s1">&#39;throttle&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">current_state</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">0.1</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">target_state</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">0.1</span><span class="p">:</span>
+            <span class="n">control</span><span class="p">[</span><span class="s1">&#39;throttle&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
+            <span class="n">control</span><span class="p">[</span><span class="s1">&#39;brake&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+            <span class="n">control</span><span class="p">[</span><span class="s1">&#39;steer&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">past_steering</span> <span class="o">=</span> <span class="n">steering</span>
+
+        <span class="k">return</span> <span class="n">control</span>
 </pre></div>
 
            </div>

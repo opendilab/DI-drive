@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>core.simulators.carla_simulator &mdash; DI-drive 0.1.0.1 documentation</title>
+  <title>core.simulators.carla_simulator &mdash; DI-drive 0.1.1 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.1.0.1
+                0.1.1
               </div>
             
           
@@ -188,7 +188,7 @@
 <span class="kn">from</span> <span class="nn">core.utils.simulator_utils.map_utils</span> <span class="kn">import</span> <span class="n">BeVWrapper</span>
 <span class="kn">from</span> <span class="nn">core.simulators.carla_data_provider</span> <span class="kn">import</span> <span class="n">CarlaDataProvider</span>
 <span class="kn">from</span> <span class="nn">core.utils.simulator_utils.carla_utils</span> <span class="kn">import</span> <span class="n">control_to_signal</span><span class="p">,</span> <span class="n">get_birdview</span>
-<span class="kn">from</span> <span class="nn">core.utils.planner</span> <span class="kn">import</span> <span class="n">BasicPlanner</span><span class="p">,</span> <span class="n">BehaviorPlanner</span>
+<span class="kn">from</span> <span class="nn">core.utils.planner</span> <span class="kn">import</span> <span class="n">BasicPlanner</span><span class="p">,</span> <span class="n">BehaviorPlanner</span><span class="p">,</span> <span class="n">LBCPlannerNew</span>
 <span class="kn">from</span> <span class="nn">core.utils.others.tcp_helper</span> <span class="kn">import</span> <span class="n">find_traffic_manager_port</span>
 
 <span class="kn">import</span> <span class="nn">carla</span>
@@ -218,6 +218,7 @@
 <span class="n">PLANNER_DICT</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="n">BasicPlanner</span><span class="p">,</span>
     <span class="s1">&#39;behavior&#39;</span><span class="p">:</span> <span class="n">BehaviorPlanner</span><span class="p">,</span>
+    <span class="s1">&#39;lbc&#39;</span><span class="p">:</span> <span class="n">LBCPlannerNew</span><span class="p">,</span>
 <span class="p">}</span>
 
 
@@ -689,9 +690,10 @@
         <span class="n">location</span> <span class="o">=</span> <span class="n">transform</span><span class="o">.</span><span class="n">location</span>
         <span class="n">orientation</span> <span class="o">=</span> <span class="n">transform</span><span class="o">.</span><span class="n">get_forward_vector</span><span class="p">()</span>
         <span class="n">acceleration</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">get_acceleration</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_actor</span><span class="p">)</span>
+        <span class="n">angular_velocity</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">get_angular_velocity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_actor</span><span class="p">)</span>
+        <span class="n">velocity</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">get_speed_vector</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_actor</span><span class="p">)</span>
 
         <span class="n">light_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_traffic_light_helper</span><span class="o">.</span><span class="n">active_light_state</span><span class="o">.</span><span class="n">value</span>
-
         <span class="n">drive_waypoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map</span><span class="o">.</span><span class="n">get_waypoint</span><span class="p">(</span>
             <span class="n">location</span><span class="p">,</span>
             <span class="n">project_to_road</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -708,6 +710,9 @@
             <span class="s1">&#39;location&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">location</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">location</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">location</span><span class="o">.</span><span class="n">z</span><span class="p">]),</span>
             <span class="s1">&#39;orientation&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">orientation</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">orientation</span><span class="o">.</span><span class="n">y</span><span class="p">]),</span>
             <span class="s1">&#39;acceleration&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">acceleration</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">acceleration</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">acceleration</span><span class="o">.</span><span class="n">z</span><span class="p">]),</span>
+            <span class="s1">&#39;velocity&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">velocity</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">velocity</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">velocity</span><span class="o">.</span><span class="n">z</span><span class="p">]),</span>
+            <span class="s1">&#39;angular_velocity&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">angular_velocity</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">angular_velocity</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">angular_velocity</span><span class="o">.</span><span class="n">z</span><span class="p">]),</span>
+            <span class="s1">&#39;rotation&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">pitch</span><span class="p">,</span> <span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">yaw</span><span class="p">,</span> <span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">roll</span><span class="p">]),</span>
             <span class="s1">&#39;is_junction&#39;</span><span class="p">:</span> <span class="n">is_junction</span><span class="p">,</span>
             <span class="s1">&#39;tl_state&#39;</span><span class="p">:</span> <span class="n">light_state</span><span class="p">,</span>
             <span class="s1">&#39;tl_dis&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_traffic_light_helper</span><span class="o">.</span><span class="n">active_light_dis</span><span class="p">,</span>
@@ -763,6 +768,7 @@
         <span class="n">target_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_planner</span><span class="o">.</span><span class="n">target_waypoint</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">location</span>
         <span class="n">target_forward</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_planner</span><span class="o">.</span><span class="n">target_waypoint</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">get_forward_vector</span><span class="p">()</span>
         <span class="n">waypoint_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_planner</span><span class="o">.</span><span class="n">get_waypoints_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_waypoint_num</span><span class="p">)</span>
+        <span class="n">direction_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_planner</span><span class="o">.</span><span class="n">get_direction_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_waypoint_num</span><span class="p">)</span>
         <span class="n">agent_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_planner</span><span class="o">.</span><span class="n">agent_state</span>
         <span class="n">speed_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_planner</span><span class="o">.</span><span class="n">speed_limit</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_end_distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_planner</span><span class="o">.</span><span class="n">distance_to_goal</span>
@@ -805,6 +811,7 @@
             <span class="s1">&#39;target_forward&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">target_forward</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">target_forward</span><span class="o">.</span><span class="n">y</span><span class="p">]),</span>
             <span class="s1">&#39;waypoint_list&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">waypoint_location_list</span><span class="p">),</span>
             <span class="s1">&#39;speed_limit&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">speed_limit</span><span class="p">),</span>
+            <span class="s1">&#39;direction_list&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">direction_list</span><span class="p">)</span>
         <span class="p">}</span>
         <span class="k">return</span> <span class="n">navigation</span></div>
 
@@ -847,7 +854,7 @@
 <div class="viewcode-block" id="CarlaSimulator.clean_up"><a class="viewcode-back" href="../../../api_doc/simulators.html#core.simulators.CarlaSimulator.clean_up">[docs]</a>    <span class="k">def</span> <span class="nf">clean_up</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Destroy all actors and sensors in current world. Clear all messages saved in simulator and data provider.</span>
-<span class="sd">        This will NOT destroy the Carla client, so simulator can use same Carla client to start next episode.</span>
+<span class="sd">        This will NOT destroy the Carla client, so simulator can use same carla client to start next episode.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">actor</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_actor_map</span><span class="p">[</span><span class="s1">&#39;walker_controller&#39;</span><span class="p">]:</span>
             <span class="n">actor</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
