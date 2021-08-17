@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>policy &mdash; DI-drive 0.1.0.1 documentation</title>
+  <title>policy &mdash; DI-drive 0.1.1 documentation</title>
   
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.1.0.1
+                0.1.1
               </div>
             
           
@@ -197,7 +197,7 @@
 <h2>BaseCarlaPolicy<a class="headerlink" href="#basecarlapolicy" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt id="core.policy.base_carla_policy.BaseCarlaPolicy">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">core.policy.base_carla_policy.</span></code><code class="sig-name descname"><span class="pre">BaseCarlaPolicy</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/policy/base_carla_policy.html#BaseCarlaPolicy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.base_carla_policy.BaseCarlaPolicy" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">core.policy.base_carla_policy.</span></code><code class="sig-name descname"><span class="pre">BaseCarlaPolicy</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_field</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/policy/base_carla_policy.html#BaseCarlaPolicy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.base_carla_policy.BaseCarlaPolicy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for Carla policy interact with environments. The policy is defined in standard DI-engine form which
 has several modes to change its running form, and can interact with several environments controlled by a
 <code class="docutils literal notranslate"><span class="pre">EnvManager</span></code>. The policy is designed to support Supervised Learning, Reinforcement Learning and other method
@@ -264,20 +264,6 @@ that in <cite>collect</cite> mode the <code class="docutils literal notranslate"
 <dd class="field-even"><p>Dict: Control dict stored in values for each provided env id.</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="core.policy.AutoPolicy._init_collect">
-<code class="sig-name descname"><span class="pre">_init_collect</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoPolicy._init_collect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoPolicy._init_collect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize policy instance of <cite>collect</cite> mode. It will get default settings in config and clear all saved
-controllers and running status.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="core.policy.AutoPolicy._init_eval">
-<code class="sig-name descname"><span class="pre">_init_eval</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoPolicy._init_eval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoPolicy._init_eval" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize policy instance of <cite>eval</cite> mode. It will get default settings in config and clear all saved
-controllers andrunning status.</p>
 </dd></dl>
 
 <dl class="py method">

@@ -8,6 +8,8 @@ Imitation Learning Model Zoo
    :maxdepth: 1
 
    coil
+   lbc
+   cict
 
 
 Reinforcement Learning Model Zoo

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>End-to-End Model-Free Reinforcement Learning for Urban Driving using Implicit Affordances &mdash; DI-drive 0.1.0.1 documentation</title>
+  <title>End-to-End Model-Free Reinforcement Learning for Urban Driving using Implicit Affordances &mdash; DI-drive 0.1.1 documentation</title>
   
 
   
@@ -39,7 +39,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="API Doc" href="../api_doc/index.html" />
-    <link rel="prev" title="Conditional Imitation Learning" href="coil.html" />
+    <link rel="prev" title="from Continuous Intention to Continuous Trajectory" href="cict.html" />
     <link href="../_static/css/style.css" rel="stylesheet" type="text/css">
 
 </head>
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.1.0.1
+                0.1.1
               </div>
             
           
@@ -194,7 +194,18 @@
 <h1>End-to-End Model-Free Reinforcement Learning for Urban Driving using Implicit Affordances<a class="headerlink" href="#end-to-end-model-free-reinforcement-learning-for-urban-driving-using-implicit-affordances" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
-<p>Paper address: <a class="reference external" href="https://arxiv.org/abs/1911.10868">[Arxiv]</a></p>
+<p><a class="reference external" href="https://arxiv.org/abs/1911.10868">Implicit Affordances</a> is an end-to-end auto driving
+policy trained with Supervised Learning as well as Reinforcement Learning. It first trains
+backbone network with some implicit information as label, then freezes the backbone network
+and train the head of network using RL.
+It takes 4-frame RGB captured by front camera as in put. The model of the two training stage
+is shown as follow.</p>
+<a class="reference internal image-reference" href="../_images/implicit2.png"><img alt="implicit2" class="align-center" src="../_images/implicit2.png" style="width: 600px;" /></a>
+<img alt="implicit1" class="align-center" src="../_images/implicit1.png" />
+<p>We extend and modified some of the training and environment details to make <em>Implicit
+Affordances</em> able to run in multi-lane maps in Carla. This is so far the <strong>first</strong> driving
+policy to run <cite>FullTown</cite> navigation in Carla using Reinforcement Learning. It achieves the
+same performance as in single-lane maps.</p>
 <div class="section" id="training-models">
 <h2>Training Models<a class="headerlink" href="#training-models" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic">
@@ -312,6 +323,11 @@ ChangeLaneTown04)</p></li>
 <li><p>env_num: how many subprocesses(envs) to use for evaluting</p></li>
 </ul>
 </div>
+<div class="section" id="results">
+<h3>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h3>
+<p>You can go to <a class="reference external" href="https://opendilab.github.io/DI-drive/features/carla_benchmark.html">Benckmark page</a>
+to see results of the two provided pre-train weights.</p>
+</div>
 </div>
 <div class="section" id="training-cost">
 <h2>Training Cost<a class="headerlink" href="#training-cost" title="Permalink to this headline">¶</a></h2>
@@ -331,7 +347,7 @@ ChangeLaneTown04)</p></li>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="../api_doc/index.html" class="btn btn-neutral float-right" title="API Doc" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="coil.html" class="btn btn-neutral float-left" title="Conditional Imitation Learning" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cict.html" class="btn btn-neutral float-left" title="from Continuous Intention to Continuous Trajectory" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

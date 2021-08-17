@@ -7,7 +7,26 @@ End-to-End Model-Free Reinforcement Learning for Urban Driving using Implicit Af
 .. role:: code-bash(code)
     :language: shell
 
-Paper address: `[Arxiv] <https://arxiv.org/abs/1911.10868>`_
+`Implicit Affordances <https://arxiv.org/abs/1911.10868>`_ is an end-to-end auto driving
+policy trained with Supervised Learning as well as Reinforcement Learning. It first trains
+backbone network with some implicit information as label, then freezes the backbone network
+and train the head of network using RL.
+It takes 4-frame RGB captured by front camera as in put. The model of the two training stage
+is shown as follow.
+
+.. image:: ../../figs/implicit2.png
+    :alt: implicit2
+    :align: center
+    :width: 600px
+
+.. image:: ../../figs/implicit1.png
+    :alt: implicit1
+    :align: center
+
+We extend and modified some of the training and environment details to make *Implicit
+Affordances* able to run in multi-lane maps in Carla. This is so far the **first** driving
+policy to run `FullTown` navigation in Carla using Reinforcement Learning. It achieves the
+same performance as in single-lane maps.
 
 Training Models
 ================
@@ -124,6 +143,12 @@ Something you need to modify in ``eval.py``:
    ChangeLaneTown04)
 
 -  env_num: how many subprocesses(envs) to use for evaluting
+
+Results
+--------------
+
+You can go to `Benckmark page <https://opendilab.github.io/DI-drive/features/carla_benchmark.html>`_
+to see results of the two provided pre-train weights.
 
 Training Cost
 =============

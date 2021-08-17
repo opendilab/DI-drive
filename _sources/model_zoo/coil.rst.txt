@@ -6,7 +6,7 @@ Conditional Imitation Learning
 .. toctree::
     :maxdepth: 2
 
-`Conditional Imitation Learning(CIL) <http://vladlen.info/papers/conditional-imitation.pdf>`_ is a
+`Conditional Imitation Learning(CIL) <https://arxiv.org/abs/1710.02410>`_ is a
 widely used imitation learning method for autoploit. The CIL takes front
 RGB camera image and vehicle speed as inputs, then predict vehicle control
 singals including steer, throttle and brake under certain navigation
