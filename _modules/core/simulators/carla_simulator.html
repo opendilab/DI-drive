@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>core.simulators.carla_simulator &mdash; DI-drive 0.1.1 documentation</title>
+  <title>core.simulators.carla_simulator &mdash; DI-drive 0.1.2 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.1.1
+                0.1.2
               </div>
             
           
@@ -688,7 +688,7 @@
         <span class="n">speed</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">get_speed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_actor</span><span class="p">)</span> <span class="o">*</span> <span class="mf">3.6</span>
         <span class="n">transform</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">get_transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_actor</span><span class="p">)</span>
         <span class="n">location</span> <span class="o">=</span> <span class="n">transform</span><span class="o">.</span><span class="n">location</span>
-        <span class="n">orientation</span> <span class="o">=</span> <span class="n">transform</span><span class="o">.</span><span class="n">get_forward_vector</span><span class="p">()</span>
+        <span class="n">forward_vector</span> <span class="o">=</span> <span class="n">transform</span><span class="o">.</span><span class="n">get_forward_vector</span><span class="p">()</span>
         <span class="n">acceleration</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">get_acceleration</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_actor</span><span class="p">)</span>
         <span class="n">angular_velocity</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">get_angular_velocity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_actor</span><span class="p">)</span>
         <span class="n">velocity</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">get_speed_vector</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_actor</span><span class="p">)</span>
@@ -705,18 +705,29 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_off_road</span> <span class="o">=</span> <span class="kc">True</span>
 
+        <span class="n">lane_waypoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map</span><span class="o">.</span><span class="n">get_waypoint</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">project_to_road</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lane_type</span><span class="o">=</span><span class="n">carla</span><span class="o">.</span><span class="n">LaneType</span><span class="o">.</span><span class="n">Driving</span><span class="p">)</span>
+        <span class="n">lane_location</span> <span class="o">=</span> <span class="n">lane_waypoint</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">location</span>
+        <span class="n">lane_forward_vector</span> <span class="o">=</span> <span class="n">lane_waypoint</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">get_forward_vector</span><span class="p">()</span>
+
         <span class="n">state</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;speed&#39;</span><span class="p">:</span> <span class="n">speed</span><span class="p">,</span>
             <span class="s1">&#39;location&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">location</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">location</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">location</span><span class="o">.</span><span class="n">z</span><span class="p">]),</span>
-            <span class="s1">&#39;orientation&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">orientation</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">orientation</span><span class="o">.</span><span class="n">y</span><span class="p">]),</span>
+            <span class="s1">&#39;forward_vector&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">forward_vector</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">forward_vector</span><span class="o">.</span><span class="n">y</span><span class="p">]),</span>
             <span class="s1">&#39;acceleration&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">acceleration</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">acceleration</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">acceleration</span><span class="o">.</span><span class="n">z</span><span class="p">]),</span>
             <span class="s1">&#39;velocity&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">velocity</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">velocity</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">velocity</span><span class="o">.</span><span class="n">z</span><span class="p">]),</span>
             <span class="s1">&#39;angular_velocity&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">angular_velocity</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">angular_velocity</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">angular_velocity</span><span class="o">.</span><span class="n">z</span><span class="p">]),</span>
             <span class="s1">&#39;rotation&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">pitch</span><span class="p">,</span> <span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">yaw</span><span class="p">,</span> <span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">roll</span><span class="p">]),</span>
             <span class="s1">&#39;is_junction&#39;</span><span class="p">:</span> <span class="n">is_junction</span><span class="p">,</span>
+            <span class="s1">&#39;lane_location&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">lane_location</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">lane_location</span><span class="o">.</span><span class="n">y</span><span class="p">]),</span>
+            <span class="s1">&#39;lane_forward&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">lane_forward_vector</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">lane_forward_vector</span><span class="o">.</span><span class="n">y</span><span class="p">]),</span>
             <span class="s1">&#39;tl_state&#39;</span><span class="p">:</span> <span class="n">light_state</span><span class="p">,</span>
             <span class="s1">&#39;tl_dis&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_traffic_light_helper</span><span class="o">.</span><span class="n">active_light_dis</span><span class="p">,</span>
         <span class="p">}</span>
+        <span class="k">if</span> <span class="n">lane_waypoint</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">state</span><span class="p">[</span><span class="s1">&#39;lane_forward&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">lane_forward_vector</span> <span class="o">=</span> <span class="n">lane_waypoint</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">get_forward_vector</span><span class="p">()</span>
+            <span class="n">state</span><span class="p">[</span><span class="s1">&#39;lane_forward&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">lane_forward_vector</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">lane_forward_vector</span><span class="o">.</span><span class="n">y</span><span class="p">])</span>
 
         <span class="k">return</span> <span class="n">state</span></div>
 

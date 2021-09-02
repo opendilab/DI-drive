@@ -239,7 +239,7 @@ Status
 
 - speed (float): speed in km/h
 - location (np.ndarray): 3D location vector
-- orientation (np.ndarray): 2D orientation vector
+- forward_vector (np.ndarray): 2D forward vector
 - acceleration (np.ndarray): 3D acceleration vector
 - is_junction (bool): Whether is at junction in Carla map
 - tl_state (int): Traffic light state
@@ -273,7 +273,7 @@ Navigation
 - node_forward (np.ndarray): 2D direction of current waypoint
 - target (np.ndarray): 2D location of target waypoint(the next of node)
 - target_forward (np.ndarray): 2D direction of target waypoint 
-- waypoint_list (np.ndarray): Array containing waypoints on the route ahead. Each element is a 4D vector, consisting of the position and orientation in x-y coordinates
+- waypoint_list (np.ndarray): Array containing waypoints on the route ahead. Each element is a 4D vector, consisting of the position and forward vector in x-y coordinates
 - speed_limit (float): Speed limit of current position. It may come from the limit in current road and computed by planner
 
 Information

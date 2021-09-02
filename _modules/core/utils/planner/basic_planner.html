@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>core.utils.planner.basic_planner &mdash; DI-drive 0.1.1 documentation</title>
+  <title>core.utils.planner.basic_planner &mdash; DI-drive 0.1.2 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.1.1
+                0.1.2
               </div>
             
           
@@ -414,9 +414,13 @@
         <span class="c1"># Detect vehicle and light hazard</span>
         <span class="n">vehicle_state</span><span class="p">,</span> <span class="n">vehicle</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">is_vehicle_hazard</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">vehicle_state</span><span class="p">:</span>
-            <span class="n">vehicle_state</span><span class="p">,</span> <span class="n">vehicle</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">is_lane_vehicle_hazard</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_road_option</span><span class="p">)</span>
+            <span class="n">vehicle_state</span><span class="p">,</span> <span class="n">vehicle</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">is_lane_vehicle_hazard</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_road_option</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">vehicle_state</span><span class="p">:</span>
-            <span class="n">vehicle_state</span><span class="p">,</span> <span class="n">vehicle</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">is_junction_vehicle_hazard</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_road_option</span><span class="p">)</span>
+            <span class="n">vehicle_state</span><span class="p">,</span> <span class="n">vehicle</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">is_junction_vehicle_hazard</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_road_option</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="n">vehicle_state</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_debug</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;!!! VEHICLE BLOCKING AHEAD [</span><span class="si">{}</span><span class="s1">])&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">vehicle</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>

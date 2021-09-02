@@ -84,7 +84,7 @@ and stores them in a .lmdb file. The content is shown follow:
 
 * tick (int)
 * timestamp (float)
-* orientation (2D)
+* forward_vector (2D)
 * acceleration (3D)
 * location (3D)
 * speed (float)

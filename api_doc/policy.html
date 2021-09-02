@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>policy &mdash; DI-drive 0.1.1 documentation</title>
+  <title>policy &mdash; DI-drive 0.1.2 documentation</title>
   
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.1.1
+                0.1.2
               </div>
             
           
@@ -108,7 +108,10 @@
 <li class="toctree-l2"><a class="reference internal" href="envs.html">envs</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">policy</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#basecarlapolicy">BaseCarlaPolicy</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#autopolicy">AutoPolicy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#autopidpolicy">AutoPIDPolicy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#autompcpolicy">AutoMPCPolicy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lbcbirdviewpolicy">LBCBirdviewPolicy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lbcimagepolicy">LBCImagePolicy</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="models.html">models</a></li>
@@ -214,11 +217,11 @@ Some mode-specific interfaces may be defined specially by user.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="autopolicy">
-<h2>AutoPolicy<a class="headerlink" href="#autopolicy" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="autopidpolicy">
+<h2>AutoPIDPolicy<a class="headerlink" href="#autopidpolicy" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt id="core.policy.AutoPolicy">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">core.policy.</span></code><code class="sig-name descname"><span class="pre">AutoPolicy</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoPolicy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoPolicy" title="Permalink to this definition">¶</a></dt>
+<dt id="core.policy.AutoPIDPolicy">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">core.policy.</span></code><code class="sig-name descname"><span class="pre">AutoPIDPolicy</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoPIDPolicy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoPIDPolicy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Autonomous Driving policy follows target waypoint in env observations. It uses a Vehicle PID controller
 for each env with a specific env id related to it. In each updating, all envs should use the correct env id
 to make the PID controller works well, and the controller should be reset when starting a new episode.</p>
@@ -231,12 +234,12 @@ that in <cite>collect</cite> mode the <code class="docutils literal notranslate"
 </ul>
 </dd>
 <dt class="field-even">Interfaces</dt>
-<dd class="field-even"><p>init, reset, forward</p>
+<dd class="field-even"><p>reset, forward</p>
 </dd>
 </dl>
 <dl class="py method">
-<dt id="core.policy.AutoPolicy._forward_collect">
-<code class="sig-name descname"><span class="pre">_forward_collect</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoPolicy._forward_collect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoPolicy._forward_collect" title="Permalink to this definition">¶</a></dt>
+<dt id="core.policy.AutoPIDPolicy._forward_collect">
+<code class="sig-name descname"><span class="pre">_forward_collect</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoPIDPolicy._forward_collect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoPIDPolicy._forward_collect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Running forward to get control signal of <cite>collect</cite> mode.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Arguments</dt>
@@ -251,8 +254,8 @@ that in <cite>collect</cite> mode the <code class="docutils literal notranslate"
 </dd></dl>
 
 <dl class="py method">
-<dt id="core.policy.AutoPolicy._forward_eval">
-<code class="sig-name descname"><span class="pre">_forward_eval</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoPolicy._forward_eval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoPolicy._forward_eval" title="Permalink to this definition">¶</a></dt>
+<dt id="core.policy.AutoPIDPolicy._forward_eval">
+<code class="sig-name descname"><span class="pre">_forward_eval</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoPIDPolicy._forward_eval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoPIDPolicy._forward_eval" title="Permalink to this definition">¶</a></dt>
 <dd><p>Running forward to get control signal of <cite>eval</cite> mode.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Arguments</dt>
@@ -267,8 +270,8 @@ that in <cite>collect</cite> mode the <code class="docutils literal notranslate"
 </dd></dl>
 
 <dl class="py method">
-<dt id="core.policy.AutoPolicy._reset_collect">
-<code class="sig-name descname"><span class="pre">_reset_collect</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoPolicy._reset_collect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoPolicy._reset_collect" title="Permalink to this definition">¶</a></dt>
+<dt id="core.policy.AutoPIDPolicy._reset_collect">
+<code class="sig-name descname"><span class="pre">_reset_collect</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoPIDPolicy._reset_collect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoPIDPolicy._reset_collect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reset policy of <cite>collect</cite> mode. It will reset the controllers in provided env id. Noise will be add
 to the controller according to config.</p>
 <dl class="field-list simple">
@@ -281,9 +284,198 @@ to the controller according to config.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="core.policy.AutoPolicy._reset_eval">
-<code class="sig-name descname"><span class="pre">_reset_eval</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoPolicy._reset_eval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoPolicy._reset_eval" title="Permalink to this definition">¶</a></dt>
+<dt id="core.policy.AutoPIDPolicy._reset_eval">
+<code class="sig-name descname"><span class="pre">_reset_eval</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoPIDPolicy._reset_eval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoPIDPolicy._reset_eval" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reset policy of <cite>eval</cite> mode. It will reset the controllers in providded env id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>data_id (List[int], optional): List of env id to reset. Defaults to None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="autompcpolicy">
+<h2>AutoMPCPolicy<a class="headerlink" href="#autompcpolicy" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="core.policy.AutoMPCPolicy">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">core.policy.</span></code><code class="sig-name descname"><span class="pre">AutoMPCPolicy</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoMPCPolicy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoMPCPolicy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Autonomous Driving policy follows target waypoint list in env observations. It uses an MPC controller
+for each env with a specific env id related to it. In each updating, all envs should use the correct
+env id to make the MPC controller works well, and the controller should be reset when starting a new
+episode.</p>
+<p>The policy has 2 modes: <cite>collect</cite> and <cite>eval</cite>. Their interfaces operate in the same way. The only difference is
+that in <cite>collect</cite> mode the <code class="docutils literal notranslate"><span class="pre">forward</span></code> method may add noises to steer if set in config.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>cfg (Dict): Config Dict.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Interfaces</dt>
+<dd class="field-even"><p>reset, forward</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="core.policy.AutoMPCPolicy._forward_collect">
+<code class="sig-name descname"><span class="pre">_forward_collect</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoMPCPolicy._forward_collect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoMPCPolicy._forward_collect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Running forward to get control signal of <cite>collect</cite> mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>data (Dict): Input dict, with env id in keys and related observations in values,</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dict: Control dict stored in values for each provided env id.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="core.policy.AutoMPCPolicy._forward_eval">
+<code class="sig-name descname"><span class="pre">_forward_eval</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoMPCPolicy._forward_eval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoMPCPolicy._forward_eval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Running forward to get control signal of <cite>eval</cite> mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>data (Dict): Input dict, with env id in keys and related observations in values,</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dict: Control dict stored in values for each provided env id.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="core.policy.AutoMPCPolicy._reset_collect">
+<code class="sig-name descname"><span class="pre">_reset_collect</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoMPCPolicy._reset_collect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoMPCPolicy._reset_collect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset policy of <cite>collect</cite> mode. It will reset the controllers in provided env id. Noise will be add
+to the controller according to config.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>data_id (List[int], optional): List of env id to reset. Defaults to None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="core.policy.AutoMPCPolicy._reset_eval">
+<code class="sig-name descname"><span class="pre">_reset_eval</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/policy/auto_policy.html#AutoMPCPolicy._reset_eval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.AutoMPCPolicy._reset_eval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset policy of <cite>eval</cite> mode. It will reset the controllers in providded env id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>data_id (List[int], optional): List of env id to reset. Defaults to None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="lbcbirdviewpolicy">
+<h2>LBCBirdviewPolicy<a class="headerlink" href="#lbcbirdviewpolicy" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="core.policy.LBCBirdviewPolicy">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">core.policy.</span></code><code class="sig-name descname"><span class="pre">LBCBirdviewPolicy</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/policy/lbc_policy.html#LBCBirdviewPolicy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.LBCBirdviewPolicy" title="Permalink to this definition">¶</a></dt>
+<dd><p>LBC driving policy with Bird-eye View inputs. It has an LBC NN model which can handle
+observations from several environments by collating data into batch. Each environment
+has a PID controller related to it to get final control signals. In each updating, all
+envs should use the correct env id to make the PID controller works well, and the
+controller should be reset when starting a new episode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>cfg (Dict): Config Dict.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Interfaces</dt>
+<dd class="field-even"><p>reset, forward</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="core.policy.LBCBirdviewPolicy._forward_eval">
+<code class="sig-name descname"><span class="pre">_forward_eval</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="../_modules/core/policy/lbc_policy.html#LBCBirdviewPolicy._forward_eval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.LBCBirdviewPolicy._forward_eval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Running forward to get control signal of <cite>eval</cite> mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>data (Dict): Input dict, with env id in keys and related observations in values,</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dict: Control and waypoints dict stored in values for each provided env id.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="core.policy.LBCBirdviewPolicy._reset_eval">
+<code class="sig-name descname"><span class="pre">_reset_eval</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_ids</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/policy/lbc_policy.html#LBCBirdviewPolicy._reset_eval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.LBCBirdviewPolicy._reset_eval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset policy of <cite>eval</cite> mode. It will change the NN model into ‘eval’ mode and reset
+the controllers in providded env id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>data_id (List[int], optional): List of env id to reset. Defaults to None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="lbcimagepolicy">
+<h2>LBCImagePolicy<a class="headerlink" href="#lbcimagepolicy" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="core.policy.LBCImagePolicy">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">core.policy.</span></code><code class="sig-name descname"><span class="pre">LBCImagePolicy</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/policy/lbc_policy.html#LBCImagePolicy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.LBCImagePolicy" title="Permalink to this definition">¶</a></dt>
+<dd><p>LBC driving policy with RGB image inputs. It has an LBC NN model which can handle
+observations from several environments by collating data into batch. Each environment
+has a PID controller related to it to get final control signals. In each updating, all
+envs should use the correct env id to make the PID controller works well, and the
+controller should be reset when starting a new episode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>cfg (Dict): Config Dict.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Interfaces</dt>
+<dd class="field-even"><p>reset, forward</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="core.policy.LBCImagePolicy._forward_eval">
+<code class="sig-name descname"><span class="pre">_forward_eval</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><a class="reference internal" href="../_modules/core/policy/lbc_policy.html#LBCImagePolicy._forward_eval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.LBCImagePolicy._forward_eval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Running forward to get control signal of <cite>eval</cite> mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>data (Dict): Input dict, with env id in keys and related observations in values,</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dict: Control and waypoints dict stored in values for each provided env id.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="core.policy.LBCImagePolicy._reset_eval">
+<code class="sig-name descname"><span class="pre">_reset_eval</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_ids</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/core/policy/lbc_policy.html#LBCImagePolicy._reset_eval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.LBCImagePolicy._reset_eval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset policy of <cite>eval</cite> mode. It will change the NN model into ‘eval’ mode and reset
+the controllers in providded env id.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Arguments</dt>
 <dd class="field-odd"><ul class="simple">

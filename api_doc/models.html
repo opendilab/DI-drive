@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>models &mdash; DI-drive 0.1.1 documentation</title>
+  <title>models &mdash; DI-drive 0.1.2 documentation</title>
   
 
   
@@ -32,6 +32,7 @@
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -65,7 +66,7 @@
             
             
               <div class="version">
-                0.1.1
+                0.1.2
               </div>
             
           
@@ -111,7 +112,9 @@
 <li class="toctree-l3"><a class="reference internal" href="#bevspeedconvencoder">BEVSpeedConvEncoder</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#bevspeeddeterminatenet">BEVSpeedDeterminateNet</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#bevspeedstochasticnet">BEVSpeedStochasticNet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vanillavae">VanillaVAE</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#vehiclepidcontroller">VehiclePIDController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mpccontroller">MPCController</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#steernoisewrapper">SteerNoiseWrapper</a></li>
 </ul>
 </li>
@@ -317,6 +320,141 @@ Defaults to [64, 128, 256].</p></li>
 </dd></dl>
 
 </div>
+<div class="section" id="vanillavae">
+<h2>VanillaVAE<a class="headerlink" href="#vanillavae" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="core.models.vae_model.VanillaVAE">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">core.models.vae_model.</span></code><code class="sig-name descname"><span class="pre">VanillaVAE</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_channels</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latent_dim</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_dims</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/models/vae_model.html#VanillaVAE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.models.vae_model.VanillaVAE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Vanilla Variational Auto Encoder model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Interfaces</dt>
+<dd class="field-odd"><p>encode, decode, reparameterize, forward, loss_function, sample, generate</p>
+</dd>
+<dt class="field-even">Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p>in_channels (int): the channel number of input</p></li>
+<li><p>latent_dim (int): the latent dimension of the middle representation</p></li>
+<li><p>hidden_dims (List): the hidden dimensions of each layer in the MLP architecture in encoder and decoder</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="core.models.vae_model.VanillaVAE.decode">
+<code class="sig-name descname"><span class="pre">decode</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">None._VariableFunctionsClass.tensor</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None._VariableFunctionsClass.tensor</span><a class="reference internal" href="../_modules/core/models/vae_model.html#VanillaVAE.decode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.models.vae_model.VanillaVAE.decode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maps the given latent codes
+onto the image space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>z (Tensor): [B x D]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tensor: Output decode tensor [B x C x H x W]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="core.models.vae_model.VanillaVAE.encode">
+<code class="sig-name descname"><span class="pre">encode</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">None._VariableFunctionsClass.tensor</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">None._VariableFunctionsClass.tensor</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="../_modules/core/models/vae_model.html#VanillaVAE.encode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.models.vae_model.VanillaVAE.encode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encodes the input by passing through the encoder network
+and returns the latent codes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>input (Tensor): Input tensor to encode [N x C x H x W]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tensor: List of latent codes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="core.models.vae_model.VanillaVAE.forward">
+<code class="sig-name descname"><span class="pre">forward</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">None._VariableFunctionsClass.tensor</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">None._VariableFunctionsClass.tensor</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="../_modules/core/models/vae_model.html#VanillaVAE.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.models.vae_model.VanillaVAE.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>[summary]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>input (torch.tensor): Input tensor</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List[torch.tensor]: Input and output tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="core.models.vae_model.VanillaVAE.generate">
+<code class="sig-name descname"><span class="pre">generate</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">None._VariableFunctionsClass.tensor</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None._VariableFunctionsClass.tensor</span><a class="reference internal" href="../_modules/core/models/vae_model.html#VanillaVAE.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.models.vae_model.VanillaVAE.generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given an input image x, returns the reconstructed image</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>x(Tensor): [B x C x H x W]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tensor: [B x C x H x W]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="core.models.vae_model.VanillaVAE.loss_function">
+<code class="sig-name descname"><span class="pre">loss_function</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><a class="reference internal" href="../_modules/core/models/vae_model.html#VanillaVAE.loss_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.models.vae_model.VanillaVAE.loss_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the VAE loss function.</p>
+<p><span class="math notranslate nohighlight">\(KL(N(\mu, \sigma), N(0, 1)) = \log \frac{1}{\sigma} + \frac{\sigma^2 + \mu^2}{2} - \frac{1}{2}\)</span></p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Dict: Dictionary containing loss information</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="core.models.vae_model.VanillaVAE.reparameterize">
+<code class="sig-name descname"><span class="pre">reparameterize</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">None._VariableFunctionsClass.tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logvar</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">None._VariableFunctionsClass.tensor</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None._VariableFunctionsClass.tensor</span><a class="reference internal" href="../_modules/core/models/vae_model.html#VanillaVAE.reparameterize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.models.vae_model.VanillaVAE.reparameterize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reparameterization trick to sample from N(mu, var) from
+N(0,1).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>mu (Tensor): Mean of the latent Gaussian [B x D]</p></li>
+<li><p>logvar (Tensor): Standard deviation of the latent Gaussian [B x D]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tensor: [B x D]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="core.models.vae_model.VanillaVAE.sample">
+<code class="sig-name descname"><span class="pre">sample</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_samples</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_device</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None._VariableFunctionsClass.tensor</span><a class="reference internal" href="../_modules/core/models/vae_model.html#VanillaVAE.sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.models.vae_model.VanillaVAE.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Samples from the latent space and return the corresponding
+image space map.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>num_samples(Int): Number of samples.</p></li>
+<li><p>param current_device(Int): Device to run the model.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tensor: Sampled decode tensor.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="vehiclepidcontroller">
 <h2>VehiclePIDController<a class="headerlink" href="#vehiclepidcontroller" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
@@ -357,9 +495,47 @@ at a given target_speed. Thw steering change between to step must be within 0.1.
 <dd class="field-odd"><ul class="simple">
 <li><p>current_speed (float): Current hero vehicle speed in km/h.</p></li>
 <li><p>current_loc (List): Current hero vehicle coordinate location.</p></li>
-<li><p>current_ori (List): Current hero vehicle orientation vector.</p></li>
+<li><p>current_vec (List): Current hero vehicle forward vector.</p></li>
 <li><p>target_speed (float): Target speed in km/h</p></li>
 <li><p>target_loc (List): Target coordinate location.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dict: Control signal containing steer, throttle and brake.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="mpccontroller">
+<h2>MPCController<a class="headerlink" href="#mpccontroller" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="core.models.MPCController">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">core.models.</span></code><code class="sig-name descname"><span class="pre">MPCController</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args_objective</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizon</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fps</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/models/mpc_controller.html#MPCController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.models.MPCController" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model Predictive Control (MPC) method for speed and angle control in DI-drive. MPC takes a target
+waypoints list as input. It will minimize the objective function that calculates the loss between
+target trajectory &amp; speed and predicted vehicle states in future.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>args_objective (Dict, optional): Args in objective function containing loss weights. Defaults to None.</p></li>
+<li><p>horizon (int, optional): Steps MPC model predicts in calculating objective function. Defaults to 10.</p></li>
+<li><p>fps (int, optional): FPS of predictive model. Defaults to 5.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="core.models.MPCController.forward">
+<code class="sig-name descname"><span class="pre">forward</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ego_pose</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_speed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">waypoints</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><a class="reference internal" href="../_modules/core/models/mpc_controller.html#MPCController.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.models.MPCController.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run one step of controller, return the control signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>ego_pose (List): Current location of ego vehicle: [x, y, yaw, speed].</p></li>
+<li><p>target_speed (float): Target driving speed.</p></li>
+<li><p>waypoints (List): Target trajectory waypoints.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>

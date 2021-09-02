@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>core.envs.scenario_carla_env &mdash; DI-drive 0.1.1 documentation</title>
+  <title>core.envs.scenario_carla_env &mdash; DI-drive 0.1.2 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.1.1
+                0.1.2
               </div>
             
           
@@ -270,7 +270,7 @@
                 <span class="n">tm_port</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_carla_tm_port</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;------ Using Promote Carla @ </span><span class="si">{}</span><span class="s1">:</span><span class="si">{}</span><span class="s1"> ------&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_carla_host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_carla_port</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;------ Using Remote Carla @ </span><span class="si">{}</span><span class="s1">:</span><span class="si">{}</span><span class="s1"> ------&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_carla_host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_carla_port</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_simulator</span> <span class="o">=</span> <span class="n">CarlaScenarioSimulator</span><span class="p">(</span>
                 <span class="n">cfg</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_simulator_cfg</span><span class="p">,</span>
                 <span class="n">client</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -437,7 +437,7 @@
                 <span class="s1">&#39;speed&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s1">&#39;speed&#39;</span><span class="p">]),</span>
                 <span class="s1">&#39;speed_limit&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">navigation</span><span class="p">[</span><span class="s1">&#39;speed_limit&#39;</span><span class="p">]),</span>
                 <span class="s1">&#39;location&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">]),</span>
-                <span class="s1">&#39;orientation&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s1">&#39;orientation&#39;</span><span class="p">]),</span>
+                <span class="s1">&#39;forward_vector&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s1">&#39;forward_vector&#39;</span><span class="p">]),</span>
                 <span class="s1">&#39;acceleration&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s1">&#39;acceleration&#39;</span><span class="p">]),</span>
                 <span class="s1">&#39;is_junction&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s1">&#39;is_junction&#39;</span><span class="p">]),</span>
                 <span class="s1">&#39;tl_state&#39;</span><span class="p">:</span> <span class="n">state</span><span class="p">[</span><span class="s1">&#39;tl_state&#39;</span><span class="p">],</span>

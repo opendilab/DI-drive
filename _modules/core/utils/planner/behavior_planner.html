@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>core.utils.planner.behavior_planner &mdash; DI-drive 0.1.1 documentation</title>
+  <title>core.utils.planner.behavior_planner &mdash; DI-drive 0.1.2 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.1.1
+                0.1.2
               </div>
             
           
@@ -394,12 +394,16 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">agent_state</span> <span class="o">=</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">BLOCKED_BY_BIKE</span>
 
         <span class="c1"># 2.3: Car changelane behaviors</span>
-        <span class="n">lane_vehicle_state</span><span class="p">,</span> <span class="n">vehicle</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">is_lane_vehicle_hazard</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_road_option</span><span class="p">)</span>
+        <span class="n">lane_vehicle_state</span><span class="p">,</span> <span class="n">vehicle</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">is_lane_vehicle_hazard</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_road_option</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="n">lane_vehicle_state</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">agent_state</span> <span class="o">=</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">BLOCKED_BY_VEHICLE</span>
 
         <span class="c1"># 2.4: Car in junction  behaviors</span>
-        <span class="n">junction_vehicle_state</span><span class="p">,</span> <span class="n">vehicle</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">is_junction_vehicle_hazard</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_road_option</span><span class="p">)</span>
+        <span class="n">junction_vehicle_state</span><span class="p">,</span> <span class="n">vehicle</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">is_junction_vehicle_hazard</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_road_option</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="n">junction_vehicle_state</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">agent_state</span> <span class="o">=</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">BLOCKED_BY_VEHICLE</span>
 
