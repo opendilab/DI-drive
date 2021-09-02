@@ -6,16 +6,14 @@ description = """DI-drive: OpenDILab Decision Intelligence Autonomous Driving Pl
 
 setup(
     name='DI-drive',
-    version='0.1.1',
+    version='0.1.2',
     description='OpenDILab Decision Intelligence Autonomous Driving Platform',
     long_description=description,
     author='OpenDILab',
     license='MIT License',
-    keywords='DI RL AD Platform',
+    keywords='DL RL AD Platform',
     packages=[
-        *find_packages(
-            include=('core', 'core.*')
-            ),
+        *find_packages(include=('core', 'core.*')),
     ],
     install_requires=[
         'ephem',

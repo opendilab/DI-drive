@@ -1,18 +1,14 @@
-import os
-from functools import partial
 import torch
 from easydict import EasyDict
 
-from core.envs import SimpleCarlaEnv, CarlaEnvWrapper
+from core.envs import SimpleCarlaEnv
 from core.utils.others.tcp_helper import parse_carla_tcp
-from core.eval import CarlaBenchmarkEvaluator
-from ding.envs import AsyncSubprocessEnvManager
-from ding.policy import DQNPolicy
+from core.eval import SingleCarlaEvaluator
+from ding.policy import PPOPolicy
 from ding.utils import set_pkg_seed
 from ding.utils.default_helper import deep_merge_dicts
-
-from demo.simple_rl.model import DQNRLModel
-from demo.simple_rl.env_wrapper import DiscreteEnvWrapper
+from demo.simple_rl.model import PPORLModel
+from demo.simple_rl.env_wrapper import DiscreteBenchmarkEnvWrapper
 
 eval_config = dict(
     env=dict(
@@ -38,59 +34,46 @@ eval_config = dict(
         col_is_failure=True,
         stuck_is_failure=True,
         ignore_light=True,
+        visualize=dict(type='birdview', outputs=['show']),
     ),
-    model=dict(action_shape=21),
+    model=dict(action_shape=21,),
     policy=dict(
         cuda=True,
         ckpt_path='',
     ),
-    env_num=5,
-    env_manager=dict(
-        auto_reset=False,
-        shared_memory=False,
-        context='spawn',
+    env_wrapper=dict(
+        suite='FullTown02-v1',
     ),
-    env_wrapper=dict(),
     server=[dict(
         carla_host='localhost',
-        carla_ports=[9000, 9010, 2]
+        carla_ports=[9000, 9002, 2]
     )],
     eval=dict(
-        suite='FullTown02-v1',
-        episodes_per_suite=25,
-        weathers=[1],
+        render=True,
         transform_obs=True,
-        save_files=True,
     ),
 )
 
 main_config = EasyDict(eval_config)
 
 
-def wrapped_env(env_cfg, wrapper_cfg, host, port, tm_port=None):
-    return DiscreteEnvWrapper(CarlaEnvWrapper(SimpleCarlaEnv(env_cfg, host, port, tm_port), wrapper_cfg))
-
-
 def main(cfg, seed=0):
-    cfg.policy = deep_merge_dicts(DQNPolicy.default_config(), cfg.policy)
-    cfg.env_manager = deep_merge_dicts(AsyncSubprocessEnvManager.default_config(), cfg.env_manager)
+    cfg.policy = deep_merge_dicts(PPOPolicy.default_config(), cfg.policy)
 
     tcp_list = parse_carla_tcp(cfg.server)
+    host, port = tcp_list[0]
 
-    carla_env = AsyncSubprocessEnvManager(
-        env_fn=[partial(wrapped_env, cfg.env, cfg.env_wrapper, *tcp_list[i]) for i in range(cfg.env_num)],
-        cfg=cfg.env_manager,
-    )
+    carla_env = DiscreteBenchmarkEnvWrapper(SimpleCarlaEnv(cfg.env, host, port), cfg.env_wrapper)
     carla_env.seed(seed)
     set_pkg_seed(seed)
-    model = DQNRLModel(**cfg.model)
-    policy = DQNPolicy(cfg.policy, model=model)
+    model = PPORLModel(**cfg.model)
+    policy = PPOPolicy(cfg.policy, model=model)
 
     if cfg.policy.ckpt_path != '':
         state_dict = torch.load(cfg.policy.ckpt_path, map_location='cpu')
         policy.eval_mode.load_state_dict(state_dict)
-    evaluator = CarlaBenchmarkEvaluator(cfg.eval, carla_env, policy.eval_mode)
-    success_rate = evaluator.eval()
+    evaluator = SingleCarlaEvaluator(cfg.eval, carla_env, policy.eval_mode)
+    evaluator.eval()
     evaluator.close()
 
 

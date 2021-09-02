@@ -241,9 +241,13 @@ class BasicPlanner(object):
         # Detect vehicle and light hazard
         vehicle_state, vehicle = CarlaDataProvider.is_vehicle_hazard(self._hero_vehicle)
         if not vehicle_state:
-            vehicle_state, vehicle = CarlaDataProvider.is_lane_vehicle_hazard(self._hero_vehicle, self.target_road_option)
+            vehicle_state, vehicle = CarlaDataProvider.is_lane_vehicle_hazard(
+                self._hero_vehicle, self.target_road_option
+            )
         if not vehicle_state:
-            vehicle_state, vehicle = CarlaDataProvider.is_junction_vehicle_hazard(self._hero_vehicle, self.target_road_option)
+            vehicle_state, vehicle = CarlaDataProvider.is_junction_vehicle_hazard(
+                self._hero_vehicle, self.target_road_option
+            )
         if vehicle_state:
             if self._debug:
                 print('!!! VEHICLE BLOCKING AHEAD [{}])'.format(vehicle.id))

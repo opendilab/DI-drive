@@ -16,9 +16,9 @@ def control_to_signal(control):
         if isinstance(v, np.ndarray):
             control[k] = float(v)
     control_signal = carla.VehicleControl()
-    control_signal.steer = control['steer'] if 'steer' in control else 0
-    control_signal.throttle = control['throttle'] if 'throttle' in control else 0
-    control_signal.brake = control['brake'] if 'brake' in control else 0
+    control_signal.steer = control['steer'] if 'steer' in control else 0.0
+    control_signal.throttle = control['throttle'] if 'throttle' in control else 0.0
+    control_signal.brake = control['brake'] if 'brake' in control else 0.0
     if 'manual_gear_shift' in control:
         control_signal.manual_gear_shift = control['manual_gear_shift']
     if 'gear' in control:
@@ -85,11 +85,15 @@ def visualize_birdview(birdview):
         (32, 74, 207),
         (41, 239, 41),
     ]
-    h, w = birdview.shape[:2]
+    h, w, c = birdview.shape
     canvas = np.zeros((h, w, 3), dtype=np.uint8)
     canvas[...] = BACKGROUND
-
+    index_list = []
     for i in [0, 1, 2, 3, 4, 8, 5, 6, 7]:
+        if i < c:
+            index_list.append(i)
+
+    for i in index_list:
         canvas[birdview[:, :, i] > 0] = bev_render_colors[i]
 
     return canvas

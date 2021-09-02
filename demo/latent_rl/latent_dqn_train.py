@@ -6,51 +6,44 @@ import copy
 import time
 from tensorboardX import SummaryWriter
 
-from core.envs import SimpleCarlaEnv
 from core.utils.others.tcp_helper import parse_carla_tcp
 from core.eval import SingleCarlaEvaluator
-from ding.envs import SyncSubprocessEnvManager
+from core.envs import CarlaEnvWrapper
+from ding.envs import SyncSubprocessEnvManager, BaseEnvManager
 from ding.policy import DQNPolicy
 from ding.worker import BaseLearner, SampleCollector, AdvancedReplayBuffer
 from ding.utils import set_pkg_seed
 from ding.rl_utils import get_epsilon_greedy_fn
 
-from demo.simple_rl.model import DQNRLModel
-from demo.simple_rl.env_wrapper import DiscreteBenchmarkEnvWrapper
-from demo.simple_rl.utils import compile_config, unpack_birdview
+from demo.latent_rl.model import LatentDQNRLModel
+from demo.latent_rl.latent_rl_env import CarlaLatentRLEnv
+from core.utils.data_utils.bev_utils import unpack_birdview
+from core.utils.others.ding_utils import compile_config
+
 
 train_config = dict(
-    exp_name='dqn21_bev32_buffer400000_lr1e4_train_ft',
+    exp_name='latentdqn_buffer200000_lr1e4_train_ft',
     env=dict(
         simulator=dict(
             town='Town01',
             disable_two_wheels=True,
             verbose=False,
-            waypoint_num=32,
             planner=dict(
-                type='behavior',
-                resolution=1,
+                type='lbc',
+                resolution=1.0,
+                threshold_before=3.0,
+                threshold_after=3.0,
             ),
             obs=(
                 dict(
                     name='birdview',
                     type='bev',
-                    size=[32, 32],
-                    pixels_per_meter=1,
-                    pixels_ahead_vehicle=14,
+                    size=[320, 320],
+                    pixels_per_meter=5,
+                    pixels_ahead_vehicle=100,
                 ),
             )
         ),
-        col_is_failure=True,
-        stuck_is_failure=False,
-        ignore_light=True,
-        ran_light_is_failure=False,
-        off_road_is_failure=True,
-        wrong_direction_is_failure=True,
-        off_route_is_failure=True,
-        off_route_distance=7.5,
-        finish_reward=30,
-        #visualize=dict(type='birdview', outputs=['show']),
     ),
     env_num=7,
     env_manager=dict(
@@ -68,12 +61,13 @@ train_config = dict(
     policy=dict(
         cuda=True,
         priority=True,
-        nstep=1,
+        nstep=3,
+        discount_factor=0.99,
         learn=dict(
-            batch_size=128,
+            batch_size=64,
             learning_rate=0.0001,
             weight_decay=0.0001,
-            target_update_freq=100,
+            target_update_freq=1000,
             learner=dict(
                 hook=dict(
                     load_ckpt_before_run='',
@@ -92,10 +86,11 @@ train_config = dict(
                 type='exp',
                 start=0.95,
                 end=0.1,
-                decay=10000,
+                decay=30000,
             ),
             replay_buffer=dict(
-                replay_buffer_size=400000,
+                replay_buffer_size=100000,
+                #max_use=100,
                 monitor=dict(
                     sampled_data_attr=dict(
                         print_freq=100,
@@ -108,13 +103,13 @@ train_config = dict(
         ),
     ),
     model=dict(
-        action_shape=21,
+        action_shape=100,
     ),
     eval=dict(
-        #render=True,
         eval_freq=5000,
-        final_reward=1000,
-        eval_num=1,
+        eval_num=3,
+        success_rate=0.7,
+        transform_obs=True,
     ),
 )
 
@@ -122,8 +117,7 @@ main_config = EasyDict(train_config)
 
 
 def wrapped_env(env_cfg, wrapper_cfg, host, port, tm_port=None):
-    return DiscreteBenchmarkEnvWrapper(SimpleCarlaEnv(env_cfg, host, port, tm_port), wrapper_cfg)
-    #return MultiDiscreteBenchmarkEnvWrapper(SimpleCarlaEnv(env_cfg, host, port, tm_port), wrapper_cfg)
+    return CarlaEnvWrapper(CarlaLatentRLEnv(env_cfg, host, port, tm_port), wrapper_cfg)
 
 
 def main(cfg, seed=0):
@@ -131,7 +125,6 @@ def main(cfg, seed=0):
         cfg,
         SyncSubprocessEnvManager,
         DQNPolicy,
-        #DQNMultiDiscretePolicy,
         BaseLearner,
         SampleCollector,
         AdvancedReplayBuffer,
@@ -148,7 +141,7 @@ def main(cfg, seed=0):
     evaluate_env.seed(seed)
     set_pkg_seed(seed)
 
-    model = DQNRLModel(**cfg.model)
+    model = LatentDQNRLModel(**cfg.model)
     policy = DQNPolicy(cfg.policy, model=model)
 
     tb_logger = SummaryWriter(os.path.join('./log/', cfg.exp_name))
@@ -164,20 +157,22 @@ def main(cfg, seed=0):
     learner._instance_name = cfg.exp_name + '_' + time.ctime().replace(' ', '_').replace(':', '_')
     learner.call_hook('before_run')
     eps = epsilon_greedy(learner.train_iter)
-    new_data = collector.collect(n_sample=10000, train_iter=learner.train_iter, policy_kwargs={'eps': eps})
+    new_data = collector.collect(n_sample=1000, train_iter=learner.train_iter, policy_kwargs={'eps': eps})
     replay_buffer.push(new_data, cur_collector_envstep=collector.envstep)
 
     while True:
         if evaluator.should_eval(learner.train_iter):
-            reward_list = []
+            results_list = []
             for _ in range(cfg.eval.eval_num):
-                reward_list.append(evaluator.eval())
-            if np.average(reward_list) > cfg.eval.final_reward:
+                results_list.append(evaluator.eval())
+            success_rate = sum(results_list) / len(results_list)
+            if success_rate > cfg.eval.success_rate:
                 break
+            print("Evaluate success rate: {:.2f}%".format(success_rate*100))
         eps = epsilon_greedy(learner.train_iter)
         # Sampling data from environments
-        new_data = collector.collect(n_sample=3000, train_iter=learner.train_iter, policy_kwargs={'eps': eps})
-        update_per_collect = len(new_data) // 32
+        new_data = collector.collect(n_sample=1000, train_iter=learner.train_iter, policy_kwargs={'eps': eps})
+        update_per_collect = len(new_data) // 6
         replay_buffer.push(new_data, cur_collector_envstep=collector.envstep)
         # Training
         for i in range(update_per_collect):

@@ -3,16 +3,16 @@ from functools import partial
 import torch
 from easydict import EasyDict
 
-from core.envs import SimpleCarlaEnv, CarlaEnvWrapper
+from core.envs import CarlaEnvWrapper
 from core.utils.others.tcp_helper import parse_carla_tcp
 from core.eval import CarlaBenchmarkEvaluator
-from ding.envs import AsyncSubprocessEnvManager
+from ding.envs import AsyncSubprocessEnvManager, BaseEnvManager
 from ding.policy import DQNPolicy
 from ding.utils import set_pkg_seed
 from ding.utils.default_helper import deep_merge_dicts
 
-from demo.simple_rl.model import DQNRLModel
-from demo.simple_rl.env_wrapper import DiscreteEnvWrapper
+from demo.latent_rl.latent_rl_env import CarlaLatentEvalEnv
+from demo.latent_rl.model import LatentDQNRLModel
 
 eval_config = dict(
     env=dict(
@@ -20,26 +20,26 @@ eval_config = dict(
             town='Town01',
             disable_two_wheels=True,
             verbose=False,
-            waypoint_num=32,
             planner=dict(
-                type='behavior',
-                resolution=1,
+                type='lbc',
+                resolution=2.5,
+                threshold_before=9,
+                threshold_after=1.5,
             ),
             obs=(
                 dict(
                     name='birdview',
                     type='bev',
-                    size=[32, 32],
-                    pixels_per_meter=1,
-                    pixels_ahead_vehicle=14,
+                    size=[320, 320],
+                    pixels_per_meter=5,
+                    pixels_ahead_vehicle=100,
                 ),
             )
         ),
-        col_is_failure=True,
-        stuck_is_failure=True,
-        ignore_light=True,
+        discrete_action=True,
+        discrete_dim=10,
     ),
-    model=dict(action_shape=21),
+    model=dict(action_shape=100),
     policy=dict(
         cuda=True,
         ckpt_path='',
@@ -68,7 +68,7 @@ main_config = EasyDict(eval_config)
 
 
 def wrapped_env(env_cfg, wrapper_cfg, host, port, tm_port=None):
-    return DiscreteEnvWrapper(CarlaEnvWrapper(SimpleCarlaEnv(env_cfg, host, port, tm_port), wrapper_cfg))
+    return CarlaEnvWrapper(CarlaLatentEvalEnv(env_cfg, host, port, tm_port), wrapper_cfg)
 
 
 def main(cfg, seed=0):
@@ -83,7 +83,7 @@ def main(cfg, seed=0):
     )
     carla_env.seed(seed)
     set_pkg_seed(seed)
-    model = DQNRLModel(**cfg.model)
+    model = LatentDQNRLModel(**cfg.model)
     policy = DQNPolicy(cfg.policy, model=model)
 
     if cfg.policy.ckpt_path != '':

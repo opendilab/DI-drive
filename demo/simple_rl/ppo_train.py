@@ -16,7 +16,8 @@ from ding.utils import set_pkg_seed
 
 from demo.simple_rl.model import PPORLModel
 from demo.simple_rl.env_wrapper import DiscreteBenchmarkEnvWrapper
-from demo.simple_rl.utils import compile_config, unpack_birdview
+from core.utils.data_utils.bev_utils import unpack_birdview
+from core.utils.others.ding_utils import compile_config
 
 train_config = dict(
     exp_name='ppo21_bev32_buffer200_000_lr1e4_train_ft',
@@ -107,9 +108,11 @@ train_config = dict(
         action_shape=21,
     ),
     eval=dict(
+        # render=True,
         eval_freq=5000,
-        final_reward=1000,
-        eval_num=1,
+        eval_num=3,
+        success_rate=0.7,
+        transform_obs=True,
     ),
 )
 
@@ -151,16 +154,18 @@ def main(cfg, seed=0):
 
     learner._instance_name = cfg.exp_name + '_' + time.ctime().replace(' ', '_').replace(':', '_')
     learner.call_hook('before_run')
-    new_data = collector.collect(n_sample=9800, train_iter=learner.train_iter)
+    new_data = collector.collect(n_sample=9000, train_iter=learner.train_iter)
     replay_buffer.push(new_data, cur_collector_envstep=collector.envstep)
 
     while True:
         if evaluator.should_eval(learner.train_iter):
-            reward_list = []
+            results_list = []
             for _ in range(cfg.eval.eval_num):
-                reward_list.append(evaluator.eval())
-            if np.average(reward_list) > cfg.eval.final_reward:
+                results_list.append(evaluator.eval())
+            success_rate = sum(results_list) / len(results_list)
+            if success_rate > cfg.eval.success_rate:
                 break
+            print("Evaluate success rate: {:.2f}%".format(success_rate*100))
 
         # Sampling data from environments
         new_data = collector.collect(n_sample=2800, train_iter=learner.train_iter)

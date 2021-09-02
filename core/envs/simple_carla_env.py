@@ -48,7 +48,6 @@ class SimpleCarlaEnv(BaseCarlaEnv):
         off_route_distance=6,
         success_distance=5,
         stuck_len=300,
-        finish_reward=100,
         max_speed=5,
         visualize=None,
     )
@@ -86,7 +85,6 @@ class SimpleCarlaEnv(BaseCarlaEnv):
         self._off_route_distance = self._cfg.off_route_distance
 
         self._success_distance = self._cfg.success_distance
-        self._finish_reward = self._cfg.finish_reward
         self._max_speed = self._cfg.max_speed
         self._collided = False
         self._stuck = False
@@ -116,7 +114,7 @@ class SimpleCarlaEnv(BaseCarlaEnv):
                 tm_port=self._carla_tm_port
             )
         else:
-            print('------ Using Promote carla @ {}:{} ------'.format(self._carla_host, self._carla_port))
+            print('------ Using Remote carla @ {}:{} ------'.format(self._carla_host, self._carla_port))
             self._simulator = CarlaSimulator(
                 cfg=self._simulator_cfg,
                 client=None,
@@ -311,7 +309,7 @@ class SimpleCarlaEnv(BaseCarlaEnv):
                 'speed': np.float32(state['speed']),
                 'speed_limit': np.float32(navigation['speed_limit']),
                 'location': np.float32(state['location']),
-                'orientation': np.float32(state['orientation']),
+                'forward_vector': np.float32(state['forward_vector']),
                 'acceleration': np.float32(state['acceleration']),
                 'velocity': np.float32(state['velocity']),
                 'angular_velocity': np.float32(state['angular_velocity']),
@@ -386,9 +384,9 @@ class SimpleCarlaEnv(BaseCarlaEnv):
         else:
             speed_reward = 1
 
-        orientation = self._simulator_databuffer['state']['orientation']
+        forward_vector = self._simulator_databuffer['state']['forward_vector']
         target_forward = self._simulator_databuffer['navigation']['target_forward']
-        angle_reward = 0.5 * (1 - angle(orientation, target_forward) / np.pi)
+        angle_reward = 0.5 * (1 - angle(forward_vector, target_forward) / np.pi)
 
         steer = self._simulator_databuffer['action']['steer']
         command = self._simulator_databuffer['navigation']['command']

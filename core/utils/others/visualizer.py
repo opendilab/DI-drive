@@ -112,6 +112,7 @@ class Visualizer(object):
                     2: 'BLOCKED_BY_VEHICLE',
                     3: 'BLOCKED_BY_WALKER',
                     4: 'BLOCKED_RED_LIGHT',
+                    5: 'BLOCKED_BY_BIKE',
                 }.get(data_dict['agent_state'], '???')
                 _write('Agent State: ' + _state, left_text_pos, 0, fontsize=fontsize)
                 left_text_pos += 1

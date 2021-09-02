@@ -5,12 +5,13 @@ from easydict import EasyDict
 
 from core.envs import SimpleCarlaEnv
 from core.utils.others.tcp_helper import parse_carla_tcp
-from core.eval import SingleCarlaEvaluator
-from demo.simple_rl.model import TD3RLModel
-from demo.simple_rl.env_wrapper import ContinuousBenchmarkEnvWrapper
-from ding.policy import TD3Policy
+from core.eval import SingleCarlaEvaluator, CarlaBenchmarkEvaluator
+from ding.policy import DQNPolicy
 from ding.utils import set_pkg_seed
 from ding.utils.default_helper import deep_merge_dicts
+
+from demo.simple_rl.model import DQNRLModel
+from demo.simple_rl.env_wrapper import DiscreteBenchmarkEnvWrapper
 
 eval_config = dict(
     env=dict(
@@ -38,7 +39,7 @@ eval_config = dict(
         ignore_light=True,
         visualize=dict(type='birdview', outputs=['show']),
     ),
-    model=dict(),
+    model=dict(action_shape=21),
     policy=dict(
         cuda=True,
         ckpt_path='',
@@ -52,6 +53,7 @@ eval_config = dict(
     )],
     eval=dict(
         render=True,
+        transform_obs=True,
     ),
 )
 
@@ -59,23 +61,22 @@ main_config = EasyDict(eval_config)
 
 
 def main(cfg, seed=0):
-    cfg.policy = deep_merge_dicts(TD3Policy.default_config(), cfg.policy)
+    cfg.policy = deep_merge_dicts(DQNPolicy.default_config(), cfg.policy)
 
     tcp_list = parse_carla_tcp(cfg.server)
     host, port = tcp_list[0]
 
-    carla_env = ContinuousBenchmarkEnvWrapper(SimpleCarlaEnv(cfg.env, host, port), cfg.env_wrapper)
+    carla_env = DiscreteBenchmarkEnvWrapper(SimpleCarlaEnv(cfg.env, host, port), cfg.env_wrapper)
     carla_env.seed(seed)
     set_pkg_seed(seed)
-    model = TD3RLModel(**cfg.model)
-    policy = TD3Policy(cfg.policy, model=model)
+    model = DQNRLModel(**cfg.model)
+    policy = DQNPolicy(cfg.policy, model=model)
 
     if cfg.policy.ckpt_path != '':
         state_dict = torch.load(cfg.policy.ckpt_path, map_location='cpu')
         policy.eval_mode.load_state_dict(state_dict)
     evaluator = SingleCarlaEvaluator(cfg.eval, carla_env, policy.eval_mode)
-    for i in range(10):
-        evaluator.eval()
+    evaluator.eval()
     evaluator.close()
 
 

@@ -10,7 +10,7 @@ Single scenario is defined in a *python* file. If you want to run it individuall
 name such as "ChangeLane_1".
 
 ### Usage
-DI-drive provides a simple entry to runn Casezoo with *AutoPolicy*. You can run [auto_run_case.py](../demo/auto_run/auto_run_case.py)
+DI-drive provides a simple entry to runn Casezoo with *AutoPIDPolicy*. You can run [auto_run_case.py](../demo/auto_run/auto_run_case.py)
 with following command:
 
 ``` bash

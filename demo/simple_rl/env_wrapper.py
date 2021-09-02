@@ -2,15 +2,16 @@ import torch
 import numpy as np
 from typing import Dict, Any
 import math
+import gym
 
-from core.envs import BenchmarkEnvWrapper
+from core.envs import CarlaEnvWrapper, BenchmarkEnvWrapper
 from ding.torch_utils.data_helper import to_ndarray
 
 
-class DiscreteBenchmarkEnvWrapper(BenchmarkEnvWrapper):
+class DiscreteEnvWrapper(gym.Wrapper):
 
     def reset(self, *args, **kwargs) -> Any:
-        obs = super().reset()
+        obs = super().reset(*args, **kwargs)
         obs_out = {
             'birdview': obs['birdview'][..., [0, 1, 5, 6, 8]],
             'speed': (obs['speed'] / 25).astype(np.float32),
@@ -50,10 +51,10 @@ class DiscreteBenchmarkEnvWrapper(BenchmarkEnvWrapper):
         return timestep
 
 
-class MultiDiscreteBenchmarkEnvWrapper(BenchmarkEnvWrapper):
+class MultiDiscreteEnvWrapper(gym.Wrapper):
 
     def reset(self, *args, **kwargs) -> Any:
-        obs = super().reset()
+        obs = super().reset(*args, **kwargs)
         obs_out = {
             'birdview': obs['birdview'][..., [0, 1, 5, 6, 8]],
             'speed': (obs['speed'] / 25).astype(np.float32),
@@ -94,10 +95,10 @@ class MultiDiscreteBenchmarkEnvWrapper(BenchmarkEnvWrapper):
         return timestep
 
 
-class ContinuousBenchmarkEnvWrapper(BenchmarkEnvWrapper):
+class ContinuousEnvWrapper(gym.Wrapper):
 
     def reset(self, *args, **kwargs) -> Any:
-        obs = super().reset()
+        obs = super().reset(*args, **kwargs)
         obs_out = {
             'birdview': obs['birdview'][..., [0, 1, 5, 6, 8]],
             'speed': (obs['speed'] / 25).astype(np.float32),
@@ -128,3 +129,15 @@ class ContinuousBenchmarkEnvWrapper(BenchmarkEnvWrapper):
         }
         timestep = timestep._replace(obs=obs_out)
         return timestep
+
+
+def DiscreteBenchmarkEnvWrapper(env, cfg):
+    return DiscreteEnvWrapper(BenchmarkEnvWrapper(env, cfg))
+
+
+def MultiDiscreteBenchmarkEnvWrapper(env, cfg):
+    return MultiDiscreteEnvWrapper(BenchmarkEnvWrapper(env, cfg))
+
+
+def ContinuousBenchmarkEnvWrapper(env, cfg):
+    return ContinuousEnvWrapper(BenchmarkEnvWrapper(env, cfg))

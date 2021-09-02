@@ -18,8 +18,19 @@ def spatial_softmax_base():
 
 
 class LBCBirdviewModel(common.ResnetBase):
+    """
+    LBC NN model with Bird-eye View input and 5 waypoints trajectory output.
 
-    def __init__(self, backbone='resnet18', input_channel=7, n_step=5, all_branch=False, **kwargs):
+    :Arguments:
+        - backbone: NN backbone.
+        - input_channel: Num of channels of input BeV.
+        - all_branch: Whether outputs waypoints predicted in all 4 branches.
+
+    :Interfaces:
+        forward
+    """
+
+    def __init__(self, backbone='resnet18', input_channel=7, all_branch=False, **kwargs):
         super().__init__(backbone=backbone, input_channel=input_channel, bias_first=False)
 
         self.deconv = spatial_softmax_base()
@@ -54,6 +65,18 @@ class LBCBirdviewModel(common.ResnetBase):
 
 
 class LBCImageModel(common.ResnetBase):
+    """
+    LBC NN model with image input and 5 waypoints trajectory output.
+
+    :Arguments:
+        - backbone: NN backbone.
+        - warp: Whether wrap input image.
+        - pretrained: Whether load backbone pre-trained weights.
+        - all_branch: Whether outputs waypoints predicted in all 4 branches.
+
+    :Interfaces:
+        forward
+    """
 
     def __init__(self, backbone, warp=False, pretrained=False, all_branch=False, **kwargs):
         super().__init__(backbone, pretrained=pretrained, input_channel=3, bias_first=False)

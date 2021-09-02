@@ -18,6 +18,19 @@ COMMANDS = 4
 
 
 class LBCBirdviewPolicy(BaseCarlaPolicy):
+    """
+    LBC driving policy with Bird-eye View inputs. It has an LBC NN model which can handle
+    observations from several environments by collating data into batch. Each environment
+    has a PID controller related to it to get final control signals. In each updating, all
+    envs should use the correct env id to make the PID controller works well, and the
+    controller should be reset when starting a new episode.
+
+    :Arguments:
+        - cfg (Dict): Config Dict.
+
+    :Interfaces:
+        reset, forward
+    """
 
     config = dict(
         model=dict(cuda=True, backbone='resnet18', input_channel=7, all_branch=False),
@@ -113,6 +126,16 @@ class LBCBirdviewPolicy(BaseCarlaPolicy):
                 self._reset_single(id)
 
     def _forward_eval(self, data: Dict) -> Dict[str, Any]:
+        """
+        Running forward to get control signal of `eval` mode.
+
+        :Arguments:
+            - data (Dict): Input dict, with env id in keys and related observations in values,
+
+        :Returns:
+            Dict: Control and waypoints dict stored in values for each provided env id.
+        """
+
         data_ids = list(data.keys())
 
         data = default_collate(list(data.values()))
@@ -191,12 +214,32 @@ class LBCBirdviewPolicy(BaseCarlaPolicy):
             actions[data_id] = {'action': control}
         return actions
 
-    def _reset_eval(self, data_ids: Optional[List[int]]) -> None:
+    def _reset_eval(self, data_ids: Optional[List[int]] = None) -> None:
+        """
+        Reset policy of `eval` mode. It will change the NN model into 'eval' mode and reset
+        the controllers in providded env id.
+
+        :Arguments:
+            - data_id (List[int], optional): List of env id to reset. Defaults to None.
+        """
         self._model.eval()
         self._reset(data_ids)
 
 
 class LBCImagePolicy(BaseCarlaPolicy):
+    """
+    LBC driving policy with RGB image inputs. It has an LBC NN model which can handle
+    observations from several environments by collating data into batch. Each environment
+    has a PID controller related to it to get final control signals. In each updating, all
+    envs should use the correct env id to make the PID controller works well, and the
+    controller should be reset when starting a new episode.
+
+    :Arguments:
+        - cfg (Dict): Config Dict.
+
+    :Interfaces:
+        reset, forward
+    """
 
     config = dict(
         model=dict(cuda=True, backbone='resnet34', all_branch=False),
@@ -325,6 +368,16 @@ class LBCImagePolicy(BaseCarlaPolicy):
         return world_output
 
     def _forward_eval(self, data: Dict) -> Dict:
+        """
+        Running forward to get control signal of `eval` mode.
+
+        :Arguments:
+            - data (Dict): Input dict, with env id in keys and related observations in values,
+
+        :Returns:
+            Dict: Control and waypoints dict stored in values for each provided env id.
+        """
+
         data_ids = list(data.keys())
 
         data = default_collate(list(data.values()))
@@ -399,6 +452,13 @@ class LBCImagePolicy(BaseCarlaPolicy):
         return actions
 
     def _reset_eval(self, data_ids: Optional[List[int]]) -> None:
+        """
+        Reset policy of `eval` mode. It will change the NN model into 'eval' mode and reset
+        the controllers in providded env id.
+
+        :Arguments:
+            - data_id (List[int], optional): List of env id to reset. Defaults to None.
+        """
         self._model.eval()
         self._reset(data_ids)
 

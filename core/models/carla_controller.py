@@ -63,7 +63,7 @@ class VehiclePIDController():
         :Arguments:
             - current_speed (float): Current hero vehicle speed in km/h.
             - current_loc (List): Current hero vehicle coordinate location.
-            - current_ori (List): Current hero vehicle orientation vector.
+            - current_vec (List): Current hero vehicle forward vector.
             - target_speed (float): Target speed in km/h
             - target_loc (List): Target coordinate location.
 

@@ -12,7 +12,7 @@ from ding.utils.default_helper import deep_merge_dicts
 
 from core.envs import SimpleCarlaEnv, CarlaEnvWrapper
 from core.eval import CarlaBenchmarkEvaluator
-from core.policy import AutoPolicy
+from core.policy import AutoPIDPolicy
 from core.utils.others.tcp_helper import parse_carla_tcp
 
 autoeval_config = dict(
@@ -53,7 +53,7 @@ def main(cfg, seed=0):
     )
     evaluate_env.seed(seed)
     set_pkg_seed(seed)
-    auto_policy = AutoPolicy(cfg.policy)
+    auto_policy = AutoPIDPolicy(cfg.policy)
     evaluator = CarlaBenchmarkEvaluator(cfg.eval, evaluate_env, auto_policy.eval_mode)
     evaluator.eval()
     evaluator.close()

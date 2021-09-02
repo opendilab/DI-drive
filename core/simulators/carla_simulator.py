@@ -515,7 +515,7 @@ class CarlaSimulator(BaseSimulator):
         speed = CarlaDataProvider.get_speed(self._hero_actor) * 3.6
         transform = CarlaDataProvider.get_transform(self._hero_actor)
         location = transform.location
-        orientation = transform.get_forward_vector()
+        forward_vector = transform.get_forward_vector()
         acceleration = CarlaDataProvider.get_acceleration(self._hero_actor)
         angular_velocity = CarlaDataProvider.get_angular_velocity(self._hero_actor)
         velocity = CarlaDataProvider.get_speed_vector(self._hero_actor)
@@ -532,18 +532,29 @@ class CarlaSimulator(BaseSimulator):
         else:
             self._off_road = True
 
+        lane_waypoint = self._map.get_waypoint(location, project_to_road=True, lane_type=carla.LaneType.Driving)
+        lane_location = lane_waypoint.transform.location
+        lane_forward_vector = lane_waypoint.transform.rotation.get_forward_vector()
+
         state = {
             'speed': speed,
             'location': np.array([location.x, location.y, location.z]),
-            'orientation': np.array([orientation.x, orientation.y]),
+            'forward_vector': np.array([forward_vector.x, forward_vector.y]),
             'acceleration': np.array([acceleration.x, acceleration.y, acceleration.z]),
             'velocity': np.array([velocity.x, velocity.y, velocity.z]),
             'angular_velocity': np.array([angular_velocity.x, angular_velocity.y, angular_velocity.z]),
             'rotation': np.array([transform.rotation.pitch, transform.rotation.yaw, transform.rotation.roll]),
             'is_junction': is_junction,
+            'lane_location': np.array([lane_location.x, lane_location.y]),
+            'lane_forward': np.array([lane_forward_vector.x, lane_forward_vector.y]),
             'tl_state': light_state,
             'tl_dis': self._traffic_light_helper.active_light_dis,
         }
+        if lane_waypoint is None:
+            state['lane_forward'] = None
+        else:
+            lane_forward_vector = lane_waypoint.transform.get_forward_vector()
+            state['lane_forward'] = np.array([lane_forward_vector.x, lane_forward_vector.y])
 
         return state
 

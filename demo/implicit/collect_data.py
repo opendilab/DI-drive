@@ -9,7 +9,7 @@ import numpy as np
 
 from core.data import CarlaBenchmarkCollector
 from core.envs import SimpleCarlaEnv, CarlaEnvWrapper
-from core.policy import AutoPolicy
+from core.policy import AutoPIDPolicy
 from core.utils.others.tcp_helper import parse_carla_tcp
 from ding.envs import BaseEnvManager, SyncSubprocessEnvManager
 from ding.utils.default_helper import deep_merge_dicts
@@ -103,7 +103,7 @@ def main(cfg, seed=0):
     )
     collector_env.seed(seed)
 
-    policy = AutoPolicy(cfg.policy)
+    policy = AutoPIDPolicy(cfg.policy)
 
     collector = CarlaBenchmarkCollector(cfg.collector, collector_env, policy.collect_mode)
 

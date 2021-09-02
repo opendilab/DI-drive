@@ -71,7 +71,7 @@ class BenchmarkDatasetSaver():
                 measurements = [
                     observations['tick'],
                     observations['timestamp'],
-                    observations['orientation'],
+                    observations['forward_vector'],
                     observations['acceleration'],
                     observations['location'],
                     observations['speed'],

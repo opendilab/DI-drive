@@ -9,16 +9,18 @@ from tensorboardX import SummaryWriter
 from core.envs import SimpleCarlaEnv
 from core.utils.others.tcp_helper import parse_carla_tcp
 from core.eval import SingleCarlaEvaluator
+from core.utils.data_utils.bev_utils import unpack_birdview
+from core.utils.others.ding_utils import compile_config
 from ding.envs import SyncSubprocessEnvManager
-from ding.policy import TD3Policy
+from ding.policy import DDPGPolicy
 from ding.worker import BaseLearner, SampleCollector, NaiveReplayBuffer
 from ding.utils import set_pkg_seed
-from demo.simple_rl.model import TD3RLModel
+from demo.simple_rl.model import DDPGRLModel
 from demo.simple_rl.env_wrapper import ContinuousBenchmarkEnvWrapper
-from demo.simple_rl.utils import compile_config, unpack_birdview
+
 
 train_config = dict(
-    exp_name='td32_bev32_buffer400000_lr1e4_train_ft',
+    exp_name='ddpg2_bev32_buffer400000_lr1e4_train_ft',
     env=dict(
         simulator=dict(
             town='Town01',
@@ -61,7 +63,7 @@ train_config = dict(
     policy=dict(
         cuda=True,
         learn=dict(
-            batch_size=64,
+            batch_size=128,
             learning_rate_actor=0.0001,
             learning_rate_critic=0.0001,
             weight_decay=0.0001,
@@ -96,10 +98,11 @@ train_config = dict(
     ),
     model=dict(),
     eval=dict(
-        #render=True,
+        # render=True,
         eval_freq=5000,
-        final_reward=1000,
-        eval_num=1,
+        eval_num=3,
+        success_rate=0.7,
+        transform_obs=True,
     ),
 )
 
@@ -114,7 +117,7 @@ def main(cfg, seed=0):
     cfg = compile_config(
         cfg,
         SyncSubprocessEnvManager,
-        TD3Policy,
+        DDPGPolicy,
         BaseLearner,
         SampleCollector,
         NaiveReplayBuffer,
@@ -131,8 +134,8 @@ def main(cfg, seed=0):
     evaluate_env.seed(seed)
     set_pkg_seed(seed)
 
-    model = TD3RLModel()
-    policy = TD3Policy(cfg.policy, model=model)
+    model = DDPGRLModel()
+    policy = DDPGPolicy(cfg.policy, model=model)
 
     tb_logger = SummaryWriter(os.path.join('./log/', cfg.exp_name))
     learner = BaseLearner(cfg.policy.learn.learner, policy.learn_mode, tb_logger)
@@ -142,17 +145,18 @@ def main(cfg, seed=0):
 
     learner._instance_name = cfg.exp_name + '_' + time.ctime().replace(' ', '_').replace(':', '_')
     learner.call_hook('before_run')
-
     new_data = collector.collect(n_sample=10000, train_iter=learner.train_iter)
     replay_buffer.push(new_data, cur_collector_envstep=collector.envstep)
 
     while True:
         if evaluator.should_eval(learner.train_iter):
-            reward_list = []
+            results_list = []
             for _ in range(cfg.eval.eval_num):
-                reward_list.append(evaluator.eval())
-            if np.average(reward_list) > cfg.eval.final_reward:
+                results_list.append(evaluator.eval())
+            success_rate = sum(results_list) / len(results_list)
+            if success_rate > cfg.eval.success_rate:
                 break
+            print("Evaluate success rate: {:.2f}%".format(success_rate*100))
         # Sampling data from environments
         new_data = collector.collect(n_sample=3000, train_iter=learner.train_iter)
         update_per_collect = len(new_data) // 32

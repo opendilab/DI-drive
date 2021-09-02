@@ -15,7 +15,8 @@ from ding.worker import BaseLearner, SampleCollector, NaiveReplayBuffer
 from ding.utils import set_pkg_seed
 
 from demo.simple_rl.env_wrapper import ContinuousBenchmarkEnvWrapper
-from demo.simple_rl.utils import compile_config, unpack_birdview
+from core.utils.data_utils.bev_utils import unpack_birdview
+from core.utils.others.ding_utils import compile_config
 from demo.simple_rl.model import SACRLModel
 
 train_config = dict(
@@ -102,10 +103,11 @@ train_config = dict(
             twin_critic=True),
     ),
     eval=dict(
-        #render=True,
+        # render=True,
         eval_freq=5000,
-        final_reward=1000,
-        eval_num=1,
+        eval_num=3,
+        success_rate=0.7,
+        transform_obs=True,
     ),
 )
 
@@ -154,11 +156,13 @@ def main(cfg, seed=0):
 
     while True:
         if evaluator.should_eval(learner.train_iter):
-            reward_list = []
+            results_list = []
             for _ in range(cfg.eval.eval_num):
-                reward_list.append(evaluator.eval())
-            if np.average(reward_list) > cfg.eval.final_reward:
+                results_list.append(evaluator.eval())
+            success_rate = sum(results_list) / len(results_list)
+            if success_rate > cfg.eval.success_rate:
                 break
+            print("Evaluate success rate: {:.2f}%".format(success_rate*100))
         # Sampling data from environments
         new_data = collector.collect(n_sample=3000, train_iter=learner.train_iter)
         update_per_collect = len(new_data) // 32

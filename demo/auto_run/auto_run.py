@@ -8,7 +8,7 @@ from ding.utils import set_pkg_seed
 
 from core.envs import SimpleCarlaEnv, CarlaEnvWrapper
 from core.eval import SingleCarlaEvaluator
-from core.policy import AutoPolicy
+from core.policy import AutoPIDPolicy
 from core.utils.others.tcp_helper import parse_carla_tcp
 
 autorun_config = dict(
@@ -63,7 +63,7 @@ def main(cfg, seed=0):
     carla_env = CarlaEnvWrapper(SimpleCarlaEnv(cfg.env, host, port), cfg.env_wrapper)
     carla_env.seed(seed)
     set_pkg_seed(seed)
-    auto_policy = AutoPolicy(cfg.policy)
+    auto_policy = AutoPIDPolicy(cfg.policy)
     evaluator = SingleCarlaEvaluator(cfg.eval, carla_env, auto_policy.eval_mode)
     evaluator.eval(cfg.eval.reset_param)
     evaluator.close()

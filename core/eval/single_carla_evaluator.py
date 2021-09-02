@@ -68,6 +68,7 @@ class SingleCarlaEvaluator(BaseEvaluator):
         """
         self._policy.reset([0])
         eval_reward = 0
+        success = False
         if reset_param is not None:
             obs = self._env.reset(**reset_param)
         else:
@@ -91,13 +92,19 @@ class SingleCarlaEvaluator(BaseEvaluator):
 
                 if timestep.done:
                     eval_reward = timestep.info['final_eval_reward']
+                    success = timestep.info['success']
                     break
 
         duration = self._timer.value
         info = {
             'evaluate_time': duration,
             'eval_reward': eval_reward,
+            'success': success,
         }
-        print("[EVALUATOR] Evaluation ends:\n{}".format('\n'.join(['\t{}: {}'.format(k, v) for k, v in info.items()])))
+        print(
+            "[EVALUATOR] Evaluation ends:\n{}".format(
+                '\n'.join(['\t{}: {:.3f}'.format(k, v) for k, v in info.items()])
+            )
+        )
         print("[EVALUATOR] Evaluate done!")
-        return eval_reward
+        return success

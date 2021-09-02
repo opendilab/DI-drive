@@ -1,3 +1,18 @@
+## v0.1.2 (2021.9.2)
+
+- Rename 'orientation' to 'forward_vector'
+- Redefine train, test, and eval in demo
+- Move 'utils' in simple rl into core
+- Add Latent RL demo, including env, DQN train, test and eval
+- Add MPC controller with waypoints input
+- Add AutoMPCPolicy, rename AutoPolicy to AutoPIDPolicy
+- Add Vanilla VAE model
+- Add API doc for MPC controller
+- Add API doc for LPC Policy
+- Update evaluator. It now returns success / success rate
+- Fix a bug that walker controller may be identified as walker in CarlaDataProvider
+- Fix birdview visualizer to show less channels
+
 ## v0.1.1 (2021.8.16)
 
 - Update AutoPolicy: better performance in multi-lane maps

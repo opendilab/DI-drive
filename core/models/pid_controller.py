@@ -6,17 +6,17 @@ from easydict import EasyDict
 
 
 class PIDController(object):
-    r"""
-    PID controller for speed and angle control in XAD.
+    """
+    PID controller for speed and angle control in DI-drive.
 
-    :Interfaces: forward, clear
-
-    :Parameters:
+    :Arguments:
         - K_P (float): P value of PID.
         - K_I (float): I value of PID.
         - K_D (float): D value of PID.
         - fps (int): Frame per second in simulation. Ised to carculate derivative.
         - n (int): Length of integral window.
+
+    :Interfaces: forward, clear
     """
 
     def __init__(self, K_P=1.0, K_I=0.0, K_D=0.0, fps=10, n=30, **kwargs):
@@ -46,23 +46,23 @@ class PIDController(object):
         return control
 
     def forward(self, error: float) -> float:
-        r"""
+        """
         Run one step of controller, return control value.
 
         :Returns:
-            - control (float): Control value.
+            float: Control value.
         """
         return self.step(error)
 
     def clear(self):
-        r"""
+        """
         Clear integral window.
         """
         self._window.clear()
 
 
 class CustomController():
-    r"""
+    """
     Controller used by LBC.
     """
 

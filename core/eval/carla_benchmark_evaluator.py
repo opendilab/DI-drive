@@ -46,6 +46,7 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
         suite='FullTown01-v0',
         weathers=None,
         seed=0,
+        save_files=True,
     )
 
     def __init__(self, cfg: Dict, env: BaseEnvManager, policy: Any) -> None:
@@ -62,6 +63,7 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
         self._eval_suite_list = get_suites_list(suite)
         self._seed = self._cfg.seed
         self._weathers = self._cfg.weathers
+        self._save_files = self._cfg.save_files
         self._close_flag = False
 
     @property
@@ -108,6 +110,9 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
         if self._result_dir != '':
             os.makedirs(self._result_dir, exist_ok=True)
         self.reset()
+
+        total_episodes = 0
+        success_episodes = 0
 
         for suite in tqdm(self._eval_suite_list):
             args, kwargs = ALL_SUITES[suite]
@@ -184,9 +189,19 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
                         break
             duration = self._timer.value
             total_time += duration
-            summary = pd.DataFrame(results)
-            summary.to_csv(summary_csv, index=False)
+            for result in results:
+                total_episodes += 1
+                if result['success']:
+                    success_episodes += 1
+            if self._save_files:
+                summary = pd.DataFrame(results)
+                summary.to_csv(summary_csv, index=False)
 
-        results = gather_results(self._result_dir)
-        print(results)
-        print('[EVALUATOR] Total time: %.3f hours.' % (total_time / 3600.0))
+        if self._save_files:
+            results = gather_results(self._result_dir)
+            print(results)
+        success_rate = 0 if total_episodes == 0 else success_episodes / total_episodes
+        print('[EVALUATOR] Total success: {}/{}.'.format(success_episodes, total_episodes))
+        print('[EVALUATOR] Total time: {:.3f} hours.'.format(total_time / 3600.0))
+
+        return success_rate

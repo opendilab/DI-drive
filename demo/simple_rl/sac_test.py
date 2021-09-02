@@ -6,9 +6,9 @@ from easydict import EasyDict
 from core.envs import SimpleCarlaEnv
 from core.utils.others.tcp_helper import parse_carla_tcp
 from core.eval import SingleCarlaEvaluator
-from demo.simple_rl.model import DDPGRLModel
+from demo.simple_rl.model import SACRLModel
 from demo.simple_rl.env_wrapper import ContinuousBenchmarkEnvWrapper
-from ding.policy import DDPGPolicy
+from ding.policy import SACPolicy
 from ding.utils import set_pkg_seed
 from ding.utils.default_helper import deep_merge_dicts
 
@@ -52,6 +52,7 @@ eval_config = dict(
     )],
     eval=dict(
         render=True,
+        transform_obs=True,
     ),
 )
 
@@ -59,7 +60,7 @@ main_config = EasyDict(eval_config)
 
 
 def main(cfg, seed=0):
-    cfg.policy = deep_merge_dicts(DDPGPolicy.default_config(), cfg.policy)
+    cfg.policy = deep_merge_dicts(SACPolicy.default_config(), cfg.policy)
 
     tcp_list = parse_carla_tcp(cfg.server)
     host, port = tcp_list[0]
@@ -67,15 +68,14 @@ def main(cfg, seed=0):
     carla_env = ContinuousBenchmarkEnvWrapper(SimpleCarlaEnv(cfg.env, host, port), cfg.env_wrapper)
     carla_env.seed(seed)
     set_pkg_seed(seed)
-    model = DDPGRLModel(**cfg.model)
-    policy = DDPGPolicy(cfg.policy, model=model)
+    model = SACRLModel(**cfg.model)
+    policy = SACPolicy(cfg.policy, model=model)
 
     if cfg.policy.ckpt_path != '':
         state_dict = torch.load(cfg.policy.ckpt_path, map_location='cpu')
         policy.eval_mode.load_state_dict(state_dict)
     evaluator = SingleCarlaEvaluator(cfg.eval, carla_env, policy.eval_mode)
-    for i in range(10):
-        evaluator.eval()
+    evaluator.eval()
     evaluator.close()
 
 

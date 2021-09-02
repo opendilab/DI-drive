@@ -97,7 +97,7 @@ class ScenarioCarlaEnv(BaseCarlaEnv):
                 tm_port=self._carla_tm_port
             )
         else:
-            print('------ Using Promote Carla @ {}:{} ------'.format(self._carla_host, self._carla_port))
+            print('------ Using Remote Carla @ {}:{} ------'.format(self._carla_host, self._carla_port))
             self._simulator = CarlaScenarioSimulator(
                 cfg=self._simulator_cfg,
                 client=None,
@@ -264,7 +264,7 @@ class ScenarioCarlaEnv(BaseCarlaEnv):
                 'speed': np.float32(state['speed']),
                 'speed_limit': np.float32(navigation['speed_limit']),
                 'location': np.float32(state['location']),
-                'orientation': np.float32(state['orientation']),
+                'forward_vector': np.float32(state['forward_vector']),
                 'acceleration': np.float32(state['acceleration']),
                 'is_junction': np.float32(state['is_junction']),
                 'tl_state': state['tl_state'],

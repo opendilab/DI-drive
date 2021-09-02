@@ -11,6 +11,7 @@ from core.utils.simulator_utils.carla_utils import calculate_speed, convert_wayp
 from core.utils.simulator_utils.carla_agents.tools.misc import is_within_distance_ahead
 from core.utils.simulator_utils.carla_agents.navigation import RoadOption
 
+
 def _numpy(carla_vector, normalize=False):
     result = np.float32([carla_vector.x, carla_vector.y])
 
@@ -18,6 +19,7 @@ def _numpy(carla_vector, normalize=False):
         return result / (np.linalg.norm(result) + 1e-4)
 
     return result
+
 
 def _orientation(yaw):
     return np.float32([np.cos(np.radians(yaw)), np.sin(np.radians(yaw))])
@@ -135,7 +137,7 @@ class CarlaDataProvider(object):
         for key in CarlaDataProvider._actor_speed_map:
             if key.id == actor.id:
                 return CarlaDataProvider._actor_speed_map[key]
-        print('"WARNING: {}.get_speed: {} not found!'.format(__name__, actor))
+        print('WARNING: {}.get_speed: {} not found!'.format(__name__, actor))
         return -1
 
     @staticmethod
@@ -153,7 +155,7 @@ class CarlaDataProvider(object):
         for key in CarlaDataProvider._actor_transform_map:
             if key.id == actor.id:
                 return CarlaDataProvider._actor_transform_map[key]
-        print('"WARNING: {}.get_transform: {} not found!'.format(__name__, actor))
+        print('WARNING: {}.get_transform: {} not found!'.format(__name__, actor))
         return None
 
     @staticmethod
@@ -164,7 +166,7 @@ class CarlaDataProvider(object):
         for key in CarlaDataProvider._actor_transform_map:
             if key.id == actor.id:
                 return CarlaDataProvider._actor_transform_map[key].location
-        print('"WARNING: {}.get_location: {} not found!'.format(__name__, actor))
+        print('WARNING: {}.get_location: {} not found!'.format(__name__, actor))
         return None
 
     @staticmethod
@@ -175,7 +177,7 @@ class CarlaDataProvider(object):
         for key in CarlaDataProvider._actor_acceleration_map:
             if key.id == actor.id:
                 return CarlaDataProvider._actor_acceleration_map[key]
-        print('"WARNING: {}.get_acceleration: {} not found!'.format(__name__, actor))
+        print('WARNING: {}.get_acceleration: {} not found!'.format(__name__, actor))
         return None
 
     @staticmethod
@@ -186,7 +188,7 @@ class CarlaDataProvider(object):
         for key in CarlaDataProvider._actor_angular_velocity_map:
             if key.id == actor.id:
                 return CarlaDataProvider._actor_angular_velocity_map[key]
-        print('"WARNING: {}.get_angular_velocity: {} not found!'.format(__name__, actor))
+        print('WARNING: {}.get_angular_velocity: {} not found!'.format(__name__, actor))
         return None
 
     @staticmethod
@@ -197,7 +199,7 @@ class CarlaDataProvider(object):
         for key in CarlaDataProvider._actor_speed_vector_map:
             if key.id == actor.id:
                 return CarlaDataProvider._actor_speed_vector_map[key]
-        print('"WARNING: {}.get_speed: {} not found!'.format(__name__, actor))
+        print('WARNING: {}.get_speed: {} not found!'.format(__name__, actor))
         return None
 
     @staticmethod
@@ -827,8 +829,7 @@ class CarlaDataProvider(object):
         return (False, None)
 
     @staticmethod
-    def is_junction_vehicle_hazard(vehicle: carla.Actor,
-                                   command: RoadOption) -> Tuple[bool, Optional[carla.Actor]]:
+    def is_junction_vehicle_hazard(vehicle: carla.Actor, command: RoadOption) -> Tuple[bool, Optional[carla.Actor]]:
         """
         :Arguments:
             - vehicle: Potential obstacle to check
@@ -856,7 +857,7 @@ class CarlaDataProvider(object):
                 continue
 
             o2 = _orientation(CarlaDataProvider.get_transform(target_vehicle).rotation.yaw)
-            o2_left  = _orientation(CarlaDataProvider.get_transform(target_vehicle).rotation.yaw - 15)
+            o2_left = _orientation(CarlaDataProvider.get_transform(target_vehicle).rotation.yaw - 15)
             o2_right = _orientation(CarlaDataProvider.get_transform(target_vehicle).rotation.yaw + 15)
             x2 = target_vehicle.bounding_box.extent.x
 
@@ -866,7 +867,7 @@ class CarlaDataProvider(object):
             s2 = CarlaDataProvider.get_speed(target_vehicle)
 
             v2 = (4 * s2 + 2 * x2 + 7) * o2
-            v2_left  = (4 * s2 + 2 * x2 + 7) * o2_left
+            v2_left = (4 * s2 + 2 * x2 + 7) * o2_left
             v2_right = (4 * s2 + 2 * x2 + 7) * o2_right
 
             angle_between_heading = np.degrees(np.arccos(np.clip(o1.dot(o2), -1, 1)))
@@ -888,8 +889,7 @@ class CarlaDataProvider(object):
         return (False, None)
 
     @staticmethod
-    def is_lane_vehicle_hazard(vehicle: carla.Actor,
-                                   command: RoadOption) -> Tuple[bool, Optional[carla.Actor]]:
+    def is_lane_vehicle_hazard(vehicle: carla.Actor, command: RoadOption) -> Tuple[bool, Optional[carla.Actor]]:
         """
         :Arguments:
             - vehicle: Potential obstacle to check
@@ -916,9 +916,13 @@ class CarlaDataProvider(object):
         else:
             lft_shift += 1
 
-        lft_lane_wp = CarlaDataProvider.rotate_point(carla.Vector3D(lft_shift * lane_width, 0.0, location_w1.z), yaw_w1 + 90)
+        lft_lane_wp = CarlaDataProvider.rotate_point(
+            carla.Vector3D(lft_shift * lane_width, 0.0, location_w1.z), yaw_w1 + 90
+        )
         lft_lane_wp = location_w1 + carla.Location(lft_lane_wp)
-        rgt_lane_wp = CarlaDataProvider.rotate_point(carla.Vector3D(rgt_shift * lane_width, 0.0, location_w1.z), yaw_w1 - 90)
+        rgt_lane_wp = CarlaDataProvider.rotate_point(
+            carla.Vector3D(rgt_shift * lane_width, 0.0, location_w1.z), yaw_w1 - 90
+        )
         rgt_lane_wp = location_w1 + carla.Location(rgt_lane_wp)
 
         for target_vehicle in vehicle_list:
@@ -930,7 +934,9 @@ class CarlaDataProvider(object):
             p2 = CarlaDataProvider.get_location(target_vehicle)
             x2 = target_vehicle.bounding_box.extent.x
             p2_hat = p2 - CarlaDataProvider.get_transform(target_vehicle).get_forward_vector() * x2 * 2
-            s2 = CarlaDataProvider.get_speed_vector(target_vehicle) + CarlaDataProvider.get_transform(target_vehicle).get_forward_vector() * x2
+            s2 = CarlaDataProvider.get_speed_vector(
+                target_vehicle
+            ) + CarlaDataProvider.get_transform(target_vehicle).get_forward_vector() * x2
             s2_value = max(12, 2 + 2 * x2 + 3.0 * CarlaDataProvider.get_speed(target_vehicle))
 
             distance = p1.distance(p2)
@@ -974,6 +980,8 @@ class CarlaDataProvider(object):
         v1 = 10.0 * o1
 
         for bike in bikes_list:
+            if 'driver_id' not in bike.attributes:
+                continue
             o2 = _orientation(CarlaDataProvider.get_transform(bike).rotation.yaw)
             s2 = CarlaDataProvider.get_speed(bike)
             v2_hat = o2
@@ -983,7 +991,7 @@ class CarlaDataProvider(object):
             distance = np.linalg.norm(p2_p1)
             p2_p1_hat = p2_p1 / (distance + 1e-4)
 
-            angle_to_car = np.degrees(np.arccos(np.clip(v1_hat.dot(p2_p1_hat),-1, 1)))
+            angle_to_car = np.degrees(np.arccos(np.clip(v1_hat.dot(p2_p1_hat), -1, 1)))
             angle_between_heading = np.degrees(np.arccos(np.clip(o1.dot(o2), -1, 1)))
 
             # to consider -ve angles too
@@ -1013,11 +1021,13 @@ class CarlaDataProvider(object):
             - bool_flag: True if there is a walker ahead blocking us and False otherwise
             - walker: The blocker object itself
         """
-        walkers_list = CarlaDataProvider.get_actor_list().filter("*walker*")
+        walkers_list = CarlaDataProvider.get_actor_list().filter("*walker.*")
         p1 = _numpy(CarlaDataProvider.get_location(vehicle))
         v1 = 10.0 * _orientation(CarlaDataProvider.get_transform(vehicle).rotation.yaw)
 
         for walker in walkers_list:
+            if not isinstance(walker, carla.Walker):
+                continue
             v2_hat = _orientation(CarlaDataProvider.get_transform(walker).rotation.yaw)
             s2 = CarlaDataProvider.get_speed(walker)
 
@@ -1160,7 +1170,7 @@ class CarlaDataProvider(object):
             return False, None
 
         x = np.linalg.solve(A, b)
-        collides = all(x >= 0) and all(x <= 1) # how many seconds until collision
+        collides = all(x >= 0) and all(x <= 1)  # how many seconds until collision
 
         return collides, p1 + x[0] * v1
 

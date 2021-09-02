@@ -12,7 +12,7 @@ from tqdm import tqdm
 from core.data import CarlaBenchmarkCollector
 from core.data.dataset_saver import BenchmarkDatasetSaver
 from core.envs import SimpleCarlaEnv, CarlaEnvWrapper
-from core.policy import AutoPolicy
+from core.policy import AutoPIDPolicy
 from core.utils.others.tcp_helper import parse_carla_tcp
 
 config = dict(
@@ -119,7 +119,7 @@ def main(cfg, seed=0):
     )
     collector_env.seed(seed)
 
-    policy = AutoPolicy(cfg.policy)
+    policy = AutoPIDPolicy(cfg.policy)
 
     collector = CarlaBenchmarkCollector(cfg.collector, collector_env, policy.collect_mode)
 

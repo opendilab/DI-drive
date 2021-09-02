@@ -171,7 +171,7 @@ class ImplicitPolicy():
         current_state = self.State(current_encoding_np, speed, order, self._last_steering_dict[data_id])
         self._state_buffer_dict[data_id].append(current_state)
 
-        forward_vector = observations['orientation']
+        forward_vector = observations['forward_vector']
         location = observations['location']
         node = observations['node']
         next = observations['target']

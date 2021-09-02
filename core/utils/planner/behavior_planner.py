@@ -221,12 +221,16 @@ class BehaviorPlanner(BasicPlanner):
             self.agent_state = AgentState.BLOCKED_BY_BIKE
 
         # 2.3: Car changelane behaviors
-        lane_vehicle_state, vehicle = CarlaDataProvider.is_lane_vehicle_hazard(self._hero_vehicle, self.target_road_option)
+        lane_vehicle_state, vehicle = CarlaDataProvider.is_lane_vehicle_hazard(
+            self._hero_vehicle, self.target_road_option
+        )
         if lane_vehicle_state:
             self.agent_state = AgentState.BLOCKED_BY_VEHICLE
 
         # 2.4: Car in junction  behaviors
-        junction_vehicle_state, vehicle = CarlaDataProvider.is_junction_vehicle_hazard(self._hero_vehicle, self.target_road_option)
+        junction_vehicle_state, vehicle = CarlaDataProvider.is_junction_vehicle_hazard(
+            self._hero_vehicle, self.target_road_option
+        )
         if junction_vehicle_state:
             self.agent_state = AgentState.BLOCKED_BY_VEHICLE
 

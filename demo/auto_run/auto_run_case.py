@@ -4,7 +4,7 @@ from argparse import RawTextHelpFormatter
 from easydict import EasyDict
 
 from core.envs import CarlaEnvWrapper, ScenarioCarlaEnv
-from core.policy import AutoPolicy
+from core.policy import AutoPIDPolicy
 from ding.utils import set_pkg_seed
 from core.simulators.srunner.tools.route_parser import RouteParser
 from core.simulators.srunner.tools.scenario_parser import ScenarioConfigurationParser
@@ -63,7 +63,7 @@ def main(args, cfg, seed=0):
     carla_env = CarlaEnvWrapper(ScenarioCarlaEnv(cfg.env, args.host, args.port))
     carla_env.seed(seed)
     set_pkg_seed(seed)
-    auto_policy = AutoPolicy(cfg.policy).eval_mode
+    auto_policy = AutoPIDPolicy(cfg.policy).eval_mode
 
     for config in configs:
         auto_policy.reset([0])
