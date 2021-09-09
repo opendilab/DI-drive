@@ -1,0 +1,5 @@
+make.bat
+_static/
+_templates/
+build/
+__pycache__/

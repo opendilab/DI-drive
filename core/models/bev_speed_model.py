@@ -51,7 +51,7 @@ class BEVSpeedConvEncoder(nn.Module):
             output = self._model(test_data)
         return output.shape[1]
 
-    def forward(self, data: Dict) -> torch.tensor:
+    def forward(self, data: Dict) -> torch.Tensor:
         """
         Forward computation of encoder
 
@@ -59,7 +59,7 @@ class BEVSpeedConvEncoder(nn.Module):
             - data (Dict): Input data, must contain 'birdview' and 'speed'
 
         :Returns:
-            torch.tensor: Embedding feature.
+            torch.Tensor: Embedding feature.
         """
         image = data['birdview'].permute(0, 3, 1, 2)
         speed = data['speed']
@@ -144,7 +144,7 @@ class BEVSpeedDeterminateNet(nn.Module):
         else:
             self._head = FCContinuousNet(encoder_embedding_size, self._act_shape, head_embedding_dim, final_tanh=True)
 
-    def forward(self, obs: Dict, action: Optional[Dict] = None) -> torch.tensor:
+    def forward(self, obs: Dict, action: Optional[Dict] = None) -> torch.Tensor:
         """
         Forward computation of network. If is critic, action must not be ``None``
 
@@ -153,7 +153,7 @@ class BEVSpeedDeterminateNet(nn.Module):
             - action (Dict, optional): Action dict. Defaults to None.
 
         :Returns:
-            torch.tensor: Actions or critic value.
+            torch.Tensor: Actions or critic value.
         """
         embedding = self._encoder(obs)
         if self._is_critic:
@@ -210,7 +210,7 @@ class BEVSpeedStochasticNet(nn.Module):
         self._log_std_layer.weight.data.uniform_(-init_w, init_w)
         self._log_std_layer.bias.data.uniform_(-init_w, init_w)
 
-    def forward(self, obs: Dict) -> Tuple[torch.tensor, torch.tensor]:
+    def forward(self, obs: Dict) -> Tuple[torch.Tensor, torch.Tensor]:
         """
         Forward computation of network.
 
@@ -218,7 +218,7 @@ class BEVSpeedStochasticNet(nn.Module):
             - obs (Dict): Observation dict.
 
         :Returns:
-            Tuple[torch.tensor, torch.tensor]: Mean and std value for actions.
+            Tuple[torch.Tensor, torch.Tensor]: Mean and std value for actions.
         """
         embedding = self._encoder(obs)
         mean = self._mean_layer(embedding)

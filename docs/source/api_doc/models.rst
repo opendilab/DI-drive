@@ -1,0 +1,47 @@
+models
+##############
+
+.. toctree::
+    :maxdepth: 2
+
+
+BEVSpeedConvEncoder
+=====================
+.. autoclass:: core.models.BEVSpeedConvEncoder
+    :members:
+
+
+BEVSpeedDeterminateNet
+=======================
+.. autoclass:: core.models.BEVSpeedDeterminateNet
+    :members:
+
+
+BEVSpeedStochasticNet
+========================
+.. autoclass:: core.models.BEVSpeedStochasticNet
+    :members:
+
+
+VanillaVAE
+=================
+.. autoclass:: core.models.vae_model.VanillaVAE
+    :members:
+
+
+VehiclePIDController
+=====================
+.. autoclass:: core.models.VehiclePIDController
+    :members:
+
+
+MPCController
+==================
+.. autoclass:: core.models.MPCController
+    :members:
+
+
+SteerNoiseWrapper
+=====================
+.. autoclass:: core.models.model_wrappers.SteerNoiseWrapper
+    :members:

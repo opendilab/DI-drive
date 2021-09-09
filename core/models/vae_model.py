@@ -71,7 +71,7 @@ class VanillaVAE(nn.Module):
             nn.Conv2d(hidden_dims[-1], out_channels=7, kernel_size=3, padding=1), nn.Sigmoid()
         )
 
-    def encode(self, input: torch.tensor) -> List[torch.tensor]:
+    def encode(self, input: torch.Tensor) -> List[torch.Tensor]:
         """
         Encodes the input by passing through the encoder network
         and returns the latent codes.
@@ -90,7 +90,7 @@ class VanillaVAE(nn.Module):
 
         return mu
 
-    def decode(self, z: torch.tensor) -> torch.tensor:
+    def decode(self, z: torch.Tensor) -> torch.Tensor:
         """
         Maps the given latent codes
         onto the image space.
@@ -106,7 +106,7 @@ class VanillaVAE(nn.Module):
         result = self.final_layer(result)
         return result
 
-    def reparameterize(self, mu: torch.tensor, logvar: torch.tensor) -> torch.tensor:
+    def reparameterize(self, mu: torch.Tensor, logvar: torch.Tensor) -> torch.Tensor:
         """
         Reparameterization trick to sample from N(mu, var) from
         N(0,1).
@@ -121,15 +121,15 @@ class VanillaVAE(nn.Module):
         eps = torch.randn_like(std)
         return eps * std + mu
 
-    def forward(self, input: torch.tensor, **kwargs) -> List[torch.tensor]:
+    def forward(self, input: torch.Tensor, **kwargs) -> List[torch.Tensor]:
         """
         [summary]
 
         :Arguments:
-            - input (torch.tensor): Input tensor
+            - input (torch.Tensor): Input tensor
 
         :Returns:
-            List[torch.tensor]: Input and output tensor
+            List[torch.Tensor]: Input and output tensor
         """
         mu = self.encode(input)
         return [self.decode(mu), input]
@@ -171,7 +171,7 @@ class VanillaVAE(nn.Module):
 
         return ret
 
-    def sample(self, num_samples: int, current_device: int, **kwargs) -> torch.tensor:
+    def sample(self, num_samples: int, current_device: int, **kwargs) -> torch.Tensor:
         r"""
         Samples from the latent space and return the corresponding
         image space map.
@@ -189,7 +189,7 @@ class VanillaVAE(nn.Module):
         samples = self.decode(z)
         return samples
 
-    def generate(self, x: torch.tensor, **kwargs) -> torch.tensor:
+    def generate(self, x: torch.Tensor, **kwargs) -> torch.Tensor:
         """
         Given an input image x, returns the reconstructed image
 
