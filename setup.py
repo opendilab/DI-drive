@@ -27,6 +27,7 @@ setup(
         'py-trees==0.8.3',
         'pygame==1.9.6',
         'torch>=1.4,<=1.8',
+        'torchvision',
         'di-engine==0.1',
         'scikit-image',
         'setuptools==50',
