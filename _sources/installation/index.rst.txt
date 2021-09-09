@@ -15,22 +15,9 @@ System version:
 
 Python version: 3.6, 3.7
 
-PyTorch version: >=1.4, <=1.7.1
+PyTorch version: >=1.4, <=1.8
 
 Hardware requirements: NVIDIA GPU with 4GB memory to run Carla
-
-Get and install DI-engine
-=============================
-
-We use DI-engine —— distributed Reinforcement Learning system to train and evaluate RL agent.
-
-Follow `DI-engine installation <https://opendilab.github.io/DI-engine/installation/index.html>`_ guide to install DI-engine.
-
-Or just simply install from PyPI:
-
-.. code-block:: bash
-
-    pip install DI-engine
 
 Get and install DI-drive
 ===========================
@@ -54,6 +41,14 @@ Install DI-drive
     # install for development(if you want to modify DI-drive)
     pip install -e . --user
 
+We use DI-engine —— distributed Reinforcement Learning system to train and evaluate RL agent.
+If any questions raised when install DI-engine, please follow 
+`DI-engine installation <https://opendilab.github.io/DI-engine/installation/index.html>`_ for help.
+Or try to install manually via PyPI:
+
+.. code-block:: bash
+
+    pip install DI-engine
 
 Download and install Carla Python API
 ============================================

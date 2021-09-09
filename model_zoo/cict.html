@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -39,9 +42,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="End-to-End Model-Free Reinforcement Learning for Urban Driving using Implicit Affordances" href="implicit.html" />
-    <link rel="prev" title="Learning by Cheating" href="lbc.html" />
-    <link href="../_static/css/style.css" rel="stylesheet" type="text/css">
-
+    <link rel="prev" title="Learning by Cheating" href="lbc.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -201,7 +202,7 @@
 is a hierachical Imitation Learning method for close-loop autonomous driving. It uses a generator
 network to obtain protential map from RGB camera and LiDAR inputs, and then uses a trajectory function
 network to generate a detailed trajectory together with the placement.</p>
-<a class="reference internal image-reference" href="../_images/cict_1.png"><img alt="cict_1" class="align-center" src="../_images/cict_1.png" style="width: 800px;" /></a>
+<a class="reference internal image-reference" href="../figs/cict_1.png"><img alt="cict_1" class="align-center" src="../figs/cict_1.png" style="width: 800px;" /></a>
 <p>DI-drive prepares training and evaluation for the GAN network and trajectory network in CICT. The IL
 datasets is colleted via Carla. The close-loop control test is supported using the two trained networks.</p>
 <div class="section" id="data-preparation">
@@ -480,7 +481,7 @@ Also you may need to change the dataset path and pre-train weights path.</p>
 <div class="section" id="results">
 <h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
 <p>The groundtruth potential map and predicted potential map on evaluation dataset at the first stage:</p>
-<img alt="result_GAN" class="align-center" src="../_images/result_GAN.png" />
+<img alt="result_GAN" class="align-center" src="../figs/result_GAN.png" />
 <p>The MSE loss of position, velocity, and acceleration on evaluation dataset at the second stage:</p>
 <table class="docutils align-default">
 <colgroup>
@@ -603,7 +604,7 @@ change the environment num, server IP and port and suite’s name in config.</p>
     <span class="n">volume</span><span class="o">=</span><span class="p">{</span><span class="mi">6</span><span class="p">},</span>
     <span class="n">number</span><span class="o">=</span><span class="p">{</span><span class="mi">2</span><span class="p">},</span>
     <span class="n">pages</span><span class="o">=</span><span class="p">{</span><span class="mi">2477</span><span class="o">-</span><span class="mi">2484</span><span class="p">},</span>
-    <span class="n">doi</span><span class="o">=</span><span class="p">{</span><span class="mf">10.1109</span><span class="o">/</span><span class="n">LRA</span><span class="o">.</span><span class="mf">2021.3061336</span><span class="p">}</span>
+    <span class="n">doi</span><span class="o">=</span><span class="p">{</span><span class="mf">10.1109</span><span class="o">/</span><span class="n">LRA</span><span class="mf">.2021.3061336</span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>

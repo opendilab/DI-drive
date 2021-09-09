@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -39,9 +42,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Casezoo Evaluation" href="casezoo.html" />
-    <link rel="prev" title="Datasets" href="datasets.html" />
-    <link href="../_static/css/style.css" rel="stylesheet" type="text/css">
-
+    <link rel="prev" title="Datasets" href="datasets.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -204,7 +205,7 @@ DI-drive allows users to quickly build up an environment with a benchmark suite 
 <code class="xref py py-class docutils literal notranslate"><span class="pre">BenchmarkEnvWrapper</span></code>. Once an environment is wrapped, it will ignore
 the passed arguments in <code class="docutils literal notranslate"><span class="pre">reset</span></code> method, and choose one from the suite’s route list according to aonfiguration. It can be used
 in RL training, to sampling data in benchmark environment settings.</p>
-<p>Also, DI-drive deploys <code class="xref py py-class docutils literal notranslate"><span class="pre">CarlaBenchmarkEvaluator</span></code> and
+<p>Also, DI-drive deploys <a class="reference internal" href="../api_doc/eval.html#core.eval.CarlaBenchmarkEvaluator" title="core.eval.carla_benchmark_evaluator.CarlaBenchmarkEvaluator"><code class="xref py py-class docutils literal notranslate"><span class="pre">CarlaBenchmarkEvaluator</span></code></a> and
 <a class="reference internal" href="../api_doc/data.html#core.data.carla_benchmark_collector.CarlaBenchmarkCollector" title="core.data.carla_benchmark_collector.CarlaBenchmarkCollector"><code class="xref py py-class docutils literal notranslate"><span class="pre">CarlaBenchmarkCollector</span></code></a> to run with a policy
 and a <code class="docutils literal notranslate"><span class="pre">EnvManager</span></code> in DI-engine that can run several environments in parallel. They can parse reset params in the provided
 suite to a list and run all the episodes in order.
@@ -220,11 +221,11 @@ in the suite. The <code class="docutils literal notranslate"><span class="pre">C
 <p>You can check routes in each benchmark suite file in <a class="reference external" href="../../../data/benchmark">benchmark</a> and find start &amp; end waypoint.
 Here we show benchmark settings for ‘Town01’ and ‘Town02’<sup>[2]</sup>.</p>
 <div class="figure align-center" id="id1">
-<a class="reference internal image-reference" href="../_images/roadmaps.png"><img alt="roadmaps" src="../_images/roadmaps.png" style="width: 600px;" /></a>
+<a class="reference internal image-reference" href="../figs/roadmaps.png"><img alt="roadmaps" src="../figs/roadmaps.png" style="width: 600px;" /></a>
 <p class="caption"><span class="caption-text">Road maps od Town01 and Town02</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
 </div>
 <div class="figure align-center" id="id2">
-<a class="reference internal image-reference" href="../_images/weathers.png"><img alt="weathers" src="../_images/weathers.png" style="width: 600px;" /></a>
+<a class="reference internal image-reference" href="../figs/weathers.png"><img alt="weathers" src="../figs/weathers.png" style="width: 600px;" /></a>
 <p class="caption"><span class="caption-text">Weather settings for train, test and eval</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </div>
 </div>

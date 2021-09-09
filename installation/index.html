@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -39,9 +42,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Tutorial" href="../tutorial/index.html" />
-    <link rel="prev" title="DI-drive Documentation" href="../index.html" />
-    <link href="../_static/css/style.css" rel="stylesheet" type="text/css">
-
+    <link rel="prev" title="DI-drive Documentation" href="../index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -93,7 +94,6 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#get-and-install-di-engine">Get and install DI-engine</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#get-and-install-di-drive">Get and install DI-drive</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#download-and-install-carla-python-api">Download and install Carla Python API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#run-carla-server">Run Carla server</a></li>
@@ -195,17 +195,8 @@
 </ul>
 </div></blockquote>
 <p>Python version: 3.6, 3.7</p>
-<p>PyTorch version: &gt;=1.4, &lt;=1.7.1</p>
+<p>PyTorch version: &gt;=1.4, &lt;=1.8</p>
 <p>Hardware requirements: NVIDIA GPU with 4GB memory to run Carla</p>
-</div>
-<div class="section" id="get-and-install-di-engine">
-<h2>Get and install DI-engine<a class="headerlink" href="#get-and-install-di-engine" title="Permalink to this headline">¶</a></h2>
-<p>We use DI-engine —— distributed Reinforcement Learning system to train and evaluate RL agent.</p>
-<p>Follow <a class="reference external" href="https://opendilab.github.io/DI-engine/installation/index.html">DI-engine installation</a> guide to install DI-engine.</p>
-<p>Or just simply install from PyPI:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install DI-engine
-</pre></div>
-</div>
 </div>
 <div class="section" id="get-and-install-di-drive">
 <h2>Get and install DI-drive<a class="headerlink" href="#get-and-install-di-drive" title="Permalink to this headline">¶</a></h2>
@@ -221,6 +212,13 @@ pip install . --user
 
 <span class="c1"># install for development(if you want to modify DI-drive)</span>
 pip install -e . --user
+</pre></div>
+</div>
+<p>We use DI-engine —— distributed Reinforcement Learning system to train and evaluate RL agent.
+If any questions raised when install DI-engine, please follow
+<a class="reference external" href="https://opendilab.github.io/DI-engine/installation/index.html">DI-engine installation</a> for help.
+Or try to install manually via PyPI:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install DI-engine
 </pre></div>
 </div>
 </div>
@@ -268,13 +266,13 @@ CarlaUE4.exe --carla-world-port<span class="o">=</span>N
 </div>
 <p><em>N</em> is the rpc port of Carla server, the default data port is <em>N + 1</em>.
 You will see:</p>
-<img alt="installation_1" src="../_images/installation_1.png" />
+<img alt="installation_1" src="../figs/installation_1.png" />
 <p>You can check whether Carla server is running or not:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lsof -i:N
 </pre></div>
 </div>
 <p>If running successfully, you will see:</p>
-<img alt="installation_2" src="../_images/installation_2.png" />
+<img alt="installation_2" src="../figs/installation_2.png" />
 <p>Now you can use DI-drive to run code under this server.</p>
 </div>
 </div>

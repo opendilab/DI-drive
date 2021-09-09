@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -39,9 +42,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Visualization" href="visualize.html" />
-    <link rel="prev" title="Simulator Features" href="simulator_feature.html" />
-    <link href="../_static/css/style.css" rel="stylesheet" type="text/css">
-
+    <link rel="prev" title="Simulator Features" href="simulator_feature.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -206,7 +207,7 @@ policy with interfaces that can be directly called by the user. For example, cal
 <code class="docutils literal notranslate"><span class="pre">policy.collect_mode</span></code> is the same as calling <code class="docutils literal notranslate"><span class="pre">policy._forward_collect</span></code> method. Same as <code class="docutils literal notranslate"><span class="pre">init</span></code>, <code class="docutils literal notranslate"><span class="pre">reset</span></code>,
 <code class="docutils literal notranslate"><span class="pre">state_dict</span></code> and <code class="docutils literal notranslate"><span class="pre">load_state_dict</span></code>. This makes the policy polymorphic under the same core computing logic.</p>
 <div class="figure align-center">
-<img alt="policy_mode" src="../_images/policy_mode.png" />
+<img alt="policy_mode" src="../figs/policy_mode.png" />
 </div>
 <p>After that, it is natural to use the same policy with different modes in some worker instances to realize various
 functions during training, collecting and evaluating etc. What is more, users are allowed to design their own
