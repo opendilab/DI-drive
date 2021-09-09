@@ -202,12 +202,124 @@
 </div>
 <div class="section" id="bevspeedconvencoder">
 <h2>BEVSpeedConvEncoder<a class="headerlink" href="#bevspeedconvencoder" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="core.models.BEVSpeedConvEncoder">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">core.models.</span></span><span class="sig-name descname"><span class="pre">BEVSpeedConvEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs_shape</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_dim_list</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embedding_size</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_size</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">[8,</span> <span class="pre">4,</span> <span class="pre">3]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stride</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">[4,</span> <span class="pre">2,</span> <span class="pre">1]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/models/bev_speed_model.html#BEVSpeedConvEncoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.models.BEVSpeedConvEncoder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convolutional encoder of Bird-eye View image and speed input. It takes a BeV image and a speed scalar as input.
+The BeV image is encoded by a convolutional encoder, to get a embedding feature which is half size of the
+embedding length. Then the speed value is repeated for half embedding length time, and concated to the above
+feature to get a final feature.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>obs_shape (Tuple): BeV image shape.</p></li>
+<li><p>hidden_dim_list (List): Conv encoder hidden layer dimension list.</p></li>
+<li><p>embedding_size (int): Embedding feature dimensions.</p></li>
+<li><p>kernel_size (List, optional): Conv kernel size for each layer. Defaults to [8, 4, 3].</p></li>
+<li><p>stride (List, optional): Conv stride for each layer. Defaults to [4, 2, 1].</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="core.models.BEVSpeedConvEncoder.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.Tensor</span></span></span><a class="reference internal" href="../_modules/core/models/bev_speed_model.html#BEVSpeedConvEncoder.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.models.BEVSpeedConvEncoder.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Forward computation of encoder</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>data (Dict): Input data, must contain ‘birdview’ and ‘speed’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>torch.Tensor: Embedding feature.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="bevspeeddeterminatenet">
 <h2>BEVSpeedDeterminateNet<a class="headerlink" href="#bevspeeddeterminatenet" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="core.models.BEVSpeedDeterminateNet">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">core.models.</span></span><span class="sig-name descname"><span class="pre">BEVSpeedDeterminateNet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs_shape</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Tuple</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">[5,</span> <span class="pre">32,</span> <span class="pre">32]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_shape</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">tuple</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoder_hidden_dim_list</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">[64,</span> <span class="pre">128,</span> <span class="pre">256]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoder_embedding_size</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">512</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head_embedding_dim</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">512</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_critic</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/models/bev_speed_model.html#BEVSpeedDeterminateNet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.models.BEVSpeedDeterminateNet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Actor Neural Network takes Bird-eye View image and speed and outputs actions determinately. It use a
+<code class="docutils literal notranslate"><span class="pre">BEVSpeedConvEncoder</span></code> to get a embedding feature, and use a fully-connected layer to get final output.
+It can be used as actor or critic network depending on forward arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>obs_shape (Tuple, optional): BeV image shape. Defaults to [5, 32, 32].</p></li>
+<li><p>action_shape (Union[int, tuple], optional): Action shape. Defaults to 2.</p></li>
+<li><p>encoder_hidden_dim_list (List, optional): Conv encoder hidden layer dimension list.
+Defaults to [64, 128, 256].</p></li>
+<li><p>encoder_embedding_size (int, optional): Encoder output embedding size. Defaults to 512.</p></li>
+<li><p>head_embedding_dim (int, optional): FC hidden layer dimension. Defaults to 512.</p></li>
+<li><p>is_critic (bool, optional): Whether used as critic. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="core.models.BEVSpeedDeterminateNet.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.Tensor</span></span></span><a class="reference internal" href="../_modules/core/models/bev_speed_model.html#BEVSpeedDeterminateNet.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.models.BEVSpeedDeterminateNet.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Forward computation of network. If is critic, action must not be <code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>obs (Dict): Observation dict.</p></li>
+<li><p>action (Dict, optional): Action dict. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>torch.Tensor: Actions or critic value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="bevspeedstochasticnet">
 <h2>BEVSpeedStochasticNet<a class="headerlink" href="#bevspeedstochasticnet" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="core.models.BEVSpeedStochasticNet">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">core.models.</span></span><span class="sig-name descname"><span class="pre">BEVSpeedStochasticNet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs_shape</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Tuple</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">[5,</span> <span class="pre">32,</span> <span class="pre">32]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_shape</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">tuple</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoder_hidden_dim_list</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">[64,</span> <span class="pre">128,</span> <span class="pre">256]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">policy_hideen_size</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">512</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_std_min</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">-</span> <span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_std_max</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_w</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.003</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/models/bev_speed_model.html#BEVSpeedStochasticNet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.models.BEVSpeedStochasticNet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Actor Neural Network takes Bird-eye View image and speed and outputs actions stochasticly. It use a
+<code class="docutils literal notranslate"><span class="pre">BEVSpeedConvEncoder</span></code> to get a embedding feature, and use a fully-connected layer to get mean and
+std values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>obs_shape (Tuple, optional): BeV image shape. Defaults to [5, 32, 32].</p></li>
+<li><p>action_shape (Union[int, tuple], optional): Action shape. Defaults to 2.</p></li>
+<li><p>encoder_hidden_dim_list (List, optional): Conv encoder hidden layer dimension list.
+Defaults to [64, 128, 256].</p></li>
+<li><p>policy_hideen_size (int, optional): Encoder output embedding size. Defaults to 512.</p></li>
+<li><p>log_std_min (int, optional): Log std min value. Defaults to -20.</p></li>
+<li><p>log_std_max (int, optional): Log std max value. Defaults to 2.</p></li>
+<li><p>init_w (float, optional): Clip value of mean and std layer weights. Defaults to 3e-3.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="core.models.BEVSpeedStochasticNet.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">,</span> </span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/core/models/bev_speed_model.html#BEVSpeedStochasticNet.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.models.BEVSpeedStochasticNet.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Forward computation of network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>obs (Dict): Observation dict.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tuple[torch.Tensor, torch.Tensor]: Mean and std value for actions.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="vanillavae">
 <h2>VanillaVAE<a class="headerlink" href="#vanillavae" title="Permalink to this headline">¶</a></h2>
@@ -346,9 +458,95 @@ image space map.</p>
 </div>
 <div class="section" id="vehiclepidcontroller">
 <h2>VehiclePIDController<a class="headerlink" href="#vehiclepidcontroller" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="core.models.VehiclePIDController">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">core.models.</span></span><span class="sig-name descname"><span class="pre">VehiclePIDController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args_lateral</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args_longitudinal</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_throttle</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.75</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_brake</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_steering</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/models/carla_controller.html#VehiclePIDController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.models.VehiclePIDController" title="Permalink to this definition">¶</a></dt>
+<dd><p>VehiclePIDController is the combination of two PID controllers (lateral and longitudinal) to perform the
+low level control a vehicle from client side.</p>
+<p>The arguments dictionary of PID controller use the following semantics:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>K_P – Proportional term</p></li>
+<li><p>K_D – Differential term</p></li>
+<li><p>K_I – Integral term</p></li>
+<li><p>dt – Time step in seconds</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>args_lateral (Dict): dictionary of arguments to set the lateral PID controller.</p></li>
+<li><p>args_longitudinal (Dict): dictionary of arguments to set the longitudinal PID controller.</p></li>
+<li><p>max_throttle (float, optional): Max value of throttle. Defaults to 0.75.</p></li>
+<li><p>max_brake (float, optional): Max value of brake. Defaults to 0.3.</p></li>
+<li><p>max_steering (float, optional): Max steering. Defaults to 0.8.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Interfaces</dt>
+<dd class="field-even"><p>forward</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="core.models.VehiclePIDController.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_speed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_loc</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_ori</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_speed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_loc</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="reference internal" href="../_modules/core/models/carla_controller.html#VehiclePIDController.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.models.VehiclePIDController.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute one step of control invoking both lateral and longitudinal PID controllers to reach a target waypoint
+at a given target_speed. Thw steering change between to step must be within 0.1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>current_speed (float): Current hero vehicle speed in km/h.</p></li>
+<li><p>current_loc (List): Current hero vehicle coordinate location.</p></li>
+<li><p>current_vec (List): Current hero vehicle forward vector.</p></li>
+<li><p>target_speed (float): Target speed in km/h</p></li>
+<li><p>target_loc (List): Target coordinate location.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dict: Control signal containing steer, throttle and brake.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="mpccontroller">
 <h2>MPCController<a class="headerlink" href="#mpccontroller" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="core.models.MPCController">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">core.models.</span></span><span class="sig-name descname"><span class="pre">MPCController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args_objective</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizon</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fps</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/models/mpc_controller.html#MPCController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.models.MPCController" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model Predictive Control (MPC) method for speed and angle control in DI-drive. MPC takes a target
+waypoints list as input. It will minimize the objective function that calculates the loss between
+target trajectory &amp; speed and predicted vehicle states in future.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>args_objective (Dict, optional): Args in objective function containing loss weights. Defaults to None.</p></li>
+<li><p>horizon (int, optional): Steps MPC model predicts in calculating objective function. Defaults to 10.</p></li>
+<li><p>fps (int, optional): FPS of predictive model. Defaults to 5.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="core.models.MPCController.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ego_pose</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_speed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">waypoints</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="reference internal" href="../_modules/core/models/mpc_controller.html#MPCController.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.models.MPCController.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run one step of controller, return the control signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>ego_pose (List): Current location of ego vehicle: [x, y, yaw, speed].</p></li>
+<li><p>target_speed (float): Target driving speed.</p></li>
+<li><p>waypoints (List): Target trajectory waypoints.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dict: Control signal containing steer, throttle and brake.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="steernoisewrapper">
 <h2>SteerNoiseWrapper<a class="headerlink" href="#steernoisewrapper" title="Permalink to this headline">¶</a></h2>
