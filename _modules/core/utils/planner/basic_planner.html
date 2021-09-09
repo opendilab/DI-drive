@@ -1,0 +1,564 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>core.utils.planner.basic_planner &mdash; DI-drive 0.1.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> DI-drive
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation/index.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorial/index.html">Tutorial</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../features/index.html">Features</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../model_zoo/index.html">Model Zoo</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_doc/index.html">API Doc</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../faq/index.html">FAQ</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">DI-drive</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>core.utils.planner.basic_planner</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for core.utils.planner.basic_planner</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
+<span class="kn">from</span> <span class="nn">easydict</span> <span class="kn">import</span> <span class="n">EasyDict</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">carla</span>
+
+<span class="kn">from</span> <span class="nn">core.utils.simulator_utils.carla_agents.navigation.global_route_planner_dao</span> <span class="kn">import</span> <span class="n">GlobalRoutePlannerDAO</span>
+<span class="kn">from</span> <span class="nn">core.utils.simulator_utils.carla_agents.navigation.global_route_planner</span> <span class="kn">import</span> <span class="n">GlobalRoutePlanner</span>
+<span class="kn">from</span> <span class="nn">core.utils.simulator_utils.carla_agents.navigation</span> <span class="kn">import</span> <span class="n">RoadOption</span>
+<span class="kn">from</span> <span class="nn">core.simulators.carla_data_provider</span> <span class="kn">import</span> <span class="n">CarlaDataProvider</span>
+<span class="kn">from</span> <span class="nn">core.utils.simulator_utils.carla_agents.tools.misc</span> <span class="kn">import</span> <span class="n">draw_waypoints</span>
+<span class="kn">from</span> <span class="nn">core.utils.others.config_helper</span> <span class="kn">import</span> <span class="n">deep_merge_dicts</span>
+
+
+<span class="k">class</span> <span class="nc">AgentState</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    AGENT_STATE represents the possible states of a roaming agent</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">VOID</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">NAVIGATING</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">BLOCKED_BY_VEHICLE</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">BLOCKED_BY_WALKER</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">BLOCKED_RED_LIGHT</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">BLOCKED_BY_BIKE</span> <span class="o">=</span> <span class="mi">5</span>
+
+
+<div class="viewcode-block" id="BasicPlanner"><a class="viewcode-back" href="../../../../api_doc/utils.html#core.utils.planner.basic_planner.BasicPlanner">[docs]</a><span class="k">class</span> <span class="nc">BasicPlanner</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Basic local planner for Carla simualtor. It can set route with a pair of start and end waypoints,</span>
+<span class="sd">    or directly set with a waypoint list. The planner will provide target waypoint and road option</span>
+<span class="sd">    in current route position, and record current route distance and end timeout. The planner will</span>
+<span class="sd">    also judge agent state by checking surrounding vehicles, walkers and traffic lights.</span>
+
+<span class="sd">    The route&#39;s element consists of a waypoint and a road option. Local planner uses a waypoint queue</span>
+<span class="sd">    to store all the unreached waypoints, and a waypoint buffer to store some of the near waypoints to</span>
+<span class="sd">    speed up searching. In short, `node` waypoint is the waypoint in route that farthest from hero</span>
+<span class="sd">    vehicle and within ``min_distance``, and `target` waypoint is the next waypoint of node waypoint.</span>
+
+<span class="sd">    :Arguments:</span>
+<span class="sd">        - cfg (Dict): Config dict.</span>
+
+<span class="sd">    :Interfaces: set_destination, set_route, run_step, get_waypoints_list, clean_up</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">min_distance</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>
+        <span class="n">resolution</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>
+        <span class="n">fps</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;cfg_type&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cfg</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">default_config</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span> <span class="o">=</span> <span class="n">deep_merge_dicts</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="p">,</span> <span class="n">cfg</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span> <span class="o">=</span> <span class="n">cfg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">get_hero_actor</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_world</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">get_world</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_map</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">get_map</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_resolution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">resolution</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_min_distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">min_distance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">fps</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_route</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_queue</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_buffer_size</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="n">maxlen</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_end_location</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">node_waypoint</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target_waypoint</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">node_road_option</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target_road_option</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent_state</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">speed_limit</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">distance_to_goal</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distances</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timeout_in_seconds</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_debug</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">debug</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_grp</span> <span class="o">=</span> <span class="n">GlobalRoutePlanner</span><span class="p">(</span><span class="n">GlobalRoutePlannerDAO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_map</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolution</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_grp</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
+
+<div class="viewcode-block" id="BasicPlanner.set_destination"><a class="viewcode-back" href="../../../../api_doc/utils.html#core.utils.planner.basic_planner.BasicPlanner.set_destination">[docs]</a>    <span class="k">def</span> <span class="nf">set_destination</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">start_location</span><span class="p">:</span> <span class="n">carla</span><span class="o">.</span><span class="n">Location</span><span class="p">,</span> <span class="n">end_location</span><span class="p">:</span> <span class="n">carla</span><span class="o">.</span><span class="n">Location</span><span class="p">,</span> <span class="n">clean</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method creates a route of a list of waypoints from start location to destination location</span>
+<span class="sd">        based on the route traced by the global router. If ``clean`` is set true, it will clean current</span>
+<span class="sd">        route and waypoint queue.</span>
+
+<span class="sd">        :Arguments:</span>
+<span class="sd">            - start_location (carla.Location): initial position.</span>
+<span class="sd">            - end_location (carla.Location): final position.</span>
+<span class="sd">            - clean (bool): Whether to clean current route. Defaults to False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">start_waypoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map</span><span class="o">.</span><span class="n">get_waypoint</span><span class="p">(</span><span class="n">start_location</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_waypoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map</span><span class="o">.</span><span class="n">get_waypoint</span><span class="p">(</span><span class="n">end_location</span><span class="p">)</span>
+        <span class="n">new_route</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grp</span><span class="o">.</span><span class="n">trace_route</span><span class="p">(</span><span class="n">start_waypoint</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_waypoint</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">location</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">clean</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_queue</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_route</span> <span class="o">=</span> <span class="n">new_route</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">distance_to_goal</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">distances</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_route</span> <span class="o">+=</span> <span class="n">new_route</span>
+        <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">set_hero_vehicle_route</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_route</span><span class="p">)</span>
+
+        <span class="n">prev_loc</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">new_route</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span>
+            <span class="n">cur_loc</span> <span class="o">=</span> <span class="n">elem</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">location</span>
+            <span class="k">if</span> <span class="n">prev_loc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">delta</span> <span class="o">=</span> <span class="n">cur_loc</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">prev_loc</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">distance_to_goal</span> <span class="o">+=</span> <span class="n">delta</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">distances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span>
+            <span class="n">prev_loc</span> <span class="o">=</span> <span class="n">cur_loc</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_buffer_size</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">100</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolution</span><span class="p">),</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">node_waypoint</span> <span class="o">=</span> <span class="n">start_waypoint</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">node_road_option</span> <span class="o">=</span> <span class="n">RoadOption</span><span class="o">.</span><span class="n">LANEFOLLOW</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timeout_in_seconds</span> <span class="o">=</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">distance_to_goal</span> <span class="o">/</span> <span class="mf">1000.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">5.0</span><span class="p">)</span> <span class="o">*</span> <span class="mf">3600.0</span> <span class="o">+</span> <span class="mf">20.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeout_in_seconds</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fps</span></div>
+
+<div class="viewcode-block" id="BasicPlanner.set_route"><a class="viewcode-back" href="../../../../api_doc/utils.html#core.utils.planner.basic_planner.BasicPlanner.set_route">[docs]</a>    <span class="k">def</span> <span class="nf">set_route</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">route</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">clean</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method add a route into planner to trace. If ``clean`` is set true, it will clean current</span>
+<span class="sd">        route and waypoint queue.</span>
+
+<span class="sd">        :Arguments:</span>
+<span class="sd">            - route (List): Route add to planner.</span>
+<span class="sd">            - clean (bool, optional): Whether to clean current route. Defaults to False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">clean</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_queue</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_route</span> <span class="o">=</span> <span class="n">route</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">distance_to_goal</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">distances</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_route</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">route</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_waypoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_route</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">set_hero_vehicle_route</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_route</span><span class="p">)</span>
+
+        <span class="n">prev_loc</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">route</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span>
+            <span class="n">cur_loc</span> <span class="o">=</span> <span class="n">elem</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">location</span>
+            <span class="k">if</span> <span class="n">prev_loc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">delta</span> <span class="o">=</span> <span class="n">cur_loc</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">prev_loc</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">distance_to_goal</span> <span class="o">+=</span> <span class="n">delta</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">distances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span>
+            <span class="n">prev_loc</span> <span class="o">=</span> <span class="n">cur_loc</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">distances</span><span class="p">:</span>
+            <span class="n">cur_resolution</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">distances</span><span class="p">)[:</span><span class="mi">100</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_buffer_size</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="mi">100</span> <span class="o">//</span> <span class="n">cur_resolution</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">node_waypoint</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_road_option</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_queue</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timeout_in_seconds</span> <span class="o">=</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">distance_to_goal</span> <span class="o">/</span> <span class="mf">1000.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">5.0</span><span class="p">)</span> <span class="o">*</span> <span class="mf">3600.0</span> <span class="o">+</span> <span class="mf">20.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeout_in_seconds</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fps</span></div>
+
+    <span class="k">def</span> <span class="nf">add_route_in_front</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">route</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="p">:</span>
+            <span class="n">prev_loc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">location</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">prev_loc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_queue</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">location</span>
+        <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">route</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="o">.</span><span class="n">appendleft</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span>
+            <span class="n">cur_loc</span> <span class="o">=</span> <span class="n">elem</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">location</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="n">cur_loc</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">prev_loc</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">distance_to_goal</span> <span class="o">+=</span> <span class="n">delta</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">distances</span><span class="o">.</span><span class="n">appendleft</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span>
+            <span class="n">prev_loc</span> <span class="o">=</span> <span class="n">cur_loc</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buffer_size</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buffer_size</span><span class="p">):</span>
+                <span class="n">elem</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_queue</span><span class="o">.</span><span class="n">appendleft</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">node_waypoint</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_road_option</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<div class="viewcode-block" id="BasicPlanner.run_step"><a class="viewcode-back" href="../../../../api_doc/utils.html#core.utils.planner.basic_planner.BasicPlanner.run_step">[docs]</a>    <span class="k">def</span> <span class="nf">run_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run one step of local planner. It will update node and target waypoint and road option, and check agent</span>
+<span class="sd">        states.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_route</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+        <span class="n">vehicle_transform</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">get_transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map</span><span class="o">.</span><span class="n">get_waypoint</span><span class="p">(</span>
+            <span class="n">vehicle_transform</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="n">lane_type</span><span class="o">=</span><span class="n">carla</span><span class="o">.</span><span class="n">LaneType</span><span class="o">.</span><span class="n">Driving</span><span class="p">,</span> <span class="n">project_to_road</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Add waypoints into buffer if empty</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_buffer_size</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_queue</span><span class="p">))):</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_queue</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_queue</span><span class="o">.</span><span class="n">popleft</span><span class="p">())</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">break</span>
+
+            <span class="c1"># If no waypoints return with current waypoint</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">target_waypoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">node_waypoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">target_road_option</span> <span class="o">=</span> <span class="n">RoadOption</span><span class="o">.</span><span class="n">VOID</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">node_road_option</span> <span class="o">=</span> <span class="n">RoadOption</span><span class="o">.</span><span class="n">VOID</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">agent_state</span> <span class="o">=</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">VOID</span>
+                <span class="k">return</span>
+
+        <span class="c1"># Find the most far waypoint within min distance</span>
+        <span class="n">max_index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">waypoint</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="p">):</span>
+            <span class="n">cur_dis</span> <span class="o">=</span> <span class="n">waypoint</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">vehicle_transform</span><span class="o">.</span><span class="n">location</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">cur_dis</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_distance</span><span class="p">:</span>
+                <span class="n">max_index</span> <span class="o">=</span> <span class="n">i</span>
+        <span class="k">if</span> <span class="n">max_index</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">node_waypoint</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_road_option</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_queue</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_queue</span><span class="o">.</span><span class="n">popleft</span><span class="p">())</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">distances</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">distance_to_goal</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distances</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+
+        <span class="c1"># Update information</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">target_waypoint</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_road_option</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">speed_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="o">.</span><span class="n">get_speed_limit</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent_state</span> <span class="o">=</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">NAVIGATING</span>
+
+        <span class="c1"># Detect vehicle and light hazard</span>
+        <span class="n">vehicle_state</span><span class="p">,</span> <span class="n">vehicle</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">is_vehicle_hazard</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">vehicle_state</span><span class="p">:</span>
+            <span class="n">vehicle_state</span><span class="p">,</span> <span class="n">vehicle</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">is_lane_vehicle_hazard</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_road_option</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">vehicle_state</span><span class="p">:</span>
+            <span class="n">vehicle_state</span><span class="p">,</span> <span class="n">vehicle</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">is_junction_vehicle_hazard</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_road_option</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">vehicle_state</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_debug</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;!!! VEHICLE BLOCKING AHEAD [</span><span class="si">{}</span><span class="s1">])&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">vehicle</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">agent_state</span> <span class="o">=</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">BLOCKED_BY_VEHICLE</span>
+
+        <span class="n">bike_state</span><span class="p">,</span> <span class="n">bike</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">is_bike_hazard</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">bike_state</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_debug</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;!!! BIKE BLOCKING AHEAD [</span><span class="si">{}</span><span class="s1">])&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bike</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">agent_state</span> <span class="o">=</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">BLOCKED_BY_BIKE</span>
+
+        <span class="n">walker_state</span><span class="p">,</span> <span class="n">walker</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">is_walker_hazard</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">walker_state</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_debug</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;!!! WALKER BLOCKING AHEAD [</span><span class="si">{}</span><span class="s1">])&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">walker</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">agent_state</span> <span class="o">=</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">BLOCKED_BY_WALKER</span>
+
+        <span class="n">light_state</span><span class="p">,</span> <span class="n">traffic_light</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">is_light_red</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">light_state</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_debug</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=== RED LIGHT AHEAD [</span><span class="si">{}</span><span class="s1">])&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">traffic_light</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">agent_state</span> <span class="o">=</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">BLOCKED_RED_LIGHT</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_debug</span><span class="p">:</span>
+            <span class="n">draw_waypoints</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BasicPlanner.get_waypoints_list"><a class="viewcode-back" href="../../../../api_doc/utils.html#core.utils.planner.basic_planner.BasicPlanner.get_waypoints_list">[docs]</a>    <span class="k">def</span> <span class="nf">get_waypoints_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">waypoint_num</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">carla</span><span class="o">.</span><span class="n">Waypoint</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a list of wapoints from the end of waypoint buffer.</span>
+
+<span class="sd">        :Arguments:</span>
+<span class="sd">            - waypoint_num (int): Num of waypoint in list.</span>
+
+<span class="sd">        :Returns:</span>
+<span class="sd">            List[carla.Waypoint]: List of waypoint.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">num</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">waypoint_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">while</span> <span class="n">num</span> <span class="o">&lt;</span> <span class="n">waypoint_num</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="p">):</span>
+            <span class="n">waypoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">waypoint_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">waypoint_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">waypoint</span><span class="p">)</span>
+                <span class="n">num</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">waypoint_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">waypoint</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">location</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e-4</span><span class="p">:</span>
+                <span class="n">waypoint_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">waypoint</span><span class="p">)</span>
+                <span class="n">num</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">waypoint_list</span></div>
+
+    <span class="k">def</span> <span class="nf">get_direction_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">waypoint_num</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">RoadOption</span><span class="p">]:</span>
+        <span class="n">num</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">waypoint_num</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="p">))</span>
+        <span class="n">direction_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num</span><span class="p">):</span>
+            <span class="n">direction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+            <span class="n">direction_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">direction</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">direction_list</span>
+
+<div class="viewcode-block" id="BasicPlanner.get_incoming_waypoint_and_direction"><a class="viewcode-back" href="../../../../api_doc/utils.html#core.utils.planner.basic_planner.BasicPlanner.get_incoming_waypoint_and_direction">[docs]</a>    <span class="k">def</span> <span class="nf">get_incoming_waypoint_and_direction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">carla</span><span class="o">.</span><span class="n">Waypoint</span><span class="p">,</span> <span class="n">RoadOption</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns direction and waypoint at a distance ahead defined by the user.</span>
+
+<span class="sd">        :Arguments:</span>
+<span class="sd">            - steps (int): Number of steps to get the incoming waypoint.</span>
+
+<span class="sd">        :Returns:</span>
+<span class="sd">            Tuple[carla.Waypoint, RoadOption]: Waypoint and road option ahead.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">steps</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="p">[</span><span class="n">steps</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span><span class="p">,</span> <span class="n">RoadOption</span><span class="o">.</span><span class="n">VOID</span></div>
+
+<div class="viewcode-block" id="BasicPlanner.clean_up"><a class="viewcode-back" href="../../../../api_doc/utils.html#core.utils.planner.basic_planner.BasicPlanner.clean_up">[docs]</a>    <span class="k">def</span> <span class="nf">clean_up</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Clear route, waypoint queue and buffer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_queue</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_route</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distances</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">default_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EasyDict</span><span class="p">:</span>
+        <span class="n">cfg</span> <span class="o">=</span> <span class="n">EasyDict</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">cfg_type</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s1">&#39;Config&#39;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, OpenDILab.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

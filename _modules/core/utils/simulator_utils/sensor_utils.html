@@ -1,0 +1,757 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>core.utils.simulator_utils.sensor_utils &mdash; DI-drive 0.1.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> DI-drive
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation/index.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorial/index.html">Tutorial</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../features/index.html">Features</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../model_zoo/index.html">Model Zoo</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_doc/index.html">API Doc</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../faq/index.html">FAQ</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">DI-drive</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>core.utils.simulator_utils.sensor_utils</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for core.utils.simulator_utils.sensor_utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">carla</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">weakref</span>
+<span class="kn">import</span> <span class="nn">shapely.geometry</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span> <span class="nn">easydict</span> <span class="kn">import</span> <span class="n">EasyDict</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span> <span class="nn">core.simulators.carla_data_provider</span> <span class="kn">import</span> <span class="n">CarlaDataProvider</span>
+<span class="kn">from</span> <span class="nn">core.utils.others.config_helper</span> <span class="kn">import</span> <span class="n">deep_merge_dicts</span>
+
+<span class="n">DEFAULT_CAMERA_CONFIG</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">384</span><span class="p">,</span> <span class="mi">160</span><span class="p">],</span>
+    <span class="s1">&#39;fov&#39;</span><span class="p">:</span> <span class="mi">90</span><span class="p">,</span>
+    <span class="s1">&#39;position&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">],</span>
+    <span class="s1">&#39;rotation&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+<span class="p">}</span>
+
+<span class="n">DEFAULT_CAMERA_AUG_CONFIG</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;position_range&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;rotation_range&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]}</span>
+
+<span class="n">DEFAULT_LIDAR_CONFIG</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;channels&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">&#39;range&#39;</span><span class="p">:</span> <span class="mi">2000</span><span class="p">,</span>
+    <span class="s1">&#39;points_per_second&#39;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+    <span class="s1">&#39;rotation_frequency&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="s1">&#39;upper_fov&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span>
+    <span class="s1">&#39;lower_fov&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span>
+    <span class="s1">&#39;position&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">],</span>
+    <span class="s1">&#39;rotation&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="s1">&#39;draw&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">DEFAULT_GNSS_CONFIG</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;position&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">],</span>
+<span class="p">}</span>
+
+
+<span class="k">class</span> <span class="nc">TrafficLightState</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">RED</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">YELLOW</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">GREEN</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">OFF</span> <span class="o">=</span> <span class="mi">3</span>
+
+
+<span class="k">def</span> <span class="nf">get_random_sample</span><span class="p">(</span><span class="n">range_list</span><span class="p">):</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_range</span> <span class="ow">in</span> <span class="n">range_list</span><span class="p">:</span>
+        <span class="n">num</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="n">_range</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">_range</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">res</span>
+
+
+<div class="viewcode-block" id="SensorHelper"><a class="viewcode-back" href="../../../../api_doc/utils.html#core.utils.simulator_utils.sensor_utils.SensorHelper">[docs]</a><span class="k">class</span> <span class="nc">SensorHelper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Interfaces for sensors required for vehicles and data buffer for all sensor data in Carla. The updating for Carla</span>
+<span class="sd">    sensors are not synchronous. In each tick, the newest sensor data is obtained from sensor data buffer and returned</span>
+<span class="sd">    to the simulator. This class provides an interface that can easily create, receive data and destroy all</span>
+<span class="sd">    kinds of sensors in Carla according to config, and apply the same sensor augmantation to all camera sensors.</span>
+
+<span class="sd">    :Arguments:</span>
+<span class="sd">        - obs_cfg (Dict): Config dict for sensor</span>
+<span class="sd">        - aug_cfg (Dict, optional): Config dict for sensor augmentation. Defaults to None.</span>
+
+<span class="sd">    :Interfaces: setup_sensors, get_sensors_data, clear_up</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">obs_cfg</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+            <span class="n">aug_cfg</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_obs_cfg</span> <span class="o">=</span> <span class="n">obs_cfg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_aug_cfg</span> <span class="o">=</span> <span class="n">aug_cfg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sensors_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_buffers</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_timestamps</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_random_aug_pos</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_random_aug_rot</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="SensorHelper.setup_sensors"><a class="viewcode-back" href="../../../../api_doc/utils.html#core.utils.simulator_utils.sensor_utils.SensorHelper.setup_sensors">[docs]</a>    <span class="k">def</span> <span class="nf">setup_sensors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world</span><span class="p">:</span> <span class="n">carla</span><span class="o">.</span><span class="n">World</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">:</span> <span class="n">carla</span><span class="o">.</span><span class="n">Actor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create the sensors defined in config and attach them to the hero vehicle</span>
+
+<span class="sd">        :Arguments:</span>
+<span class="sd">            - world (carla.World): Carla world</span>
+<span class="sd">            - vehicle (carla.Actor): ego vehicle</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">bp_library</span> <span class="o">=</span> <span class="n">world</span><span class="o">.</span><span class="n">get_blueprint_library</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_aug_cfg</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_aug_cfg</span> <span class="o">=</span> <span class="n">EasyDict</span><span class="p">(</span><span class="n">deep_merge_dicts</span><span class="p">(</span><span class="n">DEFAULT_CAMERA_AUG_CONFIG</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_aug_cfg</span><span class="p">))</span>
+            <span class="k">if</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_aug_cfg</span><span class="o">.</span><span class="n">position_range</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_aug_cfg</span><span class="o">.</span><span class="n">rotation_range</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Augmentation parameters must greater than 0!&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_random_aug_pos</span> <span class="o">=</span> <span class="n">get_random_sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_aug_cfg</span><span class="o">.</span><span class="n">position_range</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_random_aug_rot</span> <span class="o">=</span> <span class="n">get_random_sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_aug_cfg</span><span class="o">.</span><span class="n">rotation_range</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_random_aug_pos</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_random_aug_rot</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">obs_item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obs_cfg</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">obs_item</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;rgb&#39;</span><span class="p">,</span> <span class="s1">&#39;depth&#39;</span><span class="p">,</span> <span class="s1">&#39;segmentation&#39;</span><span class="p">]:</span>
+                <span class="n">obs_item</span> <span class="o">=</span> <span class="n">EasyDict</span><span class="p">(</span><span class="n">deep_merge_dicts</span><span class="p">(</span><span class="n">DEFAULT_CAMERA_CONFIG</span><span class="p">,</span> <span class="n">obs_item</span><span class="p">))</span>
+                <span class="n">bp_name</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s1">&#39;rgb&#39;</span><span class="p">:</span> <span class="s1">&#39;sensor.camera.rgb&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;depth&#39;</span><span class="p">:</span> <span class="s1">&#39;sensor.camera.depth&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;segmentation&#39;</span><span class="p">:</span> <span class="s1">&#39;sensor.camera.semantic_segmentation&#39;</span><span class="p">,</span>
+                <span class="p">}[</span><span class="n">obs_item</span><span class="o">.</span><span class="n">type</span><span class="p">]</span>
+                <span class="n">sensor_bp</span> <span class="o">=</span> <span class="n">bp_library</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">bp_name</span><span class="p">)</span>
+                <span class="n">sensor_bp</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s1">&#39;image_size_x&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">obs_item</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+                <span class="n">sensor_bp</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s1">&#39;image_size_y&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">obs_item</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+                <span class="n">sensor_bp</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s1">&#39;fov&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">obs_item</span><span class="o">.</span><span class="n">fov</span><span class="p">))</span>
+                <span class="n">sensor_location</span> <span class="o">=</span> <span class="n">carla</span><span class="o">.</span><span class="n">Location</span><span class="p">(</span>
+                    <span class="n">obs_item</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_random_aug_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">obs_item</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_random_aug_pos</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                    <span class="n">obs_item</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_random_aug_pos</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                <span class="p">)</span>
+                <span class="n">sensor_rotation</span> <span class="o">=</span> <span class="n">carla</span><span class="o">.</span><span class="n">Rotation</span><span class="p">(</span>
+                    <span class="n">obs_item</span><span class="o">.</span><span class="n">rotation</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_random_aug_rot</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">obs_item</span><span class="o">.</span><span class="n">rotation</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_random_aug_rot</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                    <span class="n">obs_item</span><span class="o">.</span><span class="n">rotation</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_random_aug_rot</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                <span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">obs_item</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;lidar&#39;</span><span class="p">:</span>
+                <span class="n">obs_item</span> <span class="o">=</span> <span class="n">EasyDict</span><span class="p">(</span><span class="n">deep_merge_dicts</span><span class="p">(</span><span class="n">DEFAULT_LIDAR_CONFIG</span><span class="p">,</span> <span class="n">obs_item</span><span class="p">))</span>
+                <span class="n">sensor_bp</span> <span class="o">=</span> <span class="n">bp_library</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;sensor.lidar.ray_cast&#39;</span><span class="p">)</span>
+                <span class="n">sensor_bp</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s1">&#39;range&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">obs_item</span><span class="o">.</span><span class="n">range</span><span class="p">))</span>
+                <span class="n">sensor_bp</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s1">&#39;rotation_frequency&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">obs_item</span><span class="o">.</span><span class="n">rotation_frequency</span><span class="p">))</span>
+                <span class="n">sensor_bp</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s1">&#39;channels&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">obs_item</span><span class="o">.</span><span class="n">channels</span><span class="p">))</span>
+                <span class="n">sensor_bp</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s1">&#39;upper_fov&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">obs_item</span><span class="o">.</span><span class="n">upper_fov</span><span class="p">))</span>
+                <span class="n">sensor_bp</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s1">&#39;lower_fov&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">obs_item</span><span class="o">.</span><span class="n">lower_fov</span><span class="p">))</span>
+                <span class="n">sensor_bp</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s1">&#39;points_per_second&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">obs_item</span><span class="o">.</span><span class="n">points_per_second</span><span class="p">))</span>
+                <span class="n">sensor_location</span> <span class="o">=</span> <span class="n">carla</span><span class="o">.</span><span class="n">Location</span><span class="p">(</span><span class="n">obs_item</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">obs_item</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">obs_item</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                <span class="n">sensor_rotation</span> <span class="o">=</span> <span class="n">carla</span><span class="o">.</span><span class="n">Rotation</span><span class="p">(</span><span class="n">obs_item</span><span class="o">.</span><span class="n">rotation</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">obs_item</span><span class="o">.</span><span class="n">rotation</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">obs_item</span><span class="o">.</span><span class="n">rotation</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+
+            <span class="k">elif</span> <span class="n">obs_item</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;gnss&#39;</span><span class="p">:</span>
+                <span class="n">obs_item</span> <span class="o">=</span> <span class="n">EasyDict</span><span class="p">(</span><span class="n">deep_merge_dicts</span><span class="p">(</span><span class="n">DEFAULT_GNSS_CONFIG</span><span class="p">,</span> <span class="n">obs_item</span><span class="p">))</span>
+                <span class="n">obs_item</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">obs_item</span><span class="p">)</span>
+                <span class="n">sensor_bp</span> <span class="o">=</span> <span class="n">bp_library</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;sensor.other.gnss&#39;</span><span class="p">)</span>
+                <span class="n">sensor_location</span> <span class="o">=</span> <span class="n">carla</span><span class="o">.</span><span class="n">Location</span><span class="p">(</span><span class="n">obs_item</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">obs_item</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">obs_item</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                <span class="n">sensor_rotation</span> <span class="o">=</span> <span class="n">carla</span><span class="o">.</span><span class="n">Rotation</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">sensor_transform</span> <span class="o">=</span> <span class="n">carla</span><span class="o">.</span><span class="n">Transform</span><span class="p">(</span><span class="n">sensor_location</span><span class="p">,</span> <span class="n">sensor_rotation</span><span class="p">)</span>
+            <span class="n">sensor</span> <span class="o">=</span> <span class="n">world</span><span class="o">.</span><span class="n">spawn_actor</span><span class="p">(</span><span class="n">sensor_bp</span><span class="p">,</span> <span class="n">sensor_transform</span><span class="p">,</span> <span class="n">attach_to</span><span class="o">=</span><span class="n">vehicle</span><span class="p">)</span>
+            <span class="n">sensor</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="n">CallBack</span><span class="p">(</span><span class="n">obs_item</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">obs_item</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="bp">self</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">register_sensor</span><span class="p">(</span><span class="n">obs_item</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">sensor</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SensorHelper.clean_up"><a class="viewcode-back" href="../../../../api_doc/utils.html#core.utils.simulator_utils.sensor_utils.SensorHelper.clean_up">[docs]</a>    <span class="k">def</span> <span class="nf">clean_up</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remove and destroy all sensors</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sensors_dict</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sensors_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_sensors_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_sensors_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_sensors_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sensors_dict</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_buffers</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_timestamps</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">register_sensor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sensor</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Registers the sensors</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">tag</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sensors_dict</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Duplicated sensor tag [</span><span class="si">{}</span><span class="s2">]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sensors_dict</span><span class="p">[</span><span class="n">tag</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_buffers</span><span class="p">[</span><span class="n">tag</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_timestamps</span><span class="p">[</span><span class="n">tag</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+    <span class="k">def</span> <span class="nf">update_sensor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the sensor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">tag</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sensors_dict</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The sensor with tag [</span><span class="si">{}</span><span class="s2">] has not been created!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_buffers</span><span class="p">[</span><span class="n">tag</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_timestamps</span><span class="p">[</span><span class="n">tag</span><span class="p">]</span> <span class="o">=</span> <span class="n">timestamp</span>
+
+    <span class="k">def</span> <span class="nf">all_sensors_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks if all the sensors have sent data at least once</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sensors_dict</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_buffers</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="SensorHelper.get_sensors_data"><a class="viewcode-back" href="../../../../api_doc/utils.html#core.utils.simulator_utils.sensor_utils.SensorHelper.get_sensors_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_sensors_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get all registered sensor data from buffer</span>
+
+<span class="sd">        :Returns:</span>
+<span class="sd">            Dict: all newest sensor data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sensor_data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">obs_item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obs_cfg</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">obs_item</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;rgb&#39;</span><span class="p">,</span> <span class="s1">&#39;segmentation&#39;</span><span class="p">,</span> <span class="s1">&#39;lidar&#39;</span><span class="p">,</span> <span class="s1">&#39;gnss&#39;</span><span class="p">]:</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="n">obs_item</span><span class="o">.</span><span class="n">name</span>
+                <span class="n">img</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_buffers</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                <span class="n">sensor_data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">img</span>
+            <span class="k">elif</span> <span class="n">obs_item</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;depth&#39;</span><span class="p">:</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="n">obs_item</span><span class="o">.</span><span class="n">name</span>
+                <span class="n">raw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_buffers</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                <span class="n">img</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+                <span class="n">R</span> <span class="o">=</span> <span class="n">img</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+                <span class="n">G</span> <span class="o">=</span> <span class="n">img</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="n">B</span> <span class="o">=</span> <span class="n">img</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+                <span class="n">depth</span> <span class="o">=</span> <span class="p">(</span><span class="n">R</span> <span class="o">+</span> <span class="n">G</span> <span class="o">*</span> <span class="mi">256</span> <span class="o">+</span> <span class="n">B</span> <span class="o">*</span> <span class="mi">256</span> <span class="o">*</span> <span class="mi">256</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">256</span> <span class="o">*</span> <span class="mi">256</span> <span class="o">*</span> <span class="mi">256</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="n">depth</span> <span class="o">=</span> <span class="mi">1000</span> <span class="o">*</span> <span class="n">depth</span>
+                <span class="n">sensor_data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">depth</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_aug_cfg</span><span class="p">:</span>
+            <span class="n">sensor_data</span><span class="p">[</span><span class="s1">&#39;aug&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;aug_pos&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_random_aug_pos</span><span class="p">),</span>
+                <span class="s1">&#39;aug_rot&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_random_aug_rot</span><span class="p">),</span>
+            <span class="p">}</span>
+        <span class="k">return</span> <span class="n">sensor_data</span></div></div>
+
+
+<span class="k">class</span> <span class="nc">CallBack</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class the sensors listen to in order to receive their data each frame</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">wrapper</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the call back</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tag</span> <span class="o">=</span> <span class="n">tag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_type</span> <span class="o">=</span> <span class="nb">type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_wrapper</span> <span class="o">=</span> <span class="n">wrapper</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        call function</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">carla</span><span class="o">.</span><span class="n">Image</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parse_image_cb</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tag</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">carla</span><span class="o">.</span><span class="n">LidarMeasurement</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parse_lidar_cb</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tag</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">carla</span><span class="o">.</span><span class="n">GnssMeasurement</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parse_gnss_cb</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tag</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;No callback method for this sensor.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Parsing CARLA physical Sensors</span>
+    <span class="k">def</span> <span class="nf">_parse_image_cb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        parses cameras</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_type</span> <span class="o">==</span> <span class="s1">&#39;rgb&#39;</span><span class="p">:</span>
+            <span class="n">image</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">carla</span><span class="o">.</span><span class="n">ColorConverter</span><span class="o">.</span><span class="n">Raw</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_type</span> <span class="o">==</span> <span class="s1">&#39;segmentation&#39;</span><span class="p">:</span>
+            <span class="n">image</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">carla</span><span class="o">.</span><span class="n">ColorConverter</span><span class="o">.</span><span class="n">CityScapesPalette</span><span class="p">)</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">raw_data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s2">&quot;uint8&quot;</span><span class="p">))</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="n">image</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_wrapper</span><span class="o">.</span><span class="n">update_sensor</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">img</span><span class="p">,</span> <span class="n">image</span><span class="o">.</span><span class="n">frame</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_parse_lidar_cb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lidar_data</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        parses lidar sensors</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="n">lidar_data</span><span class="o">.</span><span class="n">raw_data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;f4&#39;</span><span class="p">))</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">3</span><span class="p">),</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_wrapper</span><span class="o">.</span><span class="n">update_sensor</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">lidar_data</span><span class="o">.</span><span class="n">frame</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_parse_gnss_cb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gnss_data</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        parses gnss sensors</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">gnss_data</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span> <span class="n">gnss_data</span><span class="o">.</span><span class="n">longitude</span><span class="p">,</span> <span class="n">gnss_data</span><span class="o">.</span><span class="n">altitude</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_wrapper</span><span class="o">.</span><span class="n">update_sensor</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">gnss_data</span><span class="o">.</span><span class="n">frame</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="CollisionSensor"><a class="viewcode-back" href="../../../../api_doc/utils.html#core.utils.simulator_utils.sensor_utils.CollisionSensor">[docs]</a><span class="k">class</span> <span class="nc">CollisionSensor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Carla sensor interface used to detect collision info in simulator. Once created,</span>
+<span class="sd">    it will automatically update every tick.</span>
+
+<span class="sd">    :Arguments:</span>
+<span class="sd">        - parent_actor (carla.Actor): Actor to detect collision</span>
+<span class="sd">        - col_threshold (float): Threshold value of collided impulse</span>
+
+<span class="sd">    :Interfaces: clear</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent_actor</span><span class="p">:</span> <span class="n">carla</span><span class="o">.</span><span class="n">Actor</span><span class="p">,</span> <span class="n">col_threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sensor</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_history</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="n">maxlen</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent_actor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_threshold</span> <span class="o">=</span> <span class="n">col_threshold</span>
+        <span class="n">world</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">get_world</span><span class="p">()</span>
+        <span class="n">bp</span> <span class="o">=</span> <span class="n">world</span><span class="o">.</span><span class="n">get_blueprint_library</span><span class="p">()</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;sensor.other.collision&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sensor</span> <span class="o">=</span> <span class="n">world</span><span class="o">.</span><span class="n">spawn_actor</span><span class="p">(</span><span class="n">bp</span><span class="p">,</span> <span class="n">carla</span><span class="o">.</span><span class="n">Transform</span><span class="p">(),</span> <span class="n">attach_to</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="p">)</span>
+        <span class="c1"># We need to pass the lambda a weak reference to self to avoid circular</span>
+        <span class="c1"># reference.</span>
+        <span class="n">weak_self</span> <span class="o">=</span> <span class="n">weakref</span><span class="o">.</span><span class="n">ref</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="k">lambda</span> <span class="n">event</span><span class="p">:</span> <span class="n">CollisionSensor</span><span class="o">.</span><span class="n">_on_collision</span><span class="p">(</span><span class="n">weak_self</span><span class="p">,</span> <span class="n">event</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">collided</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">collided_frame</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_on_collision</span><span class="p">(</span><span class="n">weak_self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span> <span class="o">=</span> <span class="n">weak_self</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">impulse</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">normal_impulse</span>
+        <span class="n">intensity</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">impulse</span><span class="o">.</span><span class="n">x</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">impulse</span><span class="o">.</span><span class="n">y</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">impulse</span><span class="o">.</span><span class="n">z</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_history</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">event</span><span class="o">.</span><span class="n">frame</span><span class="p">,</span> <span class="n">intensity</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">intensity</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_threshold</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">collided</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">collided_frame</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">frame</span>
+
+<div class="viewcode-block" id="CollisionSensor.clear"><a class="viewcode-back" href="../../../../api_doc/utils.html#core.utils.simulator_utils.sensor_utils.CollisionSensor.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Clear collision sensor in Carla world.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_history</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="o">.</span><span class="n">is_alive</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sensor</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="TrafficLightHelper"><a class="viewcode-back" href="../../../../api_doc/utils.html#core.utils.simulator_utils.sensor_utils.TrafficLightHelper">[docs]</a><span class="k">class</span> <span class="nc">TrafficLightHelper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Interface of traffic light detector and recorder. It detects next traffic light state,</span>
+<span class="sd">    calculates distance from hero vehicle to the end of this road, and if hero vehicle crosses</span>
+<span class="sd">    this line when correlated light is red, it will record running a red light</span>
+
+<span class="sd">    :Arguments:</span>
+<span class="sd">        - hero_vehicle (carla.Actor): Hero vehicle</span>
+
+<span class="sd">    :Interfaces:</span>
+<span class="sd">        - tick</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hero_vehicle</span><span class="p">:</span> <span class="n">carla</span><span class="o">.</span><span class="n">Actor</span><span class="p">,</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span> <span class="o">=</span> <span class="n">hero_vehicle</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_world</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">get_world</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_map</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">get_map</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_light_dis_thresh</span> <span class="o">=</span> <span class="mi">20</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_active_light</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_light</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_lights_ran</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_lights</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ran_light</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">active_light_state</span> <span class="o">=</span> <span class="n">TrafficLightState</span><span class="o">.</span><span class="n">OFF</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">active_light_dis</span> <span class="o">=</span> <span class="mi">200</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_debug</span> <span class="o">=</span> <span class="n">debug</span>
+
+<div class="viewcode-block" id="TrafficLightHelper.tick"><a class="viewcode-back" href="../../../../api_doc/utils.html#core.utils.simulator_utils.sensor_utils.TrafficLightHelper.tick">[docs]</a>    <span class="k">def</span> <span class="nf">tick</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tick one step. It will check the next traffic light and its state, update the count number</span>
+<span class="sd">        of traffic light if needed. It will check the running light event by getting the last waypoints</span>
+<span class="sd">        in current road and check if the vehicle has crossed them.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ran_light</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">vehicle_transform</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">get_transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="p">)</span>
+        <span class="n">vehicle_location</span> <span class="o">=</span> <span class="n">vehicle_transform</span><span class="o">.</span><span class="n">location</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_active_light</span><span class="p">,</span> <span class="n">light_trigger_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_active_light</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_active_light</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_debug</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">debug</span><span class="o">.</span><span class="n">draw_point</span><span class="p">(</span><span class="n">light_trigger_location</span> <span class="o">+</span> <span class="n">carla</span><span class="o">.</span><span class="n">Location</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">active_light_state</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">carla</span><span class="o">.</span><span class="n">TrafficLightState</span><span class="o">.</span><span class="n">Green</span><span class="p">:</span> <span class="n">TrafficLightState</span><span class="o">.</span><span class="n">GREEN</span><span class="p">,</span>
+                <span class="n">carla</span><span class="o">.</span><span class="n">TrafficLightState</span><span class="o">.</span><span class="n">Yellow</span><span class="p">:</span> <span class="n">TrafficLightState</span><span class="o">.</span><span class="n">YELLOW</span><span class="p">,</span>
+                <span class="n">carla</span><span class="o">.</span><span class="n">TrafficLightState</span><span class="o">.</span><span class="n">Red</span><span class="p">:</span> <span class="n">TrafficLightState</span><span class="o">.</span><span class="n">RED</span><span class="p">,</span>
+                <span class="n">carla</span><span class="o">.</span><span class="n">TrafficLightState</span><span class="o">.</span><span class="n">Off</span><span class="p">:</span> <span class="n">TrafficLightState</span><span class="o">.</span><span class="n">OFF</span><span class="p">,</span>
+            <span class="p">}[</span><span class="bp">self</span><span class="o">.</span><span class="n">_active_light</span><span class="o">.</span><span class="n">state</span><span class="p">]</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="n">vehicle_location</span> <span class="o">-</span> <span class="n">light_trigger_location</span>
+            <span class="n">distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">sum</span><span class="p">([</span><span class="n">delta</span><span class="o">.</span><span class="n">x</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="n">delta</span><span class="o">.</span><span class="n">y</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="n">delta</span><span class="o">.</span><span class="n">z</span> <span class="o">**</span> <span class="mi">2</span><span class="p">]))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">active_light_dis</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">distance</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_light_dis</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_light_dis_thresh</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_light</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_active_light</span><span class="o">.</span><span class="n">id</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_light</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">total_lights</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_last_light</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_active_light</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">active_light_state</span> <span class="o">=</span> <span class="n">TrafficLightState</span><span class="o">.</span><span class="n">OFF</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">active_light_dis</span> <span class="o">=</span> <span class="mi">200</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_light</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_light</span><span class="o">.</span><span class="n">state</span> <span class="o">!=</span> <span class="n">carla</span><span class="o">.</span><span class="n">TrafficLightState</span><span class="o">.</span><span class="n">Red</span><span class="p">:</span>
+                <span class="k">return</span>
+
+            <span class="n">veh_extent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="o">.</span><span class="n">bounding_box</span><span class="o">.</span><span class="n">extent</span><span class="o">.</span><span class="n">x</span>
+
+            <span class="n">tail_close_pt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rotate_point</span><span class="p">(</span>
+                <span class="n">carla</span><span class="o">.</span><span class="n">Vector3D</span><span class="p">(</span><span class="o">-</span><span class="mf">0.8</span> <span class="o">*</span> <span class="n">veh_extent</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">vehicle_location</span><span class="o">.</span><span class="n">z</span><span class="p">),</span> <span class="n">vehicle_transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">yaw</span>
+            <span class="p">)</span>
+            <span class="n">tail_close_pt</span> <span class="o">=</span> <span class="n">vehicle_location</span> <span class="o">+</span> <span class="n">carla</span><span class="o">.</span><span class="n">Location</span><span class="p">(</span><span class="n">tail_close_pt</span><span class="p">)</span>
+
+            <span class="n">tail_far_pt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rotate_point</span><span class="p">(</span>
+                <span class="n">carla</span><span class="o">.</span><span class="n">Vector3D</span><span class="p">(</span><span class="o">-</span><span class="n">veh_extent</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">vehicle_location</span><span class="o">.</span><span class="n">z</span><span class="p">),</span> <span class="n">vehicle_transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">yaw</span>
+            <span class="p">)</span>
+            <span class="n">tail_far_pt</span> <span class="o">=</span> <span class="n">vehicle_location</span> <span class="o">+</span> <span class="n">carla</span><span class="o">.</span><span class="n">Location</span><span class="p">(</span><span class="n">tail_far_pt</span><span class="p">)</span>
+
+            <span class="n">trigger_waypoints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_traffic_light_trigger_waypoints</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_last_light</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_debug</span><span class="p">:</span>
+                <span class="n">z</span> <span class="o">=</span> <span class="mf">2.1</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_light</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="n">carla</span><span class="o">.</span><span class="n">TrafficLightState</span><span class="o">.</span><span class="n">Red</span><span class="p">:</span>
+                    <span class="n">color</span> <span class="o">=</span> <span class="n">carla</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">155</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_light</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="n">carla</span><span class="o">.</span><span class="n">TrafficLightState</span><span class="o">.</span><span class="n">Green</span><span class="p">:</span>
+                    <span class="n">color</span> <span class="o">=</span> <span class="n">carla</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">155</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">color</span> <span class="o">=</span> <span class="n">carla</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">155</span><span class="p">,</span> <span class="mi">155</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">wp</span> <span class="ow">in</span> <span class="n">trigger_waypoints</span><span class="p">:</span>
+                    <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">wp</span><span class="o">.</span><span class="n">road_id</span><span class="p">,</span> <span class="n">wp</span><span class="o">.</span><span class="n">lane_id</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">debug</span><span class="o">.</span><span class="n">draw_string</span><span class="p">(</span><span class="n">wp</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">location</span> <span class="o">+</span> <span class="n">carla</span><span class="o">.</span><span class="n">Location</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">z</span><span class="p">),</span> <span class="n">text</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">debug</span><span class="o">.</span><span class="n">draw_point</span><span class="p">(</span><span class="n">wp</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">location</span> <span class="o">+</span> <span class="n">carla</span><span class="o">.</span><span class="n">Location</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="n">z</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">wp</span> <span class="ow">in</span> <span class="n">trigger_waypoints</span><span class="p">:</span>
+                <span class="n">tail_wp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map</span><span class="o">.</span><span class="n">get_waypoint</span><span class="p">(</span><span class="n">tail_far_pt</span><span class="p">)</span>
+
+                <span class="c1"># Calculate the dot product (Might be unscaled, as only its sign is important)</span>
+                <span class="n">ve_dir</span> <span class="o">=</span> <span class="n">vehicle_transform</span><span class="o">.</span><span class="n">get_forward_vector</span><span class="p">()</span>
+                <span class="n">wp_dir</span> <span class="o">=</span> <span class="n">wp</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">get_forward_vector</span><span class="p">()</span>
+                <span class="n">dot_ve_wp</span> <span class="o">=</span> <span class="n">ve_dir</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">wp_dir</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">ve_dir</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">wp_dir</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">ve_dir</span><span class="o">.</span><span class="n">z</span> <span class="o">*</span> <span class="n">wp_dir</span><span class="o">.</span><span class="n">z</span>
+
+                <span class="c1"># Check the lane until all the &quot;tail&quot; has passed</span>
+                <span class="k">if</span> <span class="n">tail_wp</span><span class="o">.</span><span class="n">road_id</span> <span class="o">==</span> <span class="n">wp</span><span class="o">.</span><span class="n">road_id</span> <span class="ow">and</span> <span class="n">tail_wp</span><span class="o">.</span><span class="n">lane_id</span> <span class="o">==</span> <span class="n">wp</span><span class="o">.</span><span class="n">lane_id</span> <span class="ow">and</span> <span class="n">dot_ve_wp</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="c1"># This light is red and is affecting our lane</span>
+                    <span class="n">yaw_wp</span> <span class="o">=</span> <span class="n">wp</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">yaw</span>
+                    <span class="n">lane_width</span> <span class="o">=</span> <span class="n">wp</span><span class="o">.</span><span class="n">lane_width</span>
+                    <span class="n">location_wp</span> <span class="o">=</span> <span class="n">wp</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">location</span>
+
+                    <span class="n">lft_lane_wp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rotate_point</span><span class="p">(</span><span class="n">carla</span><span class="o">.</span><span class="n">Vector3D</span><span class="p">(</span><span class="mf">0.4</span> <span class="o">*</span> <span class="n">lane_width</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">location_wp</span><span class="o">.</span><span class="n">z</span><span class="p">),</span> <span class="n">yaw_wp</span> <span class="o">+</span> <span class="mi">90</span><span class="p">)</span>
+                    <span class="n">lft_lane_wp</span> <span class="o">=</span> <span class="n">location_wp</span> <span class="o">+</span> <span class="n">carla</span><span class="o">.</span><span class="n">Location</span><span class="p">(</span><span class="n">lft_lane_wp</span><span class="p">)</span>
+                    <span class="n">rgt_lane_wp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rotate_point</span><span class="p">(</span><span class="n">carla</span><span class="o">.</span><span class="n">Vector3D</span><span class="p">(</span><span class="mf">0.4</span> <span class="o">*</span> <span class="n">lane_width</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">location_wp</span><span class="o">.</span><span class="n">z</span><span class="p">),</span> <span class="n">yaw_wp</span> <span class="o">-</span> <span class="mi">90</span><span class="p">)</span>
+                    <span class="n">rgt_lane_wp</span> <span class="o">=</span> <span class="n">location_wp</span> <span class="o">+</span> <span class="n">carla</span><span class="o">.</span><span class="n">Location</span><span class="p">(</span><span class="n">rgt_lane_wp</span><span class="p">)</span>
+
+                    <span class="c1"># Is the vehicle traversing the stop line?</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_vehicle_crossing_line</span><span class="p">((</span><span class="n">tail_close_pt</span><span class="p">,</span> <span class="n">tail_far_pt</span><span class="p">),</span> <span class="p">(</span><span class="n">lft_lane_wp</span><span class="p">,</span> <span class="n">rgt_lane_wp</span><span class="p">)):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">ran_light</span> <span class="o">=</span> <span class="kc">True</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">total_lights_ran</span> <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_last_light</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_active_light</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">carla</span><span class="o">.</span><span class="n">Actor</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">carla</span><span class="o">.</span><span class="n">Vector3D</span><span class="p">]]:</span>
+        <span class="n">lights_list</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">get_actor_list</span><span class="p">()</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s2">&quot;*traffic_light*&quot;</span><span class="p">)</span>
+
+        <span class="n">vehicle_transform</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">get_transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="p">)</span>
+        <span class="n">vehicle_location</span> <span class="o">=</span> <span class="n">vehicle_transform</span><span class="o">.</span><span class="n">location</span>
+        <span class="n">vehicle_waypoint</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">_map</span><span class="o">.</span><span class="n">get_waypoint</span><span class="p">(</span><span class="n">vehicle_location</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">traffic_light</span> <span class="ow">in</span> <span class="n">lights_list</span><span class="p">:</span>
+            <span class="n">object_location</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">get_trafficlight_trigger_location</span><span class="p">(</span><span class="n">traffic_light</span><span class="p">)</span>
+            <span class="n">object_waypoint</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">_map</span><span class="o">.</span><span class="n">get_waypoint</span><span class="p">(</span><span class="n">object_location</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">object_waypoint</span><span class="o">.</span><span class="n">road_id</span> <span class="o">!=</span> <span class="n">vehicle_waypoint</span><span class="o">.</span><span class="n">road_id</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">ve_dir</span> <span class="o">=</span> <span class="n">vehicle_waypoint</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">get_forward_vector</span><span class="p">()</span>
+            <span class="n">wp_dir</span> <span class="o">=</span> <span class="n">object_waypoint</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">get_forward_vector</span><span class="p">()</span>
+            <span class="n">dot_ve_wp</span> <span class="o">=</span> <span class="n">ve_dir</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">wp_dir</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">ve_dir</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">wp_dir</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">ve_dir</span><span class="o">.</span><span class="n">z</span> <span class="o">*</span> <span class="n">wp_dir</span><span class="o">.</span><span class="n">z</span>
+
+            <span class="k">if</span> <span class="n">dot_ve_wp</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">while</span> <span class="ow">not</span> <span class="n">object_waypoint</span><span class="o">.</span><span class="n">is_intersection</span><span class="p">:</span>
+                <span class="n">next_waypoint</span> <span class="o">=</span> <span class="n">object_waypoint</span><span class="o">.</span><span class="n">next</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">next_waypoint</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">next_waypoint</span><span class="o">.</span><span class="n">is_intersection</span><span class="p">:</span>
+                    <span class="n">object_waypoint</span> <span class="o">=</span> <span class="n">next_waypoint</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">break</span>
+
+            <span class="k">return</span> <span class="n">traffic_light</span><span class="p">,</span> <span class="n">object_waypoint</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">location</span>
+
+        <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_get_traffic_light_trigger_waypoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">traffic_light</span><span class="p">:</span> <span class="n">carla</span><span class="o">.</span><span class="n">Actor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">carla</span><span class="o">.</span><span class="n">Waypoint</span><span class="p">]:</span>
+        <span class="n">base_transform</span> <span class="o">=</span> <span class="n">traffic_light</span><span class="o">.</span><span class="n">get_transform</span><span class="p">()</span>
+        <span class="n">base_rot</span> <span class="o">=</span> <span class="n">base_transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">yaw</span>
+        <span class="n">area_loc</span> <span class="o">=</span> <span class="n">base_transform</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">traffic_light</span><span class="o">.</span><span class="n">trigger_volume</span><span class="o">.</span><span class="n">location</span><span class="p">)</span>
+
+        <span class="c1"># Discretize the trigger box into points</span>
+        <span class="n">area_ext</span> <span class="o">=</span> <span class="n">traffic_light</span><span class="o">.</span><span class="n">trigger_volume</span><span class="o">.</span><span class="n">extent</span>
+        <span class="n">x_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">0.9</span> <span class="o">*</span> <span class="n">area_ext</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="mf">0.9</span> <span class="o">*</span> <span class="n">area_ext</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>  <span class="c1"># 0.9 to avoid crossing to adjacent lanes</span>
+
+        <span class="n">area</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">x_values</span><span class="p">:</span>
+            <span class="n">point</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rotate_point</span><span class="p">(</span><span class="n">carla</span><span class="o">.</span><span class="n">Vector3D</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">area_ext</span><span class="o">.</span><span class="n">z</span><span class="p">),</span> <span class="n">base_rot</span><span class="p">)</span>
+            <span class="n">point_location</span> <span class="o">=</span> <span class="n">area_loc</span> <span class="o">+</span> <span class="n">carla</span><span class="o">.</span><span class="n">Location</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">point</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+            <span class="n">area</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">point_location</span><span class="p">)</span>
+
+        <span class="c1"># Get the waypoints of these points, removing duplicates</span>
+        <span class="n">ini_wps</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">area</span><span class="p">:</span>
+            <span class="n">wpx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map</span><span class="o">.</span><span class="n">get_waypoint</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
+            <span class="c1"># As x_values are arranged in order, only the last one has to be checked</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">ini_wps</span> <span class="ow">or</span> <span class="n">ini_wps</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">road_id</span> <span class="o">!=</span> <span class="n">wpx</span><span class="o">.</span><span class="n">road_id</span> <span class="ow">or</span> <span class="n">ini_wps</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lane_id</span> <span class="o">!=</span> <span class="n">wpx</span><span class="o">.</span><span class="n">lane_id</span><span class="p">:</span>
+                <span class="n">ini_wps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wpx</span><span class="p">)</span>
+
+        <span class="c1"># Advance them until the intersection</span>
+        <span class="n">wps</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">wpx</span> <span class="ow">in</span> <span class="n">ini_wps</span><span class="p">:</span>
+            <span class="k">while</span> <span class="ow">not</span> <span class="n">wpx</span><span class="o">.</span><span class="n">is_intersection</span><span class="p">:</span>
+                <span class="n">next_wp</span> <span class="o">=</span> <span class="n">wpx</span><span class="o">.</span><span class="n">next</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">next_wp</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">next_wp</span><span class="o">.</span><span class="n">is_intersection</span><span class="p">:</span>
+                    <span class="n">wpx</span> <span class="o">=</span> <span class="n">next_wp</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">break</span>
+            <span class="n">wps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wpx</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">wps</span>
+
+    <span class="k">def</span> <span class="nf">_is_vehicle_crossing_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seg1</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">seg2</span><span class="p">:</span> <span class="n">List</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        check if vehicle crosses a line segment</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">line1</span> <span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">LineString</span><span class="p">([(</span><span class="n">seg1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">seg1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">y</span><span class="p">),</span> <span class="p">(</span><span class="n">seg1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">seg1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">y</span><span class="p">)])</span>
+        <span class="n">line2</span> <span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">LineString</span><span class="p">([(</span><span class="n">seg2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">seg2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">y</span><span class="p">),</span> <span class="p">(</span><span class="n">seg2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">seg2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">y</span><span class="p">)])</span>
+        <span class="n">inter</span> <span class="o">=</span> <span class="n">line1</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">line2</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="ow">not</span> <span class="n">inter</span><span class="o">.</span><span class="n">is_empty</span>
+
+    <span class="k">def</span> <span class="nf">_rotate_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">:</span> <span class="n">carla</span><span class="o">.</span><span class="n">Vector3D</span><span class="p">,</span> <span class="n">angle</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">carla</span><span class="o">.</span><span class="n">Vector3D</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        rotate a given point by a given angle</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x_</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">angle</span><span class="p">))</span> <span class="o">*</span> <span class="n">point</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">angle</span><span class="p">))</span> <span class="o">*</span> <span class="n">point</span><span class="o">.</span><span class="n">y</span>
+        <span class="n">y_</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">angle</span><span class="p">))</span> <span class="o">*</span> <span class="n">point</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">angle</span><span class="p">))</span> <span class="o">*</span> <span class="n">point</span><span class="o">.</span><span class="n">y</span>
+        <span class="k">return</span> <span class="n">carla</span><span class="o">.</span><span class="n">Vector3D</span><span class="p">(</span><span class="n">x_</span><span class="p">,</span> <span class="n">y_</span><span class="p">,</span> <span class="n">point</span><span class="o">.</span><span class="n">z</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, OpenDILab.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

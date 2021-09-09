@@ -202,7 +202,7 @@ routes. Other settings like weathers and NPCs are defined by the number of versi
 for example <em>town1</em> represents all commonly used suites in ‘town1’.</p>
 <p>Carla benchmark setting is widely used in other literature as training and evaluation standard.
 DI-drive allows users to quickly build up an environment with a benchmark suite setting by deploying
-<code class="xref py py-class docutils literal notranslate"><span class="pre">BenchmarkEnvWrapper</span></code>. Once an environment is wrapped, it will ignore
+<a class="reference internal" href="../api_doc/envs.html#core.envs.BenchmarkEnvWrapper" title="core.envs.carla_env_wrapper.BenchmarkEnvWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">BenchmarkEnvWrapper</span></code></a>. Once an environment is wrapped, it will ignore
 the passed arguments in <code class="docutils literal notranslate"><span class="pre">reset</span></code> method, and choose one from the suite’s route list according to aonfiguration. It can be used
 in RL training, to sampling data in benchmark environment settings.</p>
 <p>Also, DI-drive deploys <a class="reference internal" href="../api_doc/eval.html#core.eval.CarlaBenchmarkEvaluator" title="core.eval.carla_benchmark_evaluator.CarlaBenchmarkEvaluator"><code class="xref py py-class docutils literal notranslate"><span class="pre">CarlaBenchmarkEvaluator</span></code></a> and

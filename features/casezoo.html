@@ -236,7 +236,7 @@ a <cite>.json</cite> file with the same file name as the route file.</p>
 <cite>xml</cite> files. Each type of scenario possess sevaral cases at a specific location and a name saved in the <cite>xml</cite> file.
 Details of all routes and scenarios are shown in
 <a class="reference external" href="https://github.com/opendilab/DI-drive/blob/main/docs/casezoo_instruction.md">Casezoo instruction</a>.</p>
-<p>DI-drive defines <code class="xref py py-class docutils literal notranslate"><span class="pre">ScenarioCarlaEnv</span></code>, which uses
+<p>DI-drive defines <a class="reference internal" href="../api_doc/envs.html#core.envs.ScenarioCarlaEnv" title="core.envs.scenario_carla_env.ScenarioCarlaEnv"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScenarioCarlaEnv</span></code></a>, which uses
 <code class="xref py py-class docutils literal notranslate"><span class="pre">ScenarioSimulator</span></code> to run Casezoo.
 You need to parse the scenario files and get a configuration instance, then pass the configuration into
 the <code class="docutils literal notranslate"><span class="pre">reset</span></code> method of a <code class="docutils literal notranslate"><span class="pre">ScenarioEnv</span></code>. The environment is able to get the scenario type by itself

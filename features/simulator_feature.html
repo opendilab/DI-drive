@@ -242,7 +242,7 @@ we show the default setting of the simulator and explain its contents.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Some of the configures can be changed by provided arguments when running
-<code class="xref py py-func docutils literal notranslate"><span class="pre">init</span></code> method, in order to make difference among episodes.</p>
+<a class="reference internal" href="../api_doc/simulators.html#core.simulators.CarlaSimulator" title="core.simulators.carla_simulator.CarlaSimulator"><code class="xref py py-func docutils literal notranslate"><span class="pre">init</span></code></a> method, in order to make difference among episodes.</p>
 </div>
 <div class="section" id="common-configurations">
 <h3>Common configurations<a class="headerlink" href="#common-configurations" title="Permalink to this headline">¶</a></h3>
@@ -372,8 +372,8 @@ we show the default setting of the simulator and explain its contents.</p>
 to generate route and road options from start to end location. The local planner is defined in DI-drive to add navigation
 into observation. It provides current waypoint location, next waypoint location, road option command
 and distance to final target. Planners may also take nearby walkers, vehicles and traffic lights into account.
-Currently <code class="xref py py-class docutils literal notranslate"><span class="pre">BasicPlanner</span></code> and
-<code class="xref py py-class docutils literal notranslate"><span class="pre">BehaviorPlanner</span></code> are supported in DI-drive.
+Currently <a class="reference internal" href="../api_doc/utils.html#core.utils.planner.basic_planner.BasicPlanner" title="core.utils.planner.basic_planner.BasicPlanner"><code class="xref py py-class docutils literal notranslate"><span class="pre">BasicPlanner</span></code></a> and
+<a class="reference internal" href="../api_doc/utils.html#core.utils.planner.behavior_planner.BehaviorPlanner" title="core.utils.planner.behavior_planner.BehaviorPlanner"><code class="xref py py-class docutils literal notranslate"><span class="pre">BehaviorPlanner</span></code></a> are supported in DI-drive.
 For more details, check the <a class="reference external" href="../api_doc/utils.html">API docs</a>.</p>
 <p>Some of the default config setting is as following:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">planner</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>

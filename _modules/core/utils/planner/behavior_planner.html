@@ -1,0 +1,717 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>core.utils.planner.behavior_planner &mdash; DI-drive 0.1.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> DI-drive
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation/index.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorial/index.html">Tutorial</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../features/index.html">Features</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../model_zoo/index.html">Model Zoo</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_doc/index.html">API Doc</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../faq/index.html">FAQ</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">DI-drive</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>core.utils.planner.behavior_planner</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for core.utils.planner.behavior_planner</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">import</span> <span class="nn">carla</span>
+
+<span class="kn">from</span> <span class="nn">.basic_planner</span> <span class="kn">import</span> <span class="n">AgentState</span><span class="p">,</span> <span class="n">BasicPlanner</span><span class="p">,</span> <span class="n">RoadOption</span>
+<span class="kn">from</span> <span class="nn">core.utils.simulator_utils.carla_agents.navigation.types_behavior</span> <span class="kn">import</span> <span class="n">Cautious</span><span class="p">,</span> <span class="n">Aggressive</span><span class="p">,</span> <span class="n">Normal</span>
+<span class="kn">from</span> <span class="nn">core.simulators.carla_data_provider</span> <span class="kn">import</span> <span class="n">CarlaDataProvider</span>
+<span class="kn">from</span> <span class="nn">core.utils.simulator_utils.carla_agents.tools.misc</span> <span class="kn">import</span> <span class="n">is_within_distance</span><span class="p">,</span> <span class="n">compute_distance</span><span class="p">,</span> <span class="n">positive</span>
+<span class="kn">from</span> <span class="nn">core.utils.planner.planner_utils</span> <span class="kn">import</span> <span class="n">get_next_until_junction</span><span class="p">,</span> <span class="n">generate_change_lane_route</span>
+
+
+<div class="viewcode-block" id="BehaviorPlanner"><a class="viewcode-back" href="../../../../api_doc/utils.html#core.utils.planner.behavior_planner.BehaviorPlanner">[docs]</a><span class="k">class</span> <span class="nc">BehaviorPlanner</span><span class="p">(</span><span class="n">BasicPlanner</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Behavior local planner for Carla simualtor. It can set route the same way as ``BasicPlanner``. BehaviorPlanner can</span>
+<span class="sd">    check the speed limitations, traffic lights in evironment, and also take nearby vehicles into account.</span>
+<span class="sd">    Lane changing</span>
+<span class="sd">    decisions can be taken by analyzing the surrounding environment, such as overtaking or tailgating avoidance.</span>
+<span class="sd">    Besides, it can also keep safety distance from a car in front of it by tracking the instantaneous time to collision</span>
+<span class="sd">    and keeping it in a certain range. Different sets of behaviors are encoded in the agent, from cautious to a more</span>
+<span class="sd">    aggressive ones.</span>
+
+<span class="sd">    :Arguments:</span>
+<span class="sd">        - cfg (Dict): Config dict.</span>
+
+<span class="sd">    :Interfaces: set_destination, set_route, run_step, get_waypoints_list, clean_up</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">min_distance</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>
+        <span class="n">resolution</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>
+        <span class="n">fps</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">behavior</span><span class="o">=</span><span class="s1">&#39;normal&#39;</span><span class="p">,</span>
+        <span class="n">min_speed</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_speed</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_incoming_waypoint</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_incoming_direction</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_light_state</span> <span class="o">=</span> <span class="s2">&quot;Green&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_light_id_to_ignore</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="n">behavior</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">behavior</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_min_speed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">min_speed</span>
+
+        <span class="c1"># Parameters for agent behavior</span>
+        <span class="k">if</span> <span class="n">behavior</span> <span class="o">==</span> <span class="s1">&#39;cautious&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">behavior</span> <span class="o">=</span> <span class="n">Cautious</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">behavior</span> <span class="o">==</span> <span class="s1">&#39;normal&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">behavior</span> <span class="o">=</span> <span class="n">Normal</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">behavior</span> <span class="o">==</span> <span class="s1">&#39;aggressive&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">behavior</span> <span class="o">=</span> <span class="n">Aggressive</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;behavior must in [&quot;normal&quot;, &quot;aggresive&quot;, and &quot;cautious&quot;], got </span><span class="si">{}</span><span class="s1"> instead.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">behavior</span><span class="p">)</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_behavior_is_vehicle_hazard</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">vehicle_list</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span>
+            <span class="n">proximity_th</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+            <span class="n">up_angle_th</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+            <span class="n">low_angle_th</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="n">lane_offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">carla</span><span class="o">.</span><span class="n">Actor</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+
+        <span class="c1"># Get the right offset</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span><span class="o">.</span><span class="n">lane_id</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">lane_offset</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">lane_offset</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="k">for</span> <span class="n">target_vehicle</span> <span class="ow">in</span> <span class="n">vehicle_list</span><span class="p">:</span>
+
+            <span class="n">target_vehicle_loc</span> <span class="o">=</span> <span class="n">target_vehicle</span><span class="o">.</span><span class="n">get_location</span><span class="p">()</span>
+            <span class="c1"># If the object is not in our next or current lane it&#39;s not an obstacle</span>
+
+            <span class="n">target_wpt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map</span><span class="o">.</span><span class="n">get_waypoint</span><span class="p">(</span><span class="n">target_vehicle_loc</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">target_wpt</span><span class="o">.</span><span class="n">road_id</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span><span class="o">.</span><span class="n">road_id</span> <span class="ow">or</span> \
+                    <span class="n">target_wpt</span><span class="o">.</span><span class="n">lane_id</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span><span class="o">.</span><span class="n">lane_id</span> <span class="o">+</span> <span class="n">lane_offset</span><span class="p">:</span>
+                <span class="n">find_in_next</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+                    <span class="n">next_wpt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_incoming_waypoint_and_direction</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="n">i</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">next_wpt</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="k">if</span> <span class="n">target_wpt</span><span class="o">.</span><span class="n">road_id</span> <span class="o">!=</span> <span class="n">next_wpt</span><span class="o">.</span><span class="n">road_id</span> <span class="ow">or</span> \
+                            <span class="n">target_wpt</span><span class="o">.</span><span class="n">lane_id</span> <span class="o">!=</span> <span class="n">next_wpt</span><span class="o">.</span><span class="n">lane_id</span> <span class="o">+</span> <span class="n">lane_offset</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="n">find_in_next</span> <span class="o">=</span> <span class="kc">True</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">find_in_next</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">is_within_distance</span><span class="p">(</span><span class="n">target_vehicle_loc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vehicle_location</span><span class="p">,</span>
+                                  <span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="o">.</span><span class="n">get_transform</span><span class="p">()</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">yaw</span><span class="p">,</span> <span class="n">proximity_th</span><span class="p">,</span> <span class="n">up_angle_th</span><span class="p">,</span>
+                                  <span class="n">low_angle_th</span><span class="p">):</span>
+
+                <span class="k">return</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">target_vehicle</span><span class="p">,</span> <span class="n">compute_distance</span><span class="p">(</span><span class="n">target_vehicle_loc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vehicle_location</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">change_route_in_current_road</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">route</span><span class="p">):</span>
+        <span class="n">route_end</span> <span class="o">=</span> <span class="n">route</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">find_in_buffer</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">wpt_index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">waypoint</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">waypoint</span><span class="o">.</span><span class="n">road_id</span> <span class="o">!=</span> <span class="n">route_end</span><span class="o">.</span><span class="n">road_id</span><span class="p">:</span>
+                    <span class="n">wpt_index</span> <span class="o">=</span> <span class="n">i</span>
+                    <span class="n">find_in_buffer</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">break</span>
+        <span class="k">if</span> <span class="n">find_in_buffer</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">wpt_index</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">distance_to_goal</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distances</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="p">)):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">distances</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">distance_to_goal</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distances</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">waypoint</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_queue</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">waypoint</span><span class="o">.</span><span class="n">road_id</span> <span class="o">!=</span> <span class="n">route_end</span><span class="o">.</span><span class="n">road_id</span><span class="p">:</span>
+                    <span class="n">wpt_index</span> <span class="o">=</span> <span class="n">i</span>
+                    <span class="k">break</span>
+            <span class="k">if</span> <span class="n">wpt_index</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">wpt_index</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_queue</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">distances</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">distance_to_goal</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distances</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_queue</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">distances</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">distance_to_goal</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_queue</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">end_waypoint</span><span class="p">,</span> <span class="n">RoadOption</span><span class="o">.</span><span class="n">LANEFOLLOW</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="p">:</span>
+            <span class="n">old_route_start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">old_route_start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_queue</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">link_route</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grp</span><span class="o">.</span><span class="n">trace_route</span><span class="p">(</span><span class="n">route_end</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="n">old_route_start</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">location</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_route_in_front</span><span class="p">(</span><span class="n">link_route</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_route_in_front</span><span class="p">(</span><span class="n">route</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BehaviorPlanner.run_step"><a class="viewcode-back" href="../../../../api_doc/utils.html#core.utils.planner.behavior_planner.BehaviorPlanner.run_step">[docs]</a>    <span class="k">def</span> <span class="nf">run_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run one step of local planner. It will update node and target waypoint and road option, and check agent</span>
+<span class="sd">        states. Besides, it may have some behavior like overtaking, tailgating, safe distance keeping and so on</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_route</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+        <span class="n">vehicle_transform</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">get_transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_vehicle_location</span> <span class="o">=</span> <span class="n">vehicle_transform</span><span class="o">.</span><span class="n">location</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map</span><span class="o">.</span><span class="n">get_waypoint</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_vehicle_location</span><span class="p">,</span> <span class="n">lane_type</span><span class="o">=</span><span class="n">carla</span><span class="o">.</span><span class="n">LaneType</span><span class="o">.</span><span class="n">Driving</span><span class="p">,</span> <span class="n">project_to_road</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Add waypoints into buffer if empty</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_buffer_size</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_queue</span><span class="p">))):</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_queue</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_queue</span><span class="o">.</span><span class="n">popleft</span><span class="p">())</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">break</span>
+
+            <span class="c1"># If no waypoints return with current waypoint</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">target_waypoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">node_waypoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">target_road_option</span> <span class="o">=</span> <span class="n">RoadOption</span><span class="o">.</span><span class="n">VOID</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">node_road_option</span> <span class="o">=</span> <span class="n">RoadOption</span><span class="o">.</span><span class="n">VOID</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">agent_state</span> <span class="o">=</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">VOID</span>
+                <span class="k">return</span>
+
+        <span class="c1"># Find the most far waypoint within min distance</span>
+        <span class="n">max_index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">waypoint</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="p">):</span>
+            <span class="n">cur_dis</span> <span class="o">=</span> <span class="n">waypoint</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">vehicle_transform</span><span class="o">.</span><span class="n">location</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">cur_dis</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_distance</span><span class="p">:</span>
+                <span class="n">max_index</span> <span class="o">=</span> <span class="n">i</span>
+        <span class="k">if</span> <span class="n">max_index</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">node_waypoint</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_road_option</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_queue</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_queue</span><span class="o">.</span><span class="n">popleft</span><span class="p">())</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">distances</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">distance_to_goal</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distances</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+
+        <span class="c1"># Update information</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">target_waypoint</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_road_option</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waypoints_buffer</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent_state</span> <span class="o">=</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">NAVIGATING</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_speed</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">get_speed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="p">)</span> <span class="o">*</span> <span class="mf">3.6</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">speed_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="o">.</span><span class="n">get_speed_limit</span><span class="p">()</span>
+        <span class="n">look_ahead_steps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_limit</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">incoming_waypoint</span><span class="p">,</span> <span class="n">incoming_direction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_incoming_waypoint_and_direction</span><span class="p">(</span><span class="n">look_ahead_steps</span><span class="p">)</span>
+
+        <span class="c1"># 1: Red lights and stops behavior</span>
+        <span class="n">light_state</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">is_light_red</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">light_state</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">agent_state</span> <span class="o">=</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">BLOCKED_RED_LIGHT</span>
+            <span class="k">return</span>
+
+        <span class="c1"># 2.1: Pedestrian avoidancd behaviors</span>
+        <span class="n">walker_state</span><span class="p">,</span> <span class="n">walker</span><span class="p">,</span> <span class="n">w_distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pedestrian_avoid_manager</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">walker_state</span><span class="p">:</span>
+            <span class="c1"># Distance is computed from the center of the two cars,</span>
+            <span class="c1"># we use bounding boxes to calculate the actual distance</span>
+            <span class="n">distance</span> <span class="o">=</span> <span class="n">w_distance</span> <span class="o">-</span> <span class="nb">max</span><span class="p">(</span><span class="n">walker</span><span class="o">.</span><span class="n">bounding_box</span><span class="o">.</span><span class="n">extent</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">walker</span><span class="o">.</span><span class="n">bounding_box</span><span class="o">.</span><span class="n">extent</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="nb">max</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="o">.</span><span class="n">bounding_box</span><span class="o">.</span><span class="n">extent</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="o">.</span><span class="n">bounding_box</span><span class="o">.</span><span class="n">extent</span><span class="o">.</span><span class="n">x</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Emergency brake if the car is very close.</span>
+            <span class="k">if</span> <span class="n">distance</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">braking_distance</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">agent_state</span> <span class="o">=</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">BLOCKED_BY_WALKER</span>
+                <span class="k">return</span>
+
+        <span class="c1"># 2.2: BIke avoidancd behaviors</span>
+        <span class="n">bike_state</span><span class="p">,</span> <span class="n">bike</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">is_bike_hazard</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">bike_state</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">agent_state</span> <span class="o">=</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">BLOCKED_BY_BIKE</span>
+
+        <span class="c1"># 2.3: Car changelane behaviors</span>
+        <span class="n">lane_vehicle_state</span><span class="p">,</span> <span class="n">vehicle</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">is_lane_vehicle_hazard</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_road_option</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">lane_vehicle_state</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">agent_state</span> <span class="o">=</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">BLOCKED_BY_VEHICLE</span>
+
+        <span class="c1"># 2.4: Car in junction  behaviors</span>
+        <span class="n">junction_vehicle_state</span><span class="p">,</span> <span class="n">vehicle</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">is_junction_vehicle_hazard</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_road_option</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">junction_vehicle_state</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">agent_state</span> <span class="o">=</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">BLOCKED_BY_VEHICLE</span>
+
+        <span class="c1"># 2.5: Car following behaviors</span>
+        <span class="n">vehicle_state</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">,</span> <span class="n">distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collision_and_car_avoid_manager</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">vehicle_state</span><span class="p">:</span>
+            <span class="c1"># Distance is computed from the center of the two cars,</span>
+            <span class="c1"># we use bounding boxes to calculate the actual distance</span>
+            <span class="n">distance</span> <span class="o">=</span> <span class="n">distance</span> <span class="o">-</span> <span class="nb">max</span><span class="p">(</span><span class="n">vehicle</span><span class="o">.</span><span class="n">bounding_box</span><span class="o">.</span><span class="n">extent</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">bounding_box</span><span class="o">.</span><span class="n">extent</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="nb">max</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="o">.</span><span class="n">bounding_box</span><span class="o">.</span><span class="n">extent</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="o">.</span><span class="n">bounding_box</span><span class="o">.</span><span class="n">extent</span><span class="o">.</span><span class="n">x</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Emergency brake if the car is very close.</span>
+            <span class="k">if</span> <span class="n">distance</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">braking_distance</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">agent_state</span> <span class="o">=</span> <span class="n">AgentState</span><span class="o">.</span><span class="n">BLOCKED_BY_VEHICLE</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">vehicle_speed</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">get_speed</span><span class="p">(</span><span class="n">vehicle</span><span class="p">)</span> <span class="o">*</span> <span class="mf">3.6</span>
+                <span class="n">delta_v</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_speed</span> <span class="o">-</span> <span class="n">vehicle_speed</span><span class="p">)</span> <span class="o">/</span> <span class="mf">3.6</span><span class="p">)</span>
+                <span class="n">ttc</span> <span class="o">=</span> <span class="n">distance</span> <span class="o">/</span> <span class="n">delta_v</span> <span class="k">if</span> <span class="n">delta_v</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">distance</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">nextafter</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">)</span>
+
+                <span class="c1"># Under safety time distance, slow down.</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">safety_time</span> <span class="o">&gt;</span> <span class="n">ttc</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">speed_limit</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span>
+                        <span class="n">positive</span><span class="p">(</span><span class="n">vehicle_speed</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">speed_decrease</span><span class="p">),</span>
+                        <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">max_speed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_limit</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">speed_lim_dist</span><span class="p">)</span>
+                    <span class="p">)</span>
+
+                <span class="c1"># Actual safety distance area, try to follow the speed of the vehicle in front.</span>
+                <span class="k">elif</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">safety_time</span> <span class="o">&gt;</span> <span class="n">ttc</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">safety_time</span><span class="p">:</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">speed_limit</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span>
+                        <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_min_speed</span><span class="p">,</span> <span class="n">vehicle_speed</span><span class="p">),</span>
+                        <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">max_speed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_limit</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">speed_lim_dist</span><span class="p">)</span>
+                    <span class="p">)</span>
+
+                <span class="c1"># Normal behavior.</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">speed_limit</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">max_speed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_limit</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">speed_lim_dist</span><span class="p">)</span>
+
+        <span class="c1"># 4: Intersection behavior</span>
+        <span class="c1"># Checking if there&#39;s a junction nearby to slow down</span>
+        <span class="k">elif</span> <span class="n">incoming_waypoint</span><span class="o">.</span><span class="n">is_junction</span> <span class="ow">and</span> <span class="p">(</span><span class="n">incoming_direction</span> <span class="o">==</span> <span class="n">RoadOption</span><span class="o">.</span><span class="n">LEFT</span>
+                                                <span class="ow">or</span> <span class="n">incoming_direction</span> <span class="o">==</span> <span class="n">RoadOption</span><span class="o">.</span><span class="n">RIGHT</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">speed_limit</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">max_speed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_limit</span> <span class="o">-</span> <span class="mi">5</span><span class="p">)</span>
+
+        <span class="c1"># 5: Change lane behavior</span>
+        <span class="k">elif</span> <span class="n">incoming_waypoint</span><span class="o">.</span><span class="n">lane_id</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span><span class="o">.</span><span class="n">lane_id</span> \
+                <span class="ow">or</span> <span class="p">(</span><span class="n">incoming_direction</span> <span class="o">==</span> <span class="n">RoadOption</span><span class="o">.</span><span class="n">CHANGELANELEFT</span>
+                    <span class="ow">or</span> <span class="n">incoming_direction</span> <span class="o">==</span> <span class="n">RoadOption</span><span class="o">.</span><span class="n">CHANGELANERIGHT</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">speed_limit</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
+                <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">max_speed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_limit</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">speed_lim_dist</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mi">25</span>
+            <span class="p">)</span>
+
+        <span class="c1"># 6: Normal behavior</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">speed_limit</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">max_speed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_limit</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">speed_lim_dist</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_traffic_light_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method is in charge of behaviors for red lights and stops.</span>
+
+<span class="sd">        WARNING: What follows is a proxy to avoid having a car brake after running a yellow light.</span>
+<span class="sd">        This happens because the car is still under the influence of the semaphore,</span>
+<span class="sd">        even after passing it. So, the semaphore id is temporarely saved to</span>
+<span class="sd">        ignore it and go around this issue, until the car is near a new one.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">light_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="o">.</span><span class="n">get_traffic_light</span><span class="p">(</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">id</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="o">.</span><span class="n">get_traffic_light</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="n">light_state</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="o">.</span><span class="n">get_traffic_light_state</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="n">light_state</span> <span class="o">==</span> <span class="s2">&quot;Red&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span><span class="o">.</span><span class="n">is_junction</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_light_id_to_ignore</span> <span class="o">!=</span> <span class="n">light_id</span> <span class="ow">or</span> <span class="n">light_id</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                <span class="k">return</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span><span class="o">.</span><span class="n">is_junction</span> <span class="ow">and</span> <span class="n">light_id</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">light_id_to_ignore</span> <span class="o">=</span> <span class="n">light_id</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_light_id_to_ignore</span> <span class="o">!=</span> <span class="n">light_id</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_light_id_to_ignore</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">return</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">_pedestrian_avoid_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">carla</span><span class="o">.</span><span class="n">Actor</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This module is in charge of warning in case of a collision</span>
+<span class="sd">        with any pedestrian.</span>
+<span class="sd">            :return vehicle_state: True if there is a walker nearby, False if not</span>
+<span class="sd">            :return vehicle: nearby walker</span>
+<span class="sd">            :return distance: distance to nearby walker</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">walker_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">get_actors</span><span class="p">()</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s2">&quot;*walker.pedestrian*&quot;</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">dist</span><span class="p">(</span><span class="n">w</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">w</span><span class="o">.</span><span class="n">get_location</span><span class="p">()</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">location</span><span class="p">)</span>
+
+        <span class="n">walker_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">walker_list</span> <span class="k">if</span> <span class="n">dist</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_road_option</span> <span class="o">==</span> <span class="n">RoadOption</span><span class="o">.</span><span class="n">CHANGELANELEFT</span><span class="p">:</span>
+            <span class="n">walker_state</span><span class="p">,</span> <span class="n">walker</span><span class="p">,</span> <span class="n">distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_behavior_is_vehicle_hazard</span><span class="p">(</span>
+                <span class="n">walker_list</span><span class="p">,</span>
+                <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">min_proximity_threshold</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_limit</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span>
+                <span class="n">up_angle_th</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span>
+                <span class="n">lane_offset</span><span class="o">=-</span><span class="mi">1</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_road_option</span> <span class="o">==</span> <span class="n">RoadOption</span><span class="o">.</span><span class="n">CHANGELANERIGHT</span><span class="p">:</span>
+            <span class="n">walker_state</span><span class="p">,</span> <span class="n">walker</span><span class="p">,</span> <span class="n">distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_behavior_is_vehicle_hazard</span><span class="p">(</span>
+                <span class="n">walker_list</span><span class="p">,</span>
+                <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">min_proximity_threshold</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_limit</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span>
+                <span class="n">up_angle_th</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span>
+                <span class="n">lane_offset</span><span class="o">=</span><span class="mi">1</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">walker_state</span><span class="p">,</span> <span class="n">walker</span><span class="p">,</span> <span class="n">distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_behavior_is_vehicle_hazard</span><span class="p">(</span>
+                <span class="n">walker_list</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">min_proximity_threshold</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_limit</span> <span class="o">/</span> <span class="mi">3</span><span class="p">),</span> <span class="n">up_angle_th</span><span class="o">=</span><span class="mi">60</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">walker_state</span><span class="p">,</span> <span class="n">walker</span><span class="p">,</span> <span class="n">distance</span>
+
+    <span class="k">def</span> <span class="nf">_collision_and_car_avoid_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">carla</span><span class="o">.</span><span class="n">Actor</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This module is in charge of warning in case of a collision</span>
+<span class="sd">        and managing possible overtaking or tailgating chances.</span>
+
+<span class="sd">            :return vehicle_state: True if there is a vehicle nearby, False if not</span>
+<span class="sd">            :return vehicle: nearby vehicle</span>
+<span class="sd">            :return distance: distance to nearby vehicle</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">vehicle_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">get_actors</span><span class="p">()</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s2">&quot;*vehicle*&quot;</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">dist</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">v</span><span class="o">.</span><span class="n">get_location</span><span class="p">()</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">location</span><span class="p">)</span>
+
+        <span class="n">vehicle_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vehicle_list</span> <span class="k">if</span> <span class="n">dist</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">45</span> <span class="ow">and</span> <span class="n">v</span><span class="o">.</span><span class="n">id</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_road_option</span> <span class="o">==</span> <span class="n">RoadOption</span><span class="o">.</span><span class="n">CHANGELANELEFT</span><span class="p">:</span>
+            <span class="n">vehicle_state</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">,</span> <span class="n">distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_behavior_is_vehicle_hazard</span><span class="p">(</span>
+                <span class="n">vehicle_list</span><span class="p">,</span>
+                <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">min_proximity_threshold</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_limit</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span>
+                <span class="n">up_angle_th</span><span class="o">=</span><span class="mi">180</span><span class="p">,</span>
+                <span class="n">lane_offset</span><span class="o">=-</span><span class="mi">1</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_road_option</span> <span class="o">==</span> <span class="n">RoadOption</span><span class="o">.</span><span class="n">CHANGELANERIGHT</span><span class="p">:</span>
+            <span class="n">vehicle_state</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">,</span> <span class="n">distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_behavior_is_vehicle_hazard</span><span class="p">(</span>
+                <span class="n">vehicle_list</span><span class="p">,</span>
+                <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">min_proximity_threshold</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_limit</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span>
+                <span class="n">up_angle_th</span><span class="o">=</span><span class="mi">180</span><span class="p">,</span>
+                <span class="n">lane_offset</span><span class="o">=</span><span class="mi">1</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">vehicle_state</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">,</span> <span class="n">distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_behavior_is_vehicle_hazard</span><span class="p">(</span>
+                <span class="n">vehicle_list</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">min_proximity_threshold</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_limit</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="n">up_angle_th</span><span class="o">=</span><span class="mi">30</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Check for overtaking</span>
+
+            <span class="k">if</span> <span class="n">vehicle_state</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_road_option</span> <span class="o">==</span> <span class="n">RoadOption</span><span class="o">.</span><span class="n">LANEFOLLOW</span> \
+                    <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span><span class="o">.</span><span class="n">is_junction</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_speed</span> <span class="o">&gt;</span> <span class="mi">10</span> \
+                    <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">overtake_counter</span> <span class="o">==</span> <span class="mi">0</span> \
+                    <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_speed</span> <span class="o">&gt;</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">get_speed</span><span class="p">(</span><span class="n">vehicle</span><span class="p">)</span> <span class="o">*</span> <span class="mf">3.6</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_overtake</span><span class="p">(</span><span class="n">vehicle_list</span><span class="p">)</span>
+
+            <span class="c1"># Check for tailgating</span>
+
+            <span class="k">elif</span> <span class="ow">not</span> <span class="n">vehicle_state</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_road_option</span> <span class="o">==</span> <span class="n">RoadOption</span><span class="o">.</span><span class="n">LANEFOLLOW</span> \
+                    <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span><span class="o">.</span><span class="n">is_junction</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_speed</span> <span class="o">&gt;</span> <span class="mi">10</span> \
+                    <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">tailgate_counter</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_tailgating</span><span class="p">(</span><span class="n">vehicle_list</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">vehicle_state</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">,</span> <span class="n">distance</span>
+
+    <span class="k">def</span> <span class="nf">_overtake</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vehicle_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">carla</span><span class="o">.</span><span class="n">Actor</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method is in charge of overtaking behaviors.</span>
+
+<span class="sd">            :param vehicle_list: list of all the nearby vehicles</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">left_turn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span><span class="o">.</span><span class="n">left_lane_marking</span><span class="o">.</span><span class="n">lane_change</span>
+        <span class="n">right_turn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span><span class="o">.</span><span class="n">right_lane_marking</span><span class="o">.</span><span class="n">lane_change</span>
+
+        <span class="n">left_wpt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span><span class="o">.</span><span class="n">get_left_lane</span><span class="p">()</span>
+        <span class="n">right_wpt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span><span class="o">.</span><span class="n">get_right_lane</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">left_turn</span> <span class="o">==</span> <span class="n">carla</span><span class="o">.</span><span class="n">LaneChange</span><span class="o">.</span><span class="n">Left</span> <span class="ow">or</span> <span class="n">left_turn</span> <span class="o">==</span> <span class="n">carla</span><span class="o">.</span><span class="n">LaneChange</span><span class="o">.</span><span class="n">Both</span><span class="p">)</span> <span class="ow">and</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span><span class="o">.</span><span class="n">lane_id</span> <span class="o">*</span> <span class="n">left_wpt</span><span class="o">.</span><span class="n">lane_id</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">left_wpt</span><span class="o">.</span><span class="n">lane_type</span> <span class="o">==</span> <span class="n">carla</span><span class="o">.</span><span class="n">LaneType</span><span class="o">.</span><span class="n">Driving</span><span class="p">:</span>
+            <span class="n">new_vehicle_state</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_behavior_is_vehicle_hazard</span><span class="p">(</span>
+                <span class="n">vehicle_list</span><span class="p">,</span>
+                <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">min_proximity_threshold</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_limit</span> <span class="o">/</span> <span class="mi">3</span><span class="p">),</span>
+                <span class="n">up_angle_th</span><span class="o">=</span><span class="mi">180</span><span class="p">,</span>
+                <span class="n">lane_offset</span><span class="o">=-</span><span class="mi">1</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">new_vehicle_state</span><span class="p">:</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">left_end_dis</span> <span class="o">=</span> <span class="n">get_next_until_junction</span><span class="p">(</span><span class="n">left_wpt</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">left_end_dis</span> <span class="o">&gt;</span> <span class="mi">40</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[PLANNER] Overtaking to the left!&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">overtake_counter</span> <span class="o">=</span> <span class="mi">200</span>
+                    <span class="n">left_plan</span> <span class="o">=</span> <span class="n">generate_change_lane_route</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span><span class="p">,</span> <span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">left_end_dis</span> <span class="o">-</span> <span class="mi">20</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">change_route_in_current_road</span><span class="p">(</span><span class="n">left_plan</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">right_turn</span> <span class="o">==</span> <span class="n">carla</span><span class="o">.</span><span class="n">LaneChange</span><span class="o">.</span><span class="n">Right</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span><span class="o">.</span><span class="n">lane_id</span> <span class="o">*</span> <span class="n">right_wpt</span><span class="o">.</span><span class="n">lane_id</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> \
+                <span class="n">right_wpt</span><span class="o">.</span><span class="n">lane_type</span> <span class="o">==</span> <span class="n">carla</span><span class="o">.</span><span class="n">LaneType</span><span class="o">.</span><span class="n">Driving</span><span class="p">:</span>
+            <span class="n">new_vehicle_state</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_behavior_is_vehicle_hazard</span><span class="p">(</span>
+                <span class="n">vehicle_list</span><span class="p">,</span>
+                <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">min_proximity_threshold</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_limit</span> <span class="o">/</span> <span class="mi">3</span><span class="p">),</span>
+                <span class="n">up_angle_th</span><span class="o">=</span><span class="mi">180</span><span class="p">,</span>
+                <span class="n">lane_offset</span><span class="o">=</span><span class="mi">1</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">new_vehicle_state</span><span class="p">:</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">right_end_dis</span> <span class="o">=</span> <span class="n">get_next_until_junction</span><span class="p">(</span><span class="n">right_wpt</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">right_end_dis</span> <span class="o">&gt;</span> <span class="mi">40</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[PLANNER] Overtaking to the right!&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">overtake_counter</span> <span class="o">=</span> <span class="mi">200</span>
+                    <span class="n">right_plan</span> <span class="o">=</span> <span class="n">generate_change_lane_route</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">right_end_dis</span> <span class="o">-</span> <span class="mi">20</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">change_route_in_current_road</span><span class="p">(</span><span class="n">right_plan</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_tailgating</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vehicle_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">carla</span><span class="o">.</span><span class="n">Actor</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method is in charge of tailgating behaviors.</span>
+
+<span class="sd">            :param location: current location of the agent</span>
+<span class="sd">            :param waypoint: current waypoint of the agent</span>
+<span class="sd">            :param vehicle_list: list of all the nearby vehicles</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">left_turn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span><span class="o">.</span><span class="n">left_lane_marking</span><span class="o">.</span><span class="n">lane_change</span>
+        <span class="n">right_turn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span><span class="o">.</span><span class="n">right_lane_marking</span><span class="o">.</span><span class="n">lane_change</span>
+
+        <span class="n">left_wpt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span><span class="o">.</span><span class="n">get_left_lane</span><span class="p">()</span>
+        <span class="n">right_wpt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span><span class="o">.</span><span class="n">get_right_lane</span><span class="p">()</span>
+
+        <span class="n">behind_vehicle_state</span><span class="p">,</span> <span class="n">behind_vehicle</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_behavior_is_vehicle_hazard</span><span class="p">(</span>
+            <span class="n">vehicle_list</span><span class="p">,</span>
+            <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">min_proximity_threshold</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_limit</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span>
+            <span class="n">up_angle_th</span><span class="o">=</span><span class="mi">180</span><span class="p">,</span>
+            <span class="n">low_angle_th</span><span class="o">=</span><span class="mi">160</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">behind_vehicle_state</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_speed</span> <span class="o">&lt;</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">get_speed</span><span class="p">(</span><span class="n">behind_vehicle</span><span class="p">)</span> <span class="o">*</span> <span class="mf">3.6</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">right_turn</span> <span class="o">==</span> <span class="n">carla</span><span class="o">.</span><span class="n">LaneChange</span><span class="o">.</span><span class="n">Right</span> <span class="ow">or</span> <span class="n">right_turn</span> <span class="o">==</span> <span class="n">carla</span><span class="o">.</span><span class="n">LaneChange</span><span class="o">.</span><span class="n">Both</span><span class="p">)</span> <span class="ow">and</span> \
+                    <span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span><span class="o">.</span><span class="n">lane_id</span> <span class="o">*</span> <span class="n">right_wpt</span><span class="o">.</span><span class="n">lane_id</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> \
+                    <span class="n">right_wpt</span><span class="o">.</span><span class="n">lane_type</span> <span class="o">==</span> <span class="n">carla</span><span class="o">.</span><span class="n">LaneType</span><span class="o">.</span><span class="n">Driving</span><span class="p">:</span>
+                <span class="n">new_vehicle_state</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_behavior_is_vehicle_hazard</span><span class="p">(</span>
+                    <span class="n">vehicle_list</span><span class="p">,</span>
+                    <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">min_proximity_threshold</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_limit</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span>
+                    <span class="n">up_angle_th</span><span class="o">=</span><span class="mi">180</span><span class="p">,</span>
+                    <span class="n">lane_offset</span><span class="o">=</span><span class="mi">1</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">new_vehicle_state</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[PLANNER] Tailgating, moving to the right!&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">tailgate_counter</span> <span class="o">=</span> <span class="mi">200</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">set_destination</span><span class="p">(</span><span class="n">right_wpt</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_waypoint</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="n">clean</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">left_turn</span> <span class="o">==</span> <span class="n">carla</span><span class="o">.</span><span class="n">LaneChange</span><span class="o">.</span><span class="n">Left</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span><span class="o">.</span><span class="n">lane_id</span> <span class="o">*</span> <span class="n">left_wpt</span><span class="o">.</span><span class="n">lane_id</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> \
+                    <span class="n">left_wpt</span><span class="o">.</span><span class="n">lane_type</span> <span class="o">==</span> <span class="n">carla</span><span class="o">.</span><span class="n">LaneType</span><span class="o">.</span><span class="n">Driving</span><span class="p">:</span>
+                <span class="n">new_vehicle_state</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_behavior_is_vehicle_hazard</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_vehicle_location</span><span class="p">,</span>
+                    <span class="n">vehicle_list</span><span class="p">,</span>
+                    <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">min_proximity_threshold</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_limit</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span>
+                    <span class="n">up_angle_th</span><span class="o">=</span><span class="mi">180</span><span class="p">,</span>
+                    <span class="n">lane_offset</span><span class="o">=-</span><span class="mi">1</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">new_vehicle_state</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[PLANNER] Tailgating, moving to the left!&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">tailgate_counter</span> <span class="o">=</span> <span class="mi">200</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">set_destination</span><span class="p">(</span><span class="n">left_wpt</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_waypoint</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="n">clean</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, OpenDILab.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
