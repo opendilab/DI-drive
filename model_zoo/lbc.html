@@ -1,77 +1,37 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>Learning by Cheating &mdash; DI-drive 0.1.2 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="from Continuous Intention to Continuous Trajectory" href="cict.html" />
     <link rel="prev" title="Conditional Imitation Learning" href="coil.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> DI-drive
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
                 0.1.2
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -79,18 +39,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
 </ul>
@@ -126,75 +75,33 @@
 <li class="toctree-l1"><a class="reference internal" href="../faq/index.html">FAQ</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">DI-drive</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="index.html">Model Zoo</a> &raquo;</li>
-        
       <li>Learning by Cheating</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/model_zoo/lbc.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="learning-by-cheating">
-<h1>Learning by Cheating<a class="headerlink" href="#learning-by-cheating" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="learning-by-cheating">
+<h1>Learning by Cheating<a class="headerlink" href="#learning-by-cheating" title="Permalink to this headline"></a></h1>
 <p><a class="reference external" href="https://arxiv.org/abs/1912.12294">Learning by Cheating(LBC)</a>
 is an Imitation Learning method which driving in Carla using waypoint prediction and
 two-stage training – cheating model and target model. The cheating model takes
@@ -202,19 +109,19 @@ ground-truth Bird-eye View image as input to teach the RGB input target policy.
 The prediction of the model is a waypoint list then the waypoint list is processed by
 a PID controller to get the final control singals including steer,
 throttle and brake.</p>
-<div class="figure align-center">
+<figure class="align-center">
 <img alt="image-lbc_1" src="../_images/image-lbc_1.png" />
-</div>
-<div class="section" id="datasets-collection">
-<h2>Datasets collection<a class="headerlink" href="#datasets-collection" title="Permalink to this headline">¶</a></h2>
+</figure>
+<section id="datasets-collection">
+<h2>Datasets collection<a class="headerlink" href="#datasets-collection" title="Permalink to this headline"></a></h2>
 <p>Pending</p>
-</div>
-<div class="section" id="model-training">
-<h2>Model training<a class="headerlink" href="#model-training" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="model-training">
+<h2>Model training<a class="headerlink" href="#model-training" title="Permalink to this headline"></a></h2>
 <p>Pending</p>
-</div>
-<div class="section" id="model-evaluation">
-<h2>Model evaluation<a class="headerlink" href="#model-evaluation" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="model-evaluation">
+<h2>Model evaluation<a class="headerlink" href="#model-evaluation" title="Permalink to this headline"></a></h2>
 <p>DI-drive provides benchmark evaluation for both cheating model and target model,
 together with pretrain weights.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python lbc_bev_eval.py
@@ -222,9 +129,9 @@ python lbc_image_eval.py
 </pre></div>
 </div>
 <p>Then you will get the performance table.</p>
-</div>
-<div class="section" id="model-testing">
-<h2>Model testing<a class="headerlink" href="#model-testing" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="model-testing">
+<h2>Model testing<a class="headerlink" href="#model-testing" title="Permalink to this headline"></a></h2>
 <p>DI-drive provides a simple entry for testing LBC models in a benchmark or Casezoo
 environment and visualize the running.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python lbc_bev_test.py
@@ -239,55 +146,38 @@ python lbc_image_test.py
 <span class="p">}</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="cict.html" class="btn btn-neutral float-right" title="from Continuous Intention to Continuous Trajectory" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="coil.html" class="btn btn-neutral float-left" title="Conditional Imitation Learning" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cict.html" class="btn btn-neutral float-right" title="from Continuous Intention to Continuous Trajectory" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, OpenDILab.
-
-    </p>
+    <p>&#169; Copyright 2021, OpenDILab.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

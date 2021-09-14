@@ -1,77 +1,37 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>Simulator Features &mdash; DI-drive 0.1.2 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Policy Features" href="policy_feature.html" />
     <link rel="prev" title="Features" href="index.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> DI-drive
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
                 0.1.2
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -79,18 +39,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
 </ul>
@@ -133,79 +82,37 @@
 <li class="toctree-l1"><a class="reference internal" href="../faq/index.html">FAQ</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">DI-drive</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="index.html">Features</a> &raquo;</li>
-        
       <li>Simulator Features</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/features/simulator_feature.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="simulator-features">
-<h1>Simulator Features<a class="headerlink" href="#simulator-features" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="simulator-features">
+<h1>Simulator Features<a class="headerlink" href="#simulator-features" title="Permalink to this headline"></a></h1>
 <div class="toctree-wrapper compound">
 </div>
-<div class="section" id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline"></a></h2>
 <p>DI-drive defines simualtor instance to unify the interfaces and standardize sub-modules. As a result, users can customize
 their simulator setting with a config dictionary, and get expected data by calling the instance’s methods.
 DI-drive currently uses Carla 0.9.9.4 for simulating Autonomous Driving. The Interaction between Carla server
@@ -214,9 +121,9 @@ The simulator contains a world map with roads, buildings and weather. The simula
 to control and get observations. The obervation may come from a <strong>sensor</strong> created in the simulator associated to hero
 vehicle, a <strong>planner</strong> in the simulator to get target waypoints and select road options, and other running status returned
 by methods.</p>
-</div>
-<div class="section" id="carla-simulator-configuring">
-<h2>Carla Simulator Configuring<a class="headerlink" href="#carla-simulator-configuring" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="carla-simulator-configuring">
+<h2>Carla Simulator Configuring<a class="headerlink" href="#carla-simulator-configuring" title="Permalink to this headline"></a></h2>
 <p>All the settings of simualtor can be customized by a config dict. Here
 we show the default setting of the simulator and explain its contents.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
@@ -244,8 +151,8 @@ we show the default setting of the simulator and explain its contents.</p>
 <p>Some of the configures can be changed by provided arguments when running
 <a class="reference internal" href="../api_doc/simulators.html#core.simulators.CarlaSimulator" title="core.simulators.carla_simulator.CarlaSimulator"><code class="xref py py-func docutils literal notranslate"><span class="pre">init</span></code></a> method, in order to make difference among episodes.</p>
 </div>
-<div class="section" id="common-configurations">
-<h3>Common configurations<a class="headerlink" href="#common-configurations" title="Permalink to this headline">¶</a></h3>
+<section id="common-configurations">
+<h3>Common configurations<a class="headerlink" href="#common-configurations" title="Permalink to this headline"></a></h3>
 <p>Here we explain some common configurations about world map and npc settings in simulator, the instruction of ‘planner’, ‘obs’ and
 ‘aug’ are shown next.</p>
 <ul>
@@ -364,9 +271,9 @@ we show the default setting of the simulator and explain its contents.</p>
 </li>
 </ul>
 <p>Users may need to check Carla documents for detailed information about configs.</p>
-</div>
-<div class="section" id="planner-configurations">
-<h3>Planner configurations<a class="headerlink" href="#planner-configurations" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="planner-configurations">
+<h3>Planner configurations<a class="headerlink" href="#planner-configurations" title="Permalink to this headline"></a></h3>
 <p>Here we explain the ‘planner’ key in config.</p>
 <p>The Planner in Carla simulator is modified from default Carla planners. A global planner in Carls Python API is used
 to generate route and road options from start to end location. The local planner is defined in DI-drive to add navigation
@@ -406,9 +313,9 @@ For more details, check the <a class="reference external" href="../api_doc/utils
 <p>You can define your own local planner in the simulator. Simply add the planner class in <code class="docutils literal notranslate"><span class="pre">PLANNER_DICT</span></code>
 in simulators.</p>
 </div>
-</div>
-<div class="section" id="sensor-configurations">
-<h3>Sensor configurations<a class="headerlink" href="#sensor-configurations" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="sensor-configurations">
+<h3>Sensor configurations<a class="headerlink" href="#sensor-configurations" title="Permalink to this headline"></a></h3>
 <p>Here we explain the ‘obs’ and ‘aug’ key in config</p>
 <p>Sensor config is used to set up sensors and get image observation in simulation. There are several types of
 sensors and images available to add into config list. You can add more than one sensor of same type.
@@ -473,15 +380,15 @@ value range of the augmentation.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="running-status">
-<h2>Running status<a class="headerlink" href="#running-status" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="running-status">
+<h2>Running status<a class="headerlink" href="#running-status" title="Permalink to this headline"></a></h2>
 <p>DI-drive simualtor can get and record some running status in each frame, including basic status, navigations,
 information about simulation. They are automatically checked in each frame. Simulator provides interfaces to
 get dictionary about these info, stored in each key.</p>
-<div class="section" id="status">
-<h3>Status<a class="headerlink" href="#status" title="Permalink to this headline">¶</a></h3>
+<section id="status">
+<h3>Status<a class="headerlink" href="#status" title="Permalink to this headline"></a></h3>
 <ul>
 <li><p>speed (float): speed in km/h</p></li>
 <li><p>location (np.ndarray): 3D location vector</p></li>
@@ -500,9 +407,9 @@ get dictionary about these info, stored in each key.</p>
 </li>
 <li><p>tl_dis (float): Dictance between vehicle and currrent road end</p></li>
 </ul>
-</div>
-<div class="section" id="navigation">
-<h3>Navigation<a class="headerlink" href="#navigation" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="navigation">
+<h3>Navigation<a class="headerlink" href="#navigation" title="Permalink to this headline"></a></h3>
 <ul>
 <li><p>agent_state (int): Agent navigation state</p>
 <blockquote>
@@ -535,65 +442,48 @@ get dictionary about these info, stored in each key.</p>
 <li><p>waypoint_list (np.ndarray): Array containing waypoints on the route ahead. Each element is a 4D vector, consisting of the position and forward vector in x-y coordinates</p></li>
 <li><p>speed_limit (float): Speed limit of current position. It may come from the limit in current road and computed by planner</p></li>
 </ul>
-</div>
-<div class="section" id="information">
-<h3>Information<a class="headerlink" href="#information" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="information">
+<h3>Information<a class="headerlink" href="#information" title="Permalink to this headline"></a></h3>
 <ul class="simple">
 <li><p>tick (int): Ticks for time in current episode</p></li>
 <li><p>timestamp (float): Real timestamp run in current episode</p></li>
 <li><p>total_lights (int): Total traffic lights met before</p></li>
 <li><p>total_lights_ran (int): Total red traffic light ran before</p></li>
 </ul>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="policy_feature.html" class="btn btn-neutral float-right" title="Policy Features" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="index.html" class="btn btn-neutral float-left" title="Features" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="policy_feature.html" class="btn btn-neutral float-right" title="Policy Features" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, OpenDILab.
-
-    </p>
+    <p>&#169; Copyright 2021, OpenDILab.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

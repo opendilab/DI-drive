@@ -1,77 +1,37 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>Datasets &mdash; DI-drive 0.1.2 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Benchmark Evaluation" href="carla_benchmark.html" />
     <link rel="prev" title="Visualization" href="visualize.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> DI-drive
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
                 0.1.2
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -79,18 +39,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
 </ul>
@@ -129,84 +78,42 @@
 <li class="toctree-l1"><a class="reference internal" href="../faq/index.html">FAQ</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">DI-drive</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="index.html">Features</a> &raquo;</li>
-        
       <li>Datasets</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/features/datasets.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="datasets">
-<h1>Datasets<a class="headerlink" href="#datasets" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="datasets">
+<h1>Datasets<a class="headerlink" href="#datasets" title="Permalink to this headline"></a></h1>
 <div class="toctree-wrapper compound">
 </div>
-<div class="section" id="benchmark-datasets">
-<h2>Benchmark Datasets<a class="headerlink" href="#benchmark-datasets" title="Permalink to this headline">¶</a></h2>
+<section id="benchmark-datasets">
+<h2>Benchmark Datasets<a class="headerlink" href="#benchmark-datasets" title="Permalink to this headline"></a></h2>
 <p>DI-drive defines a unified benchmark dataset format that makes data collection and loading prosedure easily for users.
 It is suggested to save datasets with <a class="reference internal" href="../api_doc/data.html#core.data.dataset_saver.BenchmarkDatasetSaver" title="core.data.dataset_saver.BenchmarkDatasetSaver"><code class="xref py py-class docutils literal notranslate"><span class="pre">BenchmarkDatasetSaver</span></code></a>.
 It can automatically create folders and save all senser data and measurements into datasets as desired form.</p>
-<div class="section" id="general-structure">
-<h3>General structure<a class="headerlink" href="#general-structure" title="Permalink to this headline">¶</a></h3>
+<section id="general-structure">
+<h3>General structure<a class="headerlink" href="#general-structure" title="Permalink to this headline"></a></h3>
 <p>A dataset directory should look like the structure below. The following sections
 will explain each one of the components described.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&lt;dataset_name&gt;
@@ -229,9 +136,9 @@ will explain each one of the components described.</p>
 </pre></div>
 </div>
 <p>A dataset contains dataset metadata, episode metadata, sensor data and measurements.</p>
-</div>
-<div class="section" id="dataset-metadata">
-<h3>Dataset metadata<a class="headerlink" href="#dataset-metadata" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="dataset-metadata">
+<h3>Dataset metadata<a class="headerlink" href="#dataset-metadata" title="Permalink to this headline"></a></h3>
 <p>Each dataset contains a metadata file with information provided by user.
 It may have the follwing contents:</p>
 <ul class="simple">
@@ -239,9 +146,9 @@ It may have the follwing contents:</p>
 <li><p>Collected suite</p></li>
 <li><p>Obs image types and names</p></li>
 </ul>
-</div>
-<div class="section" id="episode-metadata">
-<h3>Episode metadata<a class="headerlink" href="#episode-metadata" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="episode-metadata">
+<h3>Episode metadata<a class="headerlink" href="#episode-metadata" title="Permalink to this headline"></a></h3>
 <p>Each episode is stored in a folder.
 For each collected episode we generate a json file containing
 its general aspects that are:</p>
@@ -258,14 +165,14 @@ partitioned in simulation steps of 100 ms.
 For each step, we store data divided
 into two different categories, sensor data
 stored as PNG images, and measurement data stored as json files.</p>
-</div>
-<div class="section" id="sensor-data">
-<h3>Sensor data<a class="headerlink" href="#sensor-data" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="sensor-data">
+<h3>Sensor data<a class="headerlink" href="#sensor-data" title="Permalink to this headline"></a></h3>
 <p>All images collected are stored as png files. The name consists of its tag in observation configurations
 and the frame number.</p>
-</div>
-<div class="section" id="measurements">
-<h3>Measurements<a class="headerlink" href="#measurements" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="measurements">
+<h3>Measurements<a class="headerlink" href="#measurements" title="Permalink to this headline"></a></h3>
 <p>Measurements represent all the float data collected for each simulation
 step. Each measurement arranges its content in a fixed order,
 and stores them in a .lmdb file. The content is shown follow:</p>
@@ -287,61 +194,44 @@ and stores them in a .lmdb file. The content is shown follow:</p>
 <li><p>tl_dis (float)</p></li>
 </ul>
 <p>Their meaning is the same as the observation returned in <a class="reference internal" href="../api_doc/envs.html#core.envs.SimpleCarlaEnv" title="core.envs.simple_carla_env.SimpleCarlaEnv"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimpleCarlaEnv</span></code></a></p>
-</div>
-<div class="section" id="others">
-<h3>Others<a class="headerlink" href="#others" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="others">
+<h3>Others<a class="headerlink" href="#others" title="Permalink to this headline"></a></h3>
 <p>It is allowed to add user customized data into datasets. The data can be postpocessed and stored in an ‘other’ key,
 with no effect to measurements. Users can organize their necessary information into datasets freely.</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="carla_benchmark.html" class="btn btn-neutral float-right" title="Benchmark Evaluation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="visualize.html" class="btn btn-neutral float-left" title="Visualization" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="carla_benchmark.html" class="btn btn-neutral float-right" title="Benchmark Evaluation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, OpenDILab.
-
-    </p>
+    <p>&#169; Copyright 2021, OpenDILab.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

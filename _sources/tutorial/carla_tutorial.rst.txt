@@ -56,6 +56,6 @@ Then, just pull the Carla image and run with port.
 
     docker pull carlasim/carla:0.9.9.4
     # by default
-    docker run -p 2000-2002:9000:9002 --runtime=nvidia --gpus <gpu_id> carlasim/carla:0.9.9.4
+    docker run -p 2000-2002:9000-9002 --runtime=nvidia --gpus <gpu_id> carlasim/carla:0.9.9.4
     # with parameters
-    docker run -p 2000-2002:9000:9002 --runtime=nvidia --gpus <gpu_id> carlasim/carla:0.9.9.4 /bin/bash CarlaUE4.sh <list of paremeters>
+    docker run -p 2000-2002:9000-9002 --runtime=nvidia --gpus <gpu_id> carlasim/carla:0.9.9.4 /bin/bash CarlaUE4.sh <list of paremeters>

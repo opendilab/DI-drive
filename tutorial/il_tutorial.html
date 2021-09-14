@@ -1,77 +1,37 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>Simple Imitation Learning &mdash; DI-drive 0.1.2 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Simple Reinforcement Learning" href="rl_tutorial.html" />
     <link rel="prev" title="Auto policy running and visualization" href="auto_run.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> DI-drive
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
                 0.1.2
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -79,18 +39,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
 </ul>
@@ -122,75 +71,33 @@
 <li class="toctree-l1"><a class="reference internal" href="../faq/index.html">FAQ</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">DI-drive</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="index.html">Tutorial</a> &raquo;</li>
-        
       <li>Simple Imitation Learning</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/tutorial/il_tutorial.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="simple-imitation-learning">
-<span id="header-n2"></span><h1>Simple Imitation Learning<a class="headerlink" href="#simple-imitation-learning" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="simple-imitation-learning">
+<span id="header-n2"></span><h1>Simple Imitation Learning<a class="headerlink" href="#simple-imitation-learning" title="Permalink to this headline"></a></h1>
 <p>Here we will show you how to use <strong>DI-drive</strong> for imitation learning research
 of autopilot. <strong>DI-drive</strong> supports
 <a class="reference external" href="http://vladlen.info/papers/conditional-imitation.pdf">Conditional Imitation Learning(CIL)</a>
@@ -205,8 +112,8 @@ steer, throttle and brake under certain navigation command.</p>
 <li><p>Model evaluation</p></li>
 </ul>
 <p>For now, we will show you step by step</p>
-<div class="section" id="datasets-collection">
-<span id="header-n14"></span><h2>Datasets collection<a class="headerlink" href="#datasets-collection" title="Permalink to this headline">¶</a></h2>
+<section id="datasets-collection">
+<span id="header-n14"></span><h2>Datasets collection<a class="headerlink" href="#datasets-collection" title="Permalink to this headline"></a></h2>
 <p>To collect the datasets, the first step is to start a Carla server</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>./CarlaUE4.sh -fps<span class="o">=</span><span class="m">10</span> -benchmark -world-port<span class="o">=[</span>PORT NUM<span class="o">]</span>
 </pre></div>
@@ -230,9 +137,9 @@ single Carla thread. You can speed up this process by starting multi-carla envs.
 <p>If you finished this step, there should be a <code class="docutils literal notranslate"><span class="pre">.npy</span></code> file under
 <code class="docutils literal notranslate"><span class="pre">_preloads</span></code>.</p>
 <p>Once you finish the data collection, the next step is to train an CIL model.</p>
-</div>
-<div class="section" id="model-training">
-<span id="header-n26"></span><h2>Model training<a class="headerlink" href="#model-training" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="model-training">
+<span id="header-n26"></span><h2>Model training<a class="headerlink" href="#model-training" title="Permalink to this headline"></a></h2>
 <p>The training part of IL enables a model to mimic the
 output of an expert policy with the same input. To apply the model training
 with <strong>DI-drive</strong> with default training configuration, just run</p>
@@ -246,16 +153,16 @@ above.</p>
 </pre></div>
 </div>
 <p>You will see loss printed on the screen like</p>
-<div class="figure align-center">
+<figure class="align-center">
 <a class="reference internal image-reference" href="../_images/image-il_1.png"><img alt="image-il_1" src="../_images/image-il_1.png" style="width: 300px;" /></a>
-</div>
+</figure>
 <p>and the training checkpoints will be saved under <code class="docutils literal notranslate"><span class="pre">_logs</span></code> folder. The
 training process will last for 7~8 hours (i7-9900k and GeForce RTX 2080Ti), up to your machine hardware.</p>
 <p>if you want to customize your training configuration such as the model architecture and
 learning rates, please modify the config in <code class="docutils literal notranslate"><span class="pre">coil_train.py</span></code></p>
-</div>
-<div class="section" id="model-evaluation">
-<span id="header-n35"></span><h2>Model evaluation<a class="headerlink" href="#model-evaluation" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="model-evaluation">
+<span id="header-n35"></span><h2>Model evaluation<a class="headerlink" href="#model-evaluation" title="Permalink to this headline"></a></h2>
 <p>To evaluate your trained model with <strong>DI-drive</strong>, just run</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">coil_eval</span><span class="o">.</span><span class="n">py</span>
 </pre></div>
@@ -266,62 +173,45 @@ learning rates, please modify the config in <code class="docutils literal notran
 </pre></div>
 </div>
 <p>You can visual the real-time evaluation process like</p>
-<div class="figure align-center">
+<figure class="align-center">
 <a class="reference internal image-reference" href="../_images/image-il_2.png"><img alt="image-il_2" src="../_images/image-il_2.png" style="width: 500px;" /></a>
-</div>
+</figure>
 <p>When the evaluation is finished, you will get a performance table.</p>
 <p>You can customize the evaluation configuration by modifying the config in
 <code class="docutils literal notranslate"><span class="pre">coil_eval.py</span></code></p>
 <p>Congratulations! You have finished the imitation learning tutorial.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="rl_tutorial.html" class="btn btn-neutral float-right" title="Simple Reinforcement Learning" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="auto_run.html" class="btn btn-neutral float-left" title="Auto policy running and visualization" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="rl_tutorial.html" class="btn btn-neutral float-right" title="Simple Reinforcement Learning" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, OpenDILab.
-
-    </p>
+    <p>&#169; Copyright 2021, OpenDILab.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>
