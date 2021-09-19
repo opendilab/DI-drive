@@ -11,6 +11,7 @@ from collect_pm import CollectPerspectiveImage, InversePerspectiveMapping
 
 config = dict(
     env=dict(
+        env_num=5,
         simulator=dict(
             disable_two_wheels=True,
             waypoint_num=32,
@@ -43,30 +44,29 @@ config = dict(
             ),
             verbose=True,
         ),
-        # visualize=dict(
-        #     type='rgb',
-        #     outputs=['show']
-        # ),
         col_is_failure=True,
-        stuck_is_failure=True
+        stuck_is_failure=True,
+        manager=dict(
+            auto_reset=False,
+            shared_memory=False,
+            context='spawn',
+            max_retry=1,
+        ),
+        wrapper=dict(suite='FullTown01-v3', ),
     ),
-    env_num=5,
-    episode_nums=40,
-    env_manager=dict(
-        auto_reset=False,
-        shared_memory=False,
-    ),
-    env_wrapper=dict(suite='FullTown01-v3', ),
     server=[
         dict(carla_host='localhost', carla_ports=[9000, 9010, 2]),
     ],
     policy=dict(
         target_speed=25,
         noise=False,
+        collect=dict(
+            n_episode=5,
+            dir_path='datasets/cict_datasets_train',
+            npy_prefix='_preloads',
+            collector=dict(suite='FullTown01-v3', ),
+        ),
     ),
-    collector=dict(suite='FullTown01-v3', ),
-    dir_path='datasets/cict_datasets_train',
-    npy_prefix='_preloads'
 )
 
 scale = 12.0
@@ -460,16 +460,16 @@ def save_as_npy(save_dir, episode_path):
     ipm_file.sort()
     ipm_file = [os.path.join(episode_path, 'ipm', x) for x in ipm_file]
 
-    if not os.path.exists(config['npy_prefix']):
-        os.mkdir(config['npy_prefix'])
+    if not os.path.exists(config['policy']['collect']['npy_prefix']):
+        os.mkdir(config['policy']['collect']['npy_prefix'])
     np.save(
-        '%s/%s.npy' % (config['npy_prefix'], episode_path),
+        '%s/%s.npy' % (config['policy']['collect']['npy_prefix'], episode_path),
         [img_file, dest_file, dest_file2, pm_file, ipm_file, measurements_list]
     )
 
 
 if __name__ == '__main__':
-    save_dir = config['dir_path']
+    save_dir = config['policy']['collect']['dir_path']
     epi_folder = [x for x in os.listdir(save_dir) if x.startswith('epi')]
     #epi_folder = ['episode_00038','episode_00039']
     #epi_folder = ['episode_00037']

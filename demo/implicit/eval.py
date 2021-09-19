@@ -12,8 +12,8 @@ from ding.utils import set_pkg_seed
 from ding.utils.default_helper import deep_merge_dicts
 
 eval_config = dict(
-    env_num=8,
     env=dict(
+        env_num=8,
         simulator=dict(
             verbose=False,
             planner=dict(type='basic', resolution=2.0, min_distance=1.5),
@@ -29,10 +29,12 @@ eval_config = dict(
                 ),
             ),
         ),
-    ),
-    env_manager=dict(
-        shared_memory=False,
-        auto_reset=False,
+        manager=dict(
+            shared_memory=False,
+            auto_reset=False,
+            context='spawn',
+            max_retry=1,
+        ),
     ),
     server=[
         dict(carla_host='localhost', carla_ports=[9000, 9016, 2]),
@@ -47,19 +49,21 @@ eval_config = dict(
 main_config = EasyDict(eval_config)
 
 
-def wrapped_env(env_cfg, host, port, tm_port):
+def wrapped_env(env_cfg, host, port, tm_port=None):
     return CarlaEnvWrapper(SimpleCarlaEnv(env_cfg, host, port, tm_port))
 
 
 def main(cfg, policy_cfg, seed=0):
-    cfg.env_manager = deep_merge_dicts(SyncSubprocessEnvManager.default_config(), cfg.env_manager)
+    cfg.env.manager = deep_merge_dicts(SyncSubprocessEnvManager.default_config(), cfg.env.manager)
 
     tcp_list = parse_carla_tcp(cfg.server)
-    env_num = cfg.env_num
+    env_num = cfg.env.env_num
+    assert len(tcp_list) >= env_num, \
+        "Carla server not enough! Need {} servers but only found {}.".format(env_num, len(tcp_list))
 
     evaluate_env = SyncSubprocessEnvManager(
-        env_fn=[partial(wrapped_env, cfg.env, *tcp_list[i], tcp_list[i][1] + 500) for i in range(env_num)],
-        cfg=cfg.env_manager,
+        env_fn=[partial(wrapped_env, cfg.env, *tcp_list[i]) for i in range(env_num)],
+        cfg=cfg.env.manager,
     )
     evaluate_env.seed(seed)
     set_pkg_seed(seed)

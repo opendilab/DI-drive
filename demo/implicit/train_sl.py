@@ -138,10 +138,10 @@ def train_or_eval(criterion, net, data, optim, is_train, config, epoch, writter)
             for key in metrics.keys():
                 writter.add_scalar('train/' + key, metrics[key], i + epoch_iters * epoch)
 
-    if not is_train:
-        metrics = loss_metric.get_metric_dict()
-        for key in metrics.keys():
-            writter.add_scalar('val/' + key, metrics[key], i + epoch_iters * epoch)
+        if not is_train:
+            metrics = loss_metric.get_metric_dict()
+            for key in metrics.keys():
+                writter.add_scalar('val/' + key, metrics[key], i + epoch_iters * epoch)
 
 
 def train(config):
@@ -171,7 +171,7 @@ def train(config):
             logging.info("=> lodding checkpoint '{}'".format(checkpoint))
             net.load_state_dict(torch.load(checkpoint))
         else:
-            logging.warn("=> no checkpoint found at '{}'".format(resume_path))
+            logging.warn("=> no checkpoint found at '{}'".format(checkpoint))
 
     net = torch.nn.DataParallel(net, device_ids=config['learner']['gpus'])
 
@@ -188,7 +188,7 @@ def train(config):
         train_or_eval(criterion, net, data_train, optim, True, config, epoch, writter)
         train_or_eval(criterion, net, data_val, None, False, config, epoch, writter)
 
-        torch.save(net.module.state_dict(), str(Path(config['learner']['log_dir']) / ('model-%d.pth.tar' % epoch)))
+        torch.save(net.state_dict(), str(Path(config['learner']['log_dir']) / ('model-%d.pth.tar' % epoch)))
         scheduler.step()
 
 

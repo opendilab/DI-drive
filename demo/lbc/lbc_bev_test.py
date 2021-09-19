@@ -37,15 +37,17 @@ lbc_config = dict(
             type='birdview',
             outputs=['show']
         ),
+        wrapper=dict(),
     ),
-    env_wrapper=dict(),
     server=[dict(carla_host='localhost', carla_ports=[9000, 9002, 2])],
     policy=dict(
         ckpt_path='model-256.th',
+        eval=dict(
+            evaluator=dict(
+                render=True,
+            ),
+        )
     ),
-    eval=dict(
-        render=True,
-    )
 )
 
 main_config = EasyDict(lbc_config)
@@ -57,6 +59,7 @@ def wrapped_env(env_cfg, host, port, tm_port=None):
 
 def main(cfg, seed=0):
     tcp_list = parse_carla_tcp(cfg.server)
+    assert len(tcp_list) > 0, "No Carla server found!"
 
     carla_env = wrapped_env(cfg.env, *tcp_list[0])
     carla_env.seed(seed)
@@ -65,7 +68,7 @@ def main(cfg, seed=0):
     state_dict = torch.load(cfg.policy.ckpt_path)
     lbc_policy.load_state_dict(state_dict)
 
-    evaluator = SingleCarlaEvaluator(cfg.eval, carla_env, lbc_policy)
+    evaluator = SingleCarlaEvaluator(cfg.policy.eval.evaluator, carla_env, lbc_policy)
     evaluator.eval()
 
     evaluator.close()

@@ -334,7 +334,8 @@ class BasicPlanner(object):
         """
         self._waypoints_queue.clear()
         self._waypoints_buffer.clear()
-        self._route.clear()
+        if self._route is not None:
+            self._route.clear()
         self.distances.clear()
 
     @classmethod

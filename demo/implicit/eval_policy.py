@@ -65,7 +65,7 @@ class ImplicitPolicy():
 
             print("we load RL model ", current_model)
             checkpoint = torch.load(current_model)
-            checkpoint = checkpoint['model']
+            #checkpoint = checkpoint['model']
 
             # 1. filter out unnecessary keys
             pretrained_dict = {k: v for k, v in checkpoint.items() if k in current_RL_model_dict}

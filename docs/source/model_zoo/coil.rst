@@ -43,6 +43,7 @@ modifying the configuration.
 
     config = dict(
         env=dict(
+            env_num=5,
             simulator=dict(
                 disable_two_wheels=True,
                 waypoint_num=32,
@@ -63,29 +64,30 @@ modifying the configuration.
             ),
             col_is_failure=True,
             stuck_is_failure=True,
-        ),
-        env_num=1,
-        episode_nums=10,
-        env_manager=dict(
-            auto_reset=False,
-            shared_memory=False,
-        ),
-        env_wrapper=dict(
-            suite='FullTown01-v1',
-        ),
-        collector=dict(
-            suite='FullTown01-v1',
+            manager=dict(
+                auto_reset=False,
+                shared_memory=False,
+                context='spawn',
+                max_retry=1,
+            ),
+            wrapper=dict(),
         ),
         server=[
-            dict(carla_host='localhost', carla_ports=[8000, 8002, 2]),
+            dict(carla_host='localhost', carla_ports=[9000, 9010, 2]),
         ],
         policy=dict(
             target_speed=25,
             noise=True,
+            collect=dict(
+                n_episode=5,
+                dir_path='./datasets_train/cils_datasets_train',
+                collector=dict(
+                    suite='FullTown01-v1',
+                ),
+            )
         ),
-        dir_path='./datasets_train_collector/cils_datasets_train',
     )
-  
+
 .. _header-n75:
 
 Model training
@@ -150,8 +152,8 @@ evaluation process, you can modify the configuration in ``coil_eval.py``.
 .. code:: python
 
     autoeval_config = dict(
-        env_num=5,
         env=dict(
+            env_num=5,
             simulator=dict(
                 verbose=False,
                 obs=(
@@ -161,26 +163,30 @@ evaluation process, you can modify the configuration in ``coil_eval.py``.
                         size=[800, 600],
                         position=[2.0, 0.0, 1.4],
                         rotation=[-15, 0, 0],
-                    ), dict(
-                        name='birdview',
-                        type='bev',
-                        size=[500, 500],
-                        pixels_per_meter=8,
-                    )
+                    ),
                 ),
                 planner=dict(type='behavior', ),
             ),
+            manager=dict(
+                shared_memory=False,
+                auto_reset=False,
+                context='spawn',
+                max_retry=1,
+            ),
         ),
-        env_manager=dict(
-            shared_memory=False,
-            auto_reset=False,
+        server=[
+            dict(carla_host='localhost', carla_ports=[9000, 9010, 2])
+        ],
+        policy=dict(
+            target_speed=40,
+            eval=dict(
+                evaluator=dict(
+                    suite='FullTown02-v1',
+                    episodes_per_suite=5,
+                    save_files=True,
+                ),
+            ),
         ),
-        server=[dict(carla_host='localhost', carla_ports=[9000, 9010, 2])],
-        eval=dict(
-            suite='FullTown02-v1',
-            episodes_per_suite=10,
-        ),
-        policy=dict(target_speed=40, ),
     )
 
     policy_config = dict(

@@ -40,28 +40,30 @@ def post_process(datasets_path):
 
 
 def main(cfg, seed=0):
-    cfg.env_manager = deep_merge_dicts(SyncSubprocessEnvManager.default_config(), cfg.env_manager)
+    cfg.env.manager = deep_merge_dicts(SyncSubprocessEnvManager.default_config(), cfg.env.manager)
 
     tcp_list = parse_carla_tcp(cfg.server)
-    env_num = cfg.env_num
+    env_num = cfg.env.env_num
+    assert len(tcp_list) >= env_num, \
+        "Carla server not enough! Need {} servers but only found {}.".format(env_num, len(tcp_list))
 
     collector_env = SyncSubprocessEnvManager(
-        env_fn=[partial(wrapped_env, cfg.env, cfg.env_wrapper, *tcp_list[i]) for i in range(env_num)],
-        cfg=cfg.env_manager,
+        env_fn=[partial(wrapped_env, cfg.env, cfg.env.wrapper, *tcp_list[i]) for i in range(env_num)],
+        cfg=cfg.env.manager,
     )
     collector_env.seed(seed)
 
     policy = AutoPIDPolicy(cfg.policy)
 
-    collector = CarlaBenchmarkCollector(cfg.collector, collector_env, policy.collect_mode)
+    collector = CarlaBenchmarkCollector(cfg.policy.collect.collector, collector_env, policy.collect_mode)
 
-    if not os.path.exists(cfg.dir_path):
-        os.makedirs(cfg.dir_path)
+    if not os.path.exists(cfg.policy.collect.dir_path):
+        os.makedirs(cfg.policy.collect.dir_path)
 
     collected_episodes = 0
-    saver = CICTBenchmarkDatasetSaver(cfg.dir_path, cfg.env.simulator.obs, post_process_fn=cict_post_process_fn)
+    saver = CICTBenchmarkDatasetSaver(cfg.policy.collect.dir_path, cfg.env.simulator.obs, post_process_fn=cict_post_process_fn)
 
-    while collected_episodes < cfg.episode_nums:
+    while collected_episodes < cfg.policy.collect.n_episode:
         # Sampling data from environments
         print('start collect data')
         new_data = collector.collect(n_episode=env_num)
@@ -70,7 +72,7 @@ def main(cfg, seed=0):
         collected_episodes += env_num
 
     collector_env.close()
-    post_process(cfg.dir_path)
+    post_process(cfg.policy.collect.dir_path)
 
 
 if __name__ == '__main__':

@@ -47,6 +47,7 @@ class SimpleCarlaEnv(BaseCarlaEnv):
         off_route_is_failure=False,
         off_route_distance=6,
         success_distance=5,
+        success_reward=10,
         stuck_len=300,
         max_speed=5,
         visualize=None,
@@ -85,6 +86,7 @@ class SimpleCarlaEnv(BaseCarlaEnv):
         self._off_route_distance = self._cfg.off_route_distance
 
         self._success_distance = self._cfg.success_distance
+        self._success_reward = self._cfg.success_reward
         self._max_speed = self._cfg.max_speed
         self._collided = False
         self._stuck = False
@@ -354,7 +356,7 @@ class SimpleCarlaEnv(BaseCarlaEnv):
         goal_reward = 0
         plan_distance = self._simulator.end_distance
         if self.is_success():
-            goal_reward += self._finish_reward
+            goal_reward += self._success_reward
         elif self.is_failure():
             goal_reward -= -1
 

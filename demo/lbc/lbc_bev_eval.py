@@ -13,8 +13,8 @@ from demo.lbc.lbc_env_wrapper import LBCEnvWrapper
 
 
 lbc_config = dict(
-    env_num=5,
     env=dict(
+        env_num=5,
         simulator=dict(
             town='Town01',
             disable_two_wheels=True,
@@ -37,21 +37,25 @@ lbc_config = dict(
                 ),
             ),
         ),
+        manager=dict(
+            shared_memory=False,
+            auto_reset=False,
+            context='spawn',
+            max_retry=1,
+        ),
+        wrapper=dict(),
     ),
-    env_manager=dict(
-        shared_memory=False,
-        auto_reset=False,
-    ),
-    env_wrapper=dict(),
     server=[dict(carla_host='localhost', carla_ports=[9000, 9002, 2])],
     policy=dict(
         ckpt_path='model-256.th',
+        eval=dict(
+            evaluator=dict(
+                suite='FullTown01-v3',
+                episodes_per_suite=25,
+                weathers=[1],
+            )
+        ),
     ),
-    eval=dict(
-        suite='FullTown01-v3',
-        episodes_per_suite=25,
-        weathers=[1],
-    )
 )
 
 main_config = EasyDict(lbc_config)
@@ -62,12 +66,15 @@ def wrapped_env(env_cfg, host, port, tm_port=None):
 
 
 def main(cfg, seed=0):
-    cfg.env_manager = deep_merge_dicts(AsyncSubprocessEnvManager.default_config(), cfg.env_manager)
+    cfg.env.manager = deep_merge_dicts(AsyncSubprocessEnvManager.default_config(), cfg.env.manager)
     tcp_list = parse_carla_tcp(cfg.server)
+    env_num = cfg.env.env_num
+    assert len(tcp_list) >= env_num, \
+        "Carla server not enough! Need {} servers but only found {}.".format(env_num, len(tcp_list))
 
     carla_env = AsyncSubprocessEnvManager(
-        env_fn=[partial(wrapped_env, cfg.env, *tcp_list[i]) for i in range(cfg.env_num)],
-        cfg=cfg.env_manager,
+        env_fn=[partial(wrapped_env, cfg.env, *tcp_list[i]) for i in range(env_num)],
+        cfg=cfg.env.manager,
     )
 
     carla_env.seed(seed)
@@ -76,7 +83,7 @@ def main(cfg, seed=0):
     state_dict = torch.load(cfg.policy.ckpt_path)
     lbc_policy.load_state_dict(state_dict)
 
-    evaluator = CarlaBenchmarkEvaluator(cfg.eval, carla_env, lbc_policy)
+    evaluator = CarlaBenchmarkEvaluator(cfg.policy.eval.evaluator, carla_env, lbc_policy)
     evaluator.eval()
 
     evaluator.close()

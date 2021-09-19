@@ -92,9 +92,9 @@ class ImplicitCarlaEnv(BaseCarlaEnv):
         self.last_order = 0
 
     def _init_carla_simulator(self):
-        print(self.host, self.port, self.port + 500)
+        print(self.host, self.port)
         self._simulator = CarlaSimulator(
-            cfg=self._simulator_cfg, client=None, host=self.host, port=self.port, tm_port=self.port + 500
+            cfg=self._simulator_cfg, client=None, host=self.host, port=self.port
         )
         self._launched_simulator = True
 
@@ -457,7 +457,7 @@ class ImplicitCarlaEnv(BaseCarlaEnv):
         self._final_eval_reward = 0.
         self._timeout = self._simulator._planner.timeout
         self.new_obs = self._get_obs()
-        obs={}
+        obs = {}
         for key in ['speed', 'steer', 'image', 'targets', 'order']:
             obs[key] = self.new_obs[key]
         obs = to_ndarray(obs)

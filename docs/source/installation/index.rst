@@ -48,7 +48,7 @@ Or try to install manually via PyPI:
 
 .. code-block:: bash
 
-    pip install DI-engine
+    pip install di-engine==0.1.1
 
 Download and install Carla Python API
 ============================================

@@ -17,6 +17,7 @@ from core.utils.others.tcp_helper import parse_carla_tcp
 
 config = dict(
     env=dict(
+        env_num=5,
         simulator=dict(
             disable_two_wheels=True,
             waypoint_num=32,
@@ -37,25 +38,28 @@ config = dict(
         ),
         col_is_failure=True,
         stuck_is_failure=True,
-    ),
-    env_num=1,
-    episode_nums=5,
-    env_manager=dict(
-        auto_reset=False,
-        shared_memory=False,
-    ),
-    env_wrapper=dict(),
-    collector=dict(
-        suite='FullTown01-v1',
+        manager=dict(
+            auto_reset=False,
+            shared_memory=False,
+            context='spawn',
+            max_retry=1,
+        ),
+        wrapper=dict(),
     ),
     server=[
-        dict(carla_host='localhost', carla_ports=[5000, 5002, 2]),
+        dict(carla_host='localhost', carla_ports=[9000, 9010, 2]),
     ],
     policy=dict(
         target_speed=25,
         noise=True,
+        collect=dict(
+            n_episode=5,
+            dir_path='./datasets_train/cils_datasets_train',
+            collector=dict(
+                suite='FullTown01-v1',
+            ),
+        )
     ),
-    dir_path='./datasets_train/cils_datasets_train',
 )
 
 main_config = EasyDict(config)
@@ -108,27 +112,29 @@ def post_process(datasets_path):
 
 
 def main(cfg, seed=0):
-    cfg.env_manager = deep_merge_dicts(SyncSubprocessEnvManager.default_config(), cfg.env_manager)
+    cfg.env.manager = deep_merge_dicts(SyncSubprocessEnvManager.default_config(), cfg.env.manager)
 
     tcp_list = parse_carla_tcp(cfg.server)
-    env_num = cfg.env_num
+    env_num = cfg.env.env_num
+    assert len(tcp_list) >= env_num, \
+        "Carla server not enough! Need {} servers but only found {}.".format(env_num, len(tcp_list))
 
     collector_env = SyncSubprocessEnvManager(
-        env_fn=[partial(wrapped_env, cfg.env, cfg.env_wrapper, *tcp_list[i]) for i in range(env_num)],
-        cfg=cfg.env_manager,
+        env_fn=[partial(wrapped_env, cfg.env, cfg.env.wrapper, *tcp_list[i]) for i in range(env_num)],
+        cfg=cfg.env.manager,
     )
     collector_env.seed(seed)
 
     policy = AutoPIDPolicy(cfg.policy)
 
-    collector = CarlaBenchmarkCollector(cfg.collector, collector_env, policy.collect_mode)
+    collector = CarlaBenchmarkCollector(cfg.policy.collect.collector, collector_env, policy.collect_mode)
 
-    if not os.path.exists(cfg.dir_path):
-        os.makedirs(cfg.dir_path)
+    if not os.path.exists(cfg.policy.collect.dir_path):
+        os.makedirs(cfg.policy.collect.dir_path)
 
     collected_episodes = -1
-    saver = BenchmarkDatasetSaver(cfg.dir_path, cfg.env.simulator.obs, cils_postprocess)
-    while collected_episodes < cfg.episode_nums:
+    saver = BenchmarkDatasetSaver(cfg.policy.collect.dir_path, cfg.env.simulator.obs, cils_postprocess)
+    while collected_episodes < cfg.policy.collect.n_episode:
         # Sampling data from environments
         print('start collect data')
         new_data = collector.collect(n_episode=env_num)
@@ -137,7 +143,7 @@ def main(cfg, seed=0):
         saver.save_episodes_data(new_data, start_episode=collected_episodes)
 
     collector_env.close()
-    post_process(cfg.dir_path)
+    post_process(cfg.policy.collect.dir_path)
 
 
 if __name__ == '__main__':

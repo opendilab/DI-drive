@@ -3,25 +3,17 @@ Copyright 2021 OpenDILab. All Rights Reserved:
 Description:
 '''
 
-from functools import partial
 import numpy as np
-import torch
-import PIL.Image as Image
 import os
 
 from easydict import EasyDict
-from ding.envs import SyncSubprocessEnvManager
 from ding.utils import set_pkg_seed
-from ding.utils.default_helper import deep_merge_dicts
-
 from core.envs import SimpleCarlaEnv, CarlaEnvWrapper
-from core.eval import CarlaBenchmarkEvaluator
+from core.eval import SingleCarlaEvaluator
 from core.utils.others.tcp_helper import parse_carla_tcp
-from ding.torch_utils.data_helper import to_tensor
 from demo.cict_demo.cict_policy import CICTPolicy
 
 autoeval_config = dict(
-    env_num=1,
     env=dict(
         simulator=dict(
             verbose=False,
@@ -50,20 +42,24 @@ autoeval_config = dict(
             ),
             planner=dict(type='behavior', resolution=1),
         ),
-        visualize=dict(type='rgb', outputs=['video']),
         col_is_failure=True,
         stuck_is_failure=True,
+        visualize=dict(type='rgb', outputs=['show']),
+        wrapper=dict(
+            suite='FullTown02-v1',
+        ),
     ),
-    env_manager=dict(
-        shared_memory=False,
-        auto_reset=False,
+    server=[
+        dict(carla_host='localhost', carla_ports=[9000, 9002, 2])
+    ],
+    policy=dict(
+        eval=dict(
+            evaluator=dict(
+                render=True,
+                transform_obs=True,
+            ),
+        ),
     ),
-    server=[dict(carla_host='localhost', carla_ports=[9000, 9010, 2])],
-    eval=dict(
-        suite='FullTown01-v1',
-        episodes_per_suite=5,
-    ),
-    policy=dict(target_speed=25, ),
 )
 
 policy_config = dict(
@@ -105,59 +101,16 @@ main_config = EasyDict(autoeval_config)
 main_config.policy.update(policy_config)
 
 
-def wrapped_env(env_cfg, host, port, tm_port):
-    return CarlaEnvWrapper(SimpleCarlaEnv(env_cfg, host, port, tm_port))
-
-
-'''
-def dataset_test():
-    data_dir = '/data3/yg/cict_datasets_train_d'
-    _policy = CICTPolicy(main_config.policy).eval_mode
-
-    for n in range(10):
-        npy_path = '_preloads2/episode_%05d.npy' % n
-        episode_path = 'episode_%05d' % n
-        img_name, _, dest_name2, _, _, measurement = np.load(npy_path, allow_pickle=True)
-        _policy.reset([n])
-        for i in range(220, len(dest_name2)):
-            data = {}
-            img = Image.open(os.path.join(data_dir, img_name[i])).convert("RGB")
-            data['rgb'] = np.array(img)[:, :, ::-1].copy()
-            #print(data['rgb'].shape)
-            data['timestamp'] = measurement[i]['time']
-            data['location'] = measurement[i]['location']
-            data['rotation'] = measurement[i]['rotation']
-            data['velocity'] = measurement[i]['velocity']
-            data['lidar'] = np.load(os.path.join(data_dir, img_name[i].replace('rgb','lidar').replace('png', 'npy')))
-            data['waypoint_list'] = np.load(
-                os.path.join(data_dir, img_name[i].replace('rgb','waypoints').replace('png', 'npy')))
-            real_control = {}
-            real_control['steer'] = measurement[i]['steer']
-            real_control['brake'] = measurement[i]['brake']
-            real_control['throttle'] = measurement[i]['throttle']
-            data = to_tensor(data)
-            pred_control = _policy.forward({'0': data})
-            pred_control = pred_control['0']
-            print(n, i)
-            print(pred_control)
-            print(real_control)
-'''
-
-
 def main(cfg, seed=0):
-    cfg.env_manager = deep_merge_dicts(SyncSubprocessEnvManager.default_config(), cfg.env_manager)
-
     tcp_list = parse_carla_tcp(cfg.server)
-    env_num = cfg.env_num
+    assert len(tcp_list) > 0, "No Carla server found!"
+    host, port = tcp_list[0]
 
-    evaluate_env = SyncSubprocessEnvManager(
-        env_fn=[partial(wrapped_env, cfg.env, *tcp_list[i], tcp_list[i][1] + 500) for i in range(env_num)],
-        cfg=cfg.env_manager,
-    )
-    evaluate_env.seed(seed)
+    carla_env = CarlaEnvWrapper(SimpleCarlaEnv(cfg.env, host, port,), cfg.env.wrapper)
+    carla_env.seed(seed)
     set_pkg_seed(seed)
-    auto_policy = CICTPolicy(cfg.policy)
-    evaluator = CarlaBenchmarkEvaluator(cfg.eval, evaluate_env, auto_policy.eval_mode)
+    policy = CICTPolicy(cfg.policy)
+    evaluator = SingleCarlaEvaluator(cfg.policy.eval.evaluator, carla_env, policy.eval_mode)
     evaluator.eval()
     evaluator.close()
 

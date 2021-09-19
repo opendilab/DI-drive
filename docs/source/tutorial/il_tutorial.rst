@@ -111,7 +111,7 @@ Note that you have change the checkpoint path and Carla server host/port in ``co
 .. code:: python
 
     ckpt_path='<path_to_your_checkpoint>'
-    server=[dict(carla_host='localhost', carla_ports=[9000, 9002, 2])],
+    server=[dict(carla_host='localhost', carla_ports=[9000, 9010, 2])],
 
 You can visual the real-time evaluation process like
 

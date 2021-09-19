@@ -16,6 +16,7 @@ from ding.utils.default_helper import deep_merge_dicts
 
 config = dict(
     env=dict(
+        env_num=5,
         simulator=dict(
             disable_two_wheels=True,
             waypoint_num=32,
@@ -48,22 +49,25 @@ config = dict(
         ),
         col_is_failure=True,
         stuck_is_failure=True,
+        manager=dict(
+            auto_reset=False,
+            shared_memory=False,
+            context='spawn',
+            max_retry=1,
+        ),
+        wrapper=dict(),
     ),
-    env_num=5,
-    save_dir='dataset/',
-    episode_nums=50,
-    env_manager=dict(
-        auto_reset=False,
-        shared_memory=False,
-    ),
-    env_wrapper=dict(),
-    collector=dict(),
     server=[
         dict(carla_host='localhost', carla_ports=[9000, 9010, 2]),
     ],
     policy=dict(
         target_speed=25,
         noise=False,
+        collect=dict(
+            save_dir='dataset/',
+            n_episode=50,
+            collector=dict()
+        ),
     ),
 )
 
@@ -92,37 +96,39 @@ def wrapped_env(env_cfg, wrapper_cfg, host, port, tm_port=None):
 
 
 def main(cfg, seed=0):
-    cfg.env_manager = deep_merge_dicts(SyncSubprocessEnvManager.default_config(), cfg.env_manager)
+    cfg.env.manager = deep_merge_dicts(SyncSubprocessEnvManager.default_config(), cfg.env.manager)
 
     tcp_list = parse_carla_tcp(cfg.server)
-    env_num = cfg.env_num
+    env_num = cfg.env.env_num
+    assert len(tcp_list) >= env_num, \
+        "Carla server not enough! Need {} servers but only found {}.".format(env_num, len(tcp_list))
 
     collector_env = SyncSubprocessEnvManager(
-        env_fn=[partial(wrapped_env, cfg.env, cfg.env_wrapper, *tcp_list[i]) for i in range(env_num)],
-        cfg=cfg.env_manager,
+        env_fn=[partial(wrapped_env, cfg.env, cfg.env.wrapper, *tcp_list[i]) for i in range(env_num)],
+        cfg=cfg.env.manager,
     )
     collector_env.seed(seed)
 
     policy = AutoPIDPolicy(cfg.policy)
 
-    collector = CarlaBenchmarkCollector(cfg.collector, collector_env, policy.collect_mode)
+    collector = CarlaBenchmarkCollector(cfg.policy.collect.collector, collector_env, policy.collect_mode)
 
-    if not os.path.exists(cfg.save_dir):
-        os.mkdir(cfg.save_dir)
+    if not os.path.exists(cfg.policy.collect.save_dir):
+        os.mkdir(cfg.policy.collect.save_dir)
 
     collected_episodes = 0
 
-    while collected_episodes < cfg.episode_nums:
+    while collected_episodes < cfg.policy.collect.n_episode:
         # Sampling data from environments
         print('start collect data')
         new_data = collector.collect(n_episode=env_num)
         for i in range(len(new_data)):
             collected_episodes += 1
-            episode_path = Path(cfg.save_dir).joinpath('episode_%05d' % collected_episodes)
+            episode_path = Path(cfg.policy.collect.save_dir).joinpath('episode_%05d' % collected_episodes)
             if not os.path.exists(episode_path):
                 os.mkdir(episode_path)
             write_episode_data(episode_path, new_data[i]['data'])
-            if collected_episodes > cfg.episode_nums:
+            if collected_episodes > cfg.policy.collect.n_episode:
                 break
 
     collector_env.close()

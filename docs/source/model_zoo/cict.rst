@@ -32,6 +32,7 @@ Default settings:
 
     config = dict(
         env=dict(
+            env_num=5,
             simulator=dict(
                 disable_two_wheels=True,
                 waypoint_num=32,
@@ -46,6 +47,7 @@ Default settings:
                         size=[640, 360],
                         position=[0.5, 0.0, 2.5],
                         rotation=[0, 0, 0],
+                        sensor_tick=1. / 30,
                     ),
                     dict(
                         name='lidar',
@@ -58,20 +60,20 @@ Default settings:
                         lower_fov=-30,
                         position=[0.5, 0.0, 2.5],
                         rotation=[0, 0, 0],
+                        sensor_tick=0.05,
                     )
-                )
+                ),
+                verbose=True,
             ),
             col_is_failure=True,
-            stuck_is_failure=True
-        ),
-        env_num=5,
-        episode_nums=40,
-        env_manager=dict(
-            auto_reset=False,
-            shared_memory=False,
-        ),
-        env_wrapper=dict(
-            suite='FullTown01-v3',
+            stuck_is_failure=True,
+            manager=dict(
+                auto_reset=False,
+                shared_memory=False,
+                context='spawn',
+                max_retry=1,
+            ),
+            wrapper=dict(suite='FullTown01-v3', ),
         ),
         server=[
             dict(carla_host='localhost', carla_ports=[9000, 9010, 2]),
@@ -79,12 +81,13 @@ Default settings:
         policy=dict(
             target_speed=25,
             noise=False,
+            collect=dict(
+                n_episode=5,
+                dir_path='datasets/cict_datasets_train',
+                npy_prefix='_preloads',
+                collector=dict(suite='FullTown01-v3', ),
+            ),
         ),
-        collector=dict(
-            suite='FullTown01-v3',
-        ),
-        dir_path='datasets/cict_datasets_train',
-        npy_prefix='_preloads'
     )
 
 Collecting and post processing:
@@ -330,19 +333,19 @@ velocity loss         0.44275
 acceleration loss     3.52583
 ==================    =========
 
-Benchmark Test
-===============
+Benchmark Evaluating
+=======================
 
-The Benchmark test runs with the two trained network in a Carla town suite. You may need to
+The Benchmark evaluation runs with the two trained network in a Carla town suite. You may need to
 change the environment num, server IP and port and suite's name in config.
 
 Default configuration:
 
 .. code:: python 
 
-    autoeval_config = dict(
-        env_num=1,
+    eval_config = dict(
         env=dict(
+            env_num=5,
             simulator=dict(
                 verbose=False,
                 disable_two_wheels=True,
@@ -369,21 +372,29 @@ Default configuration:
                     )
                 ),
                 planner=dict(type='behavior', resolution=1),
-                visualize=dict(outputs=['video']),
-                col_is_failure=True,
-                stuck_is_failure=True,
+            ),
+            col_is_failure=True,
+            stuck_is_failure=True,
+            manager=dict(
+                shared_memory=False,
+                auto_reset=False,
+                context='spawn',
+                max_retry=1,
             ),
         ),
-        env_manager=dict(
-            shared_memory=False,
-            auto_reset=False,
+        server=[
+            dict(carla_host='localhost', carla_ports=[9000, 9010, 2])
+        ],
+        policy=dict(
+            target_speed=25,
+            eval=dict(
+                evaluator=dict(
+                    suite='FullTown01-v1',
+                    episodes_per_suite=5,
+                    transform_obs=True,
+                ),
+            ),
         ),
-        server=[dict(carla_host='localhost', carla_ports=[9000, 9002, 2])],
-        eval=dict(
-            suite='FullTown01-v1',
-            episodes_per_suite=5,
-        ),
-        policy=dict(target_speed=25, ),
     )
 
     policy_config = dict(
@@ -425,9 +436,15 @@ Default configuration:
         PRED_T=3
     )
 
-Testing on the Carla Benchmark:
+Evaluating on the Carla Benchmark:
 
 .. code:: bash
+
+    python cict_eval.py
+
+Testing with visualization:
+
+.. code::
 
     python cict_test.py
 

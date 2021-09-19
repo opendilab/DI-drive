@@ -6,7 +6,7 @@ description = """DI-drive: OpenDILab Decision Intelligence Autonomous Driving Pl
 
 setup(
     name='DI-drive',
-    version='0.1.2',
+    version='0.1.3',
     description='OpenDILab Decision Intelligence Autonomous Driving Platform',
     long_description=description,
     author='OpenDILab',
@@ -28,7 +28,7 @@ setup(
         'pygame==1.9.6',
         'torch>=1.4,<=1.8',
         'torchvision',
-        'di-engine==0.1',
+        'di-engine==0.1.1',
         'scikit-image',
         'setuptools==50',
         'shapely',

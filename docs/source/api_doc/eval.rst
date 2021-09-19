@@ -15,3 +15,9 @@ SingleCarlaEvaluator
 =======================
 .. autoclass:: core.eval.SingleCarlaEvaluator
     :members:
+
+
+SerialEvaluator
+======================
+.. autoclass:: core.eval.SerialEvaluator
+    :members:

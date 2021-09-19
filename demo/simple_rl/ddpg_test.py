@@ -1,5 +1,4 @@
 import os
-import argparse
 import torch
 from easydict import EasyDict
 
@@ -37,23 +36,23 @@ eval_config = dict(
         stuck_is_failure=True,
         ignore_light=True,
         visualize=dict(type='birdview', outputs=['show']),
+        wrapper=dict(suite='FullTown02-v1',),
     ),
-    model=dict(),
     policy=dict(
         cuda=True,
         ckpt_path='',
-    ),
-    env_wrapper=dict(
-        suite='FullTown02-v1',
+        model=dict(),
+        eval=dict(
+            evaluator=dict(
+                render=True,
+                transform_obs=True,
+            ),
+        ),
     ),
     server=[dict(
         carla_host='localhost',
         carla_ports=[9000, 9002, 2]
     )],
-    eval=dict(
-        render=True,
-        transform_obs=True,
-    ),
 )
 
 main_config = EasyDict(eval_config)
@@ -63,18 +62,19 @@ def main(cfg, seed=0):
     cfg.policy = deep_merge_dicts(DDPGPolicy.default_config(), cfg.policy)
 
     tcp_list = parse_carla_tcp(cfg.server)
+    assert len(tcp_list) > 0, "No Carla server found!"
     host, port = tcp_list[0]
 
-    carla_env = ContinuousBenchmarkEnvWrapper(SimpleCarlaEnv(cfg.env, host, port), cfg.env_wrapper)
+    carla_env = ContinuousBenchmarkEnvWrapper(SimpleCarlaEnv(cfg.env, host, port), cfg.env.wrapper)
     carla_env.seed(seed)
     set_pkg_seed(seed)
-    model = DDPGRLModel(**cfg.model)
+    model = DDPGRLModel(**cfg.policy.model)
     policy = DDPGPolicy(cfg.policy, model=model)
 
     if cfg.policy.ckpt_path != '':
         state_dict = torch.load(cfg.policy.ckpt_path, map_location='cpu')
         policy.eval_mode.load_state_dict(state_dict)
-    evaluator = SingleCarlaEvaluator(cfg.eval, carla_env, policy.eval_mode)
+    evaluator = SingleCarlaEvaluator(cfg.policy.eval.evaluator, carla_env, policy.eval_mode)
     evaluator.eval()
     evaluator.close()
 

@@ -25,7 +25,7 @@ Other RL demo is written in same way.
 .. code:: bash
 
     cd demo/simple_rl
-    python dqn_main.py
+    python dqn_train.py
 
 The config part defines the env and policy settings. Notes that you need to change the Carla server
 host and port, and modify the environment nums according to yours. By default it uses 8 Carla server on
@@ -34,10 +34,10 @@ host and port, and modify the environment nums according to yours. By default it
 .. code:: python
 
     train_config = dict(
+        exp_name=...,
         env=dict(
             ...
         ),
-        env_num=8,
         server=[
             dict(carla_host='localhost', carla_ports=[9000, 9016, 2]),
         ],
@@ -72,22 +72,58 @@ After running for about 24 hours, you will get:
     :align: center
     :width: 800px
       
-Evaluate the trained model
-----------------------------
+Evaluate and test the trained model
+---------------------------------------
 
-After training, you can evaluate the trained model with a vsiualization screen. Simply run the following code.
+After training, you can evaluate the trained model on a benchmark suite. Simply run the following code.
 
 .. code:: bash
 
-    cd demo/simple_rl
     python dqn_eval.py
 
-You may need to change Carla server, change the suite you want to evaluate, and switch on/off visualization or save a replay gif/video.
-You can add your pre-trained weights in policy's config.
+You may need to change Carla server numbers and settints, change the suite you want to evaluate, and add
+your pre-trained weights in policy's config.
 
 .. code:: python
 
     eval_config = dict(
+        env=dict(
+            env_num=5,
+            ...
+        ),
+        server=[dict(
+            carla_host='localhost',
+            carla_ports=[9000, 9010, 2]
+        )],
+        policy=dict(
+            cuda=True,
+            ckpt_path='path/to/your/model',
+            eval=dict(
+                evaluator=dict(
+                    suite='FullTown02-v1',
+                    ...
+                ),
+            ),
+            ...
+        ),
+        ...
+    )
+
+The default DQN policy can have nice probability to complete navigation in `FullTown02-v2`, with traffic lights
+ignored.
+
+Also, you can test the policy in a town route with a visualized screen. Simply run the following code.
+
+.. code:: bash
+
+    python dqn_test.py
+
+You may need to change Carla server settints, switch on/off visualization or save a replay gif/video
+and add your pre-trained weights in policy's config.
+
+.. code:: python
+
+    test_config = dict(
         env=dict(
             ...
             visualize=dict(
@@ -104,9 +140,12 @@ You can add your pre-trained weights in policy's config.
         policy=dict(
             cuda=True,
             ckpt_path='path/to/your/model',
+            eval=dict(
+                evaluator=dict(
+                    render=True,
+                    ...
+                ),
+            ),
+            ...
         ),
-        ...
     )
-
-The default DQN policy can have nice probability to complete navigation in `FullTown02-v2`, with traffic lights
-ignored.

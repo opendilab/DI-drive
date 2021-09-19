@@ -23,8 +23,8 @@ copyright = '2021, OpenDILab'
 author = 'OpenDILab'
 
 # The full version, including alpha/beta/rc tags
-version = '0.1.2'
-release = '0.1.2'
+version = '0.1.3'
+release = '0.1.3'
 
 
 # -- General configuration ---------------------------------------------------

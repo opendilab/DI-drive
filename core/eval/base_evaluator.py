@@ -8,7 +8,7 @@ import sys
 
 import copy
 from abc import abstractmethod
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 from easydict import EasyDict
 
 from core.utils.others.config_helper import deep_merge_dicts
@@ -24,6 +24,8 @@ class BaseEvaluator(object):
             cfg: dict,
             env: Any = None,
             policy: Any = None,
+            exp_name: Optional[str] = 'default_experiment',
+            instance_name: Optional[str] = 'base_evaluator',
     ) -> None:
         if 'cfg_type' not in cfg:
             self._cfg = self.__class__.default_config()
@@ -31,6 +33,8 @@ class BaseEvaluator(object):
         else:
             self._cfg = cfg
         self._end_flag = False
+        self._exp_name = exp_name
+        self._instance_name = instance_name
 
         self._timer = EasyTimer()
         if env is not None:

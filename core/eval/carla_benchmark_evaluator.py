@@ -12,6 +12,7 @@ from core.data.benchmark import ALL_SUITES
 from core.data.benchmark.benchmark_utils import get_suites_list, gather_results, read_pose_txt, get_benchmark_dir
 from ding.envs import BaseEnvManager
 from ding.torch_utils.data_helper import to_tensor
+from ding.utils import build_logger
 
 
 class CarlaBenchmarkEvaluator(BaseEvaluator):
@@ -29,6 +30,8 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
         - cfg (Dict): Config dict.
         - env (BaseEnvManager): Env manager used to evaluate.
         - policy (Any): Policy to evaluate. Must have ``forward`` method.
+        - exp_name (str, optional): Name of the experiments. Used to build logger. Defaults to 'default_experiment'.
+        - instance_name (str, optional): Name of the evaluator. Used to build logger. Defaults to 'benchmark_evaluator'.
 
     :Interfaces: reset, eval, close
 
@@ -49,8 +52,15 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
         save_files=True,
     )
 
-    def __init__(self, cfg: Dict, env: BaseEnvManager, policy: Any) -> None:
-        super().__init__(cfg, env, policy)
+    def __init__(
+            self,
+            cfg: Dict,
+            env: BaseEnvManager,
+            policy: Any,
+            exp_name: Optional[str] = 'default_experiment',
+            instance_name: Optional[str] = 'benchmark_evaluator',
+    ) -> None:
+        super().__init__(cfg, env, policy, exp_name=exp_name, instance_name=instance_name)
         self._benchmark_dir = self._cfg.benchmark_dir
         self._result_dir = self._cfg.result_dir
         self._transform_obs = self._cfg.transform_obs
@@ -96,13 +106,18 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
     def eval(
             self,
             policy_kwargs: Optional[Dict] = None,
-    ) -> None:
+            n_episode: Optional[int] = None
+    ) -> float:
         """
         Run evaluation with provided policy arguments. It will evaluate all available episodes of the benchmark suite
         unless `episode_per_suite` is set in config.
 
         :Arguments:
             - policy_kwargs (Dict, optional): Additional arguments in policy forward. Defaults to None.
+            - n_episode: (int, optional): Episodes to eval. By default it is set in config.
+
+        :Returns:
+            float: Success rate.
         """
         total_time = 0.0
         if policy_kwargs is None:
@@ -110,6 +125,8 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
         if self._result_dir != '':
             os.makedirs(self._result_dir, exist_ok=True)
         self.reset()
+        if n_episode is None:
+            n_episode = self._episodes_per_suite
 
         total_episodes = 0
         success_episodes = 0
@@ -138,7 +155,7 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
             running_envs = 0
 
             for episode, (weather, (start, end)) in enumerate(product(weathers, pose_pairs)):
-                if episode >= self._episodes_per_suite:
+                if episode >= n_episode:
                     break
                 param = reset_params.copy()
                 param['start'] = start
@@ -176,6 +193,7 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
                                 'start': running_env_params[i]['start'],
                                 'end': running_env_params[i]['end'],
                                 'weather': running_env_params[i]['weather'],
+                                'reward': t.info['final_eval_reward'],
                                 'success': t.info['success'],
                                 'collided': t.info['collided'],
                                 'timecost': int(t.info['tick']),
