@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Carla tutorial &mdash; DI-drive 0.1.2 documentation</title>
+  <title>Carla tutorial &mdash; DI-drive 0.1.3 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -30,7 +30,7 @@
             <a href="../index.html" class="icon icon-home"> DI-drive
           </a>
               <div class="version">
-                0.1.2
+                0.1.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -49,6 +49,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Carla tutorial</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#basic-concept-of-carla">Basic Concept of Carla</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#quickly-create-carla-server-via-docker">Quickly Create Carla server via Docker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#carla-server-settings">Carla server settings</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="auto_run.html">Auto policy running and visualization</a></li>
@@ -142,6 +143,25 @@ docker run -p <span class="m">2000</span>-2002:9000-9002 --runtime<span class="o
 docker run -p <span class="m">2000</span>-2002:9000-9002 --runtime<span class="o">=</span>nvidia --gpus &lt;gpu_id&gt; carlasim/carla:0.9.9.4 /bin/bash CarlaUE4.sh &lt;list of paremeters&gt;
 </pre></div>
 </div>
+</section>
+<section id="carla-server-settings">
+<h2>Carla server settings<a class="headerlink" href="#carla-server-settings" title="Permalink to this headline"></a></h2>
+<p>We provide config setting to quickly set host and port for several Carla servers. The <code class="docutils literal notranslate"><span class="pre">server</span></code> key in config
+file is used to set Carla servers. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">server</span><span class="o">=</span><span class="p">[</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">carla_host</span><span class="o">=</span><span class="s1">&#39;192.168.1.1&#39;</span><span class="p">,</span> <span class="n">carla_ports</span><span class="o">=</span><span class="p">[</span><span class="mi">5000</span><span class="p">,</span> <span class="mi">5010</span><span class="p">,</span> <span class="mi">2</span><span class="p">]),</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">carla_host</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="n">carla_ports</span><span class="o">=</span><span class="p">[</span><span class="mi">9000</span><span class="p">,</span> <span class="mi">9010</span><span class="p">,</span> <span class="mi">2</span><span class="p">]),</span>
+    <span class="p">],</span>
+    <span class="o">...</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>You can use Carla servers in several IP hosts, each is stored as an element in <code class="docutils literal notranslate"><span class="pre">server</span></code> list. Each IP has a
+host and a list of ports. The interval between ports is 2, because Carla needs two ports to communicate. By
+defalut the <cite>N+1</cite> port is occupied. The saving form of ports in config is similar to the Python <code class="docutils literal notranslate"><span class="pre">range</span></code> method.
+<code class="code docutils literal notranslate"><span class="pre">carla_ports=[9000,</span> <span class="pre">9010,</span> <span class="pre">2]</span></code> means there are 5 Carla servers whose ports are ‘9000, 9002, 9004, 9006
+, 9008’.</p>
 </section>
 </section>
 

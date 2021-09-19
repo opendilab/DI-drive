@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core.eval.serial_evaluator &mdash; DI-drive 0.1.3 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> DI-drive
+          </a>
+              <div class="version">
+                0.1.3
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/index.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/index.html">Tutorial</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../features/index.html">Features</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../model_zoo/index.html">Model Zoo</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_doc/index.html">API Doc</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../faq/index.html">FAQ</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DI-drive</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>core.eval.serial_evaluator</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for core.eval.serial_evaluator</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">from</span> <span class="nn">.base_evaluator</span> <span class="kn">import</span> <span class="n">BaseEvaluator</span>
+<span class="kn">from</span> <span class="nn">core.data.benchmark</span> <span class="kn">import</span> <span class="n">ALL_SUITES</span>
+<span class="kn">from</span> <span class="nn">ding.envs</span> <span class="kn">import</span> <span class="n">BaseEnvManager</span>
+<span class="kn">from</span> <span class="nn">ding.torch_utils.data_helper</span> <span class="kn">import</span> <span class="n">to_tensor</span>
+<span class="kn">from</span> <span class="nn">ding.utils</span> <span class="kn">import</span> <span class="n">build_logger</span><span class="p">,</span> <span class="n">EasyTimer</span>
+
+
+<div class="viewcode-block" id="SerialEvaluator"><a class="viewcode-back" href="../../../api_doc/eval.html#core.eval.SerialEvaluator">[docs]</a><span class="k">class</span> <span class="nc">SerialEvaluator</span><span class="p">(</span><span class="n">BaseEvaluator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Evaluator used to serially evaluate a policy for defined times. It is mainly used when training a policy to get the</span>
+<span class="sd">    evaluator performance frequently and store the best iterations. Different from serial evaluator in `DI-engine`, this</span>
+<span class="sd">    evaluator compares the performance of iterations by the success rate rather than rewards. You can provide a</span>
+<span class="sd">    tensorboard logger to save scalars when training.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        Env manager must run WITH auto reset.</span>
+
+<span class="sd">    :Arguments:</span>
+<span class="sd">        - cfg (Dict): Config dict.</span>
+<span class="sd">        - env (BaseEnvManager): Env manager used to evaluate.</span>
+<span class="sd">        - policy (Any): Policy to evaluate. Must have ``forward`` method.</span>
+<span class="sd">        - tb_logger (SummaryWriter, optional): Tensorboard writter to store values in tensorboard. Defaults to None.</span>
+<span class="sd">        - exp_name (str, optional): Name of the experiments. Used to build logger. Defaults to &#39;default_experiment&#39;.</span>
+<span class="sd">        - instance_name (str, optional): [description]. Defaults to &#39;serial_evaluator&#39;.</span>
+
+<span class="sd">    :Interfaces: reset, eval, close, should_eval</span>
+
+<span class="sd">    :Properties:</span>
+<span class="sd">        - env (BaseEnvManager): Env manager with several environments used to evaluate.</span>
+<span class="sd">        - policy (Any): Policy instance to interact with envs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">transform_obs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="c1"># Evaluate every &quot;eval_freq&quot; training iterations.</span>
+        <span class="n">eval_freq</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">n_episode</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">stop_rate</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">cfg</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+            <span class="n">env</span><span class="p">:</span> <span class="n">BaseEnvManager</span><span class="p">,</span>
+            <span class="n">policy</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+            <span class="n">tb_logger</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;SummaryWriter&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># noqa</span>
+            <span class="n">exp_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;default_experiment&#39;</span><span class="p">,</span>
+            <span class="n">instance_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;serial_evaluator&#39;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">policy</span><span class="p">,</span> <span class="n">exp_name</span><span class="o">=</span><span class="n">exp_name</span><span class="p">,</span> <span class="n">instance_name</span><span class="o">=</span><span class="n">instance_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_transform_obs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">transform_obs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_n_episode</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">n_episode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stop_rate</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">stop_rate</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tb_logger</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">tb_logger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tb_logger</span> <span class="o">=</span> <span class="n">tb_logger</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">build_logger</span><span class="p">(</span>
+            <span class="n">path</span><span class="o">=</span><span class="s1">&#39;./</span><span class="si">{}</span><span class="s1">/log/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_exp_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance_name</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_instance_name</span><span class="p">,</span> <span class="n">need_tb</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_eval_iter</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max_success_rate</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_timer</span> <span class="o">=</span> <span class="n">EasyTimer</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">env</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseEnvManager</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env_manager</span>
+
+    <span class="nd">@env</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">env</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_env_manager</span><span class="p">:</span> <span class="n">BaseEnvManager</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_end_flag</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_env_manager</span> <span class="o">=</span> <span class="n">_env_manager</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_env_manager</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_env_num</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env_manager</span><span class="o">.</span><span class="n">env_num</span>
+
+<div class="viewcode-block" id="SerialEvaluator.close"><a class="viewcode-back" href="../../../api_doc/eval.html#core.eval.SerialEvaluator.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Close the collector and the env manager if not closed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_close_flag</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_close_flag</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_env_manager</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tb_logger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tb_logger</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tb_logger</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SerialEvaluator.reset"><a class="viewcode-back" href="../../../api_doc/eval.html#core.eval.SerialEvaluator.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reset evaluator and policies.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_policy</span><span class="o">.</span><span class="n">reset</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_env_num</span><span class="p">)])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_eval_iter</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max_success_rate</span> <span class="o">=</span> <span class="mi">0</span></div>
+
+<div class="viewcode-block" id="SerialEvaluator.should_eval"><a class="viewcode-back" href="../../../api_doc/eval.html#core.eval.SerialEvaluator.should_eval">[docs]</a>    <span class="k">def</span> <span class="nf">should_eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_iter</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Judge if the training iteration is at frequency value to run evaluation.</span>
+
+<span class="sd">        :Arguments:</span>
+<span class="sd">            - train_iter (int): Current training iteration</span>
+
+<span class="sd">        :Returns:</span>
+<span class="sd">            bool: Whether should run iteration</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">train_iter</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_eval_iter</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">eval_freq</span> <span class="ow">and</span> <span class="n">train_iter</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_eval_iter</span> <span class="o">=</span> <span class="n">train_iter</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="SerialEvaluator.eval"><a class="viewcode-back" href="../../../api_doc/eval.html#core.eval.SerialEvaluator.eval">[docs]</a>    <span class="k">def</span> <span class="nf">eval</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">save_ckpt_fn</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">train_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">envstep</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">n_episode</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run evaluation with provided policy arguments. It will evaluate all available episodes of the benchmark suite</span>
+<span class="sd">        unless `episode_per_suite` is set in config.</span>
+
+<span class="sd">        :Arguments:</span>
+<span class="sd">            - save_ckpt_fn (Callable, optional): Function to save ckpt. Will be called if at best performance.</span>
+<span class="sd">                Defaults to None.</span>
+<span class="sd">            - train_iter (int, optional): Current training iterations. Defaults to -1.</span>
+<span class="sd">            - envstep (int, optional): Current env steps. Defaults to -1.</span>
+<span class="sd">            - n_episode: (int, optional): Episodes to eval. By default it is set in config.</span>
+
+<span class="sd">        :Returns:</span>
+<span class="sd">            Tuple[bool, float]: Whether reach stop value and success rate.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">n_episode</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">n_episode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_n_episode</span>
+        <span class="k">assert</span> <span class="n">n_episode</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;please indicate eval n_episode&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_env_manager</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_policy</span><span class="o">.</span><span class="n">reset</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_env_num</span><span class="p">)])</span>
+
+        <span class="n">episode_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timer</span><span class="p">:</span>
+            <span class="k">while</span> <span class="n">episode_count</span> <span class="o">&lt;</span> <span class="n">n_episode</span><span class="p">:</span>
+                <span class="n">obs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env_manager</span><span class="o">.</span><span class="n">ready_obs</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transform_obs</span><span class="p">:</span>
+                    <span class="n">obs</span> <span class="o">=</span> <span class="n">to_tensor</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+                <span class="n">policy_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_policy</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
+                <span class="n">actions</span> <span class="o">=</span> <span class="p">{</span><span class="n">env_id</span><span class="p">:</span> <span class="n">output</span><span class="p">[</span><span class="s1">&#39;action&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">env_id</span><span class="p">,</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">policy_output</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+                <span class="n">timesteps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env_manager</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">env_id</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">timesteps</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;abnormal&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_policy</span><span class="o">.</span><span class="n">reset</span><span class="p">([</span><span class="n">env_id</span><span class="p">])</span>
+                        <span class="k">continue</span>
+                    <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">done</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_policy</span><span class="o">.</span><span class="n">reset</span><span class="p">([</span><span class="n">env_id</span><span class="p">])</span>
+                        <span class="n">result</span> <span class="o">=</span> <span class="p">{</span>
+                            <span class="s1">&#39;reward&#39;</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;final_eval_reward&#39;</span><span class="p">],</span>
+                            <span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;success&#39;</span><span class="p">],</span>
+                            <span class="s1">&#39;step&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;tick&#39;</span><span class="p">]),</span>
+                        <span class="p">}</span>
+                        <span class="n">episode_count</span> <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                            <span class="n">results</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                            <span class="s2">&quot;[EVALUATOR] env </span><span class="si">{}</span><span class="s2"> finish episode, final reward: </span><span class="si">{}</span><span class="s2">, current episode: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                <span class="n">env_id</span><span class="p">,</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;reward&#39;</span><span class="p">],</span> <span class="n">episode_count</span>
+                            <span class="p">)</span>
+                        <span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env_manager</span><span class="o">.</span><span class="n">done</span><span class="p">:</span>
+                    <span class="k">break</span>
+
+        <span class="n">duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timer</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">episode_reward</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;reward&#39;</span><span class="p">]</span>
+        <span class="n">envstep_count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;step&#39;</span><span class="p">])</span>
+        <span class="n">success_count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;success&#39;</span><span class="p">])</span>
+        <span class="n">success_rate</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">episode_count</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">success_count</span> <span class="o">/</span> <span class="n">episode_count</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;train_iter&#39;</span><span class="p">:</span> <span class="n">train_iter</span><span class="p">,</span>
+            <span class="s1">&#39;ckpt_name&#39;</span><span class="p">:</span> <span class="s1">&#39;iteration_</span><span class="si">{}</span><span class="s1">.pth.tar&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">train_iter</span><span class="p">),</span>
+            <span class="s1">&#39;envstep_count&#39;</span><span class="p">:</span> <span class="n">envstep_count</span><span class="p">,</span>
+            <span class="s1">&#39;avg_envstep_per_episode&#39;</span><span class="p">:</span> <span class="n">envstep_count</span> <span class="o">/</span> <span class="n">n_episode</span><span class="p">,</span>
+            <span class="s1">&#39;evaluate_time&#39;</span><span class="p">:</span> <span class="n">duration</span><span class="p">,</span>
+            <span class="s1">&#39;avg_envstep_per_sec&#39;</span><span class="p">:</span> <span class="n">envstep_count</span> <span class="o">/</span> <span class="n">duration</span><span class="p">,</span>
+            <span class="s1">&#39;avg_time_per_episode&#39;</span><span class="p">:</span> <span class="n">duration</span> <span class="o">/</span> <span class="n">n_episode</span><span class="p">,</span>
+            <span class="s1">&#39;success_rate&#39;</span><span class="p">:</span> <span class="n">success_rate</span><span class="p">,</span>
+            <span class="s1">&#39;reward_mean&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">episode_reward</span><span class="p">),</span>
+            <span class="s1">&#39;reward_std&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">episode_reward</span><span class="p">),</span>
+            <span class="s1">&#39;reward_max&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">episode_reward</span><span class="p">),</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">get_tabulate_vars_hor</span><span class="p">(</span><span class="n">info</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tb_logger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;train_iter&#39;</span><span class="p">,</span> <span class="s1">&#39;ckpt_name&#39;</span><span class="p">,</span> <span class="s1">&#39;each_reward&#39;</span><span class="p">]:</span>
+                    <span class="k">continue</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+                    <span class="k">continue</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_tb_logger</span><span class="o">.</span><span class="n">add_scalar</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_iter/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instance_name</span><span class="p">)</span> <span class="o">+</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">train_iter</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_tb_logger</span><span class="o">.</span><span class="n">add_scalar</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_step/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_instance_name</span><span class="p">)</span> <span class="o">+</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">envstep</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">success_rate</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_success_rate</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">save_ckpt_fn</span><span class="p">:</span>
+                <span class="n">save_ckpt_fn</span><span class="p">(</span><span class="s1">&#39;ckpt_best.pth.tar&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_max_success_rate</span> <span class="o">=</span> <span class="n">success_rate</span>
+        <span class="n">stop_flag</span> <span class="o">=</span> <span class="n">success_rate</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stop_rate</span> <span class="ow">and</span> <span class="n">train_iter</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">stop_flag</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="s2">&quot;[EVALUATOR] &quot;</span> <span class="o">+</span>
+                <span class="s2">&quot;Current success rate: </span><span class="si">{}</span><span class="s2"> is greater than stop rate: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">success_rate</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stop_rate</span><span class="p">)</span> <span class="o">+</span>
+                <span class="s2">&quot;, so the training is converged.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">stop_flag</span><span class="p">,</span> <span class="n">success_rate</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, OpenDILab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

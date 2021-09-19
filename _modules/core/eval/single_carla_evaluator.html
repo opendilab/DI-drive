@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>core.eval.single_carla_evaluator &mdash; DI-drive 0.1.2 documentation</title>
+  <title>core.eval.single_carla_evaluator &mdash; DI-drive 0.1.3 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -27,7 +27,7 @@
             <a href="../../../index.html" class="icon icon-home"> DI-drive
           </a>
               <div class="version">
-                0.1.2
+                0.1.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -84,10 +84,11 @@
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">from</span> <span class="nn">.base_evaluator</span> <span class="kn">import</span> <span class="n">BaseEvaluator</span>
 <span class="kn">from</span> <span class="nn">ding.torch_utils.data_helper</span> <span class="kn">import</span> <span class="n">to_tensor</span>
+<span class="kn">from</span> <span class="nn">ding.utils</span> <span class="kn">import</span> <span class="n">build_logger</span>
 
 
 <div class="viewcode-block" id="SingleCarlaEvaluator"><a class="viewcode-back" href="../../../api_doc/eval.html#core.eval.SingleCarlaEvaluator">[docs]</a><span class="k">class</span> <span class="nc">SingleCarlaEvaluator</span><span class="p">(</span><span class="n">BaseEvaluator</span><span class="p">):</span>
@@ -96,24 +97,35 @@
 <span class="sd">    evaluation results. It uses a environment in DI-engine form and can be rendered in the runtime.</span>
 
 <span class="sd">    :Arguments:</span>
-<span class="sd">            - cfg (Dict): Config dict</span>
-<span class="sd">            - env (Any): Carla env, should be in DI-engine form</span>
-<span class="sd">            - policy (Any): the policy to pe evaluated</span>
+<span class="sd">        - cfg (Dict): Config dict</span>
+<span class="sd">        - env (Any): Carla env, should be in DI-engine form</span>
+<span class="sd">        - policy (Any): the policy to pe evaluated</span>
+<span class="sd">        - exp_name (str, optional): Name of the experiments. Used to build logger. Defaults to &#39;default_experiment&#39;.</span>
+<span class="sd">        - instance_name (str, optional): Name of the evaluator. Used to build logger. Defaults to &#39;single_evaluator&#39;.</span>
 
-<span class="sd">    :Interfaces: reset, eval, close, should_eval</span>
+<span class="sd">    :Interfaces: reset, eval, close</span>
+
+<span class="sd">    :Properties:</span>
+<span class="sd">        - env (BaseCarlaEnv): Environment used to evaluate.</span>
+<span class="sd">        - policy (Any): Policy instance to interact with envs.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
         <span class="n">render</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">eval_freq</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
         <span class="n">transform_obs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">policy</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">policy</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">cfg</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+            <span class="n">env</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+            <span class="n">policy</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+            <span class="n">exp_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;default_experiment&#39;</span><span class="p">,</span>
+            <span class="n">instance_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;single_evaluator&#39;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">policy</span><span class="p">,</span> <span class="n">exp_name</span><span class="o">=</span><span class="n">exp_name</span><span class="p">,</span> <span class="n">instance_name</span><span class="o">=</span><span class="n">instance_name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_render</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">render</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_transform_obs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">transform_obs</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_last_eval_iter</span> <span class="o">=</span> <span class="mi">0</span>
 
 <div class="viewcode-block" id="SingleCarlaEvaluator.close"><a class="viewcode-back" href="../../../api_doc/eval.html#core.eval.SingleCarlaEvaluator.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -124,21 +136,6 @@
     <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">pass</span>
 
-<div class="viewcode-block" id="SingleCarlaEvaluator.should_eval"><a class="viewcode-back" href="../../../api_doc/eval.html#core.eval.SingleCarlaEvaluator.should_eval">[docs]</a>    <span class="k">def</span> <span class="nf">should_eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_iter</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Judge if the training iteration is at frequency value to run evaluation.</span>
-
-<span class="sd">        :Arguments:</span>
-<span class="sd">            - train_iter (int): Current training iteration</span>
-
-<span class="sd">        :Returns:</span>
-<span class="sd">            bool: Whether should run iteration</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">train_iter</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_eval_iter</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">eval_freq</span> <span class="ow">and</span> <span class="n">train_iter</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_last_eval_iter</span> <span class="o">=</span> <span class="n">train_iter</span>
-        <span class="k">return</span> <span class="kc">True</span></div>
-
 <div class="viewcode-block" id="SingleCarlaEvaluator.eval"><a class="viewcode-back" href="../../../api_doc/eval.html#core.eval.SingleCarlaEvaluator.eval">[docs]</a>    <span class="k">def</span> <span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reset_param</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Running one episode evaluation with provided reset params.</span>
@@ -147,7 +144,7 @@
 <span class="sd">            - reset_param (Dict, optional): Reset parameter for environment. Defaults to None.</span>
 
 <span class="sd">        :Returns:</span>
-<span class="sd">            float: Evaluation final reward.</span>
+<span class="sd">            bool: Whether evaluation succeed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_policy</span><span class="o">.</span><span class="n">reset</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">eval_reward</span> <span class="o">=</span> <span class="mi">0</span>

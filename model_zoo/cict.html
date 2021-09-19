@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>from Continuous Intention to Continuous Trajectory &mdash; DI-drive 0.1.2 documentation</title>
+  <title>from Continuous Intention to Continuous Trajectory &mdash; DI-drive 0.1.3 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -30,7 +30,7 @@
             <a href="../index.html" class="icon icon-home"> DI-drive
           </a>
               <div class="version">
-                0.1.2
+                0.1.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -59,7 +59,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#training">Training</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#evaluation">Evaluation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#results">Results</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#benchmark-test">Benchmark Test</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#benchmark-evaluating">Benchmark Evaluating</a></li>
 </ul>
 </li>
 </ul>
@@ -121,6 +121,7 @@ in default config before running.</p>
 <p>Default settings:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
     <span class="n">env</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">env_num</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
         <span class="n">simulator</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
             <span class="n">disable_two_wheels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="n">waypoint_num</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
@@ -135,6 +136,7 @@ in default config before running.</p>
                     <span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="mi">640</span><span class="p">,</span> <span class="mi">360</span><span class="p">],</span>
                     <span class="n">position</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">],</span>
                     <span class="n">rotation</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                    <span class="n">sensor_tick</span><span class="o">=</span><span class="mf">1.</span> <span class="o">/</span> <span class="mi">30</span><span class="p">,</span>
                 <span class="p">),</span>
                 <span class="nb">dict</span><span class="p">(</span>
                     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;lidar&#39;</span><span class="p">,</span>
@@ -147,20 +149,20 @@ in default config before running.</p>
                     <span class="n">lower_fov</span><span class="o">=-</span><span class="mi">30</span><span class="p">,</span>
                     <span class="n">position</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">],</span>
                     <span class="n">rotation</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                    <span class="n">sensor_tick</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
                 <span class="p">)</span>
-            <span class="p">)</span>
+            <span class="p">),</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">),</span>
         <span class="n">col_is_failure</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">stuck_is_failure</span><span class="o">=</span><span class="kc">True</span>
-    <span class="p">),</span>
-    <span class="n">env_num</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-    <span class="n">episode_nums</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
-    <span class="n">env_manager</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-        <span class="n">auto_reset</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">shared_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="p">),</span>
-    <span class="n">env_wrapper</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-        <span class="n">suite</span><span class="o">=</span><span class="s1">&#39;FullTown01-v3&#39;</span><span class="p">,</span>
+        <span class="n">stuck_is_failure</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">manager</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">auto_reset</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">shared_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">context</span><span class="o">=</span><span class="s1">&#39;spawn&#39;</span><span class="p">,</span>
+            <span class="n">max_retry</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">wrapper</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">suite</span><span class="o">=</span><span class="s1">&#39;FullTown01-v3&#39;</span><span class="p">,</span> <span class="p">),</span>
     <span class="p">),</span>
     <span class="n">server</span><span class="o">=</span><span class="p">[</span>
         <span class="nb">dict</span><span class="p">(</span><span class="n">carla_host</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="n">carla_ports</span><span class="o">=</span><span class="p">[</span><span class="mi">9000</span><span class="p">,</span> <span class="mi">9010</span><span class="p">,</span> <span class="mi">2</span><span class="p">]),</span>
@@ -168,12 +170,13 @@ in default config before running.</p>
     <span class="n">policy</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
         <span class="n">target_speed</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
         <span class="n">noise</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">collect</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">n_episode</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+            <span class="n">dir_path</span><span class="o">=</span><span class="s1">&#39;datasets/cict_datasets_train&#39;</span><span class="p">,</span>
+            <span class="n">npy_prefix</span><span class="o">=</span><span class="s1">&#39;_preloads&#39;</span><span class="p">,</span>
+            <span class="n">collector</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">suite</span><span class="o">=</span><span class="s1">&#39;FullTown01-v3&#39;</span><span class="p">,</span> <span class="p">),</span>
+        <span class="p">),</span>
     <span class="p">),</span>
-    <span class="n">collector</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-        <span class="n">suite</span><span class="o">=</span><span class="s1">&#39;FullTown01-v3&#39;</span><span class="p">,</span>
-    <span class="p">),</span>
-    <span class="n">dir_path</span><span class="o">=</span><span class="s1">&#39;datasets/cict_datasets_train&#39;</span><span class="p">,</span>
-    <span class="n">npy_prefix</span><span class="o">=</span><span class="s1">&#39;_preloads&#39;</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -408,14 +411,14 @@ Also you may need to change the dataset path and pre-train weights path.</p>
 </tbody>
 </table>
 </section>
-<section id="benchmark-test">
-<h2>Benchmark Test<a class="headerlink" href="#benchmark-test" title="Permalink to this headline"></a></h2>
-<p>The Benchmark test runs with the two trained network in a Carla town suite. You may need to
+<section id="benchmark-evaluating">
+<h2>Benchmark Evaluating<a class="headerlink" href="#benchmark-evaluating" title="Permalink to this headline"></a></h2>
+<p>The Benchmark evaluation runs with the two trained network in a Carla town suite. You may need to
 change the environment num, server IP and port and suite’s name in config.</p>
 <p>Default configuration:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">autoeval_config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-    <span class="n">env_num</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">eval_config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
     <span class="n">env</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">env_num</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
         <span class="n">simulator</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
             <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="n">disable_two_wheels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -442,21 +445,29 @@ change the environment num, server IP and port and suite’s name in config.</p>
                 <span class="p">)</span>
             <span class="p">),</span>
             <span class="n">planner</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">&#39;behavior&#39;</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
-            <span class="n">visualize</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">outputs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;video&#39;</span><span class="p">]),</span>
-            <span class="n">col_is_failure</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">stuck_is_failure</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">col_is_failure</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">stuck_is_failure</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">manager</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">shared_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">auto_reset</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">context</span><span class="o">=</span><span class="s1">&#39;spawn&#39;</span><span class="p">,</span>
+            <span class="n">max_retry</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="p">),</span>
     <span class="p">),</span>
-    <span class="n">env_manager</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-        <span class="n">shared_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">auto_reset</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">server</span><span class="o">=</span><span class="p">[</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">carla_host</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="n">carla_ports</span><span class="o">=</span><span class="p">[</span><span class="mi">9000</span><span class="p">,</span> <span class="mi">9010</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+    <span class="p">],</span>
+    <span class="n">policy</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">target_speed</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
+        <span class="nb">eval</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">evaluator</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+                <span class="n">suite</span><span class="o">=</span><span class="s1">&#39;FullTown01-v1&#39;</span><span class="p">,</span>
+                <span class="n">episodes_per_suite</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                <span class="n">transform_obs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">),</span>
     <span class="p">),</span>
-    <span class="n">server</span><span class="o">=</span><span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">carla_host</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="n">carla_ports</span><span class="o">=</span><span class="p">[</span><span class="mi">9000</span><span class="p">,</span> <span class="mi">9002</span><span class="p">,</span> <span class="mi">2</span><span class="p">])],</span>
-    <span class="nb">eval</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-        <span class="n">suite</span><span class="o">=</span><span class="s1">&#39;FullTown01-v1&#39;</span><span class="p">,</span>
-        <span class="n">episodes_per_suite</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-    <span class="p">),</span>
-    <span class="n">policy</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">target_speed</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="p">),</span>
 <span class="p">)</span>
 
 <span class="n">policy_config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
@@ -499,8 +510,12 @@ change the environment num, server IP and port and suite’s name in config.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>Testing on the Carla Benchmark:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python cict_test.py
+<p>Evaluating on the Carla Benchmark:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python cict_eval.py
+</pre></div>
+</div>
+<p>Testing with visualization:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">cict_test</span><span class="o">.</span><span class="n">py</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@ARTICLE</span><span class="p">{</span><span class="mi">9361054</span><span class="p">,</span>

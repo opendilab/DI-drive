@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Learning by Cheating &mdash; DI-drive 0.1.2 documentation</title>
+  <title>Learning by Cheating &mdash; DI-drive 0.1.3 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -30,7 +30,7 @@
             <a href="../index.html" class="icon icon-home"> DI-drive
           </a>
               <div class="version">
-                0.1.2
+                0.1.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -123,7 +123,11 @@ throttle and brake.</p>
 <section id="model-evaluation">
 <h2>Model evaluation<a class="headerlink" href="#model-evaluation" title="Permalink to this headline"></a></h2>
 <p>DI-drive provides benchmark evaluation for both cheating model and target model,
-together with pretrain weights.</p>
+together with pretrain weights. You may need to change the Carla server settings
+to yours.</p>
+<p>Pretrain weights:
+<a class="reference external" href="http://opendilab.org/download/DI-drive/lbc/birdview/model-256.th">bev</a>,
+<a class="reference external" href="http://opendilab.org/download/DI-drive/lbc/rgb/model-20.th">image</a></p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python lbc_bev_eval.py
 python lbc_image_eval.py
 </pre></div>
@@ -133,7 +137,8 @@ python lbc_image_eval.py
 <section id="model-testing">
 <h2>Model testing<a class="headerlink" href="#model-testing" title="Permalink to this headline"></a></h2>
 <p>DI-drive provides a simple entry for testing LBC models in a benchmark or Casezoo
-environment and visualize the running.</p>
+environment and visualize the running. You may need to change the Carla server settings
+to yours.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python lbc_bev_test.py
 python lbc_image_test.py
 </pre></div>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>models &mdash; DI-drive 0.1.2 documentation</title>
+  <title>models &mdash; DI-drive 0.1.3 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -31,7 +31,7 @@
             <a href="../index.html" class="icon icon-home"> DI-drive
           </a>
               <div class="version">
-                0.1.2
+                0.1.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -60,8 +60,6 @@
 <li class="toctree-l2"><a class="reference internal" href="policy.html">policy</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">models</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#bevspeedconvencoder">BEVSpeedConvEncoder</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#bevspeeddeterminatenet">BEVSpeedDeterminateNet</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#bevspeedstochasticnet">BEVSpeedStochasticNet</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#vanillavae">VanillaVAE</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#vehiclepidcontroller">VehiclePIDController</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#mpccontroller">MPCController</a></li>
@@ -139,88 +137,6 @@ feature to get a final feature.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>torch.Tensor: Embedding feature.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-</section>
-<section id="bevspeeddeterminatenet">
-<h2>BEVSpeedDeterminateNet<a class="headerlink" href="#bevspeeddeterminatenet" title="Permalink to this headline"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="core.models.BEVSpeedDeterminateNet">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">core.models.</span></span><span class="sig-name descname"><span class="pre">BEVSpeedDeterminateNet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs_shape</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Tuple</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">[5,</span> <span class="pre">32,</span> <span class="pre">32]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_shape</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">tuple</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoder_hidden_dim_list</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">[64,</span> <span class="pre">128,</span> <span class="pre">256]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoder_embedding_size</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">512</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head_embedding_dim</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">512</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_critic</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/models/bev_speed_model.html#BEVSpeedDeterminateNet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.models.BEVSpeedDeterminateNet" title="Permalink to this definition"></a></dt>
-<dd><p>Actor Neural Network takes Bird-eye View image and speed and outputs actions determinately. It use a
-<code class="docutils literal notranslate"><span class="pre">BEVSpeedConvEncoder</span></code> to get a embedding feature, and use a fully-connected layer to get final output.
-It can be used as actor or critic network depending on forward arguments.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Arguments</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p>obs_shape (Tuple, optional): BeV image shape. Defaults to [5, 32, 32].</p></li>
-<li><p>action_shape (Union[int, tuple], optional): Action shape. Defaults to 2.</p></li>
-<li><p>encoder_hidden_dim_list (List, optional): Conv encoder hidden layer dimension list.
-Defaults to [64, 128, 256].</p></li>
-<li><p>encoder_embedding_size (int, optional): Encoder output embedding size. Defaults to 512.</p></li>
-<li><p>head_embedding_dim (int, optional): FC hidden layer dimension. Defaults to 512.</p></li>
-<li><p>is_critic (bool, optional): Whether used as critic. Defaults to False.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="core.models.BEVSpeedDeterminateNet.forward">
-<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.Tensor</span></span></span><a class="reference internal" href="../_modules/core/models/bev_speed_model.html#BEVSpeedDeterminateNet.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.models.BEVSpeedDeterminateNet.forward" title="Permalink to this definition"></a></dt>
-<dd><p>Forward computation of network. If is critic, action must not be <code class="docutils literal notranslate"><span class="pre">None</span></code></p>
-<dl class="field-list simple">
-<dt class="field-odd">Arguments</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p>obs (Dict): Observation dict.</p></li>
-<li><p>action (Dict, optional): Action dict. Defaults to None.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>torch.Tensor: Actions or critic value.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-</section>
-<section id="bevspeedstochasticnet">
-<h2>BEVSpeedStochasticNet<a class="headerlink" href="#bevspeedstochasticnet" title="Permalink to this headline"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="core.models.BEVSpeedStochasticNet">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">core.models.</span></span><span class="sig-name descname"><span class="pre">BEVSpeedStochasticNet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs_shape</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Tuple</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">[5,</span> <span class="pre">32,</span> <span class="pre">32]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_shape</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">tuple</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoder_hidden_dim_list</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">[64,</span> <span class="pre">128,</span> <span class="pre">256]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">policy_hideen_size</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">512</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_std_min</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">-</span> <span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_std_max</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_w</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.003</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/models/bev_speed_model.html#BEVSpeedStochasticNet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.models.BEVSpeedStochasticNet" title="Permalink to this definition"></a></dt>
-<dd><p>Actor Neural Network takes Bird-eye View image and speed and outputs actions stochasticly. It use a
-<code class="docutils literal notranslate"><span class="pre">BEVSpeedConvEncoder</span></code> to get a embedding feature, and use a fully-connected layer to get mean and
-std values.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Arguments</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p>obs_shape (Tuple, optional): BeV image shape. Defaults to [5, 32, 32].</p></li>
-<li><p>action_shape (Union[int, tuple], optional): Action shape. Defaults to 2.</p></li>
-<li><p>encoder_hidden_dim_list (List, optional): Conv encoder hidden layer dimension list.
-Defaults to [64, 128, 256].</p></li>
-<li><p>policy_hideen_size (int, optional): Encoder output embedding size. Defaults to 512.</p></li>
-<li><p>log_std_min (int, optional): Log std min value. Defaults to -20.</p></li>
-<li><p>log_std_max (int, optional): Log std max value. Defaults to 2.</p></li>
-<li><p>init_w (float, optional): Clip value of mean and std layer weights. Defaults to 3e-3.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="core.models.BEVSpeedStochasticNet.forward">
-<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">,</span> </span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/core/models/bev_speed_model.html#BEVSpeedStochasticNet.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.models.BEVSpeedStochasticNet.forward" title="Permalink to this definition"></a></dt>
-<dd><p>Forward computation of network.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Arguments</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p>obs (Dict): Observation dict.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Tuple[torch.Tensor, torch.Tensor]: Mean and std value for actions.</p>
 </dd>
 </dl>
 </dd></dl>

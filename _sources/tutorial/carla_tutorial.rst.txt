@@ -59,3 +59,26 @@ Then, just pull the Carla image and run with port.
     docker run -p 2000-2002:9000-9002 --runtime=nvidia --gpus <gpu_id> carlasim/carla:0.9.9.4
     # with parameters
     docker run -p 2000-2002:9000-9002 --runtime=nvidia --gpus <gpu_id> carlasim/carla:0.9.9.4 /bin/bash CarlaUE4.sh <list of paremeters>
+
+
+Carla server settings
+===========================
+
+We provide config setting to quickly set host and port for several Carla servers. The ``server`` key in config
+file is used to set Carla servers. For example:
+
+.. code::
+
+    config = dict(
+        server=[
+            dict(carla_host='192.168.1.1', carla_ports=[5000, 5010, 2]),
+            dict(carla_host='localhost', carla_ports=[9000, 9010, 2]),
+        ],
+        ...
+    )
+
+You can use Carla servers in several IP hosts, each is stored as an element in ``server`` list. Each IP has a
+host and a list of ports. The interval between ports is 2, because Carla needs two ports to communicate. By
+defalut the `N+1` port is occupied. The saving form of ports in config is similar to the Python ``range`` method.
+:code:`carla_ports=[9000, 9010, 2]` means there are 5 Carla servers whose ports are '9000, 9002, 9004, 9006
+, 9008'.

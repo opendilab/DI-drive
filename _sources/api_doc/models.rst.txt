@@ -11,18 +11,6 @@ BEVSpeedConvEncoder
     :members:
 
 
-BEVSpeedDeterminateNet
-=======================
-.. autoclass:: core.models.BEVSpeedDeterminateNet
-    :members:
-
-
-BEVSpeedStochasticNet
-========================
-.. autoclass:: core.models.BEVSpeedStochasticNet
-    :members:
-
-
 VanillaVAE
 =================
 .. autoclass:: core.models.vae_model.VanillaVAE

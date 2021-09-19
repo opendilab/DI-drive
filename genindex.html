@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; DI-drive 0.1.2 documentation</title>
+  <title>Index &mdash; DI-drive 0.1.3 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -27,7 +27,7 @@
             <a href="index.html" class="icon icon-home"> DI-drive
           </a>
               <div class="version">
-                0.1.2
+                0.1.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -172,19 +172,15 @@
 </li>
       <li><a href="api_doc/utils.html#core.utils.planner.basic_planner.BasicPlanner">BasicPlanner (class in core.utils.planner.basic_planner)</a>
 </li>
-      <li><a href="api_doc/utils.html#core.utils.planner.behavior_planner.BehaviorPlanner">BehaviorPlanner (class in core.utils.planner.behavior_planner)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_doc/utils.html#core.utils.planner.behavior_planner.BehaviorPlanner">BehaviorPlanner (class in core.utils.planner.behavior_planner)</a>
+</li>
       <li><a href="api_doc/data.html#core.data.dataset_saver.BenchmarkDatasetSaver">BenchmarkDatasetSaver (class in core.data.dataset_saver)</a>
 </li>
       <li><a href="api_doc/envs.html#core.envs.BenchmarkEnvWrapper">BenchmarkEnvWrapper (class in core.envs)</a>
 </li>
       <li><a href="api_doc/models.html#core.models.BEVSpeedConvEncoder">BEVSpeedConvEncoder (class in core.models)</a>
-</li>
-      <li><a href="api_doc/models.html#core.models.BEVSpeedDeterminateNet">BEVSpeedDeterminateNet (class in core.models)</a>
-</li>
-      <li><a href="api_doc/models.html#core.models.BEVSpeedStochasticNet">BEVSpeedStochasticNet (class in core.models)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -233,6 +229,8 @@
 </li>
         <li><a href="api_doc/eval.html#core.eval.CarlaBenchmarkEvaluator.close">(core.eval.CarlaBenchmarkEvaluator method)</a>
 </li>
+        <li><a href="api_doc/eval.html#core.eval.SerialEvaluator.close">(core.eval.SerialEvaluator method)</a>
+</li>
         <li><a href="api_doc/eval.html#core.eval.SingleCarlaEvaluator.close">(core.eval.SingleCarlaEvaluator method)</a>
 </li>
       </ul></li>
@@ -273,6 +271,8 @@
       <li><a href="api_doc/eval.html#core.eval.CarlaBenchmarkEvaluator.eval">eval() (core.eval.CarlaBenchmarkEvaluator method)</a>
 
       <ul>
+        <li><a href="api_doc/eval.html#core.eval.SerialEvaluator.eval">(core.eval.SerialEvaluator method)</a>
+</li>
         <li><a href="api_doc/eval.html#core.eval.SingleCarlaEvaluator.eval">(core.eval.SingleCarlaEvaluator method)</a>
 </li>
       </ul></li>
@@ -285,10 +285,6 @@
       <li><a href="api_doc/models.html#core.models.BEVSpeedConvEncoder.forward">forward() (core.models.BEVSpeedConvEncoder method)</a>
 
       <ul>
-        <li><a href="api_doc/models.html#core.models.BEVSpeedDeterminateNet.forward">(core.models.BEVSpeedDeterminateNet method)</a>
-</li>
-        <li><a href="api_doc/models.html#core.models.BEVSpeedStochasticNet.forward">(core.models.BEVSpeedStochasticNet method)</a>
-</li>
         <li><a href="api_doc/models.html#core.models.model_wrappers.SteerNoiseWrapper.forward">(core.models.model_wrappers.SteerNoiseWrapper method)</a>
 </li>
         <li><a href="api_doc/models.html#core.models.MPCController.forward">(core.models.MPCController method)</a>
@@ -427,6 +423,8 @@
 </li>
         <li><a href="api_doc/eval.html#core.eval.CarlaBenchmarkEvaluator.reset">(core.eval.CarlaBenchmarkEvaluator method)</a>
 </li>
+        <li><a href="api_doc/eval.html#core.eval.SerialEvaluator.reset">(core.eval.SerialEvaluator method)</a>
+</li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -468,6 +466,8 @@
       </ul></li>
       <li><a href="api_doc/utils.html#core.utils.simulator_utils.sensor_utils.SensorHelper">SensorHelper (class in core.utils.simulator_utils.sensor_utils)</a>
 </li>
+      <li><a href="api_doc/eval.html#core.eval.SerialEvaluator">SerialEvaluator (class in core.eval)</a>
+</li>
       <li><a href="api_doc/utils.html#core.utils.planner.basic_planner.BasicPlanner.set_destination">set_destination() (core.utils.planner.basic_planner.BasicPlanner method)</a>
 </li>
       <li><a href="api_doc/utils.html#core.utils.planner.basic_planner.BasicPlanner.set_route">set_route() (core.utils.planner.basic_planner.BasicPlanner method)</a>
@@ -476,7 +476,7 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api_doc/utils.html#core.utils.simulator_utils.sensor_utils.SensorHelper.setup_sensors">setup_sensors() (core.utils.simulator_utils.sensor_utils.SensorHelper method)</a>
 </li>
-      <li><a href="api_doc/eval.html#core.eval.SingleCarlaEvaluator.should_eval">should_eval() (core.eval.SingleCarlaEvaluator method)</a>
+      <li><a href="api_doc/eval.html#core.eval.SerialEvaluator.should_eval">should_eval() (core.eval.SerialEvaluator method)</a>
 </li>
       <li><a href="api_doc/envs.html#core.envs.SimpleCarlaEnv">SimpleCarlaEnv (class in core.envs)</a>
 </li>

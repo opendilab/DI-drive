@@ -27,7 +27,12 @@ Model evaluation
 ----------------
 
 DI-drive provides benchmark evaluation for both cheating model and target model,
-together with pretrain weights.
+together with pretrain weights. You may need to change the Carla server settings
+to yours.
+
+Pretrain weights: 
+`bev <http://opendilab.org/download/DI-drive/lbc/birdview/model-256.th>`_, 
+`image <http://opendilab.org/download/DI-drive/lbc/rgb/model-20.th>`_
 
 .. code:: shell
 
@@ -40,7 +45,8 @@ Model testing
 -----------------
 
 DI-drive provides a simple entry for testing LBC models in a benchmark or Casezoo
-environment and visualize the running.
+environment and visualize the running. You may need to change the Carla server settings
+to yours.
 
 .. code:: shell
 
