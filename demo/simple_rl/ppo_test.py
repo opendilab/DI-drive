@@ -8,7 +8,7 @@ from ding.policy import PPOPolicy
 from ding.utils import set_pkg_seed
 from ding.utils.default_helper import deep_merge_dicts
 from demo.simple_rl.model import PPORLModel
-from demo.simple_rl.env_wrapper import DiscreteBenchmarkEnvWrapper
+from demo.simple_rl.env_wrapper import ContinuousBenchmarkEnvWrapper
 
 eval_config = dict(
     env=dict(
@@ -36,7 +36,7 @@ eval_config = dict(
         ignore_light=True,
         visualize=dict(type='birdview', outputs=['show']),
     ),
-    model=dict(action_shape=21,),
+    model=dict(action_shape=2,),
     policy=dict(
         cuda=True,
         ckpt_path='',
@@ -63,7 +63,7 @@ def main(cfg, seed=0):
     tcp_list = parse_carla_tcp(cfg.server)
     host, port = tcp_list[0]
 
-    carla_env = DiscreteBenchmarkEnvWrapper(SimpleCarlaEnv(cfg.env, host, port), cfg.env.wrapper)
+    carla_env = ContinuousBenchmarkEnvWrapper(SimpleCarlaEnv(cfg.env, host, port), cfg.env.wrapper)
     carla_env.seed(seed)
     set_pkg_seed(seed)
     model = PPORLModel(**cfg.model)

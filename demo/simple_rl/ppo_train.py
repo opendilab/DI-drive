@@ -15,7 +15,7 @@ from ding.worker import BaseLearner, SampleCollector
 from ding.utils import set_pkg_seed
 
 from demo.simple_rl.model import PPORLModel
-from demo.simple_rl.env_wrapper import DiscreteBenchmarkEnvWrapper
+from demo.simple_rl.env_wrapper import ContinuousBenchmarkEnvWrapper
 from core.utils.data_utils.bev_utils import unpack_birdview
 from core.utils.others.ding_utils import compile_config
 
@@ -46,7 +46,6 @@ train_config = dict(
         col_is_failure=True,
         stuck_is_failure=True,
         ignore_light=True,
-        finish_reward=300,
         manager=dict(
             collect=dict(
                 auto_reset=True,
@@ -70,7 +69,7 @@ train_config = dict(
         nstep_return=False,
         on_policy=True,
         model=dict(
-            action_shape=21,
+            action_shape=2,
         ),
         learn=dict(
             epoch_per_collect=5,
@@ -89,7 +88,6 @@ train_config = dict(
             ),
         ),
         collect=dict(
-            n_sample=3000,
             collector=dict(
                 collect_print_freq=1000,
                 deepcopy_obs=True,
@@ -113,7 +111,7 @@ main_config = EasyDict(train_config)
 
 
 def wrapped_env(env_cfg, wrapper_cfg, host, port, tm_port=None):
-    return DiscreteBenchmarkEnvWrapper(SimpleCarlaEnv(env_cfg, host, port, tm_port), wrapper_cfg)
+    return ContinuousBenchmarkEnvWrapper(SimpleCarlaEnv(env_cfg, host, port, tm_port), wrapper_cfg)
 
 
 def main(cfg, seed=0):
@@ -159,7 +157,7 @@ def main(cfg, seed=0):
             if stop:
                 break
         # Sampling data from environments
-        new_data = collector.collect(train_iter=learner.train_iter)
+        new_data = collector.collect(n_sample=3000, train_iter=learner.train_iter)
         unpack_birdview(new_data)
         learner.train(new_data, collector.envstep)
     learner.call_hook('after_run')
