@@ -24,6 +24,7 @@ class BaseEvaluator(object):
             cfg: dict,
             env: Any = None,
             policy: Any = None,
+            tb_logger: Optional['SummaryWritter'] = None,  # noqa
             exp_name: Optional[str] = 'default_experiment',
             instance_name: Optional[str] = 'base_evaluator',
     ) -> None:
@@ -35,6 +36,9 @@ class BaseEvaluator(object):
         self._end_flag = False
         self._exp_name = exp_name
         self._instance_name = instance_name
+        self._tb_logger = None
+        if tb_logger is not None:
+            self._tb_logger = tb_logger
 
         self._timer = EasyTimer()
         if env is not None:

@@ -37,10 +37,11 @@ class SingleCarlaEvaluator(BaseEvaluator):
             cfg: Dict,
             env: Any,
             policy: Any,
+            tb_logger: Optional['SummaryWriter'] = None,  # noqa
             exp_name: Optional[str] = 'default_experiment',
             instance_name: Optional[str] = 'single_evaluator',
     ) -> None:
-        super().__init__(cfg, env, policy, exp_name=exp_name, instance_name=instance_name)
+        super().__init__(cfg, env, policy, tb_logger=tb_logger, exp_name=exp_name, instance_name=instance_name)
         self._render = self._cfg.render
         self._transform_obs = self._cfg.transform_obs
 

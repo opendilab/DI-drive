@@ -1,7 +1,7 @@
 import gym
 import copy
 import numpy as np
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 from easydict import EasyDict
 from itertools import product
 
@@ -36,7 +36,7 @@ class CarlaEnvWrapper(gym.Wrapper):
             self._cfg = deep_merge_dicts(self._cfg, cfg)
         else:
             self._cfg = cfg
-        self._env = env
+        self.env = env
 
     def reset(self, *args, **kwargs) -> Any:
         """
@@ -46,7 +46,7 @@ class CarlaEnvWrapper(gym.Wrapper):
         :Returns:
             Any: Observations from envirionment
         """
-        obs = self._env.reset(*args, **kwargs)
+        obs = self.env.reset(*args, **kwargs)
         obs = to_ndarray(obs)
         self._final_eval_reward = 0.0
         return obs
@@ -65,13 +65,14 @@ class CarlaEnvWrapper(gym.Wrapper):
             BaseEnvTimestep: DI-engine format of env step returns.
         """
         action = to_ndarray(action)
-        for key in ['throttle', 'brake']:
-            if key in action:
-                np.clip(action[key], 0, 1)
-        if 'steer' in action:
-            np.clip(action['steer'], -1, 1)
+        if action is not None:
+            for key in ['throttle', 'brake']:
+                if key in action:
+                    np.clip(action[key], 0, 1)
+            if 'steer' in action:
+                np.clip(action['steer'], -1, 1)
 
-        obs, rew, done, info = self._env.step(action)
+        obs, rew, done, info = self.env.step(action)
         self._final_eval_reward += rew
         obs = to_ndarray(obs)
         rew = to_ndarray([rew], dtype=np.float32)
@@ -88,33 +89,15 @@ class CarlaEnvWrapper(gym.Wrapper):
         :Returns:
             BaseEnvInfo: Env information instance defined in DI-engine.
         """
-        obs_space = self._env.observation_space
-        act_space = self._env.action_space
+        obs_space = self.env.observation_space
+        act_space = self.env.action_space
         return BaseEnvInfo(agent_num=1, obs_space=obs_space, act_space=act_space, use_wrappers=None)
 
-    def render(self, *args, **kwargs) -> Any:
-        """
-        Interface of ``render`` method in env. It simply calls ``render`` in ``gym.Env`` and do nothing
-
-        :Returns:
-            Any: Returns of Env `render` method.
-        """
-        return self._env.render(*args, **kwargs)
-
-    def seed(self, seed: int) -> None:
-        """
-        Interface of ``seed`` method in env.
-
-        :Arguments:
-            - seed (int): Random seed
-        """
-        self._env.seed(seed)
-
-    def close(self) -> None:
-        """
-        Interface of ``close`` method in env.
-        """
-        self._env.close()
+    def enable_save_replay(self, replay_path: Optional[str] = None) -> None:
+        if replay_path is None:
+            replay_path = './video'
+        self._replay_path = replay_path
+        self.env = gym.wrappers.Monitor(self.env, self._replay_path, video_callable=lambda episode_id: True, force=True)
 
     @classmethod
     def default_config(cls: type) -> EasyDict:
@@ -123,7 +106,7 @@ class CarlaEnvWrapper(gym.Wrapper):
         return copy.deepcopy(cfg)
 
     def __repr__(self) -> str:
-        return repr(self._env)
+        return repr(self.env)
 
 
 class BenchmarkEnvWrapper(CarlaEnvWrapper):
@@ -221,7 +204,7 @@ class BenchmarkEnvWrapper(CarlaEnvWrapper):
                 done_state = 'None'
             print(
                 "[ENV] {} done with tick: {}, state: {}, reward: {}".format(
-                    repr(self._env), done_tick, done_state, done_reward
+                    repr(self.env), done_tick, done_state, done_reward
                 )
             )
         return timestep

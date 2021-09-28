@@ -4,6 +4,7 @@ import carla
 import numpy as np
 from typing import Any, Dict, Optional, Tuple
 from gym import spaces
+from collections import defaultdict
 
 from .base_carla_env import BaseCarlaEnv
 from core.simulators import CarlaSimulator
@@ -34,6 +35,7 @@ class SimpleCarlaEnv(BaseCarlaEnv):
         - hero_player (carla.Actor): Hero vehicle in simulator.
     """
 
+    metadata = {'render.modes': ['rgb_array']}
     action_space = spaces.Dict({})
     observation_space = spaces.Dict({})
     config = dict(
@@ -59,6 +61,7 @@ class SimpleCarlaEnv(BaseCarlaEnv):
             host: str = 'localhost',
             port: int = 9000,
             tm_port: Optional[int] = None,
+            carla_timeout: Optional[int] = 60.0,
             **kwargs,
     ) -> None:
         """
@@ -70,6 +73,7 @@ class SimpleCarlaEnv(BaseCarlaEnv):
         self._carla_host = host
         self._carla_port = port
         self._carla_tm_port = tm_port
+        self._carla_timeout = carla_timeout
 
         self._use_local_carla = False
         if self._carla_host != 'localhost':
@@ -113,7 +117,8 @@ class SimpleCarlaEnv(BaseCarlaEnv):
                 client=None,
                 host=self._carla_host,
                 port=self._carla_port,
-                tm_port=self._carla_tm_port
+                tm_port=self._carla_tm_port,
+                timeout=self._carla_timeout,
             )
         else:
             print('------ Using Remote carla @ {}:{} ------'.format(self._carla_host, self._carla_port))
@@ -191,6 +196,8 @@ class SimpleCarlaEnv(BaseCarlaEnv):
         if action is not None:
             self._simulator.apply_control(action)
             self._simulator_databuffer['action'] = action
+        else:
+            self._simulator_databuffer['action'] = dict()
         self._simulator.run_step()
         self._tick += 1
 
@@ -294,6 +301,8 @@ class SimpleCarlaEnv(BaseCarlaEnv):
         self._simulator_databuffer['state'] = state
         self._simulator_databuffer['navigation'] = navigation
         self._simulator_databuffer['information'] = information
+        if 'action' not in self._simulator_databuffer:
+            self._simulator_databuffer['action'] = dict()
         if not navigation['agent_state'] == 4 or self._ignore_light:
             self._stuck_detector.tick(state['speed'])
 
@@ -390,7 +399,7 @@ class SimpleCarlaEnv(BaseCarlaEnv):
         target_forward = self._simulator_databuffer['navigation']['target_forward']
         angle_reward = 0.5 * (1 - angle(forward_vector, target_forward) / np.pi)
 
-        steer = self._simulator_databuffer['action']['steer']
+        steer = self._simulator_databuffer['action'].get('steer', 0)
         command = self._simulator_databuffer['navigation']['command']
         steer_reward = 0.5
         # if abs(steer - self._last_steer) > 0.5:
@@ -433,7 +442,7 @@ class SimpleCarlaEnv(BaseCarlaEnv):
 
         return total_reward, reward_info
 
-    def render(self) -> None:
+    def render(self, mode='rgb_array') -> None:
         """
         Render a runtime visualization on screen, save a gif or video according to visualizer config.
         The main canvas is from a specific sensor data. It only works when 'visualize' is set in config dict.
@@ -459,6 +468,7 @@ class SimpleCarlaEnv(BaseCarlaEnv):
 
         self._visualizer.paint(self._render_buffer, render_info)
         self._visualizer.run_visualize()
+        return self._visualizer.canvas
 
     def seed(self, seed: int) -> None:
         """

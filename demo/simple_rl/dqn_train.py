@@ -53,6 +53,10 @@ train_config = dict(
         wrong_direction_is_failure=True,
         off_route_is_failure=True,
         off_route_distance=7.5,
+        replay_path='./dqn_video',
+        visualize=dict(
+            type='birdview',
+        ),
         manager=dict(
             collect=dict(
                 auto_reset=True,
@@ -160,6 +164,8 @@ def main(cfg, seed=0):
         env_fn=[partial(wrapped_env, cfg.env, cfg.env.wrapper.eval, *tcp_list[collector_env_num + i]) for i in range(evaluator_env_num)],
         cfg=cfg.env.manager.eval,
     )
+    # Uncomment this to add save replay when evaluation
+    # evaluate_env.enable_save_replay(cfg.env.replay_path)
     collector_env.seed(seed)
     evaluate_env.seed(seed)
     set_pkg_seed(seed)

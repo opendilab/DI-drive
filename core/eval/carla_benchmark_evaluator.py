@@ -103,11 +103,7 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
         """
         self._policy.reset([i for i in range(self._env_num)])
 
-    def eval(
-            self,
-            policy_kwargs: Optional[Dict] = None,
-            n_episode: Optional[int] = None
-    ) -> float:
+    def eval(self, policy_kwargs: Optional[Dict] = None, n_episode: Optional[int] = None) -> float:
         """
         Run evaluation with provided policy arguments. It will evaluate all available episodes of the benchmark suite
         unless `episode_per_suite` is set in config.

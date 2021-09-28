@@ -69,8 +69,6 @@ class Visualizer(object):
             - image: Rendered image.
             - data_dict(Dict, optional): data dict containing information, state, action and so on
         """
-        if len(self._outputs) == 0:
-            return
         if data_dict is None:
             data_dict = {}
         WHITE = (255, 255, 255)
@@ -191,6 +189,10 @@ class Visualizer(object):
             self._video_maker.clear()
         if 'show' in self._outputs:
             cv2.destroyAllWindows()
+
+    @property
+    def canvas(self):
+        return self._canvas
 
     @classmethod
     def default_config(cls: type) -> EasyDict:

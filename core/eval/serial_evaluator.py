@@ -53,14 +53,11 @@ class SerialEvaluator(BaseEvaluator):
             exp_name: Optional[str] = 'default_experiment',
             instance_name: Optional[str] = 'serial_evaluator',
     ) -> None:
-        super().__init__(cfg, env, policy, exp_name=exp_name, instance_name=instance_name)
+        super().__init__(cfg, env, policy, tb_logger=tb_logger, exp_name=exp_name, instance_name=instance_name)
         self._transform_obs = self._cfg.transform_obs
-        self._default_n_episode = cfg.n_episode
-        self._stop_rate = cfg.stop_rate
+        self._default_n_episode = self._cfg.n_episode
+        self._stop_rate = self._cfg.stop_rate
 
-        self._tb_logger = None
-        if tb_logger is not None:
-            self._tb_logger = tb_logger
         self._logger, _ = build_logger(
             path='./{}/log/{}'.format(self._exp_name, self._instance_name), name=self._instance_name, need_tb=False
         )
