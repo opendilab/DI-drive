@@ -43,6 +43,8 @@ class CarlaBenchmarkCollector(BaseCollector):
         benchmark_dir=None,
         suite='FullTown01-v0',
         seed=None,
+        dynamic_seed=True,
+        weathers=None,
     )
 
     def __init__(
@@ -55,6 +57,8 @@ class CarlaBenchmarkCollector(BaseCollector):
         self._benchmark_dir = self._cfg.benchmark_dir
         suite = self._cfg.suite
         self._seed = self._cfg.seed
+        self._dynamic_seed = self._cfg.dynamic_seed
+        self._weathers = self._cfg.weathers
         if self._benchmark_dir is None:
             self._benchmark_dir = get_benchmark_dir()
         self._collect_suite_list = get_suites_list(suite)
@@ -102,6 +106,8 @@ class CarlaBenchmarkCollector(BaseCollector):
             reset_params = kwargs.copy()
             poses_txt = reset_params.pop('poses_txt')
             weathers = reset_params.pop('weathers')
+            if self._weathers is not None:
+                weathers = self._weathers
             pose_pairs = read_pose_txt(self._benchmark_dir, poses_txt)
             for (start, end), weather in product(pose_pairs, weathers):
                 param = reset_params.copy()
@@ -127,7 +133,7 @@ class CarlaBenchmarkCollector(BaseCollector):
             self._collect_suite_reset_params.clear()
             self._collect_suite_index_dict.clear()
             self._collect_suite_list = get_suites_list(suite)
-            print('[COLLECTOR] Find suites:', self._collect_suite_list)
+            print('[COLLECTOR] Find suites:', [s for s in self._collect_suite_list])
             self._suite_num = len(self._collect_suite_list)
             self._generate_suite_reset_params()
 
