@@ -1405,3 +1405,6 @@ htmlcov
 project_test.py
 *.csv
 *.avi
+*episode_metainfo.json
+*measurements.lmdb
+*index.txt

@@ -1,3 +1,3 @@
 from .auto_policy import AutoPIDPolicy, AutoMPCPolicy
-from .coil_policy import CILPolicy
+from .cilrs_policy import CILRSPolicy
 from .lbc_policy import LBCBirdviewPolicy, LBCImagePolicy

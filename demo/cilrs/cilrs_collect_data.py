@@ -9,8 +9,7 @@ from ding.utils.default_helper import deep_merge_dicts
 from easydict import EasyDict
 from tqdm import tqdm
 
-from core.data import CarlaBenchmarkCollector
-from core.data.dataset_saver import BenchmarkDatasetSaver
+from core.data import CarlaBenchmarkCollector, BenchmarkDatasetSaver
 from core.envs import SimpleCarlaEnv, CarlaEnvWrapper
 from core.policy import AutoPIDPolicy
 from core.utils.others.tcp_helper import parse_carla_tcp
@@ -20,7 +19,6 @@ config = dict(
         env_num=5,
         simulator=dict(
             disable_two_wheels=True,
-            waypoint_num=32,
             planner=dict(
                 type='behavior',
                 resolution=1,
@@ -29,9 +27,9 @@ config = dict(
                 dict(
                     name='rgb',
                     type='rgb',
-                    size=[800, 600],
-                    position=[2.0, 0.0, 1.4],
-                    rotation=[-15, 0, 0],
+                    size=[400, 300],
+                    position=[1.3, 0.0, 2.3],
+                    fov=100,
                 ),
             ),
 
@@ -44,7 +42,11 @@ config = dict(
             context='spawn',
             max_retry=1,
         ),
-        wrapper=dict(),
+        wrapper=dict(
+            speed_factor=25.,
+            scale=1,
+            crop=256,
+        ),
     ),
     server=[
         dict(carla_host='localhost', carla_ports=[9000, 9010, 2]),
@@ -53,10 +55,12 @@ config = dict(
         target_speed=25,
         noise=True,
         collect=dict(
-            n_episode=5,
-            dir_path='./datasets_train/cils_datasets_train',
+            n_episode=100,
+            dir_path='./datasets_train/cilrs_datasets_train',
+            preloads_name='cilrs_datasets_train.npy',
             collector=dict(
                 suite='FullTown01-v1',
+                nocrash=True,
             ),
         )
     ),
@@ -65,11 +69,15 @@ config = dict(
 main_config = EasyDict(config)
 
 
-def cils_postprocess(sensor_data, *args):
+def cilrs_postprocess(sensor_data, scale=1, crop=256):
     rgb = sensor_data['rgb'].copy()
-    rgb = rgb[115:500, :, :]
     im = PIL.Image.fromarray(rgb)
-    rgb = np.array(im.resize([200, 88], PIL.Image.BICUBIC))
+    (width, height) = (int(im.width // scale), int(im.height // scale))
+    rgb = im.resize((width, height))
+    rgb = np.asarray(rgb)
+    start_x = height // 2 - crop // 2
+    start_y = width // 2 - crop // 2
+    rgb = rgb[start_x:start_x + crop, start_y:start_y + crop]
     sensor_data = {'rgb': rgb}
     others = {}
     return sensor_data, others
@@ -79,24 +87,24 @@ def wrapped_env(env_cfg, wrapper_cfg, host, port, tm_port=None):
     return CarlaEnvWrapper(SimpleCarlaEnv(env_cfg, host, port, tm_port), wrapper_cfg)
 
 
-def post_process(datasets_path):
-    epi_folder = [x for x in os.listdir(datasets_path) if x.startswith('epi')]
+def post_process(config):
+    epi_folder = [x for x in os.listdir(config.policy.collect.dir_path) if x.startswith('epi')]
 
     all_img_list = []
     all_mea_list = []
 
     for item in tqdm(epi_folder):
-        lmdb_file = lmdb.open(os.path.join(datasets_path, item, 'measurements.lmdb')).begin(write=False)
-        png_file = [
-            x for x in os.listdir(os.path.join(datasets_path, item)) if (x.endswith('png') and x.startswith('rgb'))
+        lmdb_file = lmdb.open(os.path.join(config.policy.collect.dir_path, item, 'measurements.lmdb')).begin(write=False)
+        png_files = [
+            x for x in os.listdir(os.path.join(config.policy.collect.dir_path, item)) if (x.endswith('png') and x.startswith('rgb'))
         ]
-        png_file.sort()
-        for k in tqdm(png_file):
-            index = k.split('_')[1].split('.')[0]
+        png_files.sort()
+        for png_file in png_files:
+            index = png_file.split('_')[1].split('.')[0]
             measurements = np.frombuffer(lmdb_file.get(('measurements_%05d' % int(index)).encode()), np.float32)
             data = {}
             data['control'] = np.array([measurements[12], measurements[13], measurements[14]]).astype(np.float32)
-            data['speed'] = measurements[10] / 25.
+            data['speed'] = measurements[10] / config.env.wrapper.speed_factor
             data['command'] = float(measurements[11])
             new_dict = {}
             new_dict['brake'] = data['control'][2]
@@ -104,11 +112,11 @@ def post_process(datasets_path):
             new_dict['throttle'] = data['control'][1]
             new_dict['speed_module'] = data['speed']
             new_dict['directions'] = data['command'] + 1.0
-            all_img_list.append(os.path.join(item, k))
+            all_img_list.append(os.path.join(item, png_file))
             all_mea_list.append(new_dict)
     if not os.path.exists('_preloads'):
         os.mkdir('_preloads')
-    np.save('_preloads/50hours_cils_datasets_train.npy', [all_img_list, all_mea_list])
+    np.save('_preloads/{}'.format(config.policy.collect.preloads_name), [all_img_list, all_mea_list])
 
 
 def main(cfg, seed=0):
@@ -123,7 +131,6 @@ def main(cfg, seed=0):
         env_fn=[partial(wrapped_env, cfg.env, cfg.env.wrapper, *tcp_list[i]) for i in range(env_num)],
         cfg=cfg.env.manager,
     )
-    collector_env.seed(seed)
 
     policy = AutoPIDPolicy(cfg.policy)
 
@@ -132,18 +139,22 @@ def main(cfg, seed=0):
     if not os.path.exists(cfg.policy.collect.dir_path):
         os.makedirs(cfg.policy.collect.dir_path)
 
-    collected_episodes = -1
-    saver = BenchmarkDatasetSaver(cfg.policy.collect.dir_path, cfg.env.simulator.obs, cils_postprocess)
+    collected_episodes = 0
+    data_postprocess = lambda x: cilrs_postprocess(x, cfg.env.wrapper.scale, cfg.env.wrapper.crop)
+    saver = BenchmarkDatasetSaver(cfg.policy.collect.dir_path, cfg.env.simulator.obs, data_postprocess)
+    print('[MAIN] Start collecting data')
     while collected_episodes < cfg.policy.collect.n_episode:
         # Sampling data from environments
-        print('start collect data')
-        new_data = collector.collect(n_episode=env_num)
-        print(new_data[0].keys())
-        collected_episodes += env_num
+        n_episode = min(cfg.policy.collect.n_episode - collected_episodes, env_num * 2)
+        new_data = collector.collect(n_episode=n_episode)
         saver.save_episodes_data(new_data, start_episode=collected_episodes)
+        collected_episodes += n_episode
+        print('[MAIN] Current collected: ', collected_episodes, '/', cfg.policy.collect.n_episode)
 
     collector_env.close()
-    post_process(cfg.policy.collect.dir_path)
+    saver.make_index()
+    print('[MAIN] Making preloads')
+    post_process(cfg)
 
 
 if __name__ == '__main__':

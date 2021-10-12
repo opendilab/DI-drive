@@ -34,6 +34,7 @@ class BaseCarlaPolicy(Policy):
             self._enable_field = self.total_field
         else:
             self._enable_field = enable_field
+        self._model = model
 
         for field in self._enable_field:
             getattr(self, '_init_' + field)()

@@ -43,7 +43,8 @@ class LBCBirdviewPolicy(BaseCarlaPolicy):
     )
 
     def __init__(self, cfg: dict) -> None:
-        super().__init__(cfg, enable_field=set(['eval', 'learn']))
+        super().__init__(cfg, enable_field=[])
+        self._enable_field = ['eval', 'learn']
         self._controller_dict = dict()
 
         if self._cfg.model.cuda:
@@ -98,6 +99,9 @@ class LBCBirdviewPolicy(BaseCarlaPolicy):
             self._cfg.model.backbone, self._cfg.model.input_channel, self._cfg.model.all_branch
         )
         self._model.to(self._device)
+
+        for field in self._enable_field:
+            getattr(self, '_init_' + field)()
 
     def _postprocess(self, steer, throttle, brake):
         control = {}

@@ -2,11 +2,8 @@ import os
 import numpy as np
 from collections import deque
 from typing import Any, Dict, List, Optional, Union
-import copy
-import math
-from tqdm import tqdm
-from easydict import EasyDict
 from itertools import product
+import random
 
 from .base_collector import BaseCollector
 from core.data.benchmark import ALL_SUITES
@@ -45,6 +42,8 @@ class CarlaBenchmarkCollector(BaseCollector):
         seed=None,
         dynamic_seed=True,
         weathers=None,
+        nocrash=False,
+        shuffle=False,
     )
 
     def __init__(
@@ -59,6 +58,7 @@ class CarlaBenchmarkCollector(BaseCollector):
         self._seed = self._cfg.seed
         self._dynamic_seed = self._cfg.dynamic_seed
         self._weathers = self._cfg.weathers
+        self._shuffle = self._cfg.shuffle
         if self._benchmark_dir is None:
             self._benchmark_dir = get_benchmark_dir()
         self._collect_suite_list = get_suites_list(suite)
@@ -109,12 +109,16 @@ class CarlaBenchmarkCollector(BaseCollector):
             if self._weathers is not None:
                 weathers = self._weathers
             pose_pairs = read_pose_txt(self._benchmark_dir, poses_txt)
-            for (start, end), weather in product(pose_pairs, weathers):
+            for weather, (start, end) in product(weathers, pose_pairs):
                 param = reset_params.copy()
                 param['start'] = start
                 param['end'] = end
                 param['weather'] = weather
+                if self._cfg.nocrash:
+                    param['col_is_failure'] = True
                 self._collect_suite_reset_params[suite].append(param)
+            if self._shuffle:
+                random.shuffle(self._collect_suite_reset_params[suite])
 
     def reset(self, suite: Union[List, str] = None) -> None:
         """

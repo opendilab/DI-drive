@@ -33,6 +33,7 @@ class SteerNoiseWrapper(object):
         self._noise_state = 'drive'
         self._state_step = 0
         self._last_throttle = 0
+        self._last_brake = 0
 
     def forward(self, *args, **kwargs) -> Dict:
         """
@@ -56,7 +57,7 @@ class SteerNoiseWrapper(object):
         if self._noise_state == 'noise':
             control['steer'] = self._noise_steer
             control['throttle'] = self._last_throttle
-            control['brake'] = 0
+            control['brake'] = self._last_brake
         else:
             control['steer'] = real_control['steer']
             control['throttle'] = real_control['throttle']
@@ -70,6 +71,7 @@ class SteerNoiseWrapper(object):
             if self._noise_range is not None:
                 np.clip(self._noise_steer, self._noise_range['min'], self._noise_range['max'])
             self._last_throttle = real_control['throttle']
+            self._last_brake = real_control['brake']
 
         return control
 

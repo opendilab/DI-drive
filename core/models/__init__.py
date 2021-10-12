@@ -4,4 +4,4 @@ from .mpc_controller import MPCController
 from .bev_speed_model import BEVSpeedConvEncoder
 from .vae_model import VanillaVAE
 from .model_wrappers import SteerNoiseWrapper
-from .coil_model import COILModel
+from .cilrs_model import CILRSModel
