@@ -18,6 +18,9 @@ config = dict(
         cudnn=True,
         resume=False,
         ckpt_path=None,
+        model=dict(
+            num_branch=4,
+        ),
         learn=dict(
             epoches=200,
             batch_size=128,

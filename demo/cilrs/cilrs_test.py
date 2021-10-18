@@ -43,6 +43,10 @@ lbc_config = dict(
     server=[dict(carla_host='localhost', carla_ports=[9000, 9010, 2])],
     policy=dict(
         ckpt_path=None,
+        model=dict(
+            num_branch=4,
+            pretrained=False,
+        ),
         eval=dict(
             evaluator=dict(
                 #render=True,
