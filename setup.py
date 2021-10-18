@@ -28,7 +28,7 @@ setup(
         'pygame==1.9.6',
         'torch>=1.4,<=1.8',
         'torchvision',
-        'di-engine==0.1.1',
+        'di-engine==0.2',
         'scikit-image',
         'setuptools==50',
         'shapely',
