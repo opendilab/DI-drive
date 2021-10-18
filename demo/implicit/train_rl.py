@@ -14,7 +14,7 @@ from core.utils.others.ding_utils import compile_config
 from core.utils.others.tcp_helper import parse_carla_tcp
 from ding.envs import SyncSubprocessEnvManager, BaseEnvManager
 from ding.policy import DQNPolicy
-from ding.worker import BaseLearner, SampleCollector, AdvancedReplayBuffer
+from ding.worker import BaseLearner, SampleSerialCollector, AdvancedReplayBuffer
 from ding.rl_utils import get_epsilon_greedy_fn
 from ding.utils import set_pkg_seed
 from ding.utils.default_helper import deep_merge_dicts
@@ -170,7 +170,7 @@ def main(cfg, env_args, seed=0):
         SyncSubprocessEnvManager,
         DQNPolicy,
         BaseLearner,
-        SampleCollector,
+        SampleSerialCollector,
         buffer=AdvancedReplayBuffer,
     )
 
@@ -201,7 +201,7 @@ def main(cfg, env_args, seed=0):
 
     tb_logger = SummaryWriter('./log/{}/'.format(cfg.exp_name))
     learner = BaseLearner(cfg.policy.learn.learner, policy.learn_mode, tb_logger, exp_name=cfg.exp_name)
-    collector = SampleCollector(cfg.policy.collect.collector, collector_env, policy.collect_mode, tb_logger, exp_name=cfg.exp_name)
+    collector = SampleSerialCollector(cfg.policy.collect.collector, collector_env, policy.collect_mode, tb_logger, exp_name=cfg.exp_name)
     replay_buffer = AdvancedReplayBuffer(cfg.policy.other.replay_buffer, tb_logger, exp_name=cfg.exp_name)
 
     learner.call_hook('before_run')

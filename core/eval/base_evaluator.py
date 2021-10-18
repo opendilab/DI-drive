@@ -12,7 +12,7 @@ from typing import Any, Dict, Optional
 from easydict import EasyDict
 
 from core.utils.others.config_helper import deep_merge_dicts
-from ding.utils import EasyTimer
+from ding.utils import EasyTimer, build_logger
 
 
 class BaseEvaluator(object):
@@ -39,6 +39,9 @@ class BaseEvaluator(object):
         self._tb_logger = None
         if tb_logger is not None:
             self._tb_logger = tb_logger
+        self._logger, _ = build_logger(
+            path='./{}/log/{}'.format(self._exp_name, self._instance_name), name=self._instance_name, need_tb=False
+        )
 
         self._timer = EasyTimer()
         if env is not None:
