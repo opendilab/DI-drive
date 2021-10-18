@@ -64,6 +64,8 @@ class CILRSPolicy(BaseCarlaPolicy):
         steer = control_pred[:, 0] * 2 - 1.  # convert from [0,1] to [-1,1]
         throttle = control_pred[:, 1] * self._cfg.max_throttle
         brake = control_pred[:, 2]
+        if brake < 0.05:
+            brake = brake - brake
         action = {'steer': steer, 'throttle': throttle, 'brake': brake}
 
         return action, velocity_pred

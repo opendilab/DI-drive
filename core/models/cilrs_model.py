@@ -11,7 +11,8 @@ class CILRSModel(nn.Module):
     def __init__(
         self,
         backbone='resnet18',
-        normalize=False,
+        pretrained=True,
+        normalize=True,
         num_branch=6,
         speed_dim=1,
         embedding_dim=512,
@@ -27,7 +28,7 @@ class CILRSModel(nn.Module):
             'resnet34': models.resnet34,
             'resnet50': models.resnet50,
         }[backbone]
-        self._backbone = backbone_cls(pretrained=True)
+        self._backbone = backbone_cls(pretrained=pretrained)
         self._backbone.fc = nn.Sequential()
         self._num_branch = num_branch
         self._input_speed = input_speed

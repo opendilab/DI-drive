@@ -108,7 +108,7 @@ def post_process(config):
             data['command'] = float(measurements[11])
             new_dict = {}
             new_dict['brake'] = data['control'][2]
-            new_dict['steer'] = data['control'][0]
+            new_dict['steer'] = (data['control'][0] + 1) / 2
             new_dict['throttle'] = data['control'][1]
             new_dict['speed_module'] = data['speed']
             new_dict['directions'] = data['command'] + 1.0
