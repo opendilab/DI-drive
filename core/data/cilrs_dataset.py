@@ -37,6 +37,4 @@ class CILRSDataset(Dataset):
         for k, v in measurements.items():
             v = torch.from_numpy(np.asanyarray([v])).type(torch.FloatTensor)
             data[k] = v
-        data['speed'] = data.pop('speed_module')
-        data['command'] = data.pop('directions')
         return data

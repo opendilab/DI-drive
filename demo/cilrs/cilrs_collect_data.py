@@ -110,8 +110,8 @@ def post_process(config):
             new_dict['brake'] = data['control'][2]
             new_dict['steer'] = (data['control'][0] + 1) / 2
             new_dict['throttle'] = data['control'][1]
-            new_dict['speed_module'] = data['speed']
-            new_dict['directions'] = data['command'] + 1.0
+            new_dict['speed'] = data['speed']
+            new_dict['command'] = data['command'] + 1.0
             all_img_list.append(os.path.join(item, png_file))
             all_mea_list.append(new_dict)
     if not os.path.exists('_preloads'):

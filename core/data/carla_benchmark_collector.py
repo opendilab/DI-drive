@@ -196,7 +196,7 @@ class CarlaBenchmarkCollector(BaseCollector):
         self._env_manager.reset(running_env_params)
 
         return_data = []
-        collected_episodes = running_envs
+        collected_episodes = running_envs - 1
         collected_samples = 0
 
         with self._timer:
