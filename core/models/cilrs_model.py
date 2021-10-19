@@ -69,8 +69,9 @@ class CILRSModel(nn.Module):
         self._branches = nn.ModuleList(fc_branch_list)
 
     def _normalize_imagenet(self, x):
-        """ Normalize input images according to ImageNet standards.
-        Args:
+        """
+        Normalize input images according to ImageNet standards.
+        :Arguments:
             x (tensor): input images
         """
         x = x.clone()

@@ -51,30 +51,33 @@ class CILRSPolicy(BaseCarlaPolicy):
         for field in self._enable_field:
             getattr(self, '_init_' + field)()
 
-    def _process_sensors(self, sensor):
+    def _process_sensors(self, sensor: np.ndarray) -> np.ndarray:
         sensor = sensor[:, :, ::-1]  # BGR->RGB
         sensor = np.transpose(sensor, (2, 0, 1))
         sensor = sensor / 255.0
 
         return sensor
 
-    def _process_model_outputs(self, output):
-
-        control_pred, velocity_pred = output
-        steer = control_pred[:, 0] * 2 - 1.  # convert from [0,1] to [-1,1]
-        throttle = control_pred[:, 1] * self._cfg.max_throttle
-        brake = control_pred[:, 2]
-        if brake < 0.05:
-            brake = brake - brake
-        action = {'steer': steer, 'throttle': throttle, 'brake': brake}
-
-        return action, velocity_pred
+    def _process_model_outputs(self, data: Dict, output: List) -> List:
+        action = []
+        for i, d in enumerate(data.values()):
+            control_pred = output[i][0]
+            steer = control_pred[0] * 2 - 1.  # convert from [0,1] to [-1,1]
+            throttle = min(control_pred[1], self._max_throttle)
+            brake = control_pred[2]
+            if d['tick'] < 20 and d['speed'] < 0.1:
+                throttle = self._max_throttle
+                brake = 0
+            if brake < 0.05:
+                brake = 0
+            action.append({'steer': steer, 'throttle': throttle, 'brake': brake})
+        return action
 
     def _reset_eval(self, data_id: Optional[List[int]] = None) -> None:
         self._model.eval()
 
     @torch.no_grad()
-    def _forward_eval(self, data: Dict):
+    def _forward_eval(self, data: Dict) -> Dict[str, Any]:
         data_id = list(data.keys())
 
         new_data = dict()
@@ -84,17 +87,17 @@ class CILRSPolicy(BaseCarlaPolicy):
             new_data[id]['command'] = data[id]['command']
             new_data[id]['speed'] = data[id]['speed']
 
-        data = default_collate(list(new_data.values()))
+        new_data = default_collate(list(new_data.values()))
         if self._cuda:
-            data = to_device(data, 'cuda')
+            new_data = to_device(new_data, 'cuda')
 
-        embedding = self._model.encode([data['rgb']])
-        output = self._model(embedding, data['speed'], data['command'])
+        embedding = self._model.encode([new_data['rgb']])
+        output = self._model(embedding, new_data['speed'], new_data['command'])
         if self._cuda:
             output = to_device(output, 'cpu')
 
-        actions, _ = self._process_model_outputs(output)
-        actions = default_decollate(actions)
+        actions = default_decollate(output)
+        actions = self._process_model_outputs(data, output)
         return {i: {'action': d} for i, d in zip(data_id, actions)}
 
     def _init_learn(self) -> None:
@@ -148,7 +151,7 @@ class CILRSPolicy(BaseCarlaPolicy):
 
         return return_info
 
-    def _init_validate(self):
+    def _init_validate(self) -> None:
         if self._cfg.learn.loss == 'l1':
             self._criterion = F.l1_loss
         elif self._cfg.policy.learn.loss == 'l2':

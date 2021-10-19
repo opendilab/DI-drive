@@ -19,6 +19,7 @@ class CILRSEnvWrapper(CarlaEnvWrapper):
         new_obs = {
             'command': obs['command'],
             'speed': np.float32(obs['speed'] / self._cfg.speed_factor),
+            'tick': obs['tick'],
         }
         rgb = obs['rgb']
         im = PIL.Image.fromarray(rgb)
@@ -34,6 +35,7 @@ class CILRSEnvWrapper(CarlaEnvWrapper):
     def reset(self, *args, **kwargs) -> Any:
         obs = super().reset(*args, **kwargs)
         obs_out = self._get_obs(obs)
+        self._tick = obs_out['tick']
         return obs_out
 
     def step(self, action):
@@ -45,5 +47,6 @@ class CILRSEnvWrapper(CarlaEnvWrapper):
         timestep = super().step(action)
         obs = timestep.obs
         obs_out = self._get_obs(obs)
+        self._tick = obs_out['tick']
         timestep = timestep._replace(obs=obs_out)
         return timestep
