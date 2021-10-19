@@ -17,7 +17,7 @@ class CILRSEnvWrapper(CarlaEnvWrapper):
 
     def _get_obs(self, obs):
         new_obs = {
-            'command': obs['command'] + 1,
+            'command': obs['command'],
             'speed': np.float32(obs['speed'] / self._cfg.speed_factor),
         }
         rgb = obs['rgb']
