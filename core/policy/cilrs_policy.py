@@ -97,7 +97,7 @@ class CILRSPolicy(BaseCarlaPolicy):
             output = to_device(output, 'cpu')
 
         actions = default_decollate(output)
-        actions = self._process_model_outputs(data, output)
+        actions = self._process_model_outputs(data, actions)
         return {i: {'action': d} for i, d in zip(data_id, actions)}
 
     def _init_learn(self) -> None:

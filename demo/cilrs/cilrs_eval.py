@@ -1,15 +1,18 @@
 from easydict import EasyDict
 import torch
+from functools import partial
 
 from core.envs import SimpleCarlaEnv
 from core.policy import CILRSPolicy
-from core.eval import SingleCarlaEvaluator
+from core.eval import CarlaBenchmarkEvaluator
 from core.utils.others.tcp_helper import parse_carla_tcp
-from ding.utils import set_pkg_seed
+from ding.utils import set_pkg_seed, deep_merge_dicts
+from ding.envs import AsyncSubprocessEnvManager
 from demo.cilrs.cilrs_env_wrapper import CILRSEnvWrapper
 
 cilrs_config = dict(
     env=dict(
+        env_num=5,
         simulator=dict(
             town='Town01',
             disable_two_wheels=True,
@@ -28,13 +31,15 @@ cilrs_config = dict(
                 ),
             ),
         ),
-        visualize=dict(
-            type='rgb',
-            outputs=['show']
-        ),
         wrapper=dict(),
         col_is_failure=True,
         stuck_is_failure=True,
+        manager=dict(
+            auto_reset=False,
+            shared_memory=False,
+            context='spawn',
+            max_retry=1,
+        ),
     ),
     server=[dict(carla_host='localhost', carla_ports=[9000, 9010, 2])],
     policy=dict(
@@ -45,7 +50,7 @@ cilrs_config = dict(
         ),
         eval=dict(
             evaluator=dict(
-                #render=True,
+                suite=['FullTown01-v1'],
                 transform_obs=True,
             ),
         )
@@ -60,10 +65,17 @@ def wrapped_env(env_cfg, host, port, tm_port=None):
 
 
 def main(cfg, seed=0):
-    tcp_list = parse_carla_tcp(cfg.server)
-    assert len(tcp_list) > 0, "No Carla server found!"
+    cfg.env.manager = deep_merge_dicts(AsyncSubprocessEnvManager.default_config(), cfg.env.manager)
 
-    carla_env = wrapped_env(cfg.env, *tcp_list[0])
+    tcp_list = parse_carla_tcp(cfg.server)
+    env_num = cfg.env.env_num
+    assert len(tcp_list) >= env_num, \
+        "Carla server not enough! Need {} servers but only found {}.".format(env_num, len(tcp_list))
+
+    carla_env = AsyncSubprocessEnvManager(
+        env_fn=[partial(wrapped_env, cfg.env, *tcp_list[i]) for i in range(env_num)],
+        cfg=cfg.env.manager,
+    )
     carla_env.seed(seed)
     set_pkg_seed(seed)
     cilrs_policy = CILRSPolicy(cfg.policy).eval_mode
@@ -71,9 +83,8 @@ def main(cfg, seed=0):
         state_dict = torch.load(cfg.policy.ckpt_path)
         cilrs_policy.load_state_dict(state_dict)
 
-    evaluator = SingleCarlaEvaluator(cfg.policy.eval.evaluator, carla_env, cilrs_policy)
-    res = evaluator.eval()
-
+    evaluator = CarlaBenchmarkEvaluator(cfg.policy.eval.evaluator, carla_env, cilrs_policy)
+    success_rate = evaluator.eval()
     evaluator.close()
 
 

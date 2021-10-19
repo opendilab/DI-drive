@@ -89,16 +89,14 @@ class CILRSModel(nn.Module):
         return embedding
 
     def forward(self, embedding, speed, command):
-        batch_size = embedding.size(0)
-
         if self._input_speed:
-            embedding += self._speed_in(speed)
+            embedding += self._speed_in(speed.unsqueeze(1))
 
         control_pred = 0.
         for i, branch in enumerate(self._branches):
             # Choose control for branch of only active command
             # We check for (command - 1) since navigational command 0 is ignored
-            control_pred += branch(embedding) * (i == (command - 1)).expand(batch_size, 3)
+            control_pred += branch(embedding) * (i == (command.unsqueeze(1) - 1))
 
         if self.predict_speed:
             speed_pred = self._speed_out(embedding)
