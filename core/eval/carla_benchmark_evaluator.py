@@ -198,7 +198,7 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
                 param['weather'] = weather
                 if self._resume and len(summary) > 0 and ((summary['start'] == start) & (summary['end'] == end) &
                                                           (summary['weather'] == weather)).any():
-                    self._logger.info('[EVALUATOR]', weather, start, end, 'already exist')
+                    self._logger.info('[EVALUATOR] weather:{}, route:{}, {} already exist'.format(weather, start, end))
                     continue
                 if running_envs < self._env_num:
                     running_env_params[running_envs] = param
