@@ -7,6 +7,7 @@ from tqdm import tqdm
 import torch
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
+from torch.optim import Adam
 
 from core.policy import CILRSPolicy
 from core.data import CILRSDataset
@@ -49,16 +50,20 @@ config = dict(
 main_config = EasyDict(config)
 
 
-def train(policy, loader, tb_logger=None, start_iter=0):
+def train(policy, optimizer, loader, tb_logger=None, start_iter=0):
     loss_epoch = defaultdict(list)
     iter_num = start_iter
     policy.reset()
 
     for data in tqdm(loader):
         log_vars = policy.forward(data)
-
+        optimizer.zero_grad()
+        total_loss = log_vars['total_loss']
+        total_loss.backward()
+        optimizer.step()
+        log_vars['cur_lr'] = optimizer.defaults['lr']
         for k, v in log_vars.items():
-            loss_epoch[k] += [log_vars[k]]
+            loss_epoch[k] += [log_vars[k].item()]
             if iter_num % 50 == 0 and tb_logger is not None:
                 tb_logger.add_scalar("train_iter/" + k, v, iter_num)
         iter_num += 1
@@ -70,7 +75,8 @@ def validate(policy, loader, tb_logger=None, epoch=0):
     loss_epoch = defaultdict(list)
     policy.reset()
     for data in tqdm(loader):
-        log_vars = policy.forward(data)
+        with torch.no_grad():
+            log_vars = policy.forward(data)
         for k in list(log_vars.keys()):
             loss_epoch[k] += [log_vars[k]]
     loss_epoch = {k: np.mean(v) for k, v in loss_epoch.items()}
@@ -86,7 +92,7 @@ def save_ckpt(state, name=None, exp_name=''):
     torch.save(state, ckpt_path)
 
 
-def load_best_ckpt(policy, root_dir='checkpoints', exp_name='', ckpt_path=None):
+def load_best_ckpt(policy, optimizer=None, root_dir='checkpoints', exp_name='', ckpt_path=None):
     ckpt_dir = os.path.join(root_dir, exp_name)
     assert os.path.isdir(ckpt_dir), ckpt_dir
     files = os.listdir(ckpt_dir)
@@ -101,6 +107,8 @@ def load_best_ckpt(policy, root_dir='checkpoints', exp_name='', ckpt_path=None):
     print('Load ckpt:', ckpt_path)
     state_dict = torch.load(os.path.join(ckpt_dir, ckpt_path))
     policy.load_state_dict(state_dict)
+    if 'optimizer' in state_dict:
+        optimizer.load_state_dict(state_dict['optimizer'])
     epoch = state_dict['epoch']
     iterations = state_dict['iterations']
     best_loss = state_dict['best_loss']
@@ -117,6 +125,7 @@ def main(cfg):
     val_loader = DataLoader(val_dataset, cfg.policy.learn.batch_size, num_workers=8)
 
     cilrs_policy = CILRSPolicy(cfg.policy)
+    optimizer = Adam(cilrs_policy._model.parameters(), cfg.policy.learn.lr)
     tb_logger = SummaryWriter('./log/{}/'.format(cfg.exp_name))
     iterations = 0
     best_loss = 1e8
@@ -124,11 +133,11 @@ def main(cfg):
 
     if cfg.policy.resume:
         start_epoch, iterations, best_loss = load_best_ckpt(
-            cilrs_policy.learn_mode, exp_name=cfg.exp_name, ckpt_path=cfg.policy.ckpt_path
+            cilrs_policy.learn_mode, optimizer, exp_name=cfg.exp_name, ckpt_path=cfg.policy.ckpt_path
         )
 
     for epoch in range(start_epoch, cfg.policy.learn.epoches):
-        iter_num, loss = train(cilrs_policy.learn_mode, train_loader, tb_logger, iterations)
+        iter_num, loss = train(cilrs_policy.learn_mode, optimizer, train_loader, tb_logger, iterations)
         iterations = iter_num
         tqdm.write(
             f"Epoch {epoch:03d}, Iter {iter_num:06d}: Total: {loss['total_loss']:2.5f}" +
@@ -136,10 +145,11 @@ def main(cfg):
             f" Thr: {loss['throttle_loss']:2.5f} Brk: {loss['brake_loss']:2.5f}"
         )
         if epoch % cfg.policy.eval.eval_freq == 0:
-            loss_dict = validate(cilrs_policy.validate_mode, val_loader, tb_logger, iterations)
+            loss_dict = validate(cilrs_policy.learn_mode, val_loader, tb_logger, iterations)
             total_loss = loss_dict['total_loss']
             tqdm.write(f"Validate Total: {total_loss:2.5f}")
             state_dict = cilrs_policy.learn_mode.state_dict()
+            state_dict['optimizer'] = optimizer.state_dict()
             state_dict['epoch'] = epoch
             state_dict['iterations'] = iterations
             state_dict['best_loss'] = best_loss
