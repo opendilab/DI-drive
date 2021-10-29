@@ -12,6 +12,20 @@ from .base_carla_policy import BaseCarlaPolicy
 
 
 class CILRSPolicy(BaseCarlaPolicy):
+    """
+    CILRS driving policy. It has a CILRS NN model which can handle
+    observations from several environments by collating data into batch. It contains 3
+    modes: `eval`, `learn` and `validate`. The validate mode will calculate control
+    signal together with loss, but will not back-propregate it. In `eval` mode, the
+    output control signal will be postprocessed to 
+
+    :Arguments:
+        - cfg (Dict): Config Dict.
+
+    :Interfaces:
+        reset, forward
+    """
+
     config = dict(
         cuda=True,
         max_throttle=0.75,
@@ -74,10 +88,25 @@ class CILRSPolicy(BaseCarlaPolicy):
         return action
 
     def _reset_eval(self, data_id: Optional[List[int]] = None) -> None:
+        """
+        Reset policy of `eval` mode. It will change the NN model into 'eval' mode.
+
+        :Arguments:
+            - data_id (List[int], optional): List of env id to reset. Defaults to None.
+        """
         self._model.eval()
 
     @torch.no_grad()
     def _forward_eval(self, data: Dict) -> Dict[str, Any]:
+        """
+        Running forward to get control signal of `eval` mode.
+
+        :Arguments:
+            - data (Dict): Input dict, with env id in keys and related observations in values,
+
+        :Returns:
+            Dict: Control and waypoints dict stored in values for each provided env id.
+        """
         data_id = list(data.keys())
 
         new_data = dict()
@@ -108,9 +137,24 @@ class CILRSPolicy(BaseCarlaPolicy):
             self._criterion = F.mse_loss
 
     def _reset_learn(self, data_id: Optional[List[int]] = None) -> None:
+        """
+        Reset policy of `learn` mode. It will change the NN model into 'train' mode.
+
+        :Arguments:
+            - data_id (List[int], optional): List of env id to reset. Defaults to None.
+        """
         self._model.train()
 
     def _forward_learn(self, data: Dict) -> Dict[str, Any]:
+        """
+        Running forward to get loss of `learn` mode and back-propregate the loss.
+
+        :Arguments:
+            - data (Dict): Input dict, with env id in keys and related observations in values,
+
+        :Returns:
+            Dict: information about training loss.
+        """
         if self._cuda:
             data = to_device(data, 'cuda')
 
@@ -159,6 +203,15 @@ class CILRSPolicy(BaseCarlaPolicy):
 
     @torch.no_grad()
     def _forward_validate(self, data: Dict) -> Dict[str, Any]:
+        """
+        Running forward to get loss of `validate` mode.
+
+        :Arguments:
+            - data (Dict): Input dict, with env id in keys and related observations in values,
+
+        :Returns:
+            Dict: Dict: information about validating loss
+        """
         if self._cuda:
             data = to_device(data, 'cuda')
 
