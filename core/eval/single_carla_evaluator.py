@@ -74,14 +74,14 @@ class SingleCarlaEvaluator(BaseEvaluator):
 
         with self._timer:
             while True:
+                if self._render:
+                    self._env.render()
                 if self._transform_obs:
                     obs = to_tensor(obs, dtype=torch.float32)
                 actions = self._policy.forward({0: obs})
                 action = actions[0]['action']
                 timestep = self._env.step(action)
                 obs = timestep.obs
-                if self._render:
-                    self._env.render()
                 if timestep.info.get('abnormal', False):
                     # If there is an abnormal timestep, reset all the related variables(including this env).
                     self._policy.reset(**reset_param)

@@ -4,4 +4,3 @@ Description:
 '''
 
 from .map_utils import BeVWrapper
-from .sensor_utils import SensorHelper, CollisionSensor

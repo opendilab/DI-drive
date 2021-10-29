@@ -232,6 +232,7 @@ class SimpleCarlaEnv(BaseCarlaEnv):
         done = self.is_success() or self.is_failure()
         if done and self._visualizer is not None:
             self._visualizer.done()
+            self._visualizer = None
 
         return obs, self._reward, done, info
 
