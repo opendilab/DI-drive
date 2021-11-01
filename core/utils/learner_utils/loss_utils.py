@@ -17,7 +17,7 @@ class LocationLoss(torch.nn.Module):
         else:
             raise NotImplementedError("Unknown loss: %s" % choice)
 
-        self.img_size = torch.FloatTensor([w, h])
+        self.img_size = torch.FloatTensor([w, h]).cuda()
 
     def forward(self, pred_location, gt_location):
         '''

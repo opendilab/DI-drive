@@ -4,7 +4,6 @@ from ding.torch_utils.data_helper import to_device, to_dtype, to_tensor
 import torch
 from torchvision import transforms
 import numpy as np
-import torch.nn.functional as F
 from typing import Dict, List, Any, Optional
 
 from .base_carla_policy import BaseCarlaPolicy
@@ -12,6 +11,7 @@ from core.models import PIDController, CustomController
 from core.models.lbc_model import LBCBirdviewModel, LBCImageModel
 from core.utils.model_utils import common
 from ding.utils.data import default_collate, default_decollate
+from core.utils.learner_utils.loss_utils import LocationLoss
 
 STEPS = 5
 SPEED_STEPS = 3
@@ -106,9 +106,9 @@ class LBCBirdviewPolicy(BaseCarlaPolicy):
 
     def _init_learn(self) -> None:
         if self._cfg.learn.loss == 'l1':
-            self._criterion = F.l1_loss
+            self._criterion = LocationLoss(choice='l1')
         elif self._cfg.policy.learn.loss == 'l2':
-            self._criterion = F.mse_loss
+            self._criterion = LocationLoss(choice='l2')
 
     def _postprocess(self, steer, throttle, brake):
         control = {}
@@ -119,7 +119,6 @@ class LBCBirdviewPolicy(BaseCarlaPolicy):
                 'brake': np.clip(brake, 0.0, 1.0),
             }
         )
-
         return control
 
     def _reset_single(self, data_id):
@@ -256,8 +255,10 @@ class LBCBirdviewPolicy(BaseCarlaPolicy):
         locations_pred = _locations
         location_gt = data['location'].to(self._device)
         loss = self._criterion(locations_pred, location_gt)
-        loss_mean = loss.mean()
-        return loss_mean
+        return {
+            'loss': loss,
+            'locations_pred': locations_pred,
+        }
 
     def _reset_learn(self, data_ids: Optional[List[int]] = None) -> None:
         self._model.train()
@@ -354,6 +355,12 @@ class LBCImagePolicy(BaseCarlaPolicy):
 
         self._model = LBCImageModel(self._cfg.model.backbone, False, all_branch=self._cfg.model.all_branch)
         self._model = self._model.to(self._device)
+
+    def _init_learn(self) -> None:
+        if self._cfg.learn.loss == 'l1':
+            self._criterion = LocationLoss(choise='l1')
+        elif self._cfg.policy.learn.loss == 'l2':
+            self._criterion = LocationLoss(choise='l2')
 
     def _reset_single(self, data_id):
         if data_id in self._controller_dict:
@@ -498,6 +505,34 @@ class LBCImagePolicy(BaseCarlaPolicy):
         """
         self._model.eval()
         self._reset(data_ids)
+
+    def _forward_learn(self, data: Dict) -> Dict[str, Any]:
+        rgb = to_dtype(data['rgb'], dtype=torch.float32).permute(0, 3, 1, 2)
+        speed = to_dtype(data['speed'], dtype=torch.float32)
+        command_index = [i.item() - 1 for i in data['command']]
+        command = self._one_hot[command_index]
+        if command.ndim == 1:
+            command = command.unsqueeze(0)
+
+        _rgb = rgb.to(self._device)
+        _speed = speed.to(self._device)
+        _command = command.to(self._device)
+
+        if self._model._all_branch:
+            _locations, _ = self._model(_rgb, _speed, _command)
+        else:
+            _locations = self._model(_rgb, _speed, _command)
+
+        locations_pred = _locations
+        location_gt = data['location'].to(self._device)
+        loss = self._criterion(locations_pred, location_gt)
+        return {
+            'loss': loss,
+            'location_pred': locations_pred,
+        }
+
+    def _reset_learn(self, data_ids: Optional[List[int]] = None) -> None:
+        self._model.train()
 
 
 def ls_circle(points):
