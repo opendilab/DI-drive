@@ -10,7 +10,7 @@ from core.utils.others.tcp_helper import parse_carla_tcp
 from core.eval import SerialEvaluator
 from ding.envs import SyncSubprocessEnvManager, BaseEnvManager
 from ding.policy import TD3Policy
-from ding.worker import BaseLearner, SampleCollector, NaiveReplayBuffer
+from ding.worker import BaseLearner, SampleSerialCollector, NaiveReplayBuffer
 from ding.utils import set_pkg_seed
 from demo.simple_rl.model import TD3RLModel
 from demo.simple_rl.env_wrapper import ContinuousBenchmarkEnvWrapper
@@ -127,7 +127,7 @@ def main(cfg, seed=0):
         SyncSubprocessEnvManager,
         TD3Policy,
         BaseLearner,
-        SampleCollector,
+        SampleSerialCollector,
         buffer=NaiveReplayBuffer,
     )
     tcp_list = parse_carla_tcp(cfg.server)
@@ -156,7 +156,7 @@ def main(cfg, seed=0):
 
     tb_logger = SummaryWriter('./log/{}/'.format(cfg.exp_name))
     learner = BaseLearner(cfg.policy.learn.learner, policy.learn_mode, tb_logger, exp_name=cfg.exp_name)
-    collector = SampleCollector(cfg.policy.collect.collector, collector_env, policy.collect_mode, tb_logger, exp_name=cfg.exp_name)
+    collector = SampleSerialCollector(cfg.policy.collect.collector, collector_env, policy.collect_mode, tb_logger, exp_name=cfg.exp_name)
     evaluator = SerialEvaluator(cfg.policy.eval.evaluator, evaluate_env, policy.eval_mode, tb_logger, exp_name=cfg.exp_name)
     replay_buffer = NaiveReplayBuffer(cfg.policy.other.replay_buffer, tb_logger, exp_name=cfg.exp_name)
 

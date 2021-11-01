@@ -107,7 +107,7 @@ class GifMaker(object):
         cls.images[key].append(image.copy())
 
     @classmethod
-    def save(cls, key, save_dir='debug', save_path='test.gif', duration=0.1):
+    def save(cls, key, save_dir='debug', save_path='test.gif', duration=0.05):
         save_dir = Path(save_dir)
 
         save_dir.mkdir(exist_ok=True, parents=True)

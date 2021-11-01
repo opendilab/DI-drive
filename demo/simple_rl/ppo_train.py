@@ -11,7 +11,7 @@ from core.utils.others.tcp_helper import parse_carla_tcp
 from core.eval import SerialEvaluator
 from ding.envs import SyncSubprocessEnvManager, BaseEnvManager
 from ding.policy import PPOPolicy
-from ding.worker import BaseLearner, SampleCollector
+from ding.worker import BaseLearner, SampleSerialCollector
 from ding.utils import set_pkg_seed
 
 from demo.simple_rl.model import PPORLModel
@@ -124,7 +124,7 @@ def main(cfg, seed=0):
         SyncSubprocessEnvManager,
         PPOPolicy,
         BaseLearner,
-        SampleCollector,
+        SampleSerialCollector,
     )
     tcp_list = parse_carla_tcp(cfg.server)
     collector_env_num, evaluator_env_num = cfg.env.collector_env_num, cfg.env.evaluator_env_num
@@ -152,7 +152,7 @@ def main(cfg, seed=0):
 
     tb_logger = SummaryWriter('./log/{}/'.format(cfg.exp_name))
     learner = BaseLearner(cfg.policy.learn.learner, policy.learn_mode, tb_logger, exp_name=cfg.exp_name)
-    collector = SampleCollector(cfg.policy.collect.collector, collector_env, policy.collect_mode, tb_logger, exp_name=cfg.exp_name)
+    collector = SampleSerialCollector(cfg.policy.collect.collector, collector_env, policy.collect_mode, tb_logger, exp_name=cfg.exp_name)
     evaluator = SerialEvaluator(cfg.policy.eval.evaluator, evaluate_env, policy.eval_mode, tb_logger, exp_name=cfg.exp_name)
 
     learner.call_hook('before_run')

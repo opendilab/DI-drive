@@ -4,6 +4,7 @@ from ding.torch_utils.data_helper import to_device, to_dtype, to_tensor
 import torch
 from torchvision import transforms
 import numpy as np
+import torch.nn.functional as F
 from typing import Dict, List, Any, Optional
 
 from .base_carla_policy import BaseCarlaPolicy
@@ -33,7 +34,9 @@ class LBCBirdviewPolicy(BaseCarlaPolicy):
     """
 
     config = dict(
-        model=dict(cuda=True, backbone='resnet18', input_channel=7, all_branch=False),
+        cuda=True,
+        model=dict(),
+        learn=dict(loss='l1',),
         steer_points=None,
         pid=None,
         gap=5,
@@ -43,10 +46,11 @@ class LBCBirdviewPolicy(BaseCarlaPolicy):
     )
 
     def __init__(self, cfg: dict) -> None:
-        super().__init__(cfg, enable_field=set(['eval', 'learn']))
+        super().__init__(cfg, enable_field=[])
+        self._enable_field = ['eval', 'learn']
         self._controller_dict = dict()
 
-        if self._cfg.model.cuda:
+        if self._cfg.cuda:
             if not torch.cuda.is_available():
                 print('[POLICY] No cuda device found! Use cpu by default')
                 self._device = torch.device('cpu')
@@ -94,10 +98,17 @@ class LBCBirdviewPolicy(BaseCarlaPolicy):
         self._speed_control_func = lambda: PIDController(K_P=1.0, K_I=0.1, K_D=2.5)
         self._turn_control_func = lambda: CustomController(self._pid)
 
-        self._model = LBCBirdviewModel(
-            self._cfg.model.backbone, self._cfg.model.input_channel, self._cfg.model.all_branch
-        )
+        self._model = LBCBirdviewModel(**self._cfg.model)
         self._model.to(self._device)
+
+        for field in self._enable_field:
+            getattr(self, '_init_' + field)()
+
+    def _init_learn(self) -> None:
+        if self._cfg.learn.loss == 'l1':
+            self._criterion = F.l1_loss
+        elif self._cfg.policy.learn.loss == 'l2':
+            self._criterion = F.mse_loss
 
     def _postprocess(self, steer, throttle, brake):
         control = {}
@@ -224,6 +235,32 @@ class LBCBirdviewPolicy(BaseCarlaPolicy):
         """
         self._model.eval()
         self._reset(data_ids)
+
+    def _forward_learn(self, data: Dict) -> Dict[str, Any]:
+        birdview = to_dtype(data['birdview'], dtype=torch.float32).permute(0, 3, 1, 2)
+        speed = to_dtype(data['speed'], dtype=torch.float32)
+        command_index = [i.item() - 1 for i in data['command']]
+        command = self._one_hot[command_index]
+        if command.ndim == 1:
+            command = command.unsqueeze(0)
+
+        _birdview = birdview.to(self._device)
+        _speed = speed.to(self._device)
+        _command = command.to(self._device)
+
+        if self._model._all_branch:
+            _locations, _ = self._model(_birdview, _speed, _command)
+        else:
+            _locations = self._model(_birdview, _speed, _command)
+
+        locations_pred = _locations
+        location_gt = data['location'].to(self._device)
+        loss = self._criterion(locations_pred, location_gt)
+        loss_mean = loss.mean()
+        return loss_mean
+
+    def _reset_learn(self, data_ids: Optional[List[int]] = None) -> None:
+        self._model.train()
 
 
 class LBCImagePolicy(BaseCarlaPolicy):

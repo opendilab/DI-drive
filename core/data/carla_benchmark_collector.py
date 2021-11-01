@@ -2,11 +2,8 @@ import os
 import numpy as np
 from collections import deque
 from typing import Any, Dict, List, Optional, Union
-import copy
-import math
-from tqdm import tqdm
-from easydict import EasyDict
 from itertools import product
+import random
 
 from .base_collector import BaseCollector
 from core.data.benchmark import ALL_SUITES
@@ -43,6 +40,10 @@ class CarlaBenchmarkCollector(BaseCollector):
         benchmark_dir=None,
         suite='FullTown01-v0',
         seed=None,
+        dynamic_seed=True,
+        weathers=None,
+        nocrash=False,
+        shuffle=False,
     )
 
     def __init__(
@@ -55,6 +56,9 @@ class CarlaBenchmarkCollector(BaseCollector):
         self._benchmark_dir = self._cfg.benchmark_dir
         suite = self._cfg.suite
         self._seed = self._cfg.seed
+        self._dynamic_seed = self._cfg.dynamic_seed
+        self._weathers = self._cfg.weathers
+        self._shuffle = self._cfg.shuffle
         if self._benchmark_dir is None:
             self._benchmark_dir = get_benchmark_dir()
         self._collect_suite_list = get_suites_list(suite)
@@ -102,13 +106,19 @@ class CarlaBenchmarkCollector(BaseCollector):
             reset_params = kwargs.copy()
             poses_txt = reset_params.pop('poses_txt')
             weathers = reset_params.pop('weathers')
+            if self._weathers is not None:
+                weathers = self._weathers
             pose_pairs = read_pose_txt(self._benchmark_dir, poses_txt)
-            for (start, end), weather in product(pose_pairs, weathers):
+            for weather, (start, end) in product(weathers, pose_pairs):
                 param = reset_params.copy()
                 param['start'] = start
                 param['end'] = end
                 param['weather'] = weather
+                if self._cfg.nocrash:
+                    param['col_is_failure'] = True
                 self._collect_suite_reset_params[suite].append(param)
+            if self._shuffle:
+                random.shuffle(self._collect_suite_reset_params[suite])
 
     def reset(self, suite: Union[List, str] = None) -> None:
         """
@@ -127,7 +137,7 @@ class CarlaBenchmarkCollector(BaseCollector):
             self._collect_suite_reset_params.clear()
             self._collect_suite_index_dict.clear()
             self._collect_suite_list = get_suites_list(suite)
-            print('[COLLECTOR] Find suites:', self._collect_suite_list)
+            print('[COLLECTOR] Find suites:', [s for s in self._collect_suite_list])
             self._suite_num = len(self._collect_suite_list)
             self._generate_suite_reset_params()
 
@@ -171,19 +181,21 @@ class CarlaBenchmarkCollector(BaseCollector):
                     running_env_params[running_envs] = reset_param
                     running_envs += 1
                     self._collect_suite_index_dict[suite] += 1
-                    if self._collect_suite_index_dict[suite] >= len(suite_params):
-                        self._collect_suite_index_dict[suite] = 0
+                    self._collect_suite_index_dict[suite] %= len(suite_params)
                 else:
                     prepare_enough = True
                     break
 
         if self._seed is not None:
-            for env_id in running_env_params:
-                self._env_manager.seed({env_id: self._seed})
+            if self._dynamic_seed:
+                self._env_manager.seed(self._seed)
+            else:
+                for env_id in running_env_params:
+                    self._env_manager.seed({env_id: self._seed})
         self._env_manager.reset(running_env_params)
 
         return_data = []
-        collected_episodes = running_envs
+        collected_episodes = running_envs - 1
         collected_samples = 0
 
         with self._timer:
@@ -227,12 +239,19 @@ class CarlaBenchmarkCollector(BaseCollector):
                                 reset_param_index = self._collect_suite_index_dict[next_suite]
                                 reset_param = self._collect_suite_reset_params[next_suite][reset_param_index]
                                 self._collect_suite_index_dict[next_suite] += 1
-                                if reset_param_index >= len(self._collect_suite_reset_params[next_suite]):
-                                    self._collect_suite_index_dict[next_suite] = 0
+                                self._collect_suite_index_dict[next_suite] %= len(
+                                    self._collect_suite_reset_params[next_suite]
+                                )
                                 running_env_params[env_id] = reset_param
                                 self._env_manager.reset({env_id: reset_param})
                         else:
-                            print('[COLLECTOR] env_id {} not success'.format(env_id), timestep.info)
+                            info = timestep.info
+                            for k in list(info.keys()):
+                                if 'reward' in k:
+                                    info.pop(k)
+                                if k in ['timestamp']:
+                                    info.pop(k)
+                            print('[COLLECTOR] env_id {} not success'.format(env_id), info)
                             suite_index = collected_episodes % self._suite_num
                             next_suite = self._collect_suite_list[suite_index]
                             reset_param_index = self._collect_suite_index_dict[next_suite]

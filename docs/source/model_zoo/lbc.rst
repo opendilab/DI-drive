@@ -13,6 +13,8 @@ throttle and brake.
    :alt: image-lbc_1
    :align: center
 
+   LBC structure
+
 Datasets collection
 -------------------
 

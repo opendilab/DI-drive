@@ -20,19 +20,20 @@ class SteerNoiseWrapper(object):
     def __init__(
             self,
             model: Any,
-            noise_type: str,
-            noise_kwargs: dict = {},
+            noise_type: str = 'uniform',
+            noise_args: dict = {},
             noise_len: int = 5,
             drive_len: int = 100,
             noise_range: Optional[dict] = None,
     ) -> None:
         self._model = model
-        self._noise_func = get_noise_generator(noise_type, noise_kwargs)
+        self._noise_func = get_noise_generator(noise_type, noise_args)
         self._noise_seq = {'drive': [drive_len, 'noise'], 'noise': [noise_len, 'drive']}
         self._noise_range = noise_range
         self._noise_state = 'drive'
         self._state_step = 0
         self._last_throttle = 0
+        self._last_brake = 0
 
     def forward(self, *args, **kwargs) -> Dict:
         """
@@ -56,7 +57,7 @@ class SteerNoiseWrapper(object):
         if self._noise_state == 'noise':
             control['steer'] = self._noise_steer
             control['throttle'] = self._last_throttle
-            control['brake'] = 0
+            control['brake'] = self._last_brake
         else:
             control['steer'] = real_control['steer']
             control['throttle'] = real_control['throttle']
@@ -68,13 +69,14 @@ class SteerNoiseWrapper(object):
             self._noise_state = next_state
             self._noise_steer = self._noise_func()
             if self._noise_range is not None:
-                np.clip(self._noise_steer, self._noise_range['min'], self._noise_range['max'])
+                self._noise_steer = np.clip(self._noise_steer, self._noise_range['min'], self._noise_range['max'])
             self._last_throttle = real_control['throttle']
+            self._last_brake = real_control['brake']
 
         return control
 
 
-def get_noise_generator(noise_type: str, noise_kwargs: Dict) -> Callable:
+def get_noise_generator(noise_type: str, noise_args: Dict) -> Callable:
     noise_dict = {
         'gauss': np.random.normal,
         'uniform': np.random.uniform,
@@ -83,4 +85,4 @@ def get_noise_generator(noise_type: str, noise_kwargs: Dict) -> Callable:
         raise KeyError("not support noise type: {}".format(noise_type))
     else:
         noise_func = noise_dict[noise_type]
-        return lambda: noise_func(**noise_kwargs)
+        return lambda: noise_func(**noise_args)

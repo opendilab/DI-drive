@@ -3,63 +3,76 @@
 Simple Imitation Learning
 ==========================
 
+.. toctree::
+    :maxdepth: 2
+
 Here we will show you how to use **DI-drive** for imitation learning research
 of autopilot. **DI-drive** supports 
-`Conditional Imitation Learning(CIL) <http://vladlen.info/papers/conditional-imitation.pdf>`__
-for Imitation Learning research.
+`Conditional Imitation Learning(CIL) <http://vladlen.info/papers/conditional-imitation.pdf>`_
+and its inheritor for Imitation Learning research.
 
-In this tutorial, we will show how to use **DI-drive** to train a CIL model.
-CIL takes front RGB camera and vehicle speed as input, then output the prediction of vehicle control singals including
-steer, throttle and brake under certain navigation command.
+In this tutorial, we will show how to use **DI-drive** to train a CILRS model.
+CILRS takes front RGB camera and vehicle speed as input, then output the prediction of vehicle control singals including
+steer, throttle and brake under certain navigation command, together with a speed prediction.
 
 
-IL of autopilot normally includes three parts:
+Imitation Learning normally includes three parts:
 
--  Datasets collection
+-  Collecting expert driving datasets
 
--  Model training
+-  Training driving model
 
--  Model evaluation
+-  Close-loop evaluation under driving curcumstance
 
-For now, we will show you step by step
+For now, we will show you step by step. All demo codes can be found in ``demo/cilrs``
 
 .. _header-n14:
 
 Datasets collection
--------------------
+---------------------
 
-To collect the datasets, the first step is to start a Carla server
+To collect expert data, the first step is to start Carla servers
 
 .. code:: shell
 
    ./CarlaUE4.sh -fps=10 -benchmark -world-port=[PORT NUM]
 
-To customize your training datasets, please refer to the configuration
-``coil_data_collect.py``. For this tutorial, you
-should change the ``save_dir`` path and Carla server host\port.
+To customize your training datasets, please refer to the configuration and entry demo in
+``cilrs_data_collect.py``. It use an auto-driving policy to run in Carla benchmark 'suite'.
+For this tutorial, you need to change the suite name, dataset path and Carla server host/port.
 
 .. code:: python
 
-    saver=dict(save_dir='<path_to_your_dataset>/cils_datasets_train'),
     server=[
-            dict(carla_host='localhost', carla_ports=[9000, 9008, 2]),
-        ],
+        dict(carla_host='localhost', carla_ports=[9000, 9010, 2]),
+    ],
+    policy=dict(
+        collect=dict(
+            n_episode=100,
+            dir_path='path_to_your_dataset',
+            collector=dict(
+                suite='suite_name',
+            ),
+        )
+    )
 
 Then you can use the python scrips to collect the data.
 
 .. code:: shell
 
-   cd demo/coil_demo
-   python coil_data_collect.py 
+   python cilrs_data_collect.py
 
-This collecting process usually cost ~7 hours and ~12 G storage with
-single Carla thread. You can speed up this process by starting multi-carla envs.
+This collecting process of 100 episodes may cost ~7 hours and ~12 G storage with
+single Carla server. You can speed up this process by starting multi-carla servers.
 
+The dataset format is illustrated in the `benchmark datasets <../features/datasets.html>`_.
+The CILRS demo builds preload files to speed up the loading of dataset. If you finished
+this step, there should be an ``.npy`` file under ``_preloads``.
 
-If you finished this step, there should be a ``.npy`` file under
-``_preloads``.
+We recommend to collect both training and validating datasets with different suite to get
+better performance.
 
-Once you finish the data collection, the next step is to train an CIL model.
+Once you finish the data collection, the next step is to train an CILRS model.
 
 .. _header-n26:
 
@@ -72,57 +85,83 @@ with **DI-drive** with default training configuration, just run
 
 .. code:: 
 
-   python coil_train.py
+   python cilrs_train.py
 
-Note that you should modify the dataset path as you have created
+Note that you should modify the dataset path and preload path as you have created
 above.
 
 .. code:: python
 
-                   COMMON=dict(folder='sample', exp='coil_icra',
-                                dataset_path='<path_to_your_dataset>/datasets_train')
+    data=dict(
+        train=dict(
+            root_dir='path_to_your_train_dataset',
+            preloads='path_to_your_train_preloads',
+            transform=True,
+        ),
+        val=dict(
+            root_dir='path_to_your_val_dataset',
+            preloads='path_to_your_val_preloads',
+            transform=True,
+        ),
 
-You will see loss printed on the screen like
+You will see training procedure shown on the screen like this.
 
 .. figure:: ../../figs/image-il_1.png
    :alt: image-il_1
    :align: center
-   :width: 300px
+   :width: 600px
 
-and the training checkpoints will be saved under ``_logs`` folder. The
+The training checkpoints will be saved under ``checkpoints`` folder. The
 training process will last for 7~8 hours (i7-9900k and GeForce RTX 2080Ti), up to your machine hardware.
 
 if you want to customize your training configuration such as the model architecture and
-learning rates, please modify the config in ``coil_train.py``
+learning rates, please modify the config in ``cilrs_train.py``
 
 .. _header-n35:
 
 Model evaluation
 ----------------
 
-To evaluate your trained model with **DI-drive**, just run
+We provide benchmark evaluation and close-loop test in environment (mostly for visualization) for
+a trained CILRS model with **DI-drive**. To evaluate your trained model, just run
+
+.. code:: bash
+
+   python cilrs_eval.py 
+
+Note that you may need to change the checkpoint path and Carla server host/port in ``cilrs_eval.py``.
 
 .. code:: python
 
-   python coil_eval.py 
+    server=[
+       dict(carla_host='localhost', carla_ports=[9000, 9010, 2])
+    ],
+    policy=dict(
+        ckpt_path='path_to_your_ckpt',
+        ...
+    )
 
-Note that you have change the checkpoint path and Carla server host/port in ``coil_eval.py``
-
-.. code:: python
-
-    ckpt_path='<path_to_your_checkpoint>'
-    server=[dict(carla_host='localhost', carla_ports=[9000, 9010, 2])],
-
-You can visual the real-time evaluation process like
+When the evaluation is finished, you will get a performance table.
 
 .. figure:: ../../figs/image-il_2.png
    :alt: image-il_2
    :align: center
+   :width: 800px
+
+Also, you can visual the real-time close-loop test by running
+
+.. code:: python
+
+   python cilrs_test.py 
+
+You can see a visualized screen of the running policy.
+
+.. figure:: ../../figs/image-il_3.png
+   :alt: image-il_3
+   :align: center
    :width: 500px
 
-When the evaluation is finished, you will get a performance table.
-
-You can customize the evaluation configuration by modifying the config in 
-``coil_eval.py``
+You can customize the evaluation and test configuration by modifying the config in 
+``cilrs_eval.py`` and ``cilrs_test.py``
 
 Congratulations! You have finished the imitation learning tutorial.

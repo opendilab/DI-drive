@@ -13,5 +13,5 @@ CarlaBenchmarkCollector
 
 BenchmarkDatasetSaver
 =======================
-.. autoclass:: core.data.dataset_saver.BenchmarkDatasetSaver
+.. autoclass:: core.data.benchmark_dataset_saver.BenchmarkDatasetSaver
     :members:

@@ -183,7 +183,7 @@ class Visualizer(object):
         Save file or release file writter, destroy windows.
         """
         if self._gif_maker is not None:
-            self._gif_maker.save(self._name, self._save_dir, self._name)
+            self._gif_maker.save(self._name, self._save_dir, self._name + '.gif')
             self._gif_maker.clear(self._name)
         if self._video_maker is not None:
             self._video_maker.clear()

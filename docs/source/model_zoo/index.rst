@@ -7,7 +7,7 @@ Imitation Learning Model Zoo
 .. toctree::
    :maxdepth: 1
 
-   coil
+   cilrs
    lbc
    cict
 
@@ -18,7 +18,10 @@ Reinforcement Learning Model Zoo
 .. toctree::
    :maxdepth: 1
 
+   simple_rl
    implicit
+   latent_rl
+
 
 Other Method
 ===============

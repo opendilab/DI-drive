@@ -14,14 +14,18 @@ and train the head of network using RL.
 It takes 4-frame RGB captured by front camera as in put. The model of the two training stage
 is shown as follow.
 
-.. image:: ../../figs/implicit2.png
+.. figure:: ../../figs/implicit2.png
     :alt: implicit2
     :align: center
     :width: 600px
 
-.. image:: ../../figs/implicit1.png
+    SL training pipeline
+
+.. figure:: ../../figs/implicit1.png
     :alt: implicit1
     :align: center
+
+    RL training pipeline
 
 We extend and modified some of the training and environment details to make *Implicit
 Affordances* able to run in multi-lane maps in Carla. This is so far the **first** driving

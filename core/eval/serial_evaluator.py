@@ -41,7 +41,7 @@ class SerialEvaluator(BaseEvaluator):
         # Evaluate every "eval_freq" training iterations.
         eval_freq=100,
         n_episode=10,
-        stop_rate=0.8,
+        stop_rate=1,
     )
 
     def __init__(
@@ -58,13 +58,8 @@ class SerialEvaluator(BaseEvaluator):
         self._default_n_episode = self._cfg.n_episode
         self._stop_rate = self._cfg.stop_rate
 
-        self._logger, _ = build_logger(
-            path='./{}/log/{}'.format(self._exp_name, self._instance_name), name=self._instance_name, need_tb=False
-        )
-
         self._last_eval_iter = 0
         self._max_success_rate = 0
-        self._timer = EasyTimer()
 
     @property
     def env(self) -> BaseEnvManager:
@@ -72,6 +67,7 @@ class SerialEvaluator(BaseEvaluator):
 
     @env.setter
     def env(self, _env_manager: BaseEnvManager) -> None:
+        assert _env_manager._auto_reset, "auto reset for env manager should be opened!"
         self._end_flag = False
         self._env_manager = _env_manager
         self._env_manager.launch()
@@ -117,6 +113,7 @@ class SerialEvaluator(BaseEvaluator):
             save_ckpt_fn: Callable = None,
             train_iter: int = -1,
             envstep: int = -1,
+            policy_kwargs: Optional[Dict] = None,
             n_episode: Optional[int] = None
     ) -> Tuple[bool, float]:
         """
@@ -128,11 +125,14 @@ class SerialEvaluator(BaseEvaluator):
                 Defaults to None.
             - train_iter (int, optional): Current training iterations. Defaults to -1.
             - envstep (int, optional): Current env steps. Defaults to -1.
+            - policy_kwargs (Dict, optional): Additional arguments in policy forward. Defaults to None.
             - n_episode: (int, optional): Episodes to eval. By default it is set in config.
 
         :Returns:
             Tuple[bool, float]: Whether reach stop value and success rate.
         """
+        if policy_kwargs is None:
+            policy_kwargs = dict()
         if n_episode is None:
             n_episode = self._default_n_episode
         assert n_episode is not None, "please indicate eval n_episode"
@@ -147,7 +147,7 @@ class SerialEvaluator(BaseEvaluator):
                 obs = self._env_manager.ready_obs
                 if self._transform_obs:
                     obs = to_tensor(obs, dtype=torch.float32)
-                policy_output = self._policy.forward(obs)
+                policy_output = self._policy.forward(obs, **policy_kwargs)
                 actions = {env_id: output['action'] for env_id, output in policy_output.items()}
                 timesteps = self._env_manager.step(actions)
                 for env_id, t in timesteps.items():
@@ -180,15 +180,12 @@ class SerialEvaluator(BaseEvaluator):
         info = {
             'train_iter': train_iter,
             'ckpt_name': 'iteration_{}.pth.tar'.format(train_iter),
-            'envstep_count': envstep_count,
             'avg_envstep_per_episode': envstep_count / n_episode,
             'evaluate_time': duration,
-            'avg_envstep_per_sec': envstep_count / duration,
             'avg_time_per_episode': duration / n_episode,
             'success_rate': success_rate,
             'reward_mean': np.mean(episode_reward),
             'reward_std': np.std(episode_reward),
-            'reward_max': np.max(episode_reward),
         }
         self._logger.info(self._logger.get_tabulate_vars_hor(info))
         if self._tb_logger is not None:

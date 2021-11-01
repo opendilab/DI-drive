@@ -11,7 +11,7 @@ from core.eval import SerialEvaluator
 from core.envs import CarlaEnvWrapper
 from ding.envs import SyncSubprocessEnvManager, BaseEnvManager
 from ding.policy import DQNPolicy
-from ding.worker import BaseLearner, SampleCollector, AdvancedReplayBuffer
+from ding.worker import BaseLearner, SampleSerialCollector, AdvancedReplayBuffer
 from ding.utils import set_pkg_seed
 from ding.rl_utils import get_epsilon_greedy_fn
 
@@ -134,7 +134,7 @@ def main(cfg, seed=0):
         SyncSubprocessEnvManager,
         DQNPolicy,
         BaseLearner,
-        SampleCollector,
+        SampleSerialCollector,
         buffer=AdvancedReplayBuffer,
     )
     tcp_list = parse_carla_tcp(cfg.server)
@@ -161,7 +161,7 @@ def main(cfg, seed=0):
 
     tb_logger = SummaryWriter('./log/{}/'.format(cfg.exp_name))
     learner = BaseLearner(cfg.policy.learn.learner, policy.learn_mode, tb_logger, exp_name=cfg.exp_name)
-    collector = SampleCollector(cfg.policy.collect.collector, collector_env, policy.collect_mode, tb_logger, exp_name=cfg.exp_name)
+    collector = SampleSerialCollector(cfg.policy.collect.collector, collector_env, policy.collect_mode, tb_logger, exp_name=cfg.exp_name)
     evaluator = SerialEvaluator(cfg.policy.eval.evaluator, evaluate_env, policy.eval_mode, tb_logger, exp_name=cfg.exp_name)
     replay_buffer = AdvancedReplayBuffer(cfg.policy.other.replay_buffer, tb_logger, exp_name=cfg.exp_name)
 
