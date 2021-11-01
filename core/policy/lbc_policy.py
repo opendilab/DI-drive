@@ -36,7 +36,7 @@ class LBCBirdviewPolicy(BaseCarlaPolicy):
     config = dict(
         cuda=True,
         model=dict(),
-        learn=dict(loss='l1',),
+        learn=dict(loss='l1', ),
         steer_points=None,
         pid=None,
         gap=5,

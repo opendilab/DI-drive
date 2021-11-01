@@ -10,7 +10,6 @@ from torch.utils.data import Dataset
 from core.utils.others.image_helper import read_image, draw_msra_gaussian
 from core.utils.data_utils import augmenter
 
-
 PIXEL_OFFSET = 10
 PIXELS_PER_METER = 5
 
@@ -160,12 +159,7 @@ class LBCBirdViewDataset(Dataset):
             regression_offset[i] = center - center_int
             indices[i] = center_int[1] * output_size + center_int[0]
 
-        return {
-            'birdview': birdview,
-            'location': np.array(locations),
-            'command': command,
-            'speed': speed
-        }
+        return {'birdview': birdview, 'location': np.array(locations), 'command': command, 'speed': speed}
 
 
 class LBCImageDataset(Dataset):
@@ -196,7 +190,7 @@ class LBCImageDataset(Dataset):
         self._batch_read_number = batch_read_number
         self._batch_aug = batch_aug
 
-        print ("augment with ", augment_strategy)
+        print("augment with ", augment_strategy)
         if augment_strategy is not None and augment_strategy != 'None':
             self.augmenter = getattr(augmenter, augment_strategy)
         else:
@@ -240,7 +234,9 @@ class LBCImageDataset(Dataset):
         rgb_image = read_image(png_file).reshape(160, 384, 3)
 
         if self.augmenter:
-            rgb_images = [self.augmenter(self._batch_read_number).augment_image(rgb_image) for i in range(self._batch_aug)]
+            rgb_images = [
+                self.augmenter(self._batch_read_number).augment_image(rgb_image) for i in range(self._batch_aug)
+            ]
         else:
             rgb_images = [rgb_image for i in range(self._batch_aug)]
 
