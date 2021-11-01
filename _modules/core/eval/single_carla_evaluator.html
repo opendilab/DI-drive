@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>core.eval.single_carla_evaluator &mdash; DI-drive 0.1.3 documentation</title>
+  <title>core.eval.single_carla_evaluator &mdash; DI-drive 0.2.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -27,7 +27,7 @@
             <a href="../../../index.html" class="icon icon-home"> DI-drive
           </a>
               <div class="version">
-                0.1.3
+                0.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -157,14 +157,14 @@
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timer</span><span class="p">:</span>
             <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_render</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transform_obs</span><span class="p">:</span>
                     <span class="n">obs</span> <span class="o">=</span> <span class="n">to_tensor</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
                 <span class="n">actions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_policy</span><span class="o">.</span><span class="n">forward</span><span class="p">({</span><span class="mi">0</span><span class="p">:</span> <span class="n">obs</span><span class="p">})</span>
                 <span class="n">action</span> <span class="o">=</span> <span class="n">actions</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;action&#39;</span><span class="p">]</span>
                 <span class="n">timestep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
                 <span class="n">obs</span> <span class="o">=</span> <span class="n">timestep</span><span class="o">.</span><span class="n">obs</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_render</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
                 <span class="k">if</span> <span class="n">timestep</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;abnormal&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
                     <span class="c1"># If there is an abnormal timestep, reset all the related variables(including this env).</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_policy</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="o">**</span><span class="n">reset_param</span><span class="p">)</span>

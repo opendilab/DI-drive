@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Learning by Cheating &mdash; DI-drive 0.1.3 documentation</title>
+  <title>Learning by Cheating &mdash; DI-drive 0.2.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -19,7 +19,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="from Continuous Intention to Continuous Trajectory" href="cict.html" />
-    <link rel="prev" title="Conditional Imitation Learning" href="coil.html" /> 
+    <link rel="prev" title="Conditional Imitation Learning" href="cilrs.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -30,7 +30,7 @@
             <a href="../index.html" class="icon icon-home"> DI-drive
           </a>
               <div class="version">
-                0.1.3
+                0.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -52,7 +52,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Model Zoo</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="index.html#imitation-learning-model-zoo">Imitation Learning Model Zoo</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="coil.html">Conditional Imitation Learning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cilrs.html">Conditional Imitation Learning</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Learning by Cheating</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#datasets-collection">Datasets collection</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#model-training">Model training</a></li>
@@ -109,8 +109,11 @@ ground-truth Bird-eye View image as input to teach the RGB input target policy.
 The prediction of the model is a waypoint list then the waypoint list is processed by
 a PID controller to get the final control singals including steer,
 throttle and brake.</p>
-<figure class="align-center">
+<figure class="align-center" id="id1">
 <img alt="image-lbc_1" src="../_images/image-lbc_1.png" />
+<figcaption>
+<p><span class="caption-text">LBC structure</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
 </figure>
 <section id="datasets-collection">
 <h2>Datasets collection<a class="headerlink" href="#datasets-collection" title="Permalink to this headline"></a></h2>
@@ -158,7 +161,7 @@ python lbc_image_test.py
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="coil.html" class="btn btn-neutral float-left" title="Conditional Imitation Learning" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cilrs.html" class="btn btn-neutral float-left" title="Conditional Imitation Learning" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="cict.html" class="btn btn-neutral float-right" title="from Continuous Intention to Continuous Trajectory" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

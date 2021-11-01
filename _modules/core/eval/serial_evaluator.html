@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>core.eval.serial_evaluator &mdash; DI-drive 0.1.3 documentation</title>
+  <title>core.eval.serial_evaluator &mdash; DI-drive 0.2.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -27,7 +27,7 @@
             <a href="../../../index.html" class="icon icon-home"> DI-drive
           </a>
               <div class="version">
-                0.1.3
+                0.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -124,7 +124,7 @@
         <span class="c1"># Evaluate every &quot;eval_freq&quot; training iterations.</span>
         <span class="n">eval_freq</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
         <span class="n">n_episode</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-        <span class="n">stop_rate</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+        <span class="n">stop_rate</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -141,13 +141,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_default_n_episode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">n_episode</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_stop_rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">stop_rate</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">build_logger</span><span class="p">(</span>
-            <span class="n">path</span><span class="o">=</span><span class="s1">&#39;./</span><span class="si">{}</span><span class="s1">/log/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_exp_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance_name</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_instance_name</span><span class="p">,</span> <span class="n">need_tb</span><span class="o">=</span><span class="kc">False</span>
-        <span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">_last_eval_iter</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_max_success_rate</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_timer</span> <span class="o">=</span> <span class="n">EasyTimer</span><span class="p">()</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">env</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseEnvManager</span><span class="p">:</span>
@@ -155,6 +150,7 @@
 
     <span class="nd">@env</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">env</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_env_manager</span><span class="p">:</span> <span class="n">BaseEnvManager</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">_env_manager</span><span class="o">.</span><span class="n">_auto_reset</span><span class="p">,</span> <span class="s2">&quot;auto reset for env manager should be opened!&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_end_flag</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_env_manager</span> <span class="o">=</span> <span class="n">_env_manager</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_env_manager</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
@@ -200,6 +196,7 @@
             <span class="n">save_ckpt_fn</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
             <span class="n">train_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
             <span class="n">envstep</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">policy_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
             <span class="n">n_episode</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -211,11 +208,14 @@
 <span class="sd">                Defaults to None.</span>
 <span class="sd">            - train_iter (int, optional): Current training iterations. Defaults to -1.</span>
 <span class="sd">            - envstep (int, optional): Current env steps. Defaults to -1.</span>
+<span class="sd">            - policy_kwargs (Dict, optional): Additional arguments in policy forward. Defaults to None.</span>
 <span class="sd">            - n_episode: (int, optional): Episodes to eval. By default it is set in config.</span>
 
 <span class="sd">        :Returns:</span>
 <span class="sd">            Tuple[bool, float]: Whether reach stop value and success rate.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">policy_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">policy_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">n_episode</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">n_episode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_n_episode</span>
         <span class="k">assert</span> <span class="n">n_episode</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;please indicate eval n_episode&quot;</span>
@@ -230,7 +230,7 @@
                 <span class="n">obs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env_manager</span><span class="o">.</span><span class="n">ready_obs</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transform_obs</span><span class="p">:</span>
                     <span class="n">obs</span> <span class="o">=</span> <span class="n">to_tensor</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-                <span class="n">policy_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_policy</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
+                <span class="n">policy_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_policy</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="o">**</span><span class="n">policy_kwargs</span><span class="p">)</span>
                 <span class="n">actions</span> <span class="o">=</span> <span class="p">{</span><span class="n">env_id</span><span class="p">:</span> <span class="n">output</span><span class="p">[</span><span class="s1">&#39;action&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">env_id</span><span class="p">,</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">policy_output</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
                 <span class="n">timesteps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env_manager</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">env_id</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">timesteps</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -263,15 +263,12 @@
         <span class="n">info</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;train_iter&#39;</span><span class="p">:</span> <span class="n">train_iter</span><span class="p">,</span>
             <span class="s1">&#39;ckpt_name&#39;</span><span class="p">:</span> <span class="s1">&#39;iteration_</span><span class="si">{}</span><span class="s1">.pth.tar&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">train_iter</span><span class="p">),</span>
-            <span class="s1">&#39;envstep_count&#39;</span><span class="p">:</span> <span class="n">envstep_count</span><span class="p">,</span>
             <span class="s1">&#39;avg_envstep_per_episode&#39;</span><span class="p">:</span> <span class="n">envstep_count</span> <span class="o">/</span> <span class="n">n_episode</span><span class="p">,</span>
             <span class="s1">&#39;evaluate_time&#39;</span><span class="p">:</span> <span class="n">duration</span><span class="p">,</span>
-            <span class="s1">&#39;avg_envstep_per_sec&#39;</span><span class="p">:</span> <span class="n">envstep_count</span> <span class="o">/</span> <span class="n">duration</span><span class="p">,</span>
             <span class="s1">&#39;avg_time_per_episode&#39;</span><span class="p">:</span> <span class="n">duration</span> <span class="o">/</span> <span class="n">n_episode</span><span class="p">,</span>
             <span class="s1">&#39;success_rate&#39;</span><span class="p">:</span> <span class="n">success_rate</span><span class="p">,</span>
             <span class="s1">&#39;reward_mean&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">episode_reward</span><span class="p">),</span>
             <span class="s1">&#39;reward_std&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">episode_reward</span><span class="p">),</span>
-            <span class="s1">&#39;reward_max&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">episode_reward</span><span class="p">),</span>
         <span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">get_tabulate_vars_hor</span><span class="p">(</span><span class="n">info</span><span class="p">))</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tb_logger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>

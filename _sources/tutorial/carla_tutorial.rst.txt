@@ -60,6 +60,24 @@ Then, just pull the Carla image and run with port.
     # with parameters
     docker run -p 2000-2002:9000-9002 --runtime=nvidia --gpus <gpu_id> carlasim/carla:0.9.9.4 /bin/bash CarlaUE4.sh <list of paremeters>
 
+We also provide an easily used multi-carla docker image that can start an amount of Carla servers.
+You can pull the image from `dockerhub <https://hub.docker.com>`_ and start with your own settings.
+For example, the following command will start a container with 8 Carla server whose ports are set
+from 9000 to 9014
+
+.. code:: bash
+
+    docker pull opendilab/multi-carla:0.9.9
+    docker run -p 9000-9016:9000-9016 --runtime=nvidia opendilab/multi-carla:0.9.9 /bin/bash run_carla.sh -n 8 -p 9000
+
+Generally, the option ``-n NUMS`` sets the number of Carla server and the option ``-p PORT`` sets
+the start port of servers. The other servers' port are set to the following even number.
+
+.. note::
+
+    Please pay attention to the Carla port within and out of the container. The internal ones are set
+    by the parameters in carla scripts, the external ones are set when creating the container.
+
 
 Carla server settings
 ===========================

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Simple Reinforcement Learning &mdash; DI-drive 0.1.3 documentation</title>
+  <title>Simple Reinforcement Learning &mdash; DI-drive 0.2.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -30,7 +30,7 @@
             <a href="../index.html" class="icon icon-home"> DI-drive
           </a>
               <div class="version">
-                0.1.3
+                0.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -100,17 +100,19 @@
 <h1>Simple Reinforcement Learning<a class="headerlink" href="#simple-reinforcement-learning" title="Permalink to this headline"></a></h1>
 <div class="toctree-wrapper compound">
 </div>
+<p><strong>DI-drive</strong> + <strong>DI-engine</strong> make RL for Autonomous Driving very easy. Here we show how to
+use <strong>DI-drive</strong> to run a simple Reinforcement Learning driving policy.
+The policy takes a small Bird-eye View image together with
+current speed as input, and directly outputs control signals.</p>
 <section id="prerequisites">
 <h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline"></a></h2>
-<p>Ubuntu 16.04 system +Intel(R) Core(TM) i7-8700 CPU &#64; 3.20GHz + 32G
+<p>Ubuntu 16.04 system + Intel(R) Core(TM) i7-8700 CPU &#64; 3.20GHz + 32G
 memory + GPU1060</p>
 </section>
 <section id="di-drive-rl-training-using-di-engine">
 <h2>DI-drive RL training using DI-engine<a class="headerlink" href="#di-drive-rl-training-using-di-engine" title="Permalink to this headline"></a></h2>
-<p>DI-drive + DI-engine make RL for Autonomous Driving very easy. We build a simple RL demo that can run
-varies RL algorithm with a simple environment setting. It takes a small Bird-eye View image as NN
-input, together with current speed, and directly output control signals. All the code can be found in
-<code class="docutils literal notranslate"><span class="pre">demo/simple_rl</span></code>.</p>
+<p>We build simple RL demos that can run varies RL algorithm with the aforementioned simple environment setting.
+All the code can be found in <code class="docutils literal notranslate"><span class="pre">demo/simple_rl</span></code>, including training, evaluating and testing.</p>
 <p>Here we show how to run the DQN demo. It follows the standard deployment of a DI-engine RL entry.
 Other RL demo is written in same way.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> demo/simple_rl
@@ -118,7 +120,7 @@ python dqn_train.py
 </pre></div>
 </div>
 <p>The config part defines the env and policy settings. Notes that you need to change the Carla server
-host and port, and modify the environment nums according to yours. By default it uses 8 Carla server on
+host and port, and modify the environment nums according to yours. By default it uses 8 Carla servers on
 <cite>localhost</cite> with port from 9000 to 9016.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">train_config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
     <span class="n">exp_name</span><span class="o">=...</span><span class="p">,</span>
@@ -134,13 +136,13 @@ host and port, and modify the environment nums according to yours. By default it
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>For more details about how to tune parameters in DQN, you can see their doc. Usually
+<p>For more details about how to tune parameters in DQN, you can see <strong>DI-engine</strong>’s doc. Usually
 you may concern about the replay buffer size and sample num per collection.</p>
 <p>When you see the information in terminal that contains the content in
 the following picture, it means that you are beginning to train the
 model.</p>
 <figure class="align-center">
-<a class="reference internal image-reference" href="../_images/rl_tutorial_log.png"><img alt="rl_tutorial_log" src="../_images/rl_tutorial_log.png" style="width: 800px;" /></a>
+<a class="reference internal image-reference" href="../_images/rl_tutorial_log.png"><img alt="rl_tutorial_log" src="../_images/rl_tutorial_log.png" style="width: 1000px;" /></a>
 </figure>
 <p>In the process of training, you can use the tensorboard as a monitor,
 the default log path is in your working directory.</p>

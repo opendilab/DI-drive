@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Carla tutorial &mdash; DI-drive 0.1.3 documentation</title>
+  <title>Carla tutorial &mdash; DI-drive 0.2.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -30,7 +30,7 @@
             <a href="../index.html" class="icon icon-home"> DI-drive
           </a>
               <div class="version">
-                0.1.3
+                0.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -142,6 +142,21 @@ docker run -p <span class="m">2000</span>-2002:9000-9002 --runtime<span class="o
 <span class="c1"># with parameters</span>
 docker run -p <span class="m">2000</span>-2002:9000-9002 --runtime<span class="o">=</span>nvidia --gpus &lt;gpu_id&gt; carlasim/carla:0.9.9.4 /bin/bash CarlaUE4.sh &lt;list of paremeters&gt;
 </pre></div>
+</div>
+<p>We also provide an easily used multi-carla docker image that can start an amount of Carla servers.
+You can pull the image from <a class="reference external" href="https://hub.docker.com">dockerhub</a> and start with your own settings.
+For example, the following command will start a container with 8 Carla server whose ports are set
+from 9000 to 9014</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker pull opendilab/multi-carla:0.9.9
+docker run -p <span class="m">9000</span>-9016:9000-9016 --runtime<span class="o">=</span>nvidia opendilab/multi-carla:0.9.9 /bin/bash run_carla.sh -n <span class="m">8</span> -p <span class="m">9000</span>
+</pre></div>
+</div>
+<p>Generally, the option <code class="docutils literal notranslate"><span class="pre">-n</span> <span class="pre">NUMS</span></code> sets the number of Carla server and the option <code class="docutils literal notranslate"><span class="pre">-p</span> <span class="pre">PORT</span></code> sets
+the start port of servers. The other servers’ port are set to the following even number.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Please pay attention to the Carla port within and out of the container. The internal ones are set
+by the parameters in carla scripts, the external ones are set when creating the container.</p>
 </div>
 </section>
 <section id="carla-server-settings">

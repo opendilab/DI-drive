@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Model Zoo &mdash; DI-drive 0.2.0 documentation</title>
+  <title>Latent Reinforcement Learning &mdash; DI-drive 0.2.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,8 +18,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Conditional Imitation Learning" href="cilrs.html" />
-    <link rel="prev" title="Casezoo Evaluation" href="../features/casezoo.html" /> 
+    <link rel="next" title="API Doc" href="../api_doc/index.html" />
+    <link rel="prev" title="End-to-End Model-Free Reinforcement Learning for Urban Driving using Implicit Affordances" href="implicit.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -50,22 +50,18 @@
 <li class="toctree-l1"><a class="reference internal" href="../features/index.html">Features</a></li>
 </ul>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Model Zoo</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#imitation-learning-model-zoo">Imitation Learning Model Zoo</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cilrs.html">Conditional Imitation Learning</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lbc.html">Learning by Cheating</a></li>
-<li class="toctree-l3"><a class="reference internal" href="cict.html">from Continuous Intention to Continuous Trajectory</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#reinforcement-learning-model-zoo">Reinforcement Learning Model Zoo</a><ul>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Model Zoo</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#imitation-learning-model-zoo">Imitation Learning Model Zoo</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#reinforcement-learning-model-zoo">Reinforcement Learning Model Zoo</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="simple_rl.html">BeV Speed End-to-end Reinforcement Learning</a></li>
 <li class="toctree-l3"><a class="reference internal" href="implicit.html">End-to-End Model-Free Reinforcement Learning for Urban Driving using Implicit Affordances</a></li>
-<li class="toctree-l3"><a class="reference internal" href="latent_rl.html">Latent Reinforcement Learning</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Latent Reinforcement Learning</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#training-vae">Training VAE</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#other-method">Other Method</a><ul class="simple">
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#other-method">Other Method</a></li>
 </ul>
 </li>
 </ul>
@@ -90,9 +86,10 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Model Zoo</li>
+          <li><a href="index.html">Model Zoo</a> &raquo;</li>
+      <li>Latent Reinforcement Learning</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/model_zoo/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/model_zoo/latent_rl.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -100,32 +97,20 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="model-zoo">
-<h1>Model Zoo<a class="headerlink" href="#model-zoo" title="Permalink to this headline"></a></h1>
-<section id="imitation-learning-model-zoo">
-<h2>Imitation Learning Model Zoo<a class="headerlink" href="#imitation-learning-model-zoo" title="Permalink to this headline"></a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="cilrs.html">Conditional Imitation Learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="lbc.html">Learning by Cheating</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cict.html">from Continuous Intention to Continuous Trajectory</a></li>
-</ul>
-</div>
-</section>
-<section id="reinforcement-learning-model-zoo">
-<h2>Reinforcement Learning Model Zoo<a class="headerlink" href="#reinforcement-learning-model-zoo" title="Permalink to this headline"></a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="simple_rl.html">BeV Speed End-to-end Reinforcement Learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="implicit.html">End-to-End Model-Free Reinforcement Learning for Urban Driving using Implicit Affordances</a></li>
-<li class="toctree-l1"><a class="reference internal" href="latent_rl.html">Latent Reinforcement Learning</a></li>
-</ul>
-</div>
-</section>
-<section id="other-method">
-<h2>Other Method<a class="headerlink" href="#other-method" title="Permalink to this headline"></a></h2>
+  <section id="latent-reinforcement-learning">
+<h1>Latent Reinforcement Learning<a class="headerlink" href="#latent-reinforcement-learning" title="Permalink to this headline"></a></h1>
 <div class="toctree-wrapper compound">
 </div>
+<p>Latent Reinforcement Learning is a category of policy settings which generate
+latent representations that can conpletely characterize the features related to
+the task in the input observation. Techically, it uses a Variational Autoencoder
+(VAE) to get latent embeddings, and use it to train RL policies.</p>
+<p>Our implementation refers to <a class="reference external" href="https://arxiv.org/abs/1904.09503">Model-free RL for AD</a>
+with <strong>DI-drive</strong> and <strong>DI-engine</strong> and transfers it to more general cases. In the
+following documents, it will be explained detailly.</p>
+<section id="training-vae">
+<h2>Training VAE<a class="headerlink" href="#training-vae" title="Permalink to this headline"></a></h2>
+<p>Comming soon</p>
 </section>
 </section>
 
@@ -133,8 +118,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../features/casezoo.html" class="btn btn-neutral float-left" title="Casezoo Evaluation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="cilrs.html" class="btn btn-neutral float-right" title="Conditional Imitation Learning" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="implicit.html" class="btn btn-neutral float-left" title="End-to-End Model-Free Reinforcement Learning for Urban Driving using Implicit Affordances" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../api_doc/index.html" class="btn btn-neutral float-right" title="API Doc" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>End-to-End Model-Free Reinforcement Learning for Urban Driving using Implicit Affordances &mdash; DI-drive 0.1.3 documentation</title>
+  <title>End-to-End Model-Free Reinforcement Learning for Urban Driving using Implicit Affordances &mdash; DI-drive 0.2.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,8 +18,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="API Doc" href="../api_doc/index.html" />
-    <link rel="prev" title="from Continuous Intention to Continuous Trajectory" href="cict.html" /> 
+    <link rel="next" title="Latent Reinforcement Learning" href="latent_rl.html" />
+    <link rel="prev" title="BeV Speed End-to-end Reinforcement Learning" href="simple_rl.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -30,7 +30,7 @@
             <a href="../index.html" class="icon icon-home"> DI-drive
           </a>
               <div class="version">
-                0.1.3
+                0.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -53,6 +53,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Model Zoo</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="index.html#imitation-learning-model-zoo">Imitation Learning Model Zoo</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html#reinforcement-learning-model-zoo">Reinforcement Learning Model Zoo</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="simple_rl.html">BeV Speed End-to-end Reinforcement Learning</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">End-to-End Model-Free Reinforcement Learning for Urban Driving using Implicit Affordances</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#training-models">Training Models</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#benchmarking-models">Benchmarking models</a></li>
@@ -60,6 +61,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#training-cost">Training Cost</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="latent_rl.html">Latent Reinforcement Learning</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#other-method">Other Method</a></li>
@@ -108,8 +110,18 @@ backbone network with some implicit information as label, then freezes the backb
 and train the head of network using RL.
 It takes 4-frame RGB captured by front camera as in put. The model of the two training stage
 is shown as follow.</p>
-<a class="reference internal image-reference" href="../_images/implicit2.png"><img alt="implicit2" class="align-center" src="../_images/implicit2.png" style="width: 600px;" /></a>
-<img alt="implicit1" class="align-center" src="../_images/implicit1.png" />
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="../_images/implicit2.png"><img alt="implicit2" src="../_images/implicit2.png" style="width: 600px;" /></a>
+<figcaption>
+<p><span class="caption-text">SL training pipeline</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id2">
+<img alt="implicit1" src="../_images/implicit1.png" />
+<figcaption>
+<p><span class="caption-text">RL training pipeline</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
 <p>We extend and modified some of the training and environment details to make <em>Implicit
 Affordances</em> able to run in multi-lane maps in Carla. This is so far the <strong>first</strong> driving
 policy to run <cite>FullTown</cite> navigation in Carla using Reinforcement Learning. It achieves the
@@ -252,8 +264,8 @@ to see results of the two provided pre-train weights.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="cict.html" class="btn btn-neutral float-left" title="from Continuous Intention to Continuous Trajectory" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../api_doc/index.html" class="btn btn-neutral float-right" title="API Doc" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="simple_rl.html" class="btn btn-neutral float-left" title="BeV Speed End-to-end Reinforcement Learning" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="latent_rl.html" class="btn btn-neutral float-right" title="Latent Reinforcement Learning" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

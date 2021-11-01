@@ -23,6 +23,12 @@ AutoMPCPolicy
     :members: _forward_collect, _forward_eval, _reset_collect, _reset_eval
 
 
+CILRSPolicy
+=============
+.. autoclass:: core.policy.CILRSPolicy
+    :members:
+
+
 LBCBirdviewPolicy
 ====================
 .. autoclass:: core.policy.LBCBirdviewPolicy

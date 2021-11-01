@@ -4,20 +4,24 @@ Simple Reinforcement Learning
 .. toctree::
     :maxdepth: 2
 
+
+**DI-drive** + **DI-engine** make RL for Autonomous Driving very easy. Here we show how to
+use **DI-drive** to run a simple Reinforcement Learning driving policy.
+The policy takes a small Bird-eye View image together with
+current speed as input, and directly outputs control signals.
+
 Prerequisites
 ----------------
 
-Ubuntu 16.04 system +Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz + 32G
+Ubuntu 16.04 system + Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz + 32G
 memory + GPU1060
 
 
 DI-drive RL training using DI-engine
 --------------------------------------
 
-DI-drive + DI-engine make RL for Autonomous Driving very easy. We build a simple RL demo that can run
-varies RL algorithm with a simple environment setting. It takes a small Bird-eye View image as NN
-input, together with current speed, and directly output control signals. All the code can be found in
-``demo/simple_rl``.
+We build simple RL demos that can run varies RL algorithm with the aforementioned simple environment setting.
+All the code can be found in ``demo/simple_rl``, including training, evaluating and testing.
 
 Here we show how to run the DQN demo. It follows the standard deployment of a DI-engine RL entry.
 Other RL demo is written in same way.
@@ -28,7 +32,7 @@ Other RL demo is written in same way.
     python dqn_train.py
 
 The config part defines the env and policy settings. Notes that you need to change the Carla server
-host and port, and modify the environment nums according to yours. By default it uses 8 Carla server on
+host and port, and modify the environment nums according to yours. By default it uses 8 Carla servers on
 `localhost` with port from 9000 to 9016.
 
 .. code:: python
@@ -46,7 +50,7 @@ host and port, and modify the environment nums according to yours. By default it
         ),
     )
 
-For more details about how to tune parameters in DQN, you can see their doc. Usually
+For more details about how to tune parameters in DQN, you can see **DI-engine**'s doc. Usually
 you may concern about the replay buffer size and sample num per collection.
 
 When you see the information in terminal that contains the content in
@@ -56,7 +60,7 @@ model.
 .. figure:: ../../figs/rl_tutorial_log.png
     :alt: rl_tutorial_log
     :align: center
-    :width: 800px
+    :width: 1000px
 
 In the process of training, you can use the tensorboard as a monitor,
 the default log path is in your working directory.

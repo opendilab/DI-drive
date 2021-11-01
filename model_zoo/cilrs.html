@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Conditional Imitation Learning &mdash; DI-drive 0.2.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Learning by Cheating" href="lbc.html" />
+    <link rel="prev" title="Model Zoo" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> DI-drive
+          </a>
+              <div class="version">
+                0.2.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/index.html">Tutorial</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../features/index.html">Features</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Model Zoo</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#imitation-learning-model-zoo">Imitation Learning Model Zoo</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Conditional Imitation Learning</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#data-collection">Data collection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#model-training">Model training</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#model-evaluation">Model evaluation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lbc.html">Learning by Cheating</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cict.html">from Continuous Intention to Continuous Trajectory</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#reinforcement-learning-model-zoo">Reinforcement Learning Model Zoo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#other-method">Other Method</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api_doc/index.html">API Doc</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/index.html">FAQ</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DI-drive</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Model Zoo</a> &raquo;</li>
+      <li>Conditional Imitation Learning</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/model_zoo/cilrs.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="conditional-imitation-learning">
+<h1>Conditional Imitation Learning<a class="headerlink" href="#conditional-imitation-learning" title="Permalink to this headline"></a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<p><a class="reference external" href="https://arxiv.org/abs/1904.08980">CILRS</a> together with some other implementations
+following <a class="reference external" href="https://arxiv.org/abs/1710.02410">Conditional Imitation Learning(CIL)</a> is
+a commonly used imitation learning method for auto-driving in Carla. It is an end-to-end
+driving pipeline which takes front RGB camera and vehicle speed as inputs, then predict
+vehicle control signals including steer, throttle and brake under certain navigation
+command.</p>
+<p>The CIL model uses CNN to capture visual information and concat it with measurements
+information (vehicle speed), then use the provided navigation command to select a
+branch to give predictions.</p>
+<figure class="align-center" id="id1">
+<img alt="image-cilrs_1" src="../_images/image-cilrs_1.png" />
+<figcaption>
+<p><span class="caption-text">CIL model structure</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>CILRS uses deeper ResNet model and predicts speed in outputs as well to get better
+imitating behavior.</p>
+<figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="../_images/image-cilrs_2.png"><img alt="image-cilrs_2" src="../_images/image-cilrs_2.png" style="width: 600px;" /></a>
+<figcaption>
+<p><span class="caption-text">CILRS model structure</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p><strong>DI-drive</strong> supports full pipeline of CILRS, including datasets collecting, model
+training, and benchmark evaluation. Quick start of CILRS has been
+introduced in the tutorial. All code in this page can be found in <code class="docutils literal notranslate"><span class="pre">./demo/cilrs</span></code></p>
+<section id="data-collection">
+<h2>Data collection<a class="headerlink" href="#data-collection" title="Permalink to this headline"></a></h2>
+<p>The configuration of dataset collection has been set up in
+<code class="docutils literal notranslate"><span class="pre">cilrs_data_collect.py</span></code>. It uses <code class="docutils literal notranslate"><span class="pre">CarlaBenchmarkCollector</span></code> and <code class="docutils literal notranslate"><span class="pre">BenchmarkDatasaver</span></code>
+to collect training data. You can custom the configuration as follow.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">env</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">env_num</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="n">simulator</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">disable_two_wheels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">waypoint_num</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+            <span class="n">planner</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+                <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;behavior&#39;</span><span class="p">,</span>
+                <span class="n">resolution</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">obs</span><span class="o">=</span><span class="p">(</span>
+                <span class="nb">dict</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;rgb&#39;</span><span class="p">,</span>
+                    <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;rgb&#39;</span><span class="p">,</span>
+                    <span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">],</span>
+                    <span class="n">position</span><span class="o">=</span><span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">],</span>
+                    <span class="n">rotation</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">15</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                <span class="p">),</span>
+            <span class="p">),</span>
+
+        <span class="p">),</span>
+        <span class="n">col_is_failure</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">stuck_is_failure</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">manager</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">auto_reset</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">shared_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">context</span><span class="o">=</span><span class="s1">&#39;spawn&#39;</span><span class="p">,</span>
+            <span class="n">max_retry</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">wrapper</span><span class="o">=</span><span class="nb">dict</span><span class="p">(),</span>
+    <span class="p">),</span>
+    <span class="n">server</span><span class="o">=</span><span class="p">[</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">carla_host</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="n">carla_ports</span><span class="o">=</span><span class="p">[</span><span class="mi">9000</span><span class="p">,</span> <span class="mi">9010</span><span class="p">,</span> <span class="mi">2</span><span class="p">]),</span>
+    <span class="p">],</span>
+    <span class="n">policy</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">target_speed</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
+        <span class="n">noise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">collect</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">n_episode</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+            <span class="n">dir_path</span><span class="o">=</span><span class="s1">&#39;./datasets_train/cils_datasets_train&#39;</span><span class="p">,</span>
+            <span class="n">collector</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+                <span class="n">suite</span><span class="o">=</span><span class="s1">&#39;FullTown01-v1&#39;</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="model-training">
+<h2>Model training<a class="headerlink" href="#model-training" title="Permalink to this headline"></a></h2>
+<p>The training of CILRS is a standard imitation learning process. It takes
+RGB image and measurement as input then mimic the export label. You can custom
+the training by changing model architecture, learning rate, steps and so
+on in <code class="docutils literal notranslate"><span class="pre">cilrs_train.py</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">train_config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">exp_name</span><span class="o">=</span><span class="s1">&#39;cilrs_train&#39;</span><span class="p">,</span>
+    <span class="n">policy</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">cuda</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">cudnn</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">resume</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">ckpt_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">model</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">num_branch</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">learn</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">epoches</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+            <span class="n">batch_size</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>
+            <span class="n">loss</span><span class="o">=</span><span class="s1">&#39;l1&#39;</span><span class="p">,</span>
+            <span class="n">lr</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span>
+            <span class="n">speed_weight</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+            <span class="n">control_weights</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">],</span>
+        <span class="p">),</span>
+        <span class="nb">eval</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">eval_freq</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">),</span>
+    <span class="n">data</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">train</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">root_dir</span><span class="o">=</span><span class="s1">&#39;cilrs_datasets_train&#39;</span><span class="p">,</span>
+            <span class="n">preloads</span><span class="o">=</span><span class="s1">&#39;_preloads/cilrs_train.npy&#39;</span><span class="p">,</span>
+            <span class="n">transform</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">val</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">root_dir</span><span class="o">=</span><span class="s1">&#39;cilrs_datasets_val&#39;</span><span class="p">,</span>
+            <span class="n">preloads</span><span class="o">=</span><span class="s1">&#39;./_preloads/cilrs_val.npy&#39;</span><span class="p">,</span>
+            <span class="n">transform</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="model-evaluation">
+<h2>Model evaluation<a class="headerlink" href="#model-evaluation" title="Permalink to this headline"></a></h2>
+<p>DI-drive supports model evaluation with Carla benchmark. To custom the
+evaluation process, you can modify the configuration in <code class="docutils literal notranslate"><span class="pre">cilrs_eval.py</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cilrs_config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">env</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">env_num</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="n">simulator</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">town</span><span class="o">=</span><span class="s1">&#39;Town01&#39;</span><span class="p">,</span>
+            <span class="n">disable_two_wheels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">planner</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+                <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;behavior&#39;</span><span class="p">,</span>
+                <span class="n">resolution</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">obs</span><span class="o">=</span><span class="p">(</span>
+                <span class="nb">dict</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;rgb&#39;</span><span class="p">,</span>
+                    <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;rgb&#39;</span><span class="p">,</span>
+                    <span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="mi">400</span><span class="p">,</span> <span class="mi">300</span><span class="p">],</span>
+                    <span class="n">position</span><span class="o">=</span><span class="p">[</span><span class="mf">1.3</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.3</span><span class="p">],</span>
+                    <span class="n">fov</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                <span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">),</span>
+        <span class="n">wrapper</span><span class="o">=</span><span class="nb">dict</span><span class="p">(),</span>
+        <span class="n">col_is_failure</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">stuck_is_failure</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">manager</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">auto_reset</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">shared_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">context</span><span class="o">=</span><span class="s1">&#39;spawn&#39;</span><span class="p">,</span>
+            <span class="n">max_retry</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">),</span>
+    <span class="n">server</span><span class="o">=</span><span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">carla_host</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="n">carla_ports</span><span class="o">=</span><span class="p">[</span><span class="mi">9000</span><span class="p">,</span> <span class="mi">9010</span><span class="p">,</span> <span class="mi">2</span><span class="p">])],</span>
+    <span class="n">policy</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">ckpt_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">model</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">num_branch</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+            <span class="n">pretrained</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="nb">eval</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">evaluator</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+                <span class="n">suite</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;FullTown01-v1&#39;</span><span class="p">],</span>
+                <span class="n">transform_obs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>We provide pre-train weights that can achieve 90% success rate in single lane maps
+(Town01 and Town02). You can use it to run evaluation or fintuning your trained models.</p>
+<p><a class="reference external" href="http://opendilab.org/download/DI-drive/cilrs/best_ckpt.pth">best_ckpt.pth</a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@inproceedings</span><span class="p">{</span><span class="mi">2018</span><span class="n">End</span><span class="p">,</span>
+  <span class="n">title</span><span class="o">=</span><span class="p">{</span><span class="n">End</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">End</span> <span class="n">Driving</span> <span class="n">Via</span> <span class="n">Conditional</span> <span class="n">Imitation</span> <span class="n">Learning</span><span class="p">},</span>
+  <span class="n">author</span><span class="o">=</span><span class="p">{</span> <span class="n">Codevilla</span><span class="p">,</span> <span class="n">Felipe</span>  <span class="ow">and</span>  <span class="n">Miiller</span><span class="p">,</span> <span class="n">Matthias</span>  <span class="ow">and</span>  <span class="n">Lopez</span><span class="p">,</span> <span class="n">Antonio</span>  <span class="ow">and</span>  <span class="n">Koltun</span><span class="p">,</span> <span class="n">Vladlen</span>  <span class="ow">and</span>  <span class="n">Dosovitskiy</span><span class="p">,</span> <span class="n">Alexey</span> <span class="p">},</span>
+  <span class="n">booktitle</span><span class="o">=</span><span class="p">{</span><span class="mi">2018</span> <span class="n">IEEE</span> <span class="n">International</span> <span class="n">Conference</span> <span class="n">on</span> <span class="n">Robotics</span> <span class="ow">and</span> <span class="n">Automation</span> <span class="p">(</span><span class="n">ICRA</span><span class="p">)},</span>
+  <span class="n">year</span><span class="o">=</span><span class="p">{</span><span class="mi">2018</span><span class="p">},</span>
+<span class="p">}</span>
+
+<span class="nd">@inproceedings</span><span class="p">{</span><span class="n">codevilla2019exploring</span><span class="p">,</span>
+  <span class="n">title</span><span class="o">=</span><span class="p">{</span><span class="n">Exploring</span> <span class="n">the</span> <span class="n">limitations</span> <span class="n">of</span> <span class="n">behavior</span> <span class="n">cloning</span> <span class="k">for</span> <span class="n">autonomous</span> <span class="n">driving</span><span class="p">},</span>
+  <span class="n">author</span><span class="o">=</span><span class="p">{</span><span class="n">Codevilla</span><span class="p">,</span> <span class="n">Felipe</span> <span class="ow">and</span> <span class="n">Santana</span><span class="p">,</span> <span class="n">Eder</span> <span class="ow">and</span> <span class="n">L</span><span class="p">{</span>\<span class="s1">&#39;o}pez, Antonio M and Gaidon, Adrien},</span>
+  <span class="n">booktitle</span><span class="o">=</span><span class="p">{</span><span class="n">Proceedings</span> <span class="n">of</span> <span class="n">the</span> <span class="n">IEEE</span><span class="o">/</span><span class="n">CVF</span> <span class="n">International</span> <span class="n">Conference</span> <span class="n">on</span> <span class="n">Computer</span> <span class="n">Vision</span><span class="p">},</span>
+  <span class="n">pages</span><span class="o">=</span><span class="p">{</span><span class="mi">9329</span><span class="o">--</span><span class="mi">9338</span><span class="p">},</span>
+  <span class="n">year</span><span class="o">=</span><span class="p">{</span><span class="mi">2019</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Model Zoo" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lbc.html" class="btn btn-neutral float-right" title="Learning by Cheating" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, OpenDILab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

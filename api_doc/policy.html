@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>policy &mdash; DI-drive 0.1.3 documentation</title>
+  <title>policy &mdash; DI-drive 0.2.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -30,7 +30,7 @@
             <a href="../index.html" class="icon icon-home"> DI-drive
           </a>
               <div class="version">
-                0.1.3
+                0.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -60,6 +60,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#basecarlapolicy">BaseCarlaPolicy</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#autopidpolicy">AutoPIDPolicy</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#autompcpolicy">AutoMPCPolicy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cilrspolicy">CILRSPolicy</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lbcbirdviewpolicy">LBCBirdviewPolicy</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lbcimagepolicy">LBCImagePolicy</a></li>
 </ul>
@@ -287,6 +288,29 @@ to the controller according to config.</p>
 </dl>
 </dd></dl>
 
+</dd></dl>
+
+</section>
+<section id="cilrspolicy">
+<h2>CILRSPolicy<a class="headerlink" href="#cilrspolicy" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="core.policy.CILRSPolicy">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">core.policy.</span></span><span class="sig-name descname"><span class="pre">CILRSPolicy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/core/policy/cilrs_policy.html#CILRSPolicy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core.policy.CILRSPolicy" title="Permalink to this definition"></a></dt>
+<dd><p>CILRS driving policy. It has a CILRS NN model which can handle
+observations from several environments by collating data into batch. It contains 2
+modes: <cite>eval</cite> and <cite>learn</cite>. The learn mode will calculate all losses, but will not
+back-propregate it. In <cite>eval</cite> mode, the output control signal will be postprocessed to
+standard control signal in Carla, and it can avoid stopping in the staring ticks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>cfg (Dict): Config Dict.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Interfaces</dt>
+<dd class="field-even"><p>reset, forward</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
