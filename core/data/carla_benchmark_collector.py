@@ -181,8 +181,7 @@ class CarlaBenchmarkCollector(BaseCollector):
                     running_env_params[running_envs] = reset_param
                     running_envs += 1
                     self._collect_suite_index_dict[suite] += 1
-                    if self._collect_suite_index_dict[suite] >= len(suite_params):
-                        self._collect_suite_index_dict[suite] = 0
+                    self._collect_suite_index_dict[suite] %= len(suite_params)
                 else:
                     prepare_enough = True
                     break
@@ -240,12 +239,19 @@ class CarlaBenchmarkCollector(BaseCollector):
                                 reset_param_index = self._collect_suite_index_dict[next_suite]
                                 reset_param = self._collect_suite_reset_params[next_suite][reset_param_index]
                                 self._collect_suite_index_dict[next_suite] += 1
-                                if reset_param_index >= len(self._collect_suite_reset_params[next_suite]):
-                                    self._collect_suite_index_dict[next_suite] = 0
+                                self._collect_suite_index_dict[next_suite] %= len(
+                                    self._collect_suite_reset_params[next_suite]
+                                )
                                 running_env_params[env_id] = reset_param
                                 self._env_manager.reset({env_id: reset_param})
                         else:
-                            print('[COLLECTOR] env_id {} not success'.format(env_id), timestep.info)
+                            info = timestep.info
+                            for k in list(info.keys()):
+                                if 'reward' in k:
+                                    info.pop(k)
+                                if k in ['timestamp']:
+                                    info.pop(k)
+                            print('[COLLECTOR] env_id {} not success'.format(env_id), info)
                             suite_index = collected_episodes % self._suite_num
                             next_suite = self._collect_suite_list[suite_index]
                             reset_param_index = self._collect_suite_index_dict[next_suite]

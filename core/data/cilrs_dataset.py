@@ -9,12 +9,11 @@ from core.utils.others.image_helper import read_image
 
 class CILRSDataset(Dataset):
 
-    def __init__(self, cfg: Dict) -> None:
-        self._cfg = cfg
-        self._root_dir = cfg.root_dir
-        self._transform = self._cfg.transform
+    def __init__(self, root_dir: str, transform: bool = False, preloads: str = None) -> None:
+        self._root_dir = root_dir
+        self._transform = transform
 
-        preload_file = cfg.get('preloads', None)
+        preload_file = preloads
         if preload_file is not None:
             print('[DATASET] Loading from NPY')
             self._sensor_data_names, self._measurements = np.load(preload_file, allow_pickle=True)

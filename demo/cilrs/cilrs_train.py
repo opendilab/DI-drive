@@ -119,8 +119,8 @@ def main(cfg):
     if cfg.policy.cudnn:
         torch.backends.cudnn.benchmark = True
 
-    train_dataset = CILRSDataset(cfg.data.train)
-    val_dataset = CILRSDataset(cfg.data.val)
+    train_dataset = CILRSDataset(**cfg.data.train)
+    val_dataset = CILRSDataset(**cfg.data.val)
     train_loader = DataLoader(train_dataset, cfg.policy.learn.batch_size, shuffle=True, num_workers=8)
     val_loader = DataLoader(val_dataset, cfg.policy.learn.batch_size, num_workers=8)
 

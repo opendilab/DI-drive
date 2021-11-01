@@ -36,6 +36,7 @@ config = dict(
         ),
         col_is_failure=True,
         stuck_is_failure=True,
+        ran_light_is_failure=True,
         manager=dict(
             auto_reset=False,
             shared_memory=False,
@@ -53,7 +54,9 @@ config = dict(
     ],
     policy=dict(
         target_speed=25,
+        tl_threshold=13,
         noise=True,
+        noise_kwargs=dict(),
         collect=dict(
             n_episode=100,
             dir_path='./datasets_train/cilrs_datasets_train',
@@ -69,8 +72,8 @@ config = dict(
 main_config = EasyDict(config)
 
 
-def cilrs_postprocess(sensor_data, scale=1, crop=256):
-    rgb = sensor_data['rgb'].copy()
+def cilrs_postprocess(observasion, scale=1, crop=256):
+    rgb = observasion['rgb'].copy()
     im = PIL.Image.fromarray(rgb)
     (width, height) = (int(im.width // scale), int(im.height // scale))
     rgb = im.resize((width, height))
@@ -103,7 +106,7 @@ def post_process(config):
             index = png_file.split('_')[1].split('.')[0]
             measurements = np.frombuffer(lmdb_file.get(('measurements_%05d' % int(index)).encode()), np.float32)
             data = {}
-            data['control'] = np.array([measurements[12], measurements[13], measurements[14]]).astype(np.float32)
+            data['control'] = np.array([measurements[15], measurements[16], measurements[17]]).astype(np.float32)
             data['speed'] = measurements[10] / config.env.wrapper.speed_factor
             data['command'] = float(measurements[11])
             new_dict = {}
@@ -140,9 +143,10 @@ def main(cfg, seed=0):
         os.makedirs(cfg.policy.collect.dir_path)
 
     collected_episodes = 0
-    data_postprocess = lambda x: cilrs_postprocess(x, cfg.env.wrapper.scale, cfg.env.wrapper.crop)
+    data_postprocess = lambda x: cilrs_postprocess(x, scale=cfg.env.wrapper.scale, crop=cfg.env.wrapper.crop)
     saver = BenchmarkDatasetSaver(cfg.policy.collect.dir_path, cfg.env.simulator.obs, data_postprocess)
     print('[MAIN] Start collecting data')
+    saver.make_dataset_path(cfg.policy.collect)
     while collected_episodes < cfg.policy.collect.n_episode:
         # Sampling data from environments
         n_episode = min(cfg.policy.collect.n_episode - collected_episodes, env_num * 2)

@@ -6,7 +6,7 @@ description = """DI-drive: OpenDILab Decision Intelligence Autonomous Driving Pl
 
 setup(
     name='DI-drive',
-    version='0.1.3',
+    version='0.2.0',
     description='OpenDILab Decision Intelligence Autonomous Driving Platform',
     long_description=description,
     author='OpenDILab',

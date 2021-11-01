@@ -44,6 +44,7 @@ class BenchmarkDatasetSaver():
         self._save_dir = save_dir
         self._obs_cfg = obs_cfg
         self._post_process_fn = post_process_fn
+        self._lmdb_obs_type = []
         if self._post_process_fn is None:
             self._post_process_fn = default_post_process_fn
 
@@ -90,9 +91,9 @@ class BenchmarkDatasetSaver():
                 measurements = np.concatenate(measurements, 0)
                 sensor_data, others = self._post_process_fn(observations)
                 data.append((measurements, sensor_data, others))
-            BenchmarkDatasetSaver._save_episode_data(episode_path, data)
+            BenchmarkDatasetSaver._save_episode_data(episode_path, data, self._lmdb_obs_type)
 
-    def make_dataset_path(self, dataset_metainfo: Dict):
+    def make_dataset_path(self, dataset_metainfo: Dict = dict()):
         """
         Make dataset folder and write dataset meta infomation into a json file.
 
@@ -102,13 +103,16 @@ class BenchmarkDatasetSaver():
         if not os.path.exists(self._save_dir):
             os.makedirs(self._save_dir)
 
-        obs_name = ['rgb', 'depth', 'segmentation']
+        obs_types = ['rgb', 'depth', 'segmentation', 'lidar', 'bev']
         obs_metainfo = {}
         for obs_item in self._obs_cfg:
-            if obs_item.type in obs_name:
-                type_name = obs_item.type
-                obs_item = obs_item.copy().pop('type')
-                obs_metainfo.update({type_name: obs_item})
+            if obs_item.type in obs_types:
+                obs_name = obs_item.name
+                obs_item = obs_item.copy()
+                obs_item.pop('name')
+                obs_metainfo.update({obs_name: obs_item})
+                if obs_item['type'] in ['lidar', 'bev']:
+                    self._lmdb_obs_type.append(obs_name)
 
         dataset_metainfo.update({'obs': obs_metainfo})
 
@@ -120,12 +124,15 @@ class BenchmarkDatasetSaver():
         write_json(os.path.join(episode_path, 'episode_metainfo.json'), env_params)
 
     @staticmethod
-    def _save_episode_data(episode_path, data):
-        write_episode_lmdb(episode_path, data)
+    def _save_episode_data(episode_path, data, lmdb_obs_type=None):
+        write_episode_lmdb(episode_path, data, lmdb_obs_type)
         for i, x in enumerate(data):
             sensor_data = x[1]
             for k, v in sensor_data.items():
-                save_image(os.path.join(episode_path, "%s_%05d.png" % (k, i)), v)
+                if lmdb_obs_type is not None and k in lmdb_obs_type:
+                    continue
+                else:
+                    save_image(os.path.join(episode_path, "%s_%05d.png" % (k, i)), v)
 
     def make_index(self, command_index: int = 11):
         """

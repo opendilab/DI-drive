@@ -18,7 +18,7 @@ def write_lmdb(file_path, lmdb_data):
 
     with lmdb_env.begin(write=True) as txn:
         for key, value in lmdb_data.items():
-            txn.put(key=key.encode(), value=np.float32(value))
+            txn.put(key=key.encode(), value=value)
 
 
 def write_episode_lmdb(episode_path, episode_data, lmdb_obs_type=None):
@@ -28,11 +28,12 @@ def write_episode_lmdb(episode_path, episode_data, lmdb_obs_type=None):
         for i, x in enumerate(episode_data):
             measurements = x[0]
             txn.put(('measurements_%05d' % i).encode(), np.ascontiguousarray(measurements).astype(np.float32))
-            if lmdb_obs_type is not None:
-                for obs in lmdb_obs_type:
-                    if obs not in x[1]:
-                        raise ValueError('obs type not found in data!')
-                    txn.put(('%s_%05d' % (obs, i)).encode(), episode_data[1][obs])
+            sensor_data = x[1]
+            if lmdb_obs_type:
+                for key in lmdb_obs_type:
+                    if key not in sensor_data:
+                        raise ValueError("lmdb obs %s not in sensor data!" % key)
+                    txn.put(('%s_%05d' % (key, i)).encode(), np.ascontiguousarray(sensor_data[key].astype(np.uint8)))
             others = x[2]
             for key in others.keys():
                 txn.put(('%s_%05d' % (key, i)).encode(), np.ascontiguousarray(others[key]).astype(np.float32))

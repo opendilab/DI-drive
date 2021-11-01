@@ -13,10 +13,10 @@ from .base_carla_policy import BaseCarlaPolicy
 class CILRSPolicy(BaseCarlaPolicy):
     """
     CILRS driving policy. It has a CILRS NN model which can handle
-    observations from several environments by collating data into batch. It contains 3
-    modes: `eval`, `learn` and `validate`. The validate mode will calculate control
-    signal together with loss, but will not back-propregate it. In `eval` mode, the
-    output control signal will be postprocessed to 
+    observations from several environments by collating data into batch. It contains 2
+    modes: `eval` and `learn`. The learn mode will calculate all losses, but will not
+    back-propregate it. In `eval` mode, the output control signal will be postprocessed to
+    standard control signal in Carla, and it can avoid stopping in the staring ticks.
 
     :Arguments:
         - cfg (Dict): Config Dict.
@@ -44,7 +44,7 @@ class CILRSPolicy(BaseCarlaPolicy):
             cfg: Dict,
     ) -> None:
         super().__init__(cfg, enable_field=[])
-        self._enable_field = ['eval', 'learn', 'validate']
+        self._enable_field = ['eval', 'learn']
         self._cuda = self._cfg.cuda
         self._max_throttle = self._cfg.max_throttle
         self._model = CILRSModel(**self._cfg.model)
@@ -135,7 +135,7 @@ class CILRSPolicy(BaseCarlaPolicy):
 
     def _forward_learn(self, data: Dict) -> Dict[str, Any]:
         """
-        Running forward to get loss of `learn` mode and back-propregate the loss.
+        Running forward of `learn` mode to get loss.
 
         :Arguments:
             - data (Dict): Input dict, with env id in keys and related observations in values,

@@ -37,9 +37,19 @@ class AutoPIDPolicy(BaseCarlaPolicy):
         max_throttle=0.75,
         max_steer=0.8,
         ignore_light=False,
+        tl_threshold=10,
         lateral_dict=DEFAULT_LATERAL_DICT,
         longitudinal_dict=DEFAULT_LONGITUDINAL_DICT,
         noise=False,
+        noise_kwargs=dict(
+            noise_len=5,
+            drive_len=80,
+            noise_type='uniform',
+            noise_args=dict(
+                low=-0.3,
+                high=0.3,
+            ),
+        ),
         debug=False,
     )
 
@@ -56,6 +66,7 @@ class AutoPIDPolicy(BaseCarlaPolicy):
         self._max_throttle = self._cfg.max_throttle
         self._max_steer = self._cfg.max_steer
         self._ignore_traffic_light = self._cfg.ignore_light
+        self._tl_threshold = self._cfg.tl_threshold
 
         self._lateral_dict = self._cfg.lateral_dict
         self._longitudinal_dict = self._cfg.longitudinal_dict
@@ -87,11 +98,7 @@ class AutoPIDPolicy(BaseCarlaPolicy):
         if noise:
             noise_controller = SteerNoiseWrapper(
                 model=controller,
-                noise_type='uniform',
-                noise_kwargs={
-                    'low': -0.3,
-                    'high': 0.3
-                },
+                **self._cfg.noise_kwargs,
             )
             self._controller_dict[data_id] = noise_controller
         else:
@@ -106,7 +113,7 @@ class AutoPIDPolicy(BaseCarlaPolicy):
             control = self._emergency_stop(data_id)
         elif not self._ignore_traffic_light and obs['agent_state'] == 4:
             control = self._emergency_stop(data_id)
-        elif not self._ignore_traffic_light and obs['tl_state'] == 0 and obs['tl_dis'] < 10:
+        elif not self._ignore_traffic_light and obs['tl_state'] == 0 and obs['tl_dis'] < self._tl_threshold:
             control = self._emergency_stop(data_id)
         else:
             current_speed = obs['speed']

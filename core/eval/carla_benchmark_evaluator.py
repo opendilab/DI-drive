@@ -6,6 +6,7 @@ from tqdm import tqdm
 from itertools import product
 import torch
 from typing import Dict, Any, List, Callable, Optional
+from tensorboardX import SummaryWriter
 
 from .base_evaluator import BaseEvaluator
 from core.data.benchmark import ALL_SUITES
@@ -198,7 +199,9 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
                 param['weather'] = weather
                 if self._resume and len(summary) > 0 and ((summary['start'] == start) & (summary['end'] == end) &
                                                           (summary['weather'] == weather)).any():
-                    self._logger.info('[EVALUATOR] weather:{}, route:{}, {} already exist'.format(weather, start, end))
+                    self._logger.info(
+                        '[EVALUATOR] weather: {}, route: ({}, {}) already exist'.format(weather, start, end)
+                    )
                     continue
                 if running_envs < self._env_num:
                     running_env_params[running_envs] = param
@@ -206,82 +209,92 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
                 else:
                     episode_queue.append(param)
 
-            for env_id in running_env_params:
-                self._env_manager.seed({env_id: self._seed})
-            self._env_manager.reset(running_env_params)
-            with self._timer:
-                while True:
-                    obs = self._env_manager.ready_obs
-                    if self._transform_obs:
-                        obs = to_tensor(obs, dtype=torch.float32)
-                    policy_output = self._policy.forward(obs, **policy_kwargs)
-                    actions = {env_id: output['action'] for env_id, output in policy_output.items()}
-                    timesteps = self._env_manager.step(actions)
-                    for i, t in timesteps.items():
-                        if t.info.get('abnormal', False):
-                            self._policy.reset([i])
-                            self._env_manager.reset(reset_params={i: running_env_params[i]})
+            if not running_env_params:
+                self._logger.info("[EVALUATOR] Nothing to eval.")
+            else:
+                for env_id in running_env_params:
+                    self._env_manager.seed({env_id: self._seed})
+                self._env_manager.reset(running_env_params)
+                with self._timer:
+                    while True:
+                        obs = self._env_manager.ready_obs
+                        for key in obs:
+                            if key not in running_env_params:
+                                obs.pop(key)
+                        if not obs:
+                            break
+                        if self._transform_obs:
+                            obs = to_tensor(obs, dtype=torch.float32)
+                        policy_output = self._policy.forward(obs, **policy_kwargs)
+                        actions = {env_id: output['action'] for env_id, output in policy_output.items()}
+                        timesteps = self._env_manager.step(actions)
+                        for i, t in timesteps.items():
+                            if t.info.get('abnormal', False):
+                                self._policy.reset([i])
+                                self._env_manager.reset(reset_params={i: running_env_params[i]})
+                                continue
+                            if t.done:
+                                self._policy.reset([i])
+                                result = {
+                                    'start': running_env_params[i]['start'],
+                                    'end': running_env_params[i]['end'],
+                                    'weather': running_env_params[i]['weather'],
+                                    'reward': t.info['final_eval_reward'],
+                                    'success': t.info['success'],
+                                    'collided': t.info['collided'],
+                                    'timecost': int(t.info['tick']),
+                                }
+                                results.append(result)
+                                if episode_queue:
+                                    reset_param = episode_queue.pop()
+                                    self._env_manager.reset({i: reset_param})
+                                    running_env_params[i] = reset_param
+                        if self._env_manager.done:
+                            break
+                duration = self._timer.value
+                success_num = 0
+                episode_num = 0
+                episode_reward = []
+                envstep_num = 0
+                for result in results:
+                    episode_num += 1
+                    if result['success']:
+                        success_num += 1
+                    episode_reward.append(result['reward'])
+                    envstep_num += result['timecost']
+
+                if self._save_files:
+                    results_pd = pd.DataFrame(results)
+                    summary = pd.concat([summary, results_pd])
+                    summary.to_csv(summary_csv, index=False)
+
+                info = {
+                    'suite': suite,
+                    'train_iter': train_iter,
+                    'ckpt_name': 'iteration_{}.pth.tar'.format(train_iter),
+                    'avg_envstep_per_episode': envstep_num / n_episode,
+                    'evaluate_time': duration,
+                    'avg_time_per_episode': duration / n_episode,
+                    'success_rate': 0 if envstep_num == 0 else success_num / episode_num,
+                    'reward_mean': np.mean(episode_reward),
+                    'reward_std': np.std(episode_reward),
+                }
+                if train_iter == -1:
+                    info.pop('train_iter')
+                    info.pop('ckpt_name')
+                elif self._tb_logger is not None:
+                    for k, v in info.items():
+                        if k in ['train_iter', 'ckpt_name', 'suite']:
                             continue
-                        if t.done:
-                            self._policy.reset([i])
-                            result = {
-                                'start': running_env_params[i]['start'],
-                                'end': running_env_params[i]['end'],
-                                'weather': running_env_params[i]['weather'],
-                                'reward': t.info['final_eval_reward'],
-                                'success': t.info['success'],
-                                'collided': t.info['collided'],
-                                'timecost': int(t.info['tick']),
-                            }
-                            results.append(result)
-                            if episode_queue:
-                                reset_param = episode_queue.pop()
-                                self._env_manager.reset({i: reset_param})
-                                running_env_params[i] = reset_param
-                    if self._env_manager.done:
-                        break
-            duration = self._timer.value
-            success_num = 0
-            episode_num = 0
-            episode_reward = []
-            envstep_num = 0
-            for result in results:
-                episode_num += 1
-                if result['success']:
-                    success_num += 1
-                episode_reward.append(result['reward'])
-                envstep_num += result['timecost']
+                        if not np.isscalar(v):
+                            continue
+                        self._tb_logger.add_scalar('{}_{}_iter/'.format(self._instance_name, suite) + k, v, train_iter)
+                        self._tb_logger.add_scalar('{}_{}_step/'.format(self._instance_name, suite) + k, v, envstep)
+                self._logger.info(self._logger.get_tabulate_vars_hor(info))
 
-            if self._save_files:
-                summary = pd.DataFrame(results)
-                summary.to_csv(summary_csv, index=False)
-            info = {
-                'suite': suite,
-                'train_iter': train_iter,
-                'ckpt_name': 'iteration_{}.pth.tar'.format(train_iter),
-                'avg_envstep_per_episode': envstep_num / n_episode,
-                'evaluate_time': duration,
-                'avg_time_per_episode': duration / n_episode,
-                'success_rate': 0 if envstep_num == 0 else success_num / episode_num,
-                'reward_mean': np.mean(episode_reward),
-                'reward_std': np.std(episode_reward),
-            }
-            if train_iter == -1:
-                info.pop('train_iter')
-                info.pop('ckpt_name')
-            elif self._tb_logger is not None:
-                for k, v in info.items():
-                    if k in ['train_iter', 'ckpt_name', 'suite']:
-                        continue
-                    if not np.isscalar(v):
-                        continue
-                    self._tb_logger.add_scalar('{}_{}_iter/'.format(self._instance_name, suite) + k, v, train_iter)
-                    self._tb_logger.add_scalar('{}_{}_step/'.format(self._instance_name, suite) + k, v, envstep)
-            self._logger.info(self._logger.get_tabulate_vars_hor(info))
-
-            total_episodes += episode_num
-            success_episodes += success_num
-            total_time += duration
+                total_episodes += episode_num
+                success_episodes += success_num
+                total_time += duration
 
         if self._save_files:
             results = gather_results(self._result_dir)
