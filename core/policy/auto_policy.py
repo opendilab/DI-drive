@@ -43,7 +43,7 @@ class AutoPIDPolicy(BaseCarlaPolicy):
         noise=False,
         noise_kwargs=dict(
             noise_len=5,
-            drive_len=80,
+            drive_len=100,
             noise_type='uniform',
             noise_args=dict(
                 low=-0.3,

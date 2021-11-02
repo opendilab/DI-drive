@@ -154,8 +154,9 @@ class SensorHelper(object):
         """
         for key in self._sensors_dict:
             if self._sensors_dict[key] is not None:
-                self._sensors_dict[key].stop()
-                self._sensors_dict[key].destroy()
+                if self._sensors_dict[key].is_alive:
+                    self._sensors_dict[key].stop()
+                    self._sensors_dict[key].destroy()
                 self._sensors_dict[key] = None
         time.sleep(0.1)
         self._sensors_dict.clear()

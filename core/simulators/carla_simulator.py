@@ -265,6 +265,8 @@ class CarlaSimulator(BaseSimulator):
             self._world = self._client.load_world(town)
         else:
             self._world = self._client.get_world()
+        if self._world.get_snapshot().timestamp.frame > 1e6:
+            self._world = self._client.load_world(town)
         self._map = self._world.get_map()
         self._set_sync_mode(self._sync_mode, self._delta_seconds)
 
@@ -322,7 +324,8 @@ class CarlaSimulator(BaseSimulator):
 
         for response in self._client.apply_batch_sync(batch, True):
             if response.error:
-                print('[SIMULATOR]', response.error)
+                if self._verbose:
+                    print('[SIMULATOR]', response.error)
             else:
                 CarlaDataProvider.register_actor(self._world.get_actor(response.actor_id))
 
@@ -393,7 +396,7 @@ class CarlaSimulator(BaseSimulator):
             for result in self._client.apply_batch_sync(batch, True):
                 if result.error:
                     if self._verbose:
-                        print('[SIMULATOR] walker controller ', result.error)
+                        print('[SIMULATOR] Walker controller ', result.error)
                 else:
                     _controllers.append(result.actor_id)
 
