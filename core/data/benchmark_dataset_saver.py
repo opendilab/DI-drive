@@ -3,7 +3,7 @@ import lmdb
 import glob
 import numpy as np
 from pathlib import Path
-from typing import Callable, List, Dict
+from typing import Callable, List, Dict, Optional
 
 from core.utils.data_utils.data_writter import write_json, write_episode_lmdb
 from core.utils.others.image_helper import save_image, is_image
@@ -28,27 +28,26 @@ class BenchmarkDatasetSaver():
         - save_dir (str): Dataset folder path.
         - obs_cfg (Dict): Observation config dict in simulator.
         - post_process_fn (Callable, optional): Post-process function defined by user. Defaults to None.
+        - lmdb_obs (List, optional): Observation types that saved as lmdb rather than image, default to ['lidar', 'bev']
 
     :Interfaces: make_dataset_path, save_episodes_data, make_index
     """
 
-    def __init__(self, save_dir: str, obs_cfg: Dict, post_process_fn: Callable = None):
-        """
-        [summary]
-
-        :Arguments:
-            - save_dir (str): [description]
-            - obs_cfg (Dict): [description]
-            - post_process_fn (Callable, optional): [description]. Defaults to None.
-        """
+    def __init__(
+        self,
+        save_dir: str,
+        obs_cfg: Dict,
+        post_process_fn: Optional[Callable] = None,
+        lmdb_obs: Optional[List] = ['lidar', 'bev'],
+    ) -> None:
         self._save_dir = save_dir
         self._obs_cfg = obs_cfg
         self._post_process_fn = post_process_fn
-        self._lmdb_obs_type = []
+        self._lmdb_obs_type = lmdb_obs
         if self._post_process_fn is None:
             self._post_process_fn = default_post_process_fn
 
-    def save_episodes_data(self, episodes_data: List, start_episode: int = 0):
+    def save_episodes_data(self, episodes_data: List, start_episode: int = 0) -> None:
         """
         Save data from several episodes sampled from collector, with 'env_param' and 'data' key
         saved in each episode.
@@ -93,7 +92,7 @@ class BenchmarkDatasetSaver():
                 data.append((measurements, sensor_data, others))
             BenchmarkDatasetSaver._save_episode_data(episode_path, data, self._lmdb_obs_type)
 
-    def make_dataset_path(self, dataset_metainfo: Dict = dict()):
+    def make_dataset_path(self, dataset_metainfo: Dict = dict()) -> None:
         """
         Make dataset folder and write dataset meta infomation into a json file.
 
@@ -111,20 +110,18 @@ class BenchmarkDatasetSaver():
                 obs_item = obs_item.copy()
                 obs_item.pop('name')
                 obs_metainfo.update({obs_name: obs_item})
-                if obs_item['type'] in ['lidar', 'bev']:
-                    self._lmdb_obs_type.append(obs_name)
 
         dataset_metainfo.update({'obs': obs_metainfo})
 
         write_json(os.path.join(self._save_dir, 'metainfo.json'), dataset_metainfo)
 
     @staticmethod
-    def _make_episode_path(episode_path, env_params):
+    def _make_episode_path(episode_path, env_params) -> None:
         os.makedirs(episode_path, exist_ok=True)
         write_json(os.path.join(episode_path, 'episode_metainfo.json'), env_params)
 
     @staticmethod
-    def _save_episode_data(episode_path, data, lmdb_obs_type=None):
+    def _save_episode_data(episode_path, data, lmdb_obs_type=None) -> None:
         write_episode_lmdb(episode_path, data, lmdb_obs_type)
         for i, x in enumerate(data):
             sensor_data = x[1]
@@ -134,7 +131,7 @@ class BenchmarkDatasetSaver():
                 else:
                     save_image(os.path.join(episode_path, "%s_%05d.png" % (k, i)), v)
 
-    def make_index(self, command_index: int = 11):
+    def make_index(self, command_index: int = 11) -> None:
         """
         Make an index txt file to save all the command of each frame in dataset.
 

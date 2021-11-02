@@ -45,7 +45,8 @@ config = dict(
             aug=dict(
                 position_range=[2.0, 0.0, 0.0],
                 rotation_range=[0.0, 30.0, 0.0],
-            )
+            ),
+            verbose=True,
         ),
         col_is_failure=True,
         stuck_is_failure=True,
