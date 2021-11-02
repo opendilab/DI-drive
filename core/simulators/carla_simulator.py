@@ -484,8 +484,8 @@ class CarlaSimulator(BaseSimulator):
         for veh in vehicles:
             print('\t', veh[0].id, veh[0].type_id, veh[0].attributes['role_name'])
         print("[SIMULATOR] walkers:", len(walkers))
-        print("[SIMULATOR] lights:", len(traffic_lights))
-        print("[SIMULATOR] speed limits:", len(speed_limits))
+        #print("[SIMULATOR] lights:", len(traffic_lights))
+        #print("[SIMULATOR] speed limits:", len(speed_limits))
         print("[SIMULATOR] sensors:")
         for ss in sensors:
             print('\t', ss[0])
@@ -698,8 +698,9 @@ class CarlaSimulator(BaseSimulator):
         This will NOT destroy the Carla client, so simulator can use same carla client to start next episode.
         """
         for actor in self._actor_map['walker_controller']:
-            actor.stop()
-            actor.destroy()
+            if actor.is_alive:
+                actor.stop()
+                actor.destroy()
         self._actor_map['walker_controller'].clear()
         self._actor_map.clear()
 
@@ -722,6 +723,9 @@ class CarlaSimulator(BaseSimulator):
         self._end_timeout = float('inf')
 
         CarlaDataProvider.clean_up()
+        if self._debug:
+            print('after')
+            self._count_actors()
 
     @property
     def town_name(self) -> str:

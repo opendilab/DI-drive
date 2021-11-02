@@ -1130,6 +1130,7 @@ class CarlaDataProvider(object):
             except RuntimeError as e:
                 if "time-out" in str(e):
                     pass
+                    print(e)
                 else:
                     raise e
 

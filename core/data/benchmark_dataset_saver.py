@@ -38,7 +38,7 @@ class BenchmarkDatasetSaver():
         save_dir: str,
         obs_cfg: Dict,
         post_process_fn: Optional[Callable] = None,
-        lmdb_obs: Optional[List] = ['lidar', 'bev'],
+        lmdb_obs: Optional[List] = ['lidar', 'birdview'],
     ) -> None:
         self._save_dir = save_dir
         self._obs_cfg = obs_cfg
