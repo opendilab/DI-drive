@@ -257,8 +257,9 @@ class CarlaBenchmarkCollector(BaseCollector):
                             reset_param_index = self._collect_suite_index_dict[next_suite]
                             reset_param = self._collect_suite_reset_params[next_suite][reset_param_index]
                             self._collect_suite_index_dict[next_suite] += 1
-                            if reset_param_index >= len(self._collect_suite_reset_params[next_suite]):
-                                self._collect_suite_index_dict[next_suite] = 0
+                            self._collect_suite_index_dict[next_suite] %= len(
+                                self._collect_suite_reset_params[next_suite]
+                            )
                             running_env_params[env_id] = reset_param
                             self._env_manager.reset({env_id: reset_param})
                         self._traj_cache[env_id].clear()
