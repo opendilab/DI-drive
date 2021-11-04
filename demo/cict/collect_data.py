@@ -62,7 +62,7 @@ def main(cfg, seed=0):
 
     collected_episodes = 0
     saver = CICTBenchmarkDatasetSaver(cfg.policy.collect.dir_path, cfg.env.simulator.obs, post_process_fn=cict_post_process_fn)
-
+    saver.make_dataset_path(cfg.policy.collect)
     while collected_episodes < cfg.policy.collect.n_episode:
         # Sampling data from environments
         print('start collect data')
