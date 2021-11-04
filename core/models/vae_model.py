@@ -158,7 +158,6 @@ class VanillaVAE(nn.Module):
         kld_weight = self.kld_weight
 
         recons_loss = 0
-
         '''
         weight = [8.7924e-01, 7.4700e-02, 1.0993e-02, 6.1075e-04, 2.6168e-03, 2.8066e-02, 3.7737e-03]
         vd = 1
