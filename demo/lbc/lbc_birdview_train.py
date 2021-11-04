@@ -53,7 +53,6 @@ def get_log_visualization(birdview, command, loss, locations, locations_pred, si
     RED = [255, 0, 0]
 
     images = list()
-    from core.utils.others.image_helper import check_image
 
     for i in range(min(birdview.shape[0], size)):
         loss_i = loss[i].sum()
