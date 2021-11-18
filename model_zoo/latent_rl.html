@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Latent Reinforcement Learning &mdash; DI-drive 0.2.0 documentation</title>
+  <title>Latent Reinforcement Learning &mdash; DI-drive 0.2.1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -30,7 +30,7 @@
             <a href="../index.html" class="icon icon-home"> DI-drive
           </a>
               <div class="version">
-                0.2.0
+                0.2.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -56,7 +56,8 @@
 <li class="toctree-l3"><a class="reference internal" href="simple_rl.html">BeV Speed End-to-end Reinforcement Learning</a></li>
 <li class="toctree-l3"><a class="reference internal" href="implicit.html">End-to-End Model-Free Reinforcement Learning for Urban Driving using Implicit Affordances</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Latent Reinforcement Learning</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#training-vae">Training VAE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#training-auto-encoder">Training auto-encoder</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#trainging-rl-agent">Trainging RL agent</a></li>
 </ul>
 </li>
 </ul>
@@ -102,15 +103,70 @@
 <div class="toctree-wrapper compound">
 </div>
 <p>Latent Reinforcement Learning is a category of policy settings which generate
-latent representations that can conpletely characterize the features related to
-the task in the input observation. Techically, it uses a Variational Autoencoder
-(VAE) to get latent embeddings, and use it to train RL policies.</p>
+latent representations that can completely characterize the features related to
+the driving task in the input observation. Techically, it uses a Variational
+Autoencoder (VAE) to get latent embeddings, and takes it as observation to
+train RL policies.</p>
 <p>Our implementation refers to <a class="reference external" href="https://arxiv.org/abs/1904.09503">Model-free RL for AD</a>
-with <strong>DI-drive</strong> and <strong>DI-engine</strong> and transfers it to more general cases. In the
+with <strong>DI-drive</strong> and <strong>DI-engine</strong> and transfers it to more general cases. All
+entries can be found in <code class="docutils literal notranslate"><span class="pre">demo/latent_rl</span></code>. In the
 following documents, it will be explained detailly.</p>
-<section id="training-vae">
-<h2>Training VAE<a class="headerlink" href="#training-vae" title="Permalink to this headline"></a></h2>
-<p>Comming soon</p>
+<section id="training-auto-encoder">
+<h2>Training auto-encoder<a class="headerlink" href="#training-auto-encoder" title="Permalink to this headline"></a></h2>
+<p>The first step is to train a VAE to encode input image
+into a imbedding feature. We deploy the model and training following
+open source VAE <a class="reference external" href="https://github.com/AntixK/PyTorch-VAE">vae</a>.
+..You can also use pretrained model vae.ckpt.
+We follow the standard setting. The input of the auto-encoder module
+is birdview image, whose shape is 192 * 192 * 7. We use 5
+convolutional layers activated with leakyReLU as the encoder, which
+encode the input birdview image to a embedding with 128 channels.
+The decoder shares the same convolution kernel size and activation
+layer, but uses transposed convolutional layer. Using the encoder,
+we can convert the input birdview image to 128-channel embedding,
+which helps the training of RL agent.</p>
+<p>The training procedure includes collecting birdview data and training the
+auto-encoder.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> demo/latent_rl
+<span class="c1"># Collect data</span>
+python collect_data.py
+<span class="c1"># Train VAE</span>
+python train_vae.py
+</pre></div>
+</div>
+<p>You can custom the configurations in the files above.</p>
+</section>
+<section id="trainging-rl-agent">
+<h2>Trainging RL agent<a class="headerlink" href="#trainging-rl-agent" title="Permalink to this headline"></a></h2>
+<p>Following Model-free RL for AD , we use DDQN as the
+discrete RL algorithm and TD3 as the continous RL algorithm.
+For DDQN, we discrete the steering and throttle to 10 class, which
+means the whole action space is 100. The steering and throttle is
+mapping to [-1, -0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8] and
+[0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9] respectively.
+although the action space is discrete, the vehicle can run smoothly when
+turning.
+For TD3, we use continuous action space. The policy network’s ouput is
+the mean and log scale standard deviation of a Gaussion distribution.
+At each state of collecting data, we sample an action following the
+generated Gaussion distribution. For TD3, we found that the steering
+changes drasticly. The steering is -1 or 0.8 and the throttle is
+always 0.9. However, the car can drive well. This is a point to be
+improved.</p>
+<p>The training, evaluation and testing of the method mentioned above is
+provided. We use the standard policy settings of <strong>DI-engine</strong>. You can
+see their doc to get how to modify the training settings. You may need
+to change the Carla server setting in the entry files.</p>
+<p>DDQN:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Train DDQN agent</span>
+python latent_dqn_train.py
+<span class="c1"># Benchmark evaluation</span>
+python latent_dqn_eval.py
+<span class="c1"># Test and visualize</span>
+python latent_dqn_test.py
+</pre></div>
+</div>
+<p>Pending</p>
 </section>
 </section>
 

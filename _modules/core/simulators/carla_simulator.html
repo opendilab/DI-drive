@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>core.simulators.carla_simulator &mdash; DI-drive 0.2.0 documentation</title>
+  <title>core.simulators.carla_simulator &mdash; DI-drive 0.2.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -27,7 +27,7 @@
             <a href="../../../index.html" class="icon icon-home"> DI-drive
           </a>
               <div class="version">
-                0.2.0
+                0.2.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -348,6 +348,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_world</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">load_world</span><span class="p">(</span><span class="n">town</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_world</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">get_world</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">get_snapshot</span><span class="p">()</span><span class="o">.</span><span class="n">timestamp</span><span class="o">.</span><span class="n">frame</span> <span class="o">&gt;</span> <span class="mf">1e6</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_world</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">load_world</span><span class="p">(</span><span class="n">town</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">get_map</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_sync_mode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sync_mode</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delta_seconds</span><span class="p">)</span>
 
@@ -405,7 +407,8 @@
 
         <span class="k">for</span> <span class="n">response</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">apply_batch_sync</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">error</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;[SIMULATOR]&#39;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">error</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;[SIMULATOR]&#39;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">error</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">register_actor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">get_actor</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">actor_id</span><span class="p">))</span>
 
@@ -476,7 +479,7 @@
             <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">apply_batch_sync</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">error</span><span class="p">:</span>
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_verbose</span><span class="p">:</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;[SIMULATOR] walker controller &#39;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">error</span><span class="p">)</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;[SIMULATOR] Walker controller &#39;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">error</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">_controllers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">actor_id</span><span class="p">)</span>
 
@@ -564,8 +567,8 @@
         <span class="k">for</span> <span class="n">veh</span> <span class="ow">in</span> <span class="n">vehicles</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">veh</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">veh</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">type_id</span><span class="p">,</span> <span class="n">veh</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">attributes</span><span class="p">[</span><span class="s1">&#39;role_name&#39;</span><span class="p">])</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[SIMULATOR] walkers:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">walkers</span><span class="p">))</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[SIMULATOR] lights:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">traffic_lights</span><span class="p">))</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[SIMULATOR] speed limits:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">speed_limits</span><span class="p">))</span>
+        <span class="c1">#print(&quot;[SIMULATOR] lights:&quot;, len(traffic_lights))</span>
+        <span class="c1">#print(&quot;[SIMULATOR] speed limits:&quot;, len(speed_limits))</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[SIMULATOR] sensors:&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">ss</span> <span class="ow">in</span> <span class="n">sensors</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">ss</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -778,8 +781,9 @@
 <span class="sd">        This will NOT destroy the Carla client, so simulator can use same carla client to start next episode.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">actor</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_actor_map</span><span class="p">[</span><span class="s1">&#39;walker_controller&#39;</span><span class="p">]:</span>
-            <span class="n">actor</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
-            <span class="n">actor</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">actor</span><span class="o">.</span><span class="n">is_alive</span><span class="p">:</span>
+                <span class="n">actor</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+                <span class="n">actor</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_actor_map</span><span class="p">[</span><span class="s1">&#39;walker_controller&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_actor_map</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 
@@ -801,7 +805,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_end_distance</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_end_timeout</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
 
-        <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">clean_up</span><span class="p">()</span></div>
+        <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">clean_up</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_debug</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;after&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_count_actors</span><span class="p">()</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">town_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>

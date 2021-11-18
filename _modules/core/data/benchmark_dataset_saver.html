@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>core.data.benchmark_dataset_saver &mdash; DI-drive 0.2.0 documentation</title>
+  <title>core.data.benchmark_dataset_saver &mdash; DI-drive 0.2.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -27,7 +27,7 @@
             <a href="../../../index.html" class="icon icon-home"> DI-drive
           </a>
               <div class="version">
-                0.2.0
+                0.2.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -86,7 +86,7 @@
 <span class="kn">import</span> <span class="nn">glob</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">from</span> <span class="nn">core.utils.data_utils.data_writter</span> <span class="kn">import</span> <span class="n">write_json</span><span class="p">,</span> <span class="n">write_episode_lmdb</span>
 <span class="kn">from</span> <span class="nn">core.utils.others.image_helper</span> <span class="kn">import</span> <span class="n">save_image</span><span class="p">,</span> <span class="n">is_image</span>
@@ -111,27 +111,26 @@
 <span class="sd">        - save_dir (str): Dataset folder path.</span>
 <span class="sd">        - obs_cfg (Dict): Observation config dict in simulator.</span>
 <span class="sd">        - post_process_fn (Callable, optional): Post-process function defined by user. Defaults to None.</span>
+<span class="sd">        - lmdb_obs (List, optional): Observation types that saved as lmdb rather than image, default to [&#39;lidar&#39;, &#39;bev&#39;]</span>
 
 <span class="sd">    :Interfaces: make_dataset_path, save_episodes_data, make_index</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">obs_cfg</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">post_process_fn</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        [summary]</span>
-
-<span class="sd">        :Arguments:</span>
-<span class="sd">            - save_dir (str): [description]</span>
-<span class="sd">            - obs_cfg (Dict): [description]</span>
-<span class="sd">            - post_process_fn (Callable, optional): [description]. Defaults to None.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">save_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+            <span class="n">obs_cfg</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+            <span class="n">post_process_fn</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">lmdb_obs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;lidar&#39;</span><span class="p">,</span> <span class="s1">&#39;birdview&#39;</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_save_dir</span> <span class="o">=</span> <span class="n">save_dir</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_obs_cfg</span> <span class="o">=</span> <span class="n">obs_cfg</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_post_process_fn</span> <span class="o">=</span> <span class="n">post_process_fn</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_lmdb_obs_type</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lmdb_obs_type</span> <span class="o">=</span> <span class="n">lmdb_obs</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post_process_fn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_post_process_fn</span> <span class="o">=</span> <span class="n">default_post_process_fn</span>
 
-<div class="viewcode-block" id="BenchmarkDatasetSaver.save_episodes_data"><a class="viewcode-back" href="../../../api_doc/data.html#core.data.benchmark_dataset_saver.BenchmarkDatasetSaver.save_episodes_data">[docs]</a>    <span class="k">def</span> <span class="nf">save_episodes_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">episodes_data</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">start_episode</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="BenchmarkDatasetSaver.save_episodes_data"><a class="viewcode-back" href="../../../api_doc/data.html#core.data.benchmark_dataset_saver.BenchmarkDatasetSaver.save_episodes_data">[docs]</a>    <span class="k">def</span> <span class="nf">save_episodes_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">episodes_data</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">start_episode</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save data from several episodes sampled from collector, with &#39;env_param&#39; and &#39;data&#39; key</span>
 <span class="sd">        saved in each episode.</span>
@@ -176,7 +175,7 @@
                 <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">measurements</span><span class="p">,</span> <span class="n">sensor_data</span><span class="p">,</span> <span class="n">others</span><span class="p">))</span>
             <span class="n">BenchmarkDatasetSaver</span><span class="o">.</span><span class="n">_save_episode_data</span><span class="p">(</span><span class="n">episode_path</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lmdb_obs_type</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BenchmarkDatasetSaver.make_dataset_path"><a class="viewcode-back" href="../../../api_doc/data.html#core.data.benchmark_dataset_saver.BenchmarkDatasetSaver.make_dataset_path">[docs]</a>    <span class="k">def</span> <span class="nf">make_dataset_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset_metainfo</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()):</span>
+<div class="viewcode-block" id="BenchmarkDatasetSaver.make_dataset_path"><a class="viewcode-back" href="../../../api_doc/data.html#core.data.benchmark_dataset_saver.BenchmarkDatasetSaver.make_dataset_path">[docs]</a>    <span class="k">def</span> <span class="nf">make_dataset_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset_metainfo</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">())</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Make dataset folder and write dataset meta infomation into a json file.</span>
 
@@ -194,20 +193,18 @@
                 <span class="n">obs_item</span> <span class="o">=</span> <span class="n">obs_item</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
                 <span class="n">obs_item</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
                 <span class="n">obs_metainfo</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">obs_name</span><span class="p">:</span> <span class="n">obs_item</span><span class="p">})</span>
-                <span class="k">if</span> <span class="n">obs_item</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;lidar&#39;</span><span class="p">,</span> <span class="s1">&#39;bev&#39;</span><span class="p">]:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_lmdb_obs_type</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obs_name</span><span class="p">)</span>
 
         <span class="n">dataset_metainfo</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;obs&#39;</span><span class="p">:</span> <span class="n">obs_metainfo</span><span class="p">})</span>
 
         <span class="n">write_json</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_save_dir</span><span class="p">,</span> <span class="s1">&#39;metainfo.json&#39;</span><span class="p">),</span> <span class="n">dataset_metainfo</span><span class="p">)</span></div>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_make_episode_path</span><span class="p">(</span><span class="n">episode_path</span><span class="p">,</span> <span class="n">env_params</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_make_episode_path</span><span class="p">(</span><span class="n">episode_path</span><span class="p">,</span> <span class="n">env_params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">episode_path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">write_json</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">episode_path</span><span class="p">,</span> <span class="s1">&#39;episode_metainfo.json&#39;</span><span class="p">),</span> <span class="n">env_params</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_save_episode_data</span><span class="p">(</span><span class="n">episode_path</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">lmdb_obs_type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_save_episode_data</span><span class="p">(</span><span class="n">episode_path</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">lmdb_obs_type</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">write_episode_lmdb</span><span class="p">(</span><span class="n">episode_path</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">lmdb_obs_type</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
             <span class="n">sensor_data</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -217,7 +214,7 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">save_image</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">episode_path</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_</span><span class="si">%05d</span><span class="s2">.png&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">i</span><span class="p">)),</span> <span class="n">v</span><span class="p">)</span>
 
-<div class="viewcode-block" id="BenchmarkDatasetSaver.make_index"><a class="viewcode-back" href="../../../api_doc/data.html#core.data.benchmark_dataset_saver.BenchmarkDatasetSaver.make_index">[docs]</a>    <span class="k">def</span> <span class="nf">make_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">11</span><span class="p">):</span>
+<div class="viewcode-block" id="BenchmarkDatasetSaver.make_index"><a class="viewcode-back" href="../../../api_doc/data.html#core.data.benchmark_dataset_saver.BenchmarkDatasetSaver.make_index">[docs]</a>    <span class="k">def</span> <span class="nf">make_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">11</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Make an index txt file to save all the command of each frame in dataset.</span>
 

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Learning by Cheating &mdash; DI-drive 0.2.0 documentation</title>
+  <title>Learning by Cheating &mdash; DI-drive 0.2.1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -30,7 +30,7 @@
             <a href="../index.html" class="icon icon-home"> DI-drive
           </a>
               <div class="version">
-                0.2.0
+                0.2.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -105,7 +105,7 @@
 <p><a class="reference external" href="https://arxiv.org/abs/1912.12294">Learning by Cheating(LBC)</a>
 is an Imitation Learning method which driving in Carla using waypoint prediction and
 two-stage training – cheating model and target model. The cheating model takes
-ground-truth Bird-eye View image as input to teach the RGB input target policy.
+ground-truth Bird-eye View(BeV) image as input to teach the RGB input target policy.
 The prediction of the model is a waypoint list then the waypoint list is processed by
 a PID controller to get the final control singals including steer,
 throttle and brake.</p>
@@ -115,13 +115,97 @@ throttle and brake.</p>
 <p><span class="caption-text">LBC structure</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
+<p><strong>DI-drive</strong> provide complete pipeline of training an LBC priviledged model and target
+model, including data collection, birdview model training, image model training, mimicing
+cheating model and evaluation. All entries can be found in <code class="docutils literal notranslate"><span class="pre">demo/lbc</span></code></p>
 <section id="datasets-collection">
 <h2>Datasets collection<a class="headerlink" href="#datasets-collection" title="Permalink to this headline"></a></h2>
-<p>Pending</p>
+<p><strong>DI-drive</strong> provides benchmark data collection for LBC. The dataset is formated to save
+rgb data as <cite>.png</cite> files and BeV data into <cite>.lmdb</cite> files. The configuration of dataset
+collection is set up in <code class="docutils literal notranslate"><span class="pre">lbc_collect_data.py</span></code>. You can custom the configuration as
+follow.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">env</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">env_num</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="n">simulator</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">disable_two_wheels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">planner</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+                <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;lbc&#39;</span><span class="p">,</span>
+                <span class="n">resolution</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="n">threshold_before</span><span class="o">=</span><span class="mf">7.5</span><span class="p">,</span>
+                <span class="n">threshold_after</span><span class="o">=</span><span class="mf">5.</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">obs</span><span class="o">=</span><span class="p">(</span>
+                <span class="nb">dict</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;rgb&#39;</span><span class="p">,</span>
+                    <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;rgb&#39;</span><span class="p">,</span>
+                    <span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="mi">384</span><span class="p">,</span> <span class="mi">160</span><span class="p">],</span>
+                    <span class="n">position</span><span class="o">=</span><span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">],</span>
+                    <span class="n">fov</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="nb">dict</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;birdview&#39;</span><span class="p">,</span>
+                    <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;bev&#39;</span><span class="p">,</span>
+                    <span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="mi">320</span><span class="p">,</span> <span class="mi">320</span><span class="p">],</span>
+                    <span class="n">pixels_per_meter</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                    <span class="n">pixels_ahead_vehicle</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                <span class="p">),</span>
+            <span class="p">),</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">col_is_failure</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">stuck_is_failure</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">wrapper</span><span class="o">=</span><span class="nb">dict</span><span class="p">(),</span>
+        <span class="n">manager</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">auto_reset</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">shared_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">context</span><span class="o">=</span><span class="s1">&#39;spawn&#39;</span><span class="p">,</span>
+            <span class="n">max_retry</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">),</span>
+    <span class="n">server</span><span class="o">=</span><span class="p">[</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">carla_host</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="n">carla_ports</span><span class="o">=</span><span class="p">[</span><span class="mi">5000</span><span class="p">,</span> <span class="mi">5010</span><span class="p">,</span> <span class="mi">2</span><span class="p">]),</span>
+    <span class="p">],</span>
+    <span class="n">policy</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">target_speed</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
+        <span class="n">lateral_dict</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;K_P&#39;</span><span class="p">:</span> <span class="mf">0.75</span><span class="p">,</span> <span class="s1">&#39;K_D&#39;</span><span class="p">:</span> <span class="mf">0.</span><span class="p">,</span> <span class="s1">&#39;K_I&#39;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span> <span class="s1">&#39;dt&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">},</span>
+        <span class="n">longitudinal_dict</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;K_P&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;K_D&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> <span class="s1">&#39;K_I&#39;</span><span class="p">:</span> <span class="mf">0.025</span><span class="p">},</span>
+        <span class="n">noise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">noise_kwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(),</span>
+        <span class="n">collect</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">dir_path</span><span class="o">=</span><span class="s1">&#39;./datasets_train/lbc_datasets_train&#39;</span><span class="p">,</span>
+            <span class="n">n_episode</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+            <span class="n">collector</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+                <span class="n">suite</span><span class="o">=</span><span class="s1">&#39;FullTown01-v1&#39;</span><span class="p">,</span>
+                <span class="n">nocrash</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">),</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>You may need to change the Carla server numbers and ports, and dataset path to yours.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python collect_data.py
+</pre></div>
+</div>
 </section>
 <section id="model-training">
 <h2>Model training<a class="headerlink" href="#model-training" title="Permalink to this headline"></a></h2>
+<p>The training of LBC model contains 3 stages: training priviledged model, offline
+trainging target model, on-line fine-tuning target model.</p>
+<section id="training-priviledged-model">
+<h3>Training priviledged model<a class="headerlink" href="#training-priviledged-model" title="Permalink to this headline"></a></h3>
+<p>The training of priviledged model is a supervide learning procedure. You can check
+the training code in <code class="docutils literal notranslate"><span class="pre">lbc_birdview_train.py</span></code>. By default it will save checkpoint
+and tensorboard logs in <code class="docutils literal notranslate"><span class="pre">./log</span></code>. You can check the training progress and effects.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">lbc_birdview_train</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+</section>
+<section id="offline-training-target-model">
+<h3>Offline training target model<a class="headerlink" href="#offline-training-target-model" title="Permalink to this headline"></a></h3>
 <p>Pending</p>
+</section>
 </section>
 <section id="model-evaluation">
 <h2>Model evaluation<a class="headerlink" href="#model-evaluation" title="Permalink to this headline"></a></h2>

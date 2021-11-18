@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>core.data.carla_benchmark_collector &mdash; DI-drive 0.2.0 documentation</title>
+  <title>core.data.carla_benchmark_collector &mdash; DI-drive 0.2.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -27,7 +27,7 @@
             <a href="../../../index.html" class="icon icon-home"> DI-drive
           </a>
               <div class="version">
-                0.2.0
+                0.2.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -340,8 +340,9 @@
                             <span class="n">reset_param_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_index_dict</span><span class="p">[</span><span class="n">next_suite</span><span class="p">]</span>
                             <span class="n">reset_param</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_reset_params</span><span class="p">[</span><span class="n">next_suite</span><span class="p">][</span><span class="n">reset_param_index</span><span class="p">]</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_index_dict</span><span class="p">[</span><span class="n">next_suite</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-                            <span class="k">if</span> <span class="n">reset_param_index</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_reset_params</span><span class="p">[</span><span class="n">next_suite</span><span class="p">]):</span>
-                                <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_index_dict</span><span class="p">[</span><span class="n">next_suite</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_index_dict</span><span class="p">[</span><span class="n">next_suite</span><span class="p">]</span> <span class="o">%=</span> <span class="nb">len</span><span class="p">(</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_reset_params</span><span class="p">[</span><span class="n">next_suite</span><span class="p">]</span>
+                            <span class="p">)</span>
                             <span class="n">running_env_params</span><span class="p">[</span><span class="n">env_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">reset_param</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">_env_manager</span><span class="o">.</span><span class="n">reset</span><span class="p">({</span><span class="n">env_id</span><span class="p">:</span> <span class="n">reset_param</span><span class="p">})</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">_traj_cache</span><span class="p">[</span><span class="n">env_id</span><span class="p">]</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>

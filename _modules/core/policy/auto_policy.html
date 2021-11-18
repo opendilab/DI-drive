@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>core.policy.auto_policy &mdash; DI-drive 0.2.0 documentation</title>
+  <title>core.policy.auto_policy &mdash; DI-drive 0.2.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -27,7 +27,7 @@
             <a href="../../../index.html" class="icon icon-home"> DI-drive
           </a>
               <div class="version">
-                0.2.0
+                0.2.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -120,13 +120,14 @@
         <span class="n">max_throttle</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span>
         <span class="n">max_steer</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
         <span class="n">ignore_light</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">ignore_speed_limit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">tl_threshold</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
         <span class="n">lateral_dict</span><span class="o">=</span><span class="n">DEFAULT_LATERAL_DICT</span><span class="p">,</span>
         <span class="n">longitudinal_dict</span><span class="o">=</span><span class="n">DEFAULT_LONGITUDINAL_DICT</span><span class="p">,</span>
         <span class="n">noise</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">noise_kwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
             <span class="n">noise_len</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-            <span class="n">drive_len</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span>
+            <span class="n">drive_len</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
             <span class="n">noise_type</span><span class="o">=</span><span class="s1">&#39;uniform&#39;</span><span class="p">,</span>
             <span class="n">noise_args</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
                 <span class="n">low</span><span class="o">=-</span><span class="mf">0.3</span><span class="p">,</span>
@@ -149,6 +150,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_max_throttle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">max_throttle</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_max_steer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">max_steer</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ignore_traffic_light</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">ignore_light</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ignore_speed_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">ignore_speed_limit</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_tl_threshold</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">tl_threshold</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_lateral_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">lateral_dict</span>
@@ -196,14 +198,17 @@
             <span class="n">control</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_emergency_stop</span><span class="p">(</span><span class="n">data_id</span><span class="p">)</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ignore_traffic_light</span> <span class="ow">and</span> <span class="n">obs</span><span class="p">[</span><span class="s1">&#39;agent_state&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
             <span class="n">control</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_emergency_stop</span><span class="p">(</span><span class="n">data_id</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ignore_traffic_light</span> <span class="ow">and</span> <span class="n">obs</span><span class="p">[</span><span class="s1">&#39;tl_state&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">obs</span><span class="p">[</span><span class="s1">&#39;tl_dis&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tl_threshold</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ignore_traffic_light</span> <span class="ow">and</span> <span class="n">obs</span><span class="p">[</span><span class="s1">&#39;tl_state&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="n">obs</span><span class="p">[</span><span class="s1">&#39;tl_dis&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tl_threshold</span><span class="p">:</span>
             <span class="n">control</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_emergency_stop</span><span class="p">(</span><span class="n">data_id</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">current_speed</span> <span class="o">=</span> <span class="n">obs</span><span class="p">[</span><span class="s1">&#39;speed&#39;</span><span class="p">]</span>
             <span class="n">current_location</span> <span class="o">=</span> <span class="n">obs</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">]</span>
             <span class="n">current_vector</span> <span class="o">=</span> <span class="n">obs</span><span class="p">[</span><span class="s1">&#39;forward_vector&#39;</span><span class="p">]</span>
             <span class="n">target_location</span> <span class="o">=</span> <span class="n">obs</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span>
-            <span class="n">target_speed</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_speed</span><span class="p">,</span> <span class="n">obs</span><span class="p">[</span><span class="s1">&#39;speed_limit&#39;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ignore_speed_limit</span><span class="p">:</span>
+                <span class="n">target_speed</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_speed</span><span class="p">,</span> <span class="n">obs</span><span class="p">[</span><span class="s1">&#39;speed_limit&#39;</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">target_speed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_speed</span>
             <span class="n">control</span> <span class="o">=</span> <span class="n">controller</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span>
                 <span class="n">current_speed</span><span class="p">,</span>
                 <span class="n">current_location</span><span class="p">,</span>
@@ -311,6 +316,7 @@
         <span class="n">target_speed</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
         <span class="n">mpc_args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">ignore_light</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">ignore_speed_limit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">horizon</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
         <span class="n">fps</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
         <span class="n">noise</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -327,6 +333,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">target_speed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">target_speed</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ignore_traffic_light</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">ignore_light</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ignore_speed_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">ignore_speed_limit</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">mpc_args</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_mpc_args</span> <span class="o">=</span> <span class="n">DEFAULT_MPC_ARGS</span>
@@ -366,7 +373,7 @@
             <span class="n">control</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_emergency_stop</span><span class="p">(</span><span class="n">data_id</span><span class="p">)</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ignore_traffic_light</span> <span class="ow">and</span> <span class="n">obs</span><span class="p">[</span><span class="s1">&#39;agent_state&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
             <span class="n">control</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_emergency_stop</span><span class="p">(</span><span class="n">data_id</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ignore_traffic_light</span> <span class="ow">and</span> <span class="n">obs</span><span class="p">[</span><span class="s1">&#39;tl_state&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">obs</span><span class="p">[</span><span class="s1">&#39;tl_dis&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ignore_traffic_light</span> <span class="ow">and</span> <span class="n">obs</span><span class="p">[</span><span class="s1">&#39;tl_state&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="n">obs</span><span class="p">[</span><span class="s1">&#39;tl_dis&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
             <span class="n">control</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_emergency_stop</span><span class="p">(</span><span class="n">data_id</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">ego_pose</span> <span class="o">=</span> <span class="p">[</span>
@@ -376,9 +383,13 @@
                 <span class="n">obs</span><span class="p">[</span><span class="s1">&#39;speed&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="mf">3.6</span><span class="p">,</span>
             <span class="p">]</span>
             <span class="n">waypoints</span> <span class="o">=</span> <span class="n">obs</span><span class="p">[</span><span class="s1">&#39;waypoint_list&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ignore_speed_limit</span><span class="p">:</span>
+                <span class="n">target_speed</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_speed</span><span class="p">,</span> <span class="n">obs</span><span class="p">[</span><span class="s1">&#39;speed_limit&#39;</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">target_speed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_speed</span>
             <span class="n">control</span> <span class="o">=</span> <span class="n">controller</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span>
                 <span class="n">ego_pose</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">target_speed</span> <span class="o">/</span> <span class="mf">3.6</span><span class="p">,</span>
+                <span class="n">target_speed</span> <span class="o">/</span> <span class="mf">3.6</span><span class="p">,</span>
                 <span class="n">waypoints</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_last_steer_dict</span><span class="p">[</span><span class="n">data_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">control</span><span class="p">[</span><span class="s1">&#39;steer&#39;</span><span class="p">]</span>

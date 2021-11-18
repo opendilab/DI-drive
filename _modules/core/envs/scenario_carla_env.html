@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>core.envs.scenario_carla_env &mdash; DI-drive 0.2.0 documentation</title>
+  <title>core.envs.scenario_carla_env &mdash; DI-drive 0.2.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -27,7 +27,7 @@
             <a href="../../../index.html" class="icon icon-home"> DI-drive
           </a>
               <div class="version">
-                0.2.0
+                0.2.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -349,9 +349,14 @@
                 <span class="s1">&#39;location&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">]),</span>
                 <span class="s1">&#39;forward_vector&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s1">&#39;forward_vector&#39;</span><span class="p">]),</span>
                 <span class="s1">&#39;acceleration&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s1">&#39;acceleration&#39;</span><span class="p">]),</span>
+                <span class="s1">&#39;velocity&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s1">&#39;velocity&#39;</span><span class="p">]),</span>
+                <span class="s1">&#39;angular_velocity&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s1">&#39;angular_velocity&#39;</span><span class="p">]),</span>
+                <span class="s1">&#39;rotation&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s1">&#39;rotation&#39;</span><span class="p">]),</span>
                 <span class="s1">&#39;is_junction&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s1">&#39;is_junction&#39;</span><span class="p">]),</span>
                 <span class="s1">&#39;tl_state&#39;</span><span class="p">:</span> <span class="n">state</span><span class="p">[</span><span class="s1">&#39;tl_state&#39;</span><span class="p">],</span>
                 <span class="s1">&#39;tl_dis&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s1">&#39;tl_dis&#39;</span><span class="p">]),</span>
+                <span class="s1">&#39;waypoint_list&#39;</span><span class="p">:</span> <span class="n">navigation</span><span class="p">[</span><span class="s1">&#39;waypoint_list&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;direction_list&#39;</span><span class="p">:</span> <span class="n">navigation</span><span class="p">[</span><span class="s1">&#39;direction_list&#39;</span><span class="p">],</span>
             <span class="p">}</span>
         <span class="p">)</span>
 
