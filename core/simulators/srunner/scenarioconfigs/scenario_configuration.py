@@ -82,7 +82,7 @@ class ScenarioConfiguration(object):
     - configurations for all actors
     - town, where the scenario should be executed
     - name of the scenario (e.g. ControlLoss_1)
-    - type is the class of scenario (e.g. ControlLoss)
+    - type is the class of scenario (e.g. ControlLossNew)
     """
 
     trigger_points = []

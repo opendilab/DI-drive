@@ -14,7 +14,7 @@
                             }
                         }
                     ],
-                    "scenario_type": "ControlLoss"
+                    "scenario_type": "ControlLossNew"
                 },
                 {
                     "available_event_configurations": [
@@ -28,7 +28,7 @@
                             }
                         }
                     ],
-                    "scenario_type": "FollowLeadingVehicle"
+                    "scenario_type": "FollowLeadingVehicleNew"
                 }
             ]
         }

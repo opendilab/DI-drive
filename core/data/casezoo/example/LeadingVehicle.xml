@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <scenarios>
-    <scenario name="FollowLeadingVehicle_1" type="FollowLeadingVehicle" town="Town04">
+    <scenario name="FollowLeadingVehicle_1" type="FollowLeadingVehicleNew" town="Town04">
         <ego_vehicle x="388.9" y="-140" z="0" yaw="90" model="vehicle.lincoln.mkz2017" />
 		    <route>
                 <waypoint x="388.9" y="-140" z="0" yaw="90" />

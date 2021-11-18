@@ -18,7 +18,7 @@ from core.simulators.srunner.tools.scenario_helper import get_waypoint_in_distan
 from core.utils.planner import RoadOption
 
 
-class FollowLeadingVehicle(BasicScenario):
+class FollowLeadingVehicleNew(BasicScenario):
 
     def __init__(
         self, world, ego_vehicles, config, randomize=False, debug_mode=False, criteria_enable=True, timeout=60
@@ -32,8 +32,8 @@ class FollowLeadingVehicle(BasicScenario):
         self._other_actor_transform = None
         self.timeout = timeout
         self._ego_other_distance_start = random.randint(4, 8)
-        super(FollowLeadingVehicle, self).__init__(
-            "FollowLeadingVehicle", ego_vehicles, config, world, debug_mode, criteria_enable=criteria_enable
+        super(FollowLeadingVehicleNew, self).__init__(
+            "FollowLeadingVehicleNew", ego_vehicles, config, world, debug_mode, criteria_enable=criteria_enable
         )
 
     def _initialize_actors(self, config):

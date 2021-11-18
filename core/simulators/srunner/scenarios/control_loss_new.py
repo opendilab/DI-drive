@@ -13,7 +13,7 @@ from core.simulators.srunner.scenarios.basic_scenario import BasicScenario
 from core.simulators.srunner.tools.scenario_helper import get_location_in_distance_from_wp
 
 
-class ControlLoss(BasicScenario):
+class ControlLossNew(BasicScenario):
 
     def __init__(
         self, world, ego_vehicles, config, randomize=False, debug_mode=False, criteria_enable=True, timeout=60
@@ -38,8 +38,8 @@ class ControlLoss(BasicScenario):
         # The reference trigger for the control loss
         self._reference_waypoint = self._map.get_waypoint(config.trigger_points[0].location)
         self.object = []
-        super(ControlLoss, self).__init__(
-            "ControlLoss", ego_vehicles, config, world, debug_mode, criteria_enable=criteria_enable
+        super(ControlLossNew, self).__init__(
+            "ControlLossNew", ego_vehicles, config, world, debug_mode, criteria_enable=criteria_enable
         )
 
     def _initialize_actors(self, config):

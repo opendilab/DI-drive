@@ -37,7 +37,7 @@ def get_distance_along_route(route, target_location):
     target_location_from_wp = wmap.get_waypoint(target_location).transform.location
 
     for position, _ in route:
-
+        position = position.location
         location = target_location_from_wp
 
         # Don't perform any calculations for the first route point
@@ -352,7 +352,7 @@ def generate_target_waypoint_in_route(waypoint, route):
         wp = route_pos[0]
         trigger_location = waypoint.transform.location
 
-        dist_to_route = trigger_location.distance(wp)
+        dist_to_route = trigger_location.distance(wp.location)
         if dist_to_route <= shortest_distance:
             closest_index = index
             shortest_distance = dist_to_route
@@ -363,6 +363,8 @@ def generate_target_waypoint_in_route(waypoint, route):
     while True:
         # Get the next route location
         index = min(index + 1, len(route))
+        if index >= len(route):
+            break
         route_location = route[index][0]
         road_option = route[index][1]
 
@@ -374,7 +376,7 @@ def generate_target_waypoint_in_route(waypoint, route):
         if reached_junction and (road_option not in (RoadOption.LEFT, RoadOption.RIGHT, RoadOption.STRAIGHT)):
             break
 
-    return wmap.get_waypoint(route_location)
+    return wmap.get_waypoint(route_location.location)
 
 
 def choose_at_junction(current_waypoint, next_choices, direction=0):

@@ -37,6 +37,7 @@ class AutoPIDPolicy(BaseCarlaPolicy):
         max_throttle=0.75,
         max_steer=0.8,
         ignore_light=False,
+        ignore_speed_limit=False,
         tl_threshold=10,
         lateral_dict=DEFAULT_LATERAL_DICT,
         longitudinal_dict=DEFAULT_LONGITUDINAL_DICT,
@@ -66,6 +67,7 @@ class AutoPIDPolicy(BaseCarlaPolicy):
         self._max_throttle = self._cfg.max_throttle
         self._max_steer = self._cfg.max_steer
         self._ignore_traffic_light = self._cfg.ignore_light
+        self._ignore_speed_limit = self._cfg.ignore_speed_limit
         self._tl_threshold = self._cfg.tl_threshold
 
         self._lateral_dict = self._cfg.lateral_dict
@@ -113,14 +115,17 @@ class AutoPIDPolicy(BaseCarlaPolicy):
             control = self._emergency_stop(data_id)
         elif not self._ignore_traffic_light and obs['agent_state'] == 4:
             control = self._emergency_stop(data_id)
-        elif not self._ignore_traffic_light and obs['tl_state'] == 0 and obs['tl_dis'] < self._tl_threshold:
+        elif not self._ignore_traffic_light and obs['tl_state'] in [0, 1] and obs['tl_dis'] < self._tl_threshold:
             control = self._emergency_stop(data_id)
         else:
             current_speed = obs['speed']
             current_location = obs['location']
             current_vector = obs['forward_vector']
             target_location = obs['target']
-            target_speed = min(self.target_speed, obs['speed_limit'])
+            if not self._ignore_speed_limit:
+                target_speed = min(self.target_speed, obs['speed_limit'])
+            else:
+                target_speed = self.target_speed
             control = controller.forward(
                 current_speed,
                 current_location,
@@ -228,6 +233,7 @@ class AutoMPCPolicy(BaseCarlaPolicy):
         target_speed=25,
         mpc_args=None,
         ignore_light=False,
+        ignore_speed_limit=False,
         horizon=5,
         fps=4,
         noise=False,
@@ -244,6 +250,7 @@ class AutoMPCPolicy(BaseCarlaPolicy):
 
         self.target_speed = self._cfg.target_speed
         self._ignore_traffic_light = self._cfg.ignore_light
+        self._ignore_speed_limit = self._cfg.ignore_speed_limit
 
         if self._cfg.mpc_args is None:
             self._mpc_args = DEFAULT_MPC_ARGS
@@ -283,7 +290,7 @@ class AutoMPCPolicy(BaseCarlaPolicy):
             control = self._emergency_stop(data_id)
         elif not self._ignore_traffic_light and obs['agent_state'] == 4:
             control = self._emergency_stop(data_id)
-        elif not self._ignore_traffic_light and obs['tl_state'] == 0 and obs['tl_dis'] < 10:
+        elif not self._ignore_traffic_light and obs['tl_state'] in [0, 1] and obs['tl_dis'] < 10:
             control = self._emergency_stop(data_id)
         else:
             ego_pose = [
@@ -293,9 +300,13 @@ class AutoMPCPolicy(BaseCarlaPolicy):
                 obs['speed'] / 3.6,
             ]
             waypoints = obs['waypoint_list']
+            if not self._ignore_speed_limit:
+                target_speed = min(self.target_speed, obs['speed_limit'])
+            else:
+                target_speed = self.target_speed
             control = controller.forward(
                 ego_pose,
-                self.target_speed / 3.6,
+                target_speed / 3.6,
                 waypoints,
             )
             self._last_steer_dict[data_id] = control['steer']

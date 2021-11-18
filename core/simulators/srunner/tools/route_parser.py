@@ -15,8 +15,8 @@ from core.utils.simulator_utils.carla_agents.navigation.local_planner import Roa
 from core.simulators.srunner.scenarioconfigs.route_scenario_configuration import RouteScenarioConfiguration
 
 # TODO  check this threshold, it could be a bit larger but not so large that we cluster scenarios.
-TRIGGER_THRESHOLD = 5.0  # Threshold to say if a trigger position is new or repeated, works for matching positions
-TRIGGER_ANGLE_THRESHOLD = 10  # Threshold to say if two angles can be considering matching when matching transforms.
+TRIGGER_THRESHOLD = 10.0  # Threshold to say if a trigger position is new or repeated, works for matching positions
+TRIGGER_ANGLE_THRESHOLD = 30  # Threshold to say if two angles can be considering matching when matching transforms.
 
 
 class RouteParser(object):
