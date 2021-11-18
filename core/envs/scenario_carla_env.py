@@ -266,9 +266,14 @@ class ScenarioCarlaEnv(BaseCarlaEnv):
                 'location': np.float32(state['location']),
                 'forward_vector': np.float32(state['forward_vector']),
                 'acceleration': np.float32(state['acceleration']),
+                'velocity': np.float32(state['velocity']),
+                'angular_velocity': np.float32(state['angular_velocity']),
+                'rotation': np.float32(state['rotation']),
                 'is_junction': np.float32(state['is_junction']),
                 'tl_state': state['tl_state'],
                 'tl_dis': np.float32(state['tl_dis']),
+                'waypoint_list': navigation['waypoint_list'],
+                'direction_list': navigation['direction_list'],
             }
         )
 

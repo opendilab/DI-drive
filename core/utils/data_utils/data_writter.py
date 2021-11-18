@@ -29,10 +29,8 @@ def write_episode_lmdb(episode_path, episode_data, lmdb_obs_type=None):
             measurements = x[0]
             txn.put(('measurements_%05d' % i).encode(), np.ascontiguousarray(measurements).astype(np.float32))
             sensor_data = x[1]
-            if lmdb_obs_type:
-                for key in lmdb_obs_type:
-                    if key not in sensor_data:
-                        raise ValueError("lmdb obs %s not in sensor data!" % key)
+            for key in sensor_data:
+                if lmdb_obs_type and key in lmdb_obs_type:
                     txn.put(('%s_%05d' % (key, i)).encode(), np.ascontiguousarray(sensor_data[key].astype(np.uint8)))
             others = x[2]
             for key in others.keys():

@@ -41,7 +41,7 @@ config = dict(
                     pixels_ahead_vehicle=100,
                 ),
             ),
-
+            verbose=True,
         ),
         col_is_failure=True,
         stuck_is_failure=True,

@@ -32,14 +32,22 @@ from core.simulators.srunner.tools.route_parser import RouteParser, TRIGGER_THRE
 from core.simulators.srunner.tools.route_manipulation import interpolate_trajectory, downsample_route
 from core.simulators.srunner.tools.py_trees_port import oneshot_behavior
 
-from core.simulators.srunner.scenarios.control_loss_new import ControlLoss
-from core.simulators.srunner.scenarios.follow_leading_vehicle_new import FollowLeadingVehicle
+from core.simulators.srunner.scenarios.control_loss_new import ControlLossNew
+from core.simulators.srunner.scenarios.control_loss import ControlLoss
+from core.simulators.srunner.scenarios.follow_leading_vehicle_new import FollowLeadingVehicleNew
+from core.simulators.srunner.scenarios.follow_leading_vehicle import FollowLeadingVehicle
 from core.simulators.srunner.scenarios.change_lane import ChangeLane
-from core.simulators.srunner.scenarios.cut_in_new import CutIn
+from core.simulators.srunner.scenarios.cut_in import CutIn
 from core.simulators.srunner.scenarios.opposite_direction import OppositeDirection
 from core.simulators.srunner.scenarios.signalized_junction_left_turn import SignalizedJunctionLeftTurn
 from core.simulators.srunner.scenarios.signalized_junction_right_turn import SignalizedJunctionRightTurn
 from core.simulators.srunner.scenarios.signalized_junction_straight import SignalizedJunctionStraight
+from core.simulators.srunner.scenarios.object_crash_vehicle import DynamicObjectCrossing
+from core.simulators.srunner.scenarios.object_crash_intersection import VehicleTurningRoute
+from core.simulators.srunner.scenarios.other_leading_vehicle import OtherLeadingVehicle
+from core.simulators.srunner.scenarios.junction_crossing_route import SignalJunctionCrossingRoute, \
+                                                                        NoSignalJunctionCrossingRoute
+from core.simulators.srunner.scenarios.maneuver_opposite_direction import ManeuverOppositeDirection
 
 from core.simulators.srunner.scenariomanager.scenarioatomics.atomic_criteria import \
     (CollisionTest,
@@ -52,14 +60,34 @@ from core.simulators.srunner.scenariomanager.scenarioatomics.atomic_criteria imp
 SECONDS_GIVEN_PER_METERS = 0.5
 
 SCENARIO_CLASS_DICT = {
+    "ControlLossNew": ControlLossNew,
     "ControlLoss": ControlLoss,
+    "FollowLeadingVehicleNew": FollowLeadingVehicleNew,
     "FollowLeadingVehicle": FollowLeadingVehicle,
     "ChangeLane": ChangeLane,
     "CutIn": CutIn,
     "OppositeDirection": OppositeDirection,
+    "ManeuverOppositeDirection": ManeuverOppositeDirection,
     "SignalizedJunctionLeftTurn": SignalizedJunctionLeftTurn,
     "SignalizedJunctionRightTurn": SignalizedJunctionRightTurn,
     "SignalizedJunctionStraight": SignalizedJunctionStraight,
+    "DynamicObjectCrossing": DynamicObjectCrossing,
+    'VehicleTurningRoute': VehicleTurningRoute,
+    'NoSignalJunctionCrossingRoute': NoSignalJunctionCrossingRoute,
+    'OtherLeadingVehicle': OtherLeadingVehicle
+}
+
+NUMBER_CLASS_DICT = {
+    "Scenario1": 'ControlLoss',
+    "Scenario2": 'FollowLeadingVehicle',
+    "Scenario3": 'DynamicObjectCrossing',
+    "Scenario4": 'VehicleTurningRoute',
+    "Scenario5": 'OtherLeadingVehicle',
+    "Scenario6": 'ManeuverOppositeDirection',
+    "Scenario7": 'SignalizedJunctionStraight',
+    "Scenario8": 'SignalizedJunctionLeftTurn',
+    "Scenario9": 'SignalizedJunctionRightTurn',
+    "Scenario10": 'NoSignalJunctionCrossingRoute'
 }
 
 
@@ -318,6 +346,13 @@ class RouteScenario(BasicScenario):
 
         return sampled_scenarios
 
+    def _validate_type(self, definition):
+        """
+        Suit for scenario type from scenario runner
+        """
+        if 'Scenario' in definition['name']:
+            definition['name'] = NUMBER_CLASS_DICT[definition['name']]
+
     def _build_scenario_instances(
         self, world, ego_vehicle, scenario_definitions, scenarios_per_tick=5, timeout=300, debug_mode=False
     ):
@@ -344,6 +379,9 @@ class RouteScenario(BasicScenario):
 
         for scenario_number, definition in enumerate(scenario_definitions):
             # Get the class possibilities for this scenario number
+
+            self._validate_type(definition)
+
             scenario_class = SCENARIO_CLASS_DICT[definition['name']]
 
             # Create the other actors that are going to appear
@@ -453,7 +491,7 @@ class RouteScenario(BasicScenario):
         Basic behavior do nothing, i.e. Idle
         """
 
-        scenario_trigger_distance = 1.5  # Max trigger distance between route and scenario
+        scenario_trigger_distance = 10  # Max trigger distance between route and scenario
 
         behavior = py_trees.composites.Parallel(policy=py_trees.common.ParallelPolicy.SUCCESS_ON_ONE)
 

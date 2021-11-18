@@ -52,7 +52,8 @@ class LatentDQNRLModel(nn.Module):
         bev = data['birdview'].permute(0, 3, 1, 2)
         ego_info = data['ego_info']
         with torch.no_grad():
-            feat = self._vae_model.encode(bev)
+            mu, log_var = self._vae_model.encode(bev)
+            feat = self._vae_model.reparameterize(mu, log_var)
         x = torch.cat([feat, ego_info], dim=1)
         x = self.head(x)
         return x

@@ -75,7 +75,7 @@ class CarlaDataProvider(object):
         if actor in CarlaDataProvider._actor_transform_map:
             raise KeyError("Vehicle '{}' already registered. Cannot register twice!".format(actor.id))
         else:
-            CarlaDataProvider._actor_transform_map[actor] = None
+            CarlaDataProvider._actor_transform_map[actor] = actor.get_transform()
 
         if actor in CarlaDataProvider._actor_acceleration_map:
             raise KeyError("Vehicle '{}' already registered. Cannot register twice!".format(actor.id))
@@ -813,7 +813,7 @@ class CarlaDataProvider(object):
 
         for target_vehicle in vehicle_list:
             # do not account for the ego vehicle
-            if target_vehicle.id == vehicle.id:
+            if target_vehicle.id == vehicle.id or not target_vehicle.is_alive:
                 continue
 
             # if the object is not in our lane it's not an obstacle
@@ -853,7 +853,7 @@ class CarlaDataProvider(object):
         v1 = (5 * s1 + 6) * _orientation(CarlaDataProvider.get_transform(vehicle).rotation.yaw + shift_angle)
 
         for target_vehicle in vehicle_list:
-            if target_vehicle.id == vehicle.id:
+            if target_vehicle.id == vehicle.id or not target_vehicle.is_alive:
                 continue
 
             o2 = _orientation(CarlaDataProvider.get_transform(target_vehicle).rotation.yaw)
@@ -872,11 +872,11 @@ class CarlaDataProvider(object):
 
             angle_between_heading = np.degrees(np.arccos(np.clip(o1.dot(o2), -1, 1)))
 
-            if vehicle.get_location().distance(p2) > 20:
+            if vehicle.get_location().distance(p2) > 25:
                 continue
             if w1.is_junction is False and w2.is_junction is False:
                 continue
-            if angle_between_heading < 15.0 or angle_between_heading > 165:
+            if (angle_between_heading < 15.0 or angle_between_heading > 165) and command == RoadOption.STRAIGHT:
                 continue
             collides, collision_point = CarlaDataProvider.get_collision(_numpy(p1), v1, _numpy(p2_hat), v2)
             if collides is None:
@@ -926,7 +926,7 @@ class CarlaDataProvider(object):
         rgt_lane_wp = location_w1 + carla.Location(rgt_lane_wp)
 
         for target_vehicle in vehicle_list:
-            if target_vehicle.id == vehicle.id:
+            if target_vehicle.id == vehicle.id or not target_vehicle.is_alive:
                 continue
 
             w2 = CarlaDataProvider._map.get_waypoint(CarlaDataProvider.get_location(target_vehicle))
@@ -980,7 +980,7 @@ class CarlaDataProvider(object):
         v1 = 10.0 * o1
 
         for bike in bikes_list:
-            if 'driver_id' not in bike.attributes:
+            if 'driver_id' not in bike.attributes or not bike.is_alive:
                 continue
             o2 = _orientation(CarlaDataProvider.get_transform(bike).rotation.yaw)
             s2 = CarlaDataProvider.get_speed(bike)
@@ -989,6 +989,8 @@ class CarlaDataProvider(object):
 
             p2_p1 = p2 - p1
             distance = np.linalg.norm(p2_p1)
+            if distance > 20:
+                continue
             p2_p1_hat = p2_p1 / (distance + 1e-4)
 
             angle_to_car = np.degrees(np.arccos(np.clip(v1_hat.dot(p2_p1_hat), -1, 1)))
@@ -1130,6 +1132,7 @@ class CarlaDataProvider(object):
             except RuntimeError as e:
                 if "time-out" in str(e):
                     pass
+                    print(e)
                 else:
                     raise e
 

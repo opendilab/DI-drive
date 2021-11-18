@@ -108,6 +108,9 @@ class CarlaEnvWrapper(gym.Wrapper):
     def __repr__(self) -> str:
         return repr(self.env)
 
+    def render(self):
+        self.env.render()
+
 
 class BenchmarkEnvWrapper(CarlaEnvWrapper):
     """

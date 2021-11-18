@@ -69,7 +69,6 @@ def main(args, cfg, seed=0):
         auto_policy.reset([0])
         obs = carla_env.reset(config)
         while True:
-            carla_env.render()
             actions = auto_policy.forward({0: obs})
             action = actions[0]['action']
             timestep = carla_env.step(action)
@@ -78,6 +77,7 @@ def main(args, cfg, seed=0):
                 # If there is an abnormal timestep, reset all the related variables(including this env).
                 auto_policy.reset([0])
                 obs = carla_env.reset(config)
+            carla_env.render()
             if timestep.done:
                 break
     carla_env.close()

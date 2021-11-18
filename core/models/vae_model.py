@@ -15,6 +15,7 @@ class VanillaVAE(nn.Module):
         - in_channels (int): the channel number of input
         - latent_dim (int): the latent dimension of the middle representation
         - hidden_dims (List): the hidden dimensions of each layer in the MLP architecture in encoder and decoder
+        - kld_weight(float): the weight of KLD loss
     """
 
     def __init__(
@@ -22,6 +23,7 @@ class VanillaVAE(nn.Module):
             in_channels: int,
             latent_dim: int,
             hidden_dims: List = None,
+            kld_weight: float = 0.1,
     ) -> None:
         super(VanillaVAE, self).__init__()
         self.latent_dim = latent_dim
@@ -30,6 +32,7 @@ class VanillaVAE(nn.Module):
         if hidden_dims is None:
             hidden_dims = [32, 64, 128, 256, 512]
         self.hidden_dims = hidden_dims
+        self.kld_weight = kld_weight
 
         # Build Encoder
         for h_dim in hidden_dims:
@@ -87,8 +90,9 @@ class VanillaVAE(nn.Module):
         # Split the result into mu and var components
         # of the latent Gaussian distribution
         mu = self.fc_mu(result)
+        log_var = self.fc_var(result)
 
-        return mu
+        return mu, log_var
 
     def decode(self, z: torch.Tensor) -> torch.Tensor:
         """
@@ -131,8 +135,10 @@ class VanillaVAE(nn.Module):
         :Returns:
             List[torch.Tensor]: Input and output tensor
         """
-        mu = self.encode(input)
-        return [self.decode(mu), input]
+        mu, log_var = self.encode(input)
+        z = self.reparameterize(mu, log_var)
+        #z = mu
+        return [self.decode(z), input, mu, log_var]
 
     def loss_function(self, *args, **kwargs) -> Dict:
         """
@@ -145,14 +151,15 @@ class VanillaVAE(nn.Module):
         """
         recons = args[0]
         input = args[1]
+        mu = args[2]
+        log_var = args[3]
 
-        kld_weight = kwargs['M_N']  # Account for the minibatch samples from the dataset
+        #kld_weight = kwargs['M_N']  # Account for the minibatch samples from the dataset
+        kld_weight = self.kld_weight
 
         recons_loss = 0
-        weight = [8.7924e-01, 7.4700e-02, 1.0993e-02, 6.1075e-04, 2.6168e-03, 2.8066e-02, 3.7737e-03]
-
-        ret = {}
         '''
+        weight = [8.7924e-01, 7.4700e-02, 1.0993e-02, 6.1075e-04, 2.6168e-03, 2.8066e-02, 3.7737e-03]
         vd = 1
         for i in range(7):
             cur = F.l1_loss(recons[:, i, ...], input[:, i, ...])
@@ -166,10 +173,11 @@ class VanillaVAE(nn.Module):
         if recons_loss < 0.05:
             recons_loss = F.l1_loss(recons, input)
 
-        loss = recons_loss
-        ret['loss'] = loss
+        kld_loss = torch.mean(-0.5 * torch.sum(1 + log_var - mu ** 2 - log_var.exp(), dim=1), dim=0)
 
-        return ret
+        loss = recons_loss + kld_weight * kld_loss
+
+        return {'loss': loss, 'reconstruction_Loss': recons_loss, 'KLD': -kld_loss}
 
     def sample(self, num_samples: int, current_device: int, **kwargs) -> torch.Tensor:
         r"""
@@ -178,7 +186,7 @@ class VanillaVAE(nn.Module):
 
         :Arguments:
             - num_samples(Int): Number of samples.
-            - param current_device(Int): Device to run the model.
+            - current_device(Int): Device to run the model.
         :Returns:
             Tensor: Sampled decode tensor.
         """

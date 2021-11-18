@@ -6,7 +6,7 @@ from easydict import EasyDict
 from tqdm import tqdm
 import torch
 from torch.utils.data import DataLoader
-from torch.utils.tensorboard import SummaryWriter
+from tensorboardX import SummaryWriter
 from torch.optim import Adam
 
 from core.policy import CILRSPolicy

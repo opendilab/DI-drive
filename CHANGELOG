@@ -1,3 +1,18 @@
+## v0.2.1 (2021.11.18)
+- Add NoCrash Carla099
+- Add bev dataset
+- Add Carla AD Challenge scenarios and routes
+- Add LBC data collection and BeV training doc
+- Add Latent RL BeV and RL training doc
+- Add validation in LBC training
+- Update Benchmark datasaver
+- Update VAE model
+- Update LBC Image policy learn mode
+- Fix bug in benchmark collector
+- Fix visualizer not closed after done
+- Fix not alived sensor killed bug
+
+
 ## v0.2.0 (2021.11.1)
 - Update DI-engine to version 0.2.0
 - Reformat CIL to CILRS

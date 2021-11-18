@@ -94,7 +94,7 @@ def visualize_birdview(birdview):
             index_list.append(i)
 
     for i in index_list:
-        canvas[birdview[:, :, i] > 0] = bev_render_colors[i]
+        canvas[birdview[:, :, i] > 0.5] = bev_render_colors[i]
 
     return canvas
 

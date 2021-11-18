@@ -2,7 +2,7 @@
 
 <img src="./docs/figs/DI-drive.png" width="200" alt="icon"/>
 
-Updated on 2021.11.01 DI-drive-v0.2.0 (beta)
+Updated on 2021.11.18 DI-drive-v0.2.1 (beta)
 
 DI-drive - Decision Intelligence Platform for Autonomous Driving simulation.
 

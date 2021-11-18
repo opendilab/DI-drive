@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <scenarios>
-    <scenario name="ControlLoss_1" type="ControlLoss" town="Town01">
+    <scenario name="ControlLoss_1" type="ControlLossNew" town="Town01">
         <ego_vehicle x="392.5" y="195" z="0.5" yaw="90" model="vehicle.lincoln.mkz2017" />
 		    <route>
                 <waypoint x="392.5" y="195" z="0.5" yaw="90" />
