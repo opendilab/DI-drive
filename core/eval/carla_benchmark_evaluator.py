@@ -13,7 +13,6 @@ from core.data.benchmark import ALL_SUITES
 from core.data.benchmark.benchmark_utils import get_suites_list, gather_results, read_pose_txt, get_benchmark_dir
 from ding.envs import BaseEnvManager
 from ding.torch_utils.data_helper import to_tensor
-from ding.utils import build_logger
 
 
 class CarlaBenchmarkEvaluator(BaseEvaluator):
@@ -167,7 +166,7 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
         success_episodes = 0
         self.reset()
 
-        for suite in tqdm(self._eval_suite_list):
+        for suite in self._eval_suite_list:
             args, kwargs = ALL_SUITES[suite]
             assert len(args) == 0
             reset_params = kwargs.copy()
@@ -212,6 +211,7 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
             if not running_env_params:
                 self._logger.info("[EVALUATOR] Nothing to eval.")
             else:
+                pbar = tqdm(total=len(running_env_params)+len(episode_queue))
                 for env_id in running_env_params:
                     self._env_manager.seed({env_id: self._seed})
                 self._env_manager.reset(running_env_params)
@@ -245,6 +245,7 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
                                     'timecost': int(t.info['tick']),
                                 }
                                 results.append(result)
+                                pbar.update(1)
                                 if episode_queue:
                                     reset_param = episode_queue.pop()
                                     self._env_manager.reset({i: reset_param})
@@ -295,6 +296,7 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
                 total_episodes += episode_num
                 success_episodes += success_num
                 total_time += duration
+                pbar.close()
 
         if self._save_files:
             results = gather_results(self._result_dir)
