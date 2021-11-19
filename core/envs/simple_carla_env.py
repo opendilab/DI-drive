@@ -199,6 +199,11 @@ class SimpleCarlaEnv(BaseCarlaEnv):
             Tuple[Any, float, bool, Dict]: A tuple contains observation, reward, done and information.
         """
         if action is not None:
+            for key in ['throttle', 'brake']:
+                if key in action:
+                    np.clip(action[key], 0, 1)
+            if 'steer' in action:
+                np.clip(action['steer'], -1, 1)
             self._simulator.apply_control(action)
             self._simulator_databuffer['action'] = action
         else:

@@ -1408,3 +1408,4 @@ project_test.py
 *episode_metainfo.json
 *measurements.lmdb
 *index.txt
+openaigym*

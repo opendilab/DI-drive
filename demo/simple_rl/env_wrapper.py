@@ -1,10 +1,10 @@
 import torch
 import numpy as np
-from typing import Dict, Any
+from typing import Dict, Any, List
 import math
 import gym
 
-from core.envs import CarlaEnvWrapper, BenchmarkEnvWrapper
+from core.envs import BaseCarlaEnv
 from ding.torch_utils.data_helper import to_ndarray
 
 
@@ -24,19 +24,17 @@ DEFAULT_STEER_LIST = [
 ]
 
 
-class DiscreteBenchmarkEnvWrapper(BenchmarkEnvWrapper):
+class DiscreteEnvWrapper(gym.Wrapper):
 
-    def __init__(self, env, cfg, acc_list=None, steer_list=None):
-        super().__init__(env, cfg)
-        if acc_list is not None:
-            self._acc_list = acc_list
-        else:
+    def __init__(self, env: BaseCarlaEnv, acc_list: List = None, steer_list: List = None) -> None:
+        super().__init__(env)
+        self._acc_list = acc_list
+        if acc_list is None:
             self._acc_list = DEFAULT_ACC_LIST
-        if steer_list is not None:
-            self._steer_list = steer_list
-        else:
+        self._steer_list = steer_list
+        if steer_list is None:
             self._steer_list = DEFAULT_STEER_LIST
-
+    
     def reset(self, *args, **kwargs) -> Any:
         obs = super().reset(*args, **kwargs)
         obs_out = {
@@ -44,7 +42,7 @@ class DiscreteBenchmarkEnvWrapper(BenchmarkEnvWrapper):
             'speed': (obs['speed'] / 25).astype(np.float32),
         }
         return obs_out
-
+    
     def step(self, id):
         if isinstance(id, torch.Tensor):
             id = id.item()
@@ -58,27 +56,23 @@ class DiscreteBenchmarkEnvWrapper(BenchmarkEnvWrapper):
             'throttle': acc[0],
             'brake': acc[1],
         }
-        timestep = super().step(action)
-        obs = timestep.obs
+        obs, reward, done, info = super().step(action)
         obs_out = {
             'birdview': obs['birdview'][..., [0, 1, 5, 6, 8]],
             'speed': (obs['speed'] / 25).astype(np.float32),
         }
-        timestep = timestep._replace(obs=obs_out)
-        return timestep
+        return obs_out, reward, done, info
 
 
-class MultiDiscreteBenchmarkEnvWrapper(BenchmarkEnvWrapper):
+class MultiDiscreteEnvWrapper(gym.Wrapper):
 
-    def __init__(self, env, cfg, acc_list=None, steer_list=None):
-        super().__init__(env, cfg)
-        if acc_list is not None:
-            self._acc_list = acc_list
-        else:
+    def __init__(self, env: BaseCarlaEnv, acc_list: List = None, steer_list: List = None) -> None:
+        super().__init__(env)
+        self._acc_list = acc_list
+        if acc_list is None:
             self._acc_list = DEFAULT_ACC_LIST
-        if steer_list is not None:
-            self._steer_list = steer_list
-        else:
+        self._steer_list = steer_list
+        if steer_list is None:
             self._steer_list = DEFAULT_STEER_LIST
 
     def reset(self, *args, **kwargs) -> Any:
@@ -103,17 +97,15 @@ class MultiDiscreteBenchmarkEnvWrapper(BenchmarkEnvWrapper):
             'throttle': acc[0],
             'brake': acc[1],
         }
-        timestep = super().step(action)
-        obs = timestep.obs
+        obs, reward, done, info = super().step(action)
         obs_out = {
             'birdview': obs['birdview'][..., [0, 1, 5, 6, 8]],
             'speed': (obs['speed'] / 25).astype(np.float32),
         }
-        timestep = timestep._replace(obs=obs_out)
-        return timestep
+        return obs_out, reward, done, info
 
 
-class ContinuousBenchmarkEnvWrapper(BenchmarkEnvWrapper):
+class ContinuousEnvWrapper(gym.Wrapper):
 
     def reset(self, *args, **kwargs) -> Any:
         obs = super().reset(*args, **kwargs)
@@ -124,8 +116,7 @@ class ContinuousBenchmarkEnvWrapper(BenchmarkEnvWrapper):
         return obs_out
 
     def step(self, action):
-        if isinstance(action, torch.Tensor):
-            action = to_ndarray(action)
+        action = to_ndarray(action)
         action = np.squeeze(action)
         steer = action[0]
         acc = action[1]
@@ -139,11 +130,9 @@ class ContinuousBenchmarkEnvWrapper(BenchmarkEnvWrapper):
             'throttle': throttle,
             'brake': brake,
         }
-        timestep = super().step(action)
-        obs = timestep.obs
+        obs, reward, done, info = super().step(action)
         obs_out = {
             'birdview': obs['birdview'][..., [0, 1, 5, 6, 8]],
             'speed': (obs['speed'] / 25).astype(np.float32),
         }
-        timestep = timestep._replace(obs=obs_out)
-        return timestep
+        return obs_out, reward, done, info

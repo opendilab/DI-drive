@@ -6,7 +6,7 @@ import copy
 import time
 from tensorboardX import SummaryWriter
 
-from core.envs import SimpleCarlaEnv
+from core.envs import SimpleCarlaEnv, BenchmarkEnvWrapper
 from core.utils.others.tcp_helper import parse_carla_tcp
 from core.eval import SerialEvaluator
 from ding.envs import SyncSubprocessEnvManager, BaseEnvManager
@@ -15,7 +15,7 @@ from ding.worker import BaseLearner, SampleSerialCollector
 from ding.utils import set_pkg_seed
 
 from demo.simple_rl.model import PPORLModel
-from demo.simple_rl.env_wrapper import ContinuousBenchmarkEnvWrapper
+from demo.simple_rl.env_wrapper import ContinuousEnvWrapper
 from core.utils.data_utils.bev_utils import unpack_birdview
 from core.utils.others.ding_utils import compile_config
 
@@ -116,7 +116,7 @@ main_config = EasyDict(train_config)
 
 
 def wrapped_env(env_cfg, wrapper_cfg, host, port, tm_port=None):
-    return ContinuousBenchmarkEnvWrapper(SimpleCarlaEnv(env_cfg, host, port, tm_port), wrapper_cfg)
+    return BenchmarkEnvWrapper(ContinuousEnvWrapper(SimpleCarlaEnv(env_cfg, host, port, tm_port)), wrapper_cfg)
 
 
 def main(cfg, seed=0):

@@ -65,12 +65,6 @@ class CarlaEnvWrapper(gym.Wrapper):
             BaseEnvTimestep: DI-engine format of env step returns.
         """
         action = to_ndarray(action)
-        if action is not None:
-            for key in ['throttle', 'brake']:
-                if key in action:
-                    np.clip(action[key], 0, 1)
-            if 'steer' in action:
-                np.clip(action['steer'], -1, 1)
 
         obs, rew, done, info = self.env.step(action)
         self._final_eval_reward += rew
