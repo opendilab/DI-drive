@@ -111,6 +111,7 @@ class SimpleCarlaEnv(BaseCarlaEnv):
         self._visualize_cfg = self._cfg.visualize
         self._simulator_databuffer = dict()
         self._visualizer = None
+        self._last_canvas = None
 
     def _init_carla_simulator(self) -> None:
         if not self._use_local_carla:
@@ -467,7 +468,7 @@ class SimpleCarlaEnv(BaseCarlaEnv):
         The main canvas is from a specific sensor data. It only works when 'visualize' is set in config dict.
         """
         if self._visualizer is None:
-            return
+            return self._last_canvas
 
         render_info = {
             'collided': self._collided,
@@ -487,6 +488,7 @@ class SimpleCarlaEnv(BaseCarlaEnv):
 
         self._visualizer.paint(self._render_buffer, render_info)
         self._visualizer.run_visualize()
+        self._last_canvas = self._visualizer.canvas
         return self._visualizer.canvas
 
     def seed(self, seed: int) -> None:

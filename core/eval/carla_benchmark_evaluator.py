@@ -79,7 +79,6 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
         self._weathers = self._cfg.weathers
         self._save_files = self._cfg.save_files
 
-        self._close_flag = False
         self._last_eval_iter = 0
         self._max_success_rate = 0
 
