@@ -87,6 +87,7 @@ train_config = dict(
             target_update_freq=100,
             learner=dict(
                 hook=dict(
+                    log_show_after_iter=1000,
                     load_ckpt_before_run='',
                 ),
             ),
@@ -103,7 +104,7 @@ train_config = dict(
         eval=dict(
             evaluator=dict(
                 eval_freq=5000,
-                n_episode=3,
+                n_episode=5,
                 stop_rate=0.7,
                 transform_obs=True,
             ),

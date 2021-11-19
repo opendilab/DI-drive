@@ -92,6 +92,7 @@ train_config = dict(
                 hook=dict(
                     # Pre-train model path
                     load_ckpt_before_run='',
+                    log_show_after_iter=1000,
                 ),
             ),
         ),
@@ -105,8 +106,8 @@ train_config = dict(
         ),
         eval=dict(
             evaluator=dict(
-                eval_freq=5000,
-                n_episode=3,
+                eval_freq=2000,
+                n_episode=5,
                 stop_rate=0.7,
                 transform_obs=True,
             ),
