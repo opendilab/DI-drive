@@ -38,8 +38,10 @@ class SimpleCarlaEnv(BaseCarlaEnv):
     metadata = {'render.modes': ['rgb_array']}
     action_space = spaces.Dict({})
     observation_space = spaces.Dict({})
+    reward_type = ['goal', 'distance', 'speed', 'angle', 'steer', 'lane', 'failure']
     config = dict(
         simulator=dict(),
+        reward_type=['goal', 'distance', 'speed', 'angle', 'failure'],
         col_is_failure=False,
         stuck_is_failure=False,
         ignore_light=False,
@@ -89,6 +91,8 @@ class SimpleCarlaEnv(BaseCarlaEnv):
         self._off_route_is_failure = self._cfg.off_route_is_failure
         self._off_route_distance = self._cfg.off_route_distance
 
+        self._reward_type = self._cfg.reward_type
+        assert set(self._reward_type).issubset(self.reward_type), set(self._reward_type)
         self._success_distance = self._cfg.success_distance
         self._success_reward = self._cfg.success_reward
         self._max_speed = self._cfg.max_speed
@@ -370,7 +374,7 @@ class SimpleCarlaEnv(BaseCarlaEnv):
         if self.is_success():
             goal_reward += self._success_reward
         elif self.is_failure():
-            goal_reward -= -1
+            goal_reward -= 1
 
         # distance reward
         location = self._simulator_databuffer['state']['location']
@@ -393,20 +397,22 @@ class SimpleCarlaEnv(BaseCarlaEnv):
             target_speed = 0
         elif agent_state == 4 and not self._ignore_light:
             target_speed = 0
-        if speed_limit > 10:
-            speed_reward = 1 - abs(speed - target_speed) / speed_limit
-        else:
-            speed_reward = 1
+        # speed_reward = 1 - abs(speed - target_speed) / speed_limit
+        speed_reward = 0
+        if speed < target_speed / 5:
+            speed_reward -= 1
+        if speed > target_speed:
+            speed_reward -= 1
 
         forward_vector = self._simulator_databuffer['state']['forward_vector']
         target_forward = self._simulator_databuffer['navigation']['target_forward']
-        angle_reward = 0.5 * (1 - angle(forward_vector, target_forward) / np.pi)
+        angle_reward = 3 * (0.1 - angle(forward_vector, target_forward) / np.pi)
 
         steer = self._simulator_databuffer['action'].get('steer', 0)
         command = self._simulator_databuffer['navigation']['command']
         steer_reward = 0.5
-        # if abs(steer - self._last_steer) > 0.5:
-        #     steer_reward -= 0.2
+        if abs(steer - self._last_steer) > 0.5:
+            steer_reward -= 0.2
         if command == 1 and steer > 0.1:
             steer_reward = 0
         elif command == 2 and steer < -0.1:
@@ -417,21 +423,22 @@ class SimpleCarlaEnv(BaseCarlaEnv):
 
         waypoint_list = self._simulator_databuffer['navigation']['waypoint_list']
         lane_mid_dis = lane_mid_distance(waypoint_list, location)
-        lane_reward = max(0, 1 - lane_mid_dis)
+        lane_reward = -0.5 * lane_mid_dis
 
         failure_reward = 0
-        # if not self._col_is_failure and self._collided:
-        #     failure_reward -= 10
-        # elif not self._stuck_is_failure and self._stuck:
-        #     failure_reward -= 10
-        # elif not self._off_road_is_failure and self._off_road:
-        #     failure_reward -= 10
-        # elif not self._ran_light_is_failure and not self._ignore_light and self._ran_light:
-        #     failure_reward -= 10
-        # elif not self._wrong_direction_is_failure and self._wrong_direction:
-        #     failure_reward -= 10
+        if self._col_is_failure and self._collided:
+            failure_reward -= 5
+        elif self._stuck_is_failure and self._stuck:
+            failure_reward -= 5
+        elif self._off_road_is_failure and self._off_road:
+            failure_reward -= 5
+        elif self._ran_light_is_failure and not self._ignore_light and self._ran_light:
+            failure_reward -= 5
+        elif self._wrong_direction_is_failure and self._wrong_direction:
+            failure_reward -= 5
 
         reward_info = {}
+        total_reward = 0
         reward_info['goal_reward'] = goal_reward
         reward_info['distance_reward'] = distance_reward
         reward_info['speed_reward'] = speed_reward
@@ -440,8 +447,17 @@ class SimpleCarlaEnv(BaseCarlaEnv):
         reward_info['lane_reward'] = lane_reward
         reward_info['failure_reward'] = failure_reward
 
-        total_reward = goal_reward + distance_reward + speed_reward + angle_reward + steer_reward + lane_reward \
-            + failure_reward
+        reward_dict = {
+            'goal': goal_reward,
+            'distance': distance_reward,
+            'speed': speed_reward,
+            'angle': angle_reward,
+            'steer': steer_reward,
+            'lane': lane_reward,
+            'failure': failure_reward
+        }
+        for rt in self._reward_type:
+            total_reward += reward_dict[rt]
 
         return total_reward, reward_info
 
