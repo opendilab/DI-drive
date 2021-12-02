@@ -249,6 +249,8 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
                                     reset_param = episode_queue.pop()
                                     self._env_manager.reset({i: reset_param})
                                     running_env_params[i] = reset_param
+                                else:
+                                    running_env_params.pop(i)
                         if self._env_manager.done:
                             break
                 duration = self._timer.value
