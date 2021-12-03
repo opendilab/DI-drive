@@ -32,15 +32,22 @@ class AutoPIDPolicy(BaseCarlaPolicy):
     """
 
     config = dict(
+        # target speed in km/h
         target_speed=25,
+        # max control value
         max_brake=0.3,
         max_throttle=0.75,
         max_steer=0.8,
+        # whether consider traffic light
         ignore_light=False,
+        # whether consider speed limit provided by planner
         ignore_speed_limit=False,
+        # traffic light distance threshold
         tl_threshold=10,
+        # control param
         lateral_dict=DEFAULT_LATERAL_DICT,
         longitudinal_dict=DEFAULT_LONGITUDINAL_DICT,
+        # whether add noise in steer
         noise=False,
         noise_kwargs=dict(
             noise_len=5,

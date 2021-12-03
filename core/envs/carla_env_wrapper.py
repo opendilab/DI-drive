@@ -44,7 +44,7 @@ class CarlaEnvWrapper(gym.Wrapper):
         are recorded.
 
         :Returns:
-            Any: Observations from envirionment
+            Any: Observations from environment
         """
         obs = self.env.reset(*args, **kwargs)
         obs = to_ndarray(obs)

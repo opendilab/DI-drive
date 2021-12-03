@@ -212,7 +212,7 @@ def main(cfg, env_args, seed=0):
     while True:
         if(learner.train_iter > cfg.policy.learn.max_iterations):
             break
-        eps = epsilon_greedy(learner.train_iter)
+        eps = epsilon_greedy(collector.envstep)
         # Sampling data from environments
         collector_env.reset()
         new_data = collector.collect(n_sample=1000, train_iter=learner.train_iter, policy_kwargs={'eps': eps})

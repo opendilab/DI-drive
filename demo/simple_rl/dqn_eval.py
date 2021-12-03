@@ -75,7 +75,8 @@ main_config = EasyDict(eval_config)
 
 
 def wrapped_env(env_cfg, wrapper_cfg, host, port, tm_port=None):
-    return CarlaEnvWrapper(DiscreteEnvWrapper(SimpleCarlaEnv(env_cfg, host, port, tm_port), wrapper_cfg))
+    env = SimpleCarlaEnv(env_cfg, host, port, tm_port)
+    return CarlaEnvWrapper(DiscreteEnvWrapper(env), wrapper_cfg)
 
 
 def main(cfg, seed=0):

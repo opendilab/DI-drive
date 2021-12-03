@@ -11,7 +11,7 @@ from core.utils.planner.planner_utils import get_next_until_junction, generate_c
 
 class BehaviorPlanner(BasicPlanner):
     """
-    Behavior local planner for Carla simualtor. It can set route the same way as ``BasicPlanner``. BehaviorPlanner can
+    Behavior local planner for Carla simulator. It can set route the same way as ``BasicPlanner``. BehaviorPlanner can
     check the speed limitations, traffic lights in evironment, and also take nearby vehicles into account.
     Lane changing
     decisions can be taken by analyzing the surrounding environment, such as overtaking or tailgating avoidance.

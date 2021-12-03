@@ -170,7 +170,7 @@ def main(cfg, seed=0):
     epsilon_greedy = get_epsilon_greedy_fn(eps_cfg.start, eps_cfg.end, eps_cfg.decay, eps_cfg.type)
 
     learner.call_hook('before_run')
-    eps = epsilon_greedy(learner.train_iter)
+    eps = epsilon_greedy(collector.envstep)
     new_data = collector.collect(train_iter=learner.train_iter, policy_kwargs={'eps': eps})
     replay_buffer.push(new_data, cur_collector_envstep=collector.envstep)
 
@@ -179,7 +179,7 @@ def main(cfg, seed=0):
             stop, rate = evaluator.eval(learner.save_checkpoint, learner.train_iter, collector.envstep)
             if stop:
                 break
-        eps = epsilon_greedy(learner.train_iter)
+        eps = epsilon_greedy(collector.envstep)
         # Sampling data from environments
         new_data = collector.collect(train_iter=learner.train_iter, policy_kwargs={'eps': eps})
         update_per_collect = len(new_data) // cfg.policy.learn.batch_size * 10

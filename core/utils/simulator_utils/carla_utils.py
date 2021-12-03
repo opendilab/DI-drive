@@ -13,7 +13,8 @@ BACKGROUND = [0, 0, 0]
 
 def control_to_signal(control):
     for k, v in control.items():
-        control[k] = float(v)
+        if k in ['steer', 'throttle', 'brake', 'manual_gear_shift', 'gear']:
+            control[k] = float(v)
     control_signal = carla.VehicleControl()
     control_signal.steer = control['steer'] if 'steer' in control else 0.0
     control_signal.throttle = control['throttle'] if 'throttle' in control else 0.0

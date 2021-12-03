@@ -34,7 +34,7 @@ class DiscreteEnvWrapper(gym.Wrapper):
         self._steer_list = steer_list
         if steer_list is None:
             self._steer_list = DEFAULT_STEER_LIST
-    
+
     def reset(self, *args, **kwargs) -> Any:
         obs = super().reset(*args, **kwargs)
         obs_out = {
@@ -42,7 +42,7 @@ class DiscreteEnvWrapper(gym.Wrapper):
             'speed': (obs['speed'] / 25).astype(np.float32),
         }
         return obs_out
-    
+
     def step(self, id):
         if isinstance(id, torch.Tensor):
             id = id.item()
@@ -62,6 +62,9 @@ class DiscreteEnvWrapper(gym.Wrapper):
             'speed': (obs['speed'] / 25).astype(np.float32),
         }
         return obs_out, reward, done, info
+
+    def __repr__(self) -> str:
+        return repr(self.env)
 
 
 class MultiDiscreteEnvWrapper(gym.Wrapper):
@@ -104,6 +107,9 @@ class MultiDiscreteEnvWrapper(gym.Wrapper):
         }
         return obs_out, reward, done, info
 
+    def __repr__(self) -> str:
+        return repr(self.env)
+
 
 class ContinuousEnvWrapper(gym.Wrapper):
 
@@ -136,3 +142,6 @@ class ContinuousEnvWrapper(gym.Wrapper):
             'speed': (obs['speed'] / 25).astype(np.float32),
         }
         return obs_out, reward, done, info
+
+    def __repr__(self) -> str:
+        return repr(self.env)

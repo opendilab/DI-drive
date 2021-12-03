@@ -83,5 +83,3 @@ Q5: Error import `shapely`
         .. code:: bash
 
             sudo apt-get install libgeos-dev
-
-

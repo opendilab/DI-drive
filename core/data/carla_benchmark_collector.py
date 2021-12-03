@@ -38,11 +38,17 @@ class CarlaBenchmarkCollector(BaseCollector):
 
     config = dict(
         benchmark_dir=None,
+        # suite name, can be str or list
         suite='FullTown01-v0',
         seed=None,
+        # whether make seed of each env different
         dynamic_seed=True,
+        # manually set weathers rather than read from suite
         weathers=None,
+        # whether apply hard failure judgement in suite
+        # by default in benchmark, collided will not cause failure
         nocrash=False,
+        # whether shuffle env setting in suite
         shuffle=False,
     )
 
@@ -187,6 +193,7 @@ class CarlaBenchmarkCollector(BaseCollector):
                     break
 
         if self._seed is not None:
+            # dynamic seed: different seed for each env
             if self._dynamic_seed:
                 self._env_manager.seed(self._seed)
             else:
@@ -195,6 +202,7 @@ class CarlaBenchmarkCollector(BaseCollector):
         self._env_manager.reset(running_env_params)
 
         return_data = []
+        env_fail_times = {env_id: 0 for env_id in running_env_params}
         collected_episodes = running_envs - 1
         collected_samples = 0
 
@@ -228,6 +236,7 @@ class CarlaBenchmarkCollector(BaseCollector):
                     self._traj_cache[env_id].append(transition)
                     if timestep.done:
                         if timestep.info['success'] and len(self._traj_cache[env_id]) > 50:
+                            env_fail_times[env_id] = 0
                             env_param = running_env_params[env_id]
                             episode_data = {'env_param': env_param, 'data': list(self._traj_cache[env_id])}
                             return_data.append(episode_data)
@@ -245,6 +254,7 @@ class CarlaBenchmarkCollector(BaseCollector):
                                 running_env_params[env_id] = reset_param
                                 self._env_manager.reset({env_id: reset_param})
                         else:
+                            env_fail_times[env_id] += 1
                             info = timestep.info
                             for k in list(info.keys()):
                                 if 'reward' in k:
@@ -252,14 +262,20 @@ class CarlaBenchmarkCollector(BaseCollector):
                                 if k in ['timestamp']:
                                     info.pop(k)
                             print('[COLLECTOR] env_id {} not success'.format(env_id), info)
-                            suite_index = collected_episodes % self._suite_num
-                            next_suite = self._collect_suite_list[suite_index]
-                            reset_param_index = self._collect_suite_index_dict[next_suite]
-                            reset_param = self._collect_suite_reset_params[next_suite][reset_param_index]
-                            self._collect_suite_index_dict[next_suite] += 1
-                            self._collect_suite_index_dict[next_suite] %= len(
-                                self._collect_suite_reset_params[next_suite]
-                            )
+                            if env_fail_times[env_id] < 5:
+                                # not reach max fail times, continue reset param
+                                reset_param = running_env_params[env_id]
+                            else:
+                                # reach max fail times, skip to next reset param
+                                env_fail_times[env_id] = 0
+                                suite_index = collected_episodes % self._suite_num
+                                next_suite = self._collect_suite_list[suite_index]
+                                reset_param_index = self._collect_suite_index_dict[next_suite]
+                                reset_param = self._collect_suite_reset_params[next_suite][reset_param_index]
+                                self._collect_suite_index_dict[next_suite] += 1
+                                self._collect_suite_index_dict[next_suite] %= len(
+                                    self._collect_suite_reset_params[next_suite]
+                                )
                             running_env_params[env_id] = reset_param
                             self._env_manager.reset({env_id: reset_param})
                         self._traj_cache[env_id].clear()

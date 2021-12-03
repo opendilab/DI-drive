@@ -41,7 +41,11 @@ class SimpleCarlaEnv(BaseCarlaEnv):
     reward_type = ['goal', 'distance', 'speed', 'angle', 'steer', 'lane', 'failure']
     config = dict(
         simulator=dict(),
+        # reward types total reward take into account
         reward_type=['goal', 'distance', 'speed', 'angle', 'failure'],
+        # reward value if success
+        success_reward=10,
+        # failure judgement
         col_is_failure=False,
         stuck_is_failure=False,
         ignore_light=False,
@@ -49,11 +53,12 @@ class SimpleCarlaEnv(BaseCarlaEnv):
         off_road_is_failure=False,
         wrong_direction_is_failure=False,
         off_route_is_failure=False,
+        # failure judgement hyper-parameters
         off_route_distance=6,
         success_distance=5,
-        success_reward=10,
         stuck_len=300,
         max_speed=5,
+        # whether open visualize
         visualize=None,
     )
 
@@ -274,7 +279,7 @@ class SimpleCarlaEnv(BaseCarlaEnv):
 
     def is_failure(self) -> bool:
         """
-        Check if env fails. olliding, being stuck, running light, running off road, running in
+        Check if env fails. colliding, being stuck, running light, running off road, running in
         wrong direction according to config. It will certainly happen when time is out.
 
         :Returns:
@@ -467,10 +472,13 @@ class SimpleCarlaEnv(BaseCarlaEnv):
 
         return total_reward, reward_info
 
-    def render(self, mode='rgb_array') -> None:
+    def render(self, mode='rgb_array') -> Any:
         """
         Render a runtime visualization on screen, save a gif or video according to visualizer config.
         The main canvas is from a specific sensor data. It only works when 'visualize' is set in config dict.
+
+        :Returns:
+            Any: visualized canvas, mainly used by tensorboard and gym monitor wrapper
         """
         if self._visualizer is None:
             return self._last_canvas
@@ -484,7 +492,7 @@ class SimpleCarlaEnv(BaseCarlaEnv):
             'tick': self._tick,
             'end_timeout': self._simulator.end_timeout,
             'end_distance': self._simulator.end_distance,
-            'total_distance': self._simulator.total_diatance,
+            'total_distance': self._simulator.total_distance,
         }
         render_info.update(self._simulator_databuffer['state'])
         render_info.update(self._simulator_databuffer['navigation'])

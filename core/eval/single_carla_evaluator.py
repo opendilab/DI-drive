@@ -6,11 +6,12 @@ from typing import Any, Dict, List, Optional
 from .base_evaluator import BaseEvaluator
 from ding.torch_utils.data_helper import to_tensor
 from ding.utils import build_logger
+from tensorboardX import SummaryWriter
 
 
 class SingleCarlaEvaluator(BaseEvaluator):
     """
-    Carla envaluator used to evaluate a single environment. It is mainly used to visualize the
+    Carla evaluator used to evaluate a single environment. It is mainly used to visualize the
     evaluation results. It uses a environment in DI-engine form and can be rendered in the runtime.
 
     :Arguments:
@@ -28,7 +29,9 @@ class SingleCarlaEvaluator(BaseEvaluator):
     """
 
     config = dict(
+        # whether calling 'render' each step
         render=False,
+        # whether transform obs into tensor manually
         transform_obs=False,
     )
 

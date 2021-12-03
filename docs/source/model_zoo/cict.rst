@@ -5,8 +5,8 @@ from Continuous Intention to Continuous Trajectory
     :maxdepth: 2
 
 `from Continuous Intention to Continuous Trajectory(CICT) <https://arxiv.org/abs/2010.10393>`_
-is a hierachical Imitation Learning method for close-loop autonomous driving. It uses a generator
-network to obtain protential map from RGB camera and LiDAR inputs, and then uses a trajectory function
+is a hierarchical Imitation Learning method for close-loop autonomous driving. It uses a generator
+network to obtain potential map from RGB camera and LiDAR inputs, and then uses a trajectory function
 network to generate a detailed trajectory together with the placement.
 
 .. image:: ../../figs/cict_1.png
@@ -319,7 +319,7 @@ Evaluating the second stage:
 Results
 =========
 
-The groundtruth potential map and predicted potential map on evaluation dataset at the first stage:
+The ground-truth potential map and predicted potential map on evaluation dataset at the first stage:
 
 .. image:: ../../figs/result_GAN.png
    :alt: result_GAN

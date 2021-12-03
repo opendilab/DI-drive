@@ -78,7 +78,7 @@ class LBCImageModel(common.ResnetBase):
         forward
     """
 
-    def __init__(self, backbone, warp=False, pretrained=False, all_branch=False, **kwargs):
+    def __init__(self, backbone='resnet34', warp=False, pretrained=False, all_branch=False, **kwargs):
         super().__init__(backbone, pretrained=pretrained, input_channel=3, bias_first=False)
 
         self.c = {'resnet18': 512, 'resnet34': 512, 'resnet50': 2048}[backbone]
@@ -112,7 +112,7 @@ class LBCImageModel(common.ResnetBase):
             ]
         )
 
-        self.all_branch = all_branch
+        self._all_branch = all_branch
 
     def forward(self, image, velocity, command):
         # if self.warp:
@@ -135,7 +135,7 @@ class LBCImageModel(common.ResnetBase):
         location_preds = torch.stack(location_preds, dim=1)
         location_pred = common.select_branch(location_preds, command)
 
-        if self.all_branch:
+        if self._all_branch:
             return location_pred, location_preds
 
         return location_pred

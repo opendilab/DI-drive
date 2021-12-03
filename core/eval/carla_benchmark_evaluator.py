@@ -43,14 +43,22 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
 
     config = dict(
         benchmark_dir=None,
+        # dir path to resume&save eval .csv files
         result_dir='',
+        # whether to transform obs into tensor manually
         transform_obs=False,
+        # num of episodes to eval in a suite
         episodes_per_suite=100,
+        # stop value of success rate
         stop_rate=1,
+        # whether resume an existing evaluation result in .csv
         resume=False,
+        # suite name, can be str or list
         suite='FullTown01-v0',
+        # manually set weathers rather than read from suite
         weathers=None,
         seed=0,
+        # whether save as .csv file
         save_files=True,
     )
 
@@ -173,7 +181,7 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
             weathers = reset_params.pop('weathers')
             suite_name = suite + '_seed%d' % self._seed
             summary_csv = os.path.join(self._result_dir, suite_name + ".csv")
-            if os.path.exists(summary_csv):
+            if os.path.exists(summary_csv) and self._resume:
                 summary = pd.read_csv(summary_csv)
             else:
                 summary = pd.DataFrame()
@@ -210,7 +218,7 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
             if not running_env_params:
                 self._logger.info("[EVALUATOR] Nothing to eval.")
             else:
-                pbar = tqdm(total=len(running_env_params)+len(episode_queue))
+                pbar = tqdm(total=len(running_env_params) + len(episode_queue))
                 for env_id in running_env_params:
                     self._env_manager.seed({env_id: self._seed})
                 self._env_manager.reset(running_env_params)

@@ -257,7 +257,7 @@ class CarlaDataProvider(object):
         if CarlaDataProvider._map is None:
             if world is None:
                 if CarlaDataProvider._world is None:
-                    raise ValueError("class mmenber 'world' not initialized yet")
+                    raise ValueError("class member 'world' not initialized yet")
                 else:
                     CarlaDataProvider._map = CarlaDataProvider._world.get_map()
             else:
@@ -277,7 +277,7 @@ class CarlaDataProvider(object):
     @staticmethod
     def is_sync_mode() -> bool:
         """
-        Return true if syncronuous mode is used
+        Return true if synchronous mode is used
         """
         return CarlaDataProvider._sync_mode
 

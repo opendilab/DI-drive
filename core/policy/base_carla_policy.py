@@ -71,3 +71,12 @@ class BaseCarlaPolicy(Policy):
         if isinstance(data, deque):
             data = list(data)
         return data
+
+    def _load_state_dict_learn(self, state_dict: Dict[str, Any]) -> None:
+        self._model.load_state_dict(state_dict['model'], strict=True)
+
+    def _load_state_dict_collect(self, state_dict: Dict[str, Any]) -> None:
+        self._model.load_state_dict(state_dict['model'], strict=True)
+
+    def _load_state_dict_eval(self, state_dict: Dict[str, Any]) -> None:
+        self._model.load_state_dict(state_dict['model'], strict=True)
