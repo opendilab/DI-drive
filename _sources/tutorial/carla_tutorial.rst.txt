@@ -4,7 +4,7 @@ Carla tutorial
 .. toctree::
     :maxdepth: 2
 
-Carla is currently the mainly used simualtor in DI-drive. This page shows some bacis concepts and
+Carla is currently the mainly used simulator in DI-drive. This page shows some bacis concepts and
 a quick user guide to run Carla simulator, for quick hands-on use of Carla in DI-drive
 
 Basic Concept of Carla

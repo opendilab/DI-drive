@@ -1,37 +1,73 @@
-<!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Learning by Cheating &mdash; DI-drive 0.2.1 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
   
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Learning by Cheating &mdash; DI-drive 0.2.2 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-    <script src="../_static/js/theme.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="from Continuous Intention to Continuous Trajectory" href="cict.html" />
     <link rel="prev" title="Conditional Imitation Learning" href="cilrs.html" /> 
 </head>
 
-<body class="wy-body-for-nav"> 
+<body class="wy-body-for-nav">
+
+   
   <div class="wy-grid-for-nav">
+    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
+          
+
+          
             <a href="../index.html" class="icon icon-home"> DI-drive
+          
+
+          
           </a>
+
+          
+            
+            
               <div class="version">
-                0.2.1
+                0.2.2
               </div>
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -39,7 +75,17 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
 </ul>
@@ -75,92 +121,100 @@
 <li class="toctree-l1"><a class="reference internal" href="../faq/index.html">FAQ</a></li>
 </ul>
 
+            
+          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">DI-drive</a>
+        
       </nav>
 
+
       <div class="wy-nav-content">
+        
         <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="index.html">Model Zoo</a> &raquo;</li>
+        
       <li>Learning by Cheating</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
+        
+            
             <a href="../_sources/model_zoo/lbc.rst.txt" rel="nofollow"> View page source</a>
+          
+        
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-             
-  <section id="learning-by-cheating">
-<h1>Learning by Cheating<a class="headerlink" href="#learning-by-cheating" title="Permalink to this headline"></a></h1>
+            
+  <div class="section" id="learning-by-cheating">
+<h1>Learning by Cheating<a class="headerlink" href="#learning-by-cheating" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://arxiv.org/abs/1912.12294">Learning by Cheating(LBC)</a>
 is an Imitation Learning method which driving in Carla using waypoint prediction and
 two-stage training – cheating model and target model. The cheating model takes
 ground-truth Bird-eye View(BeV) image as input to teach the RGB input target policy.
 The prediction of the model is a waypoint list then the waypoint list is processed by
-a PID controller to get the final control singals including steer,
+a PID controller to get the final control signals including steer,
 throttle and brake.</p>
-<figure class="align-center" id="id1">
+<div class="figure align-center" id="id1">
 <img alt="image-lbc_1" src="../_images/image-lbc_1.png" />
-<figcaption>
-<p><span class="caption-text">LBC structure</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
-</figcaption>
-</figure>
-<p><strong>DI-drive</strong> provide complete pipeline of training an LBC priviledged model and target
+<p class="caption"><span class="caption-text">LBC structure</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<p><strong>DI-drive</strong> provide complete pipeline of training an LBC privileged model and target
 model, including data collection, birdview model training, image model training, mimicing
 cheating model and evaluation. All entries can be found in <code class="docutils literal notranslate"><span class="pre">demo/lbc</span></code></p>
-<section id="datasets-collection">
-<h2>Datasets collection<a class="headerlink" href="#datasets-collection" title="Permalink to this headline"></a></h2>
-<p><strong>DI-drive</strong> provides benchmark data collection for LBC. The dataset is formated to save
+<div class="section" id="datasets-collection">
+<h2>Datasets collection<a class="headerlink" href="#datasets-collection" title="Permalink to this headline">¶</a></h2>
+<p><strong>DI-drive</strong> provides benchmark data collection for LBC. The dataset is formatted to save
 rgb data as <cite>.png</cite> files and BeV data into <cite>.lmdb</cite> files. The configuration of dataset
-collection is set up in <code class="docutils literal notranslate"><span class="pre">lbc_collect_data.py</span></code>. You can custom the configuration as
-follow.</p>
+collection is set up in <code class="docutils literal notranslate"><span class="pre">lbc_collect_data.py</span></code>. You may need to change the Carla server,
+dataset path, collection suites, planner configs and noise args etc.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
     <span class="n">env</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
         <span class="n">env_num</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
         <span class="n">simulator</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-            <span class="n">disable_two_wheels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="n">planner</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-                <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;lbc&#39;</span><span class="p">,</span>
-                <span class="n">resolution</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                <span class="n">threshold_before</span><span class="o">=</span><span class="mf">7.5</span><span class="p">,</span>
-                <span class="n">threshold_after</span><span class="o">=</span><span class="mf">5.</span><span class="p">,</span>
+                <span class="o">...</span>
             <span class="p">),</span>
-            <span class="n">obs</span><span class="o">=</span><span class="p">(</span>
-                <span class="nb">dict</span><span class="p">(</span>
-                    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;rgb&#39;</span><span class="p">,</span>
-                    <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;rgb&#39;</span><span class="p">,</span>
-                    <span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="mi">384</span><span class="p">,</span> <span class="mi">160</span><span class="p">],</span>
-                    <span class="n">position</span><span class="o">=</span><span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">],</span>
-                    <span class="n">fov</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span>
-                <span class="p">),</span>
-                <span class="nb">dict</span><span class="p">(</span>
-                    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;birdview&#39;</span><span class="p">,</span>
-                    <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;bev&#39;</span><span class="p">,</span>
-                    <span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="mi">320</span><span class="p">,</span> <span class="mi">320</span><span class="p">],</span>
-                    <span class="n">pixels_per_meter</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-                    <span class="n">pixels_ahead_vehicle</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-                <span class="p">),</span>
-            <span class="p">),</span>
-            <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="p">),</span>
-        <span class="n">col_is_failure</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">stuck_is_failure</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">wrapper</span><span class="o">=</span><span class="nb">dict</span><span class="p">(),</span>
-        <span class="n">manager</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-            <span class="n">auto_reset</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">shared_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">context</span><span class="o">=</span><span class="s1">&#39;spawn&#39;</span><span class="p">,</span>
-            <span class="n">max_retry</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="o">...</span>
         <span class="p">),</span>
     <span class="p">),</span>
     <span class="n">server</span><span class="o">=</span><span class="p">[</span>
@@ -168,10 +222,10 @@ follow.</p>
     <span class="p">],</span>
     <span class="n">policy</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
         <span class="n">target_speed</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
-        <span class="n">lateral_dict</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;K_P&#39;</span><span class="p">:</span> <span class="mf">0.75</span><span class="p">,</span> <span class="s1">&#39;K_D&#39;</span><span class="p">:</span> <span class="mf">0.</span><span class="p">,</span> <span class="s1">&#39;K_I&#39;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span> <span class="s1">&#39;dt&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">},</span>
-        <span class="n">longitudinal_dict</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;K_P&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;K_D&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> <span class="s1">&#39;K_I&#39;</span><span class="p">:</span> <span class="mf">0.025</span><span class="p">},</span>
         <span class="n">noise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">noise_kwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(),</span>
+        <span class="n">noise_kwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="o">...</span>
+        <span class="p">),</span>
         <span class="n">collect</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
             <span class="n">dir_path</span><span class="o">=</span><span class="s1">&#39;./datasets_train/lbc_datasets_train&#39;</span><span class="p">,</span>
             <span class="n">n_episode</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
@@ -180,6 +234,7 @@ follow.</p>
                 <span class="n">nocrash</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="p">),</span>
         <span class="p">),</span>
+        <span class="o">...</span>
     <span class="p">),</span>
 <span class="p">)</span>
 </pre></div>
@@ -188,29 +243,40 @@ follow.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python collect_data.py
 </pre></div>
 </div>
-</section>
-<section id="model-training">
-<h2>Model training<a class="headerlink" href="#model-training" title="Permalink to this headline"></a></h2>
-<p>The training of LBC model contains 3 stages: training priviledged model, offline
-trainging target model, on-line fine-tuning target model.</p>
-<section id="training-priviledged-model">
-<h3>Training priviledged model<a class="headerlink" href="#training-priviledged-model" title="Permalink to this headline"></a></h3>
-<p>The training of priviledged model is a supervide learning procedure. You can check
+</div>
+<div class="section" id="model-training">
+<h2>Model training<a class="headerlink" href="#model-training" title="Permalink to this headline">¶</a></h2>
+<p>The training of LBC model contains 3 stages: training privileged model, offline
+training target model, on-line fine-tuning target model.</p>
+<div class="section" id="training-privileged-model">
+<h3>Training privileged model<a class="headerlink" href="#training-privileged-model" title="Permalink to this headline">¶</a></h3>
+<p>The training of privileged model is a supervise learning procedure. You can check
 the training code in <code class="docutils literal notranslate"><span class="pre">lbc_birdview_train.py</span></code>. By default it will save checkpoint
 and tensorboard logs in <code class="docutils literal notranslate"><span class="pre">./log</span></code>. You can check the training progress and effects.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">lbc_birdview_train</span><span class="o">.</span><span class="n">py</span>
 </pre></div>
 </div>
-</section>
-<section id="offline-training-target-model">
-<h3>Offline training target model<a class="headerlink" href="#offline-training-target-model" title="Permalink to this headline"></a></h3>
+</div>
+<div class="section" id="offline-training-target-model">
+<h3>Offline training target model<a class="headerlink" href="#offline-training-target-model" title="Permalink to this headline">¶</a></h3>
+<p>The off-line training of target model consists of 2 procedures, first warm-up training
+with dataset label, then mimicing with privileged model label. Both training codes are
+provided in <code class="docutils literal notranslate"><span class="pre">lbc_img_train_phase0.py</span></code> and <code class="docutils literal notranslate"><span class="pre">lbc_img_train_phase1.py</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">lbc_img_train_phase0</span><span class="o">.</span><span class="n">py</span>
+<span class="n">python</span> <span class="n">lbc_img_train_phase1</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>You may need to change the dataset path, checkpoint path etc.</p>
+</div>
+<div class="section" id="online-training-target-model">
+<h3>Online training target model<a class="headerlink" href="#online-training-target-model" title="Permalink to this headline">¶</a></h3>
 <p>Pending</p>
-</section>
-</section>
-<section id="model-evaluation">
-<h2>Model evaluation<a class="headerlink" href="#model-evaluation" title="Permalink to this headline"></a></h2>
+</div>
+</div>
+<div class="section" id="model-evaluation">
+<h2>Model evaluation<a class="headerlink" href="#model-evaluation" title="Permalink to this headline">¶</a></h2>
 <p>DI-drive provides benchmark evaluation for both cheating model and target model,
-together with pretrain weights. You may need to change the Carla server settings
+together with pre-trained weights. You may need to change the Carla server settings
 to yours.</p>
 <p>Pretrain weights:
 <a class="reference external" href="http://opendilab.org/download/DI-drive/lbc/birdview/model-256.th">bev</a>,
@@ -220,9 +286,9 @@ python lbc_image_eval.py
 </pre></div>
 </div>
 <p>Then you will get the performance table.</p>
-</section>
-<section id="model-testing">
-<h2>Model testing<a class="headerlink" href="#model-testing" title="Permalink to this headline"></a></h2>
+</div>
+<div class="section" id="model-testing">
+<h2>Model testing<a class="headerlink" href="#model-testing" title="Permalink to this headline">¶</a></h2>
 <p>DI-drive provides a simple entry for testing LBC models in a benchmark or Casezoo
 environment and visualize the running. You may need to change the Carla server settings
 to yours.</p>
@@ -238,38 +304,56 @@ python lbc_image_test.py
 <span class="p">}</span>
 </pre></div>
 </div>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>
+           
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="cilrs.html" class="btn btn-neutral float-left" title="Conditional Imitation Learning" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="cict.html" class="btn btn-neutral float-right" title="from Continuous Intention to Continuous Trajectory" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="cict.html" class="btn btn-neutral float-right" title="from Continuous Intention to Continuous Trajectory" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="cilrs.html" class="btn btn-neutral float-left" title="Conditional Imitation Learning" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
     </div>
+  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, OpenDILab.</p>
-  </div>
+    <p>
+        &copy; Copyright 2021, OpenDILab
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
+
         </div>
       </div>
+
     </section>
+
   </div>
-  <script>
+  
+
+
+  <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

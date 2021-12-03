@@ -1,34 +1,71 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>core.envs.scenario_carla_env &mdash; DI-drive 0.2.1 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <meta charset="utf-8">
   
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>core.envs.scenario_carla_env &mdash; DI-drive 0.2.2 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/js/theme.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav"> 
+<body class="wy-body-for-nav">
+
+   
   <div class="wy-grid-for-nav">
+    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
+          
+
+          
             <a href="../../../index.html" class="icon icon-home"> DI-drive
+          
+
+          
           </a>
+
+          
+            
+            
               <div class="version">
-                0.2.1
+                0.2.2
               </div>
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -36,7 +73,17 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation/index.html">Installation</a></li>
 </ul>
@@ -56,30 +103,66 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../faq/index.html">FAQ</a></li>
 </ul>
 
+            
+          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">DI-drive</a>
+        
       </nav>
 
+
       <div class="wy-nav-content">
+        
         <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
       <li>core.envs.scenario_carla_env</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
+        
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-             
+            
   <h1>Source code for core.envs.scenario_carla_env</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">time</span>
@@ -121,8 +204,11 @@
     <span class="n">observation_space</span> <span class="o">=</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Dict</span><span class="p">({})</span>
     <span class="n">config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
         <span class="n">simulator</span><span class="o">=</span><span class="nb">dict</span><span class="p">(),</span>
-        <span class="n">finish_reward</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="c1"># reward value if success</span>
+        <span class="n">success_reward</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="c1"># whether open visualize</span>
         <span class="n">visualize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="c1"># outputs of scenario conclusion</span>
         <span class="n">outputs</span><span class="o">=</span><span class="p">[],</span>
         <span class="n">output_dir</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
     <span class="p">)</span>
@@ -154,7 +240,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_output_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">output_dir</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">outputs</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_finish_reward</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">finish_reward</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_success_reward</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">success_reward</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_is_success</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_is_failure</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_collided</span> <span class="o">=</span> <span class="kc">False</span>
@@ -379,10 +465,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">goal_reward</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_success</span><span class="p">:</span>
-            <span class="n">goal_reward</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finish_reward</span>
+            <span class="n">goal_reward</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_success_reward</span>
 
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_failure</span><span class="p">:</span>
-            <span class="n">goal_reward</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finish_reward</span>
+            <span class="n">goal_reward</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_success_reward</span>
 
         <span class="n">criteria_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simulator</span><span class="o">.</span><span class="n">get_criteria</span><span class="p">()</span>
 
@@ -424,7 +510,7 @@
             <span class="s1">&#39;tick&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tick</span><span class="p">,</span>
             <span class="s1">&#39;end_timeout&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simulator</span><span class="o">.</span><span class="n">end_timeout</span><span class="p">,</span>
             <span class="s1">&#39;end_distance&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simulator</span><span class="o">.</span><span class="n">end_distance</span><span class="p">,</span>
-            <span class="s1">&#39;total_distance&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simulator</span><span class="o">.</span><span class="n">total_diatance</span><span class="p">,</span>
+            <span class="s1">&#39;total_distance&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simulator</span><span class="o">.</span><span class="n">total_distance</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="n">render_info</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_simulator_databuffer</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">])</span>
         <span class="n">render_info</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_simulator_databuffer</span><span class="p">[</span><span class="s1">&#39;navigation&#39;</span><span class="p">])</span>
@@ -477,30 +563,42 @@
 </pre></div>
 
            </div>
+           
           </div>
           <footer>
+  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, OpenDILab.</p>
-  </div>
+    <p>
+        &copy; Copyright 2021, OpenDILab
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
+
         </div>
       </div>
+
     </section>
+
   </div>
-  <script>
+  
+
+
+  <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

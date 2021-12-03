@@ -7,9 +7,9 @@ Datasets
 Benchmark Datasets
 ===================
 
-DI-drive defines a unified benchmark dataset format that makes data collection and loading prosedure easily for users.
+DI-drive defines a unified benchmark dataset format that makes data collection and loading procedure easily for users.
 It is suggested to save datasets with :class:`BenchmarkDatasetSaver <core.data.dataset_saver.BenchmarkDatasetSaver>`.
-It can automatically create folders and save all senser data and measurements into datasets as desired form.
+It can automatically create folders and save all sensor data and measurements into datasets as desired form.
 
 General structure
 ----------------------
@@ -43,7 +43,7 @@ Dataset metadata
 -----------------
 
 Each dataset contains a metadata file with information provided by user.
-It may have the follwing contents:
+It may have the following contents:
 
 * Number of episodes
 * Collected suite
@@ -103,5 +103,5 @@ Their meaning is the same as the observation returned in :class:`SimpleCarlaEnv 
 Others
 -----------
 
-It is allowed to add user customized data into datasets. The data can be postpocessed and stored in an 'other' key, 
+It is allowed to add user customized data into datasets. The data can be post-processed and stored in an 'other' key, 
 with no effect to measurements. Users can organize their necessary information into datasets freely.

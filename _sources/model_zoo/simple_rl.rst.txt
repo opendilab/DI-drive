@@ -21,25 +21,32 @@ and **DI-engine** RL policies.
     :width: 250px
 
 
-Inputs, Env and NN models
+Inputs, NN models and Policies
 =====================================
 
-It takes a Bird-eye View image with size of 32x32x5 and speed scalar as observations. The BeV image
-consists of roads, lanes, vehicles, pedestrians and target route. Each occupies a channel with 0-1
-value. The traffic light information is excluded from observations.
+The simple RL policy takes a Bird-eye View(BeV) image with size of 32x32x5 and speed scalar as observations.
+The BeV image consists of roads, lanes, vehicles, pedestrians and target route. Each occupies a channel
+with 0-1 value. The traffic light information is excluded from observations.
 
-The BeV image is encoded by a conv net to get a 256 size embedding, and concat with the speed value
+The BeV image is encoded by a Conv net to get a 256 size embedding, and concat with the speed value
 repeated 256 times. The encoder output is then send into different heads depends on the required
-outputs of RL policies. Currently we have DQN, DDPG, TD3, SAC and PPO demos. We provide training and
-evaluation entry for all of them.
+outputs of RL policies.
 
-Please refer to the defination of encoder in ``core/models/bev_speed_model.py`` and RL models in
+Please refer to the definition of encoder in ``core/models/bev_speed_model.py`` and RL models in
 ``demo/simple_rl/model.py`` for their details. If you want to build your own RL experiments, you can
 define NN models similarly.
 
-The environment instance ``SimpleCarlaEnv`` is well defined with specified inputs and outputs. 
-The standard usage to customize the env interfaces is to add ``EnvWrapper`` and change the input, output
-of Env. For example:
+Currently we have DQN, DDPG, TD3, SAC and PPO demos. We provide training and evaluation entry for all of
+them. All these policies are implemented from **DI-engine** standard policy zoo. You can refer to
+**DI-engine**'s document to get how to modify the training hyper-parameters in config.
+
+
+Environment
+==================
+
+The simple RL experiments use the environment instance ``SimpleCarlaEnv`` which is well defined with
+specified inputs and outputs.  The standard usage to customize the env interfaces is to add ``EnvWrapper``
+and change the input, output, reward of Env. For example:
 
 .. code:: python
 
@@ -49,7 +56,7 @@ of Env. For example:
         self._steer_list = [-0.8, -0.5, -0.2, 0, 0.2, 0.5, 0.8]
 
         def reset(self, *args, **kwargs) -> Any:
-            obs = self.env.reset(*args, **kwargs)
+            obs = super().reset(*args, **kwargs)
             obs_out = {
                 'birdview': obs['birdview'][..., [0, 1, 5, 6, 8]],
                 'speed': (obs['speed'] / 25).astype(np.float32),
@@ -69,17 +76,19 @@ of Env. For example:
                 'throttle': acc[0],
                 'brake': acc[1],
             }
-            timestep = self.env.step(action)
-            obs = timestep.obs
+            obs, reward, done, info = super().step(action)
             obs_out = {
                 'birdview': obs['birdview'][..., [0, 1, 5, 6, 8]],
                 'speed': (obs['speed'] / 25).astype(np.float32),
             }
-            timestep = timestep._replace(obs=obs_out)
-            return timestep
+            return obs_out, reward, done, info
 
-This will map the descrete action space to continuous control signal in Carla env and delete
+This will map the discrete action space to continuous control signal in Carla env and delete
 traffic signal channels in BeV image. Other wrappers work in the same way.
+
+We have tried amounts of reward shaping and add varies kinds of reward function in the Env. By default
+only ['goal', 'distance', 'speed', 'angle', 'failure'] 5 types of reward is taken into account. You
+can modify the reward types you want to use via config.
 
 
 Training and Evaluation
@@ -128,6 +137,6 @@ On-policy training loop:
 The are two kinds of evaluation provided in this demo, `Carla benchmark <../features/carla_benchmark.html>`_ 
 evaluation and close-loop driving test. The former one is to evaluate the general performance
 of a policy in a benchmark suite, the latter one is mostly used to visualize driving results in a route.
-They can be implement using ``CarlaBenchmarkEvaluator`` and ``SerialEvaluator`` seperately.
+They can be implement using ``CarlaBenchmarkEvaluator`` and ``SerialEvaluator`` separately.
 
 For more details, it is recommended to check the `API doc <../api_doc/index.html>`_ for the modules above.

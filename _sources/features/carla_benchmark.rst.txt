@@ -14,7 +14,7 @@ for example *town1* represents all commonly used suites in 'town1'.
 Carla benchmark setting is widely used in other literature as training and evaluation standard.
 DI-drive allows users to quickly build up an environment with a benchmark suite setting by deploying
 :class:`BenchmarkEnvWrapper <core.envs.carla_env_wrapper.BenchmarkEnvWrapper>`. Once an environment is wrapped, it will ignore
-the passed arguments in ``reset`` method, and choose one from the suite's route list according to aonfiguration. It can be used
+the passed arguments in ``reset`` method, and choose one from the suite's route list according to configuration. It can be used
 in RL training, to sampling data in benchmark environment settings.
 
 Also, DI-drive deploys :class:`CarlaBenchmarkEvaluator <core.eval.carla_benchmark_evaluator.CarlaBenchmarkEvaluator>` and
@@ -136,6 +136,15 @@ FullTown01-v1   92%             23/25       0
 FullTown01-v2   88%             22/25       0
 FullTown02-v1   80%             20/25       0
 FullTown02-v2   72%             18/25       0
+=============   ==============  =========   ========
+
+- Simple RL PPO
+
+=============   ==============  =========   ========
+Suite           Success rate    Total run   Seed
+=============   ==============  =========   ========
+FullTown01-v1   80%             20/25       0
+FullTown02-v1   96%             24/25       0
 =============   ==============  =========   ========
 
 .. - MfDRL

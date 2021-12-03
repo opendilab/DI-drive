@@ -1,34 +1,71 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>core.simulators.carla_simulator &mdash; DI-drive 0.2.1 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <meta charset="utf-8">
   
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>core.simulators.carla_simulator &mdash; DI-drive 0.2.2 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/js/theme.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav"> 
+<body class="wy-body-for-nav">
+
+   
   <div class="wy-grid-for-nav">
+    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
+          
+
+          
             <a href="../../../index.html" class="icon icon-home"> DI-drive
+          
+
+          
           </a>
+
+          
+            
+            
               <div class="version">
-                0.2.1
+                0.2.2
               </div>
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -36,7 +73,17 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation/index.html">Installation</a></li>
 </ul>
@@ -56,30 +103,66 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../faq/index.html">FAQ</a></li>
 </ul>
 
+            
+          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">DI-drive</a>
+        
       </nav>
 
+
       <div class="wy-nav-content">
+        
         <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
       <li>core.simulators.carla_simulator</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
+        
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-             
+            
   <h1>Source code for core.simulators.carla_simulator</h1><div class="highlight"><pre>
 <span></span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">Copyright 2021 OpenDILab. All Rights Reserved:</span>
@@ -137,12 +220,12 @@
 <span class="sd">    Common Carla Simulator.</span>
 <span class="sd">    The simulator creates a client to Carla server, and is able to get observation, send</span>
 <span class="sd">    control signals to the hero vehicle and record essential data from the simulated world.</span>
-<span class="sd">    In the intialization period, the simulator may change the environment parameters including</span>
+<span class="sd">    In the initialization period, the simulator may change the environment parameters including</span>
 <span class="sd">    maps and weathers and can add actors (including NPC vehicles, pedestrians as well as sensors</span>
 <span class="sd">    mounted on the hero vehicle),</span>
 <span class="sd">    During the running period the simulator will achieve running state and information about</span>
 <span class="sd">    the hero vehicle (such as running speed, angle, navigation goal and reference path), data</span>
-<span class="sd">    from the sensors (such as camera images, lidar points) as well as runnign status(including</span>
+<span class="sd">    from the sensors (such as camera images, lidar points) as well as running status(including</span>
 <span class="sd">    collision, running off road, red light, distance and timeout to end waypoint).</span>
 
 <span class="sd">    Once it is created, it will set up Carla client and set the parameters in the configuration</span>
@@ -174,10 +257,10 @@
 <span class="sd">        - collided (bool): Whether collided in current episode.</span>
 <span class="sd">        - ran_light (bool): Whether ran light in current frame.</span>
 <span class="sd">        - off_road (bool): Whether ran off road in current frame.</span>
-<span class="sd">        - wrong_direction (bool): Whether ran in wrong derection in current frame.</span>
+<span class="sd">        - wrong_direction (bool): Whether ran in wrong direction in current frame.</span>
 <span class="sd">        - end_distance (float): Distance to target in current frame.</span>
 <span class="sd">        - end_timeout (float): Timeout for entire route provided by planner.</span>
-<span class="sd">        - total_diatance (float): Dictance for entire route provided by planner.</span>
+<span class="sd">        - total_distance (float): Distance for entire route provided by planner.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
         <span class="n">town</span><span class="o">=</span><span class="s1">&#39;Town01&#39;</span><span class="p">,</span>
@@ -298,7 +381,7 @@
 <div class="viewcode-block" id="CarlaSimulator.init"><a class="viewcode-back" href="../../../api_doc/simulators.html#core.simulators.CarlaSimulator.init">[docs]</a>    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">end</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Init simulator episode with provided args.</span>
-<span class="sd">        This method takes start and end waypoint indexs to set a navigation goal, and will use planner to build a route</span>
+<span class="sd">        This method takes start and end waypoint indexes to set a navigation goal, and will use planner to build a route</span>
 <span class="sd">        to generate target waypoint and road options in each tick. It will set world, map, vehicles, pedestrians dut to</span>
 <span class="sd">        default config, and provided args, which will be stored to replace old config.</span>
 <span class="sd">        If no collision happens when creating actors, the init will end and return.</span>
@@ -494,7 +577,7 @@
         <span class="c1"># wait for a tick to ensure client receives the last transform of the walkers we have just created</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">tick</span><span class="p">()</span>
 
-        <span class="c1"># 5. initialize each controller and set target to walk to (list is [controler, actor, controller, actor ...])</span>
+        <span class="c1"># 5. initialize each controller and set target to walk to (list is [controller, actor, controller, actor ...])</span>
         <span class="c1"># set how many pedestrians can cross the road</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">set_pedestrians_cross_factor</span><span class="p">(</span><span class="n">pedestrians_crossing</span><span class="p">)</span>
 
@@ -576,7 +659,7 @@
 
 <div class="viewcode-block" id="CarlaSimulator.apply_planner"><a class="viewcode-back" href="../../../api_doc/simulators.html#core.simulators.CarlaSimulator.apply_planner">[docs]</a>    <span class="k">def</span> <span class="nf">apply_planner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">end_idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Aplly goal waypoint to planner in simulator. The start point is set to current hero vehicle waypoint.</span>
+<span class="sd">        Apply goal waypoint to planner in simulator. The start point is set to current hero vehicle waypoint.</span>
 
 <span class="sd">        :Arguments:</span>
 <span class="sd">            - end_idx (int): Index of end waypoint.</span>
@@ -593,7 +676,7 @@
 <div class="viewcode-block" id="CarlaSimulator.get_state"><a class="viewcode-back" href="../../../api_doc/simulators.html#core.simulators.CarlaSimulator.get_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get running state from current world. It contains location, orientation, speed, acc,</span>
-<span class="sd">        and the state of surrounding road info suchas traffic light and junction.</span>
+<span class="sd">        and the state of surrounding road info such as traffic light and junction.</span>
 
 <span class="sd">        :Returns:</span>
 <span class="sd">            Dict: State dict.</span>
@@ -665,7 +748,7 @@
 
 <div class="viewcode-block" id="CarlaSimulator.get_information"><a class="viewcode-back" href="../../../api_doc/simulators.html#core.simulators.CarlaSimulator.get_information">[docs]</a>    <span class="k">def</span> <span class="nf">get_information</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get running information inclution time and ran light counts in current world.</span>
+<span class="sd">        Get running information including time and ran light counts in current world.</span>
 
 <span class="sd">        :Returns:</span>
 <span class="sd">            Dict: Information dict.</span>
@@ -742,7 +825,7 @@
 <div class="viewcode-block" id="CarlaSimulator.run_step"><a class="viewcode-back" href="../../../api_doc/simulators.html#core.simulators.CarlaSimulator.run_step">[docs]</a>    <span class="k">def</span> <span class="nf">run_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run one step simulation.</span>
-<span class="sd">        This will tick Carla world and update informations for all sensors and measurement.</span>
+<span class="sd">        This will tick Carla world and update information for all sensors and measurement.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">tick</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_tick</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -843,35 +926,47 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_end_timeout</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">total_diatance</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">total_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_total_distance</span></div>
 </pre></div>
 
            </div>
+           
           </div>
           <footer>
+  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, OpenDILab.</p>
-  </div>
+    <p>
+        &copy; Copyright 2021, OpenDILab
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
+
         </div>
       </div>
+
     </section>
+
   </div>
-  <script>
+  
+
+
+  <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

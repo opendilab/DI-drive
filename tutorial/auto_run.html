@@ -1,37 +1,73 @@
-<!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Auto policy running and visualization &mdash; DI-drive 0.2.1 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
   
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Auto policy running and visualization &mdash; DI-drive 0.2.2 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-    <script src="../_static/js/theme.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Simple Imitation Learning" href="il_tutorial.html" />
     <link rel="prev" title="Carla tutorial" href="carla_tutorial.html" /> 
 </head>
 
-<body class="wy-body-for-nav"> 
+<body class="wy-body-for-nav">
+
+   
   <div class="wy-grid-for-nav">
+    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
+          
+
+          
             <a href="../index.html" class="icon icon-home"> DI-drive
+          
+
+          
           </a>
+
+          
+            
+            
               <div class="version">
-                0.2.1
+                0.2.2
               </div>
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -39,7 +75,17 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
 </ul>
@@ -71,41 +117,80 @@
 <li class="toctree-l1"><a class="reference internal" href="../faq/index.html">FAQ</a></li>
 </ul>
 
+            
+          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">DI-drive</a>
+        
       </nav>
 
+
       <div class="wy-nav-content">
+        
         <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="index.html">Tutorial</a> &raquo;</li>
+        
       <li>Auto policy running and visualization</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
+        
+            
             <a href="../_sources/tutorial/auto_run.rst.txt" rel="nofollow"> View page source</a>
+          
+        
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-             
-  <section id="auto-policy-running-and-visualization">
-<h1>Auto policy running and visualization<a class="headerlink" href="#auto-policy-running-and-visualization" title="Permalink to this headline"></a></h1>
+            
+  <div class="section" id="auto-policy-running-and-visualization">
+<h1>Auto policy running and visualization<a class="headerlink" href="#auto-policy-running-and-visualization" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
 <p>DI-drive provides an <a class="reference internal" href="../api_doc/policy.html#core.policy.AutoPIDPolicy" title="core.policy.auto_policy.AutoPIDPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">AutoPIDPolicy</span></code></a> which can navigate through
 a target waypoint and command in observation. It can be used for data sampling, map and sensor data
 visualization, reward design, etc.</p>
 <p>To quickly run the demo, start a Carla server first. Then you can connect to the server and run policy.</p>
-<section id="running-with-start-and-target-waypoint">
-<h2>Running with start and target waypoint<a class="headerlink" href="#running-with-start-and-target-waypoint" title="Permalink to this headline"></a></h2>
+<div class="section" id="running-with-start-and-target-waypoint">
+<h2>Running with start and target waypoint<a class="headerlink" href="#running-with-start-and-target-waypoint" title="Permalink to this headline">¶</a></h2>
 <p>In this part, the policy runs in <a class="reference internal" href="../api_doc/envs.html#core.envs.SimpleCarlaEnv" title="core.envs.simple_carla_env.SimpleCarlaEnv"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimpleCarlaEnv</span></code></a>.
 It follows a route calculated by provided start and end waypoint index when calling <code class="docutils literal notranslate"><span class="pre">reset</span></code> method.
 Simply run the following command. You may need to change the Carla server host and port in <code class="docutils literal notranslate"><span class="pre">auto_run.py</span></code>
@@ -125,9 +210,9 @@ python auto_run.py
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="running-with-scenario-in-casezoo">
-<h2>Running with scenario in Casezoo<a class="headerlink" href="#running-with-scenario-in-casezoo" title="Permalink to this headline"></a></h2>
+</div>
+<div class="section" id="running-with-scenario-in-casezoo">
+<h2>Running with scenario in Casezoo<a class="headerlink" href="#running-with-scenario-in-casezoo" title="Permalink to this headline">¶</a></h2>
 <p>In this part, the policy runs in <a class="reference internal" href="../api_doc/envs.html#core.envs.ScenarioCarlaEnv" title="core.envs.scenario_carla_env.ScenarioCarlaEnv"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScenarioCarlaEnv</span></code></a>.
 It runs with provided Casezoo route and config file, or the single scenario name.
 Check <a class="reference external" href="https://github.com/opendilab/DI-drive/blob/main/docs/casezoo_instruction.md">Casezoo instruction</a> for all scenario name and description in Casezoo.</p>
@@ -140,9 +225,9 @@ python auto_run_case.py --host &lt;your Carla server host&gt; --port &lt;your Ca
 --scenario &lt;scenario name&gt;
 </pre></div>
 </div>
-</section>
-<section id="visualization">
-<h2>Visualization<a class="headerlink" href="#visualization" title="Permalink to this headline"></a></h2>
+</div>
+<div class="section" id="visualization">
+<h2>Visualization<a class="headerlink" href="#visualization" title="Permalink to this headline">¶</a></h2>
 <p>We provide two default sensor data to visualize. You can switch the shown image in visualizer by change the
 ‘type’ key in the visualize config. The sensor config can be change them whatever you want.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">autorun_config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
@@ -175,50 +260,64 @@ python auto_run_case.py --host &lt;your Carla server host&gt; --port &lt;your Ca
 </pre></div>
 </div>
 <p>If everything works well you can see running screen like this.</p>
-<figure class="align-center" id="id1">
+<div class="figure align-center" id="id1">
 <a class="reference internal image-reference" href="../_images/auto_run_rgb.png"><img alt="auto_run_rgb" src="../_images/auto_run_rgb.png" style="width: 500px;" /></a>
-<figcaption>
-<p><span class="caption-text">Visualization of RGB camera</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
-</figcaption>
-</figure>
-<figure class="align-center" id="id2">
+<p class="caption"><span class="caption-text">Visualization of RGB camera</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-center" id="id2">
 <a class="reference internal image-reference" href="../_images/auto_run_bev.png"><img alt="auto_run_bev" src="../_images/auto_run_bev.png" style="width: 500px;" /></a>
-<figcaption>
-<p><span class="caption-text">Visualization of Bird-eye View image</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
-</figcaption>
-</figure>
-</section>
-</section>
+<p class="caption"><span class="caption-text">Visualization of Bird-eye View image</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+</div>
 
 
            </div>
+           
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="carla_tutorial.html" class="btn btn-neutral float-left" title="Carla tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="il_tutorial.html" class="btn btn-neutral float-right" title="Simple Imitation Learning" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="il_tutorial.html" class="btn btn-neutral float-right" title="Simple Imitation Learning" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="carla_tutorial.html" class="btn btn-neutral float-left" title="Carla tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
     </div>
+  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, OpenDILab.</p>
-  </div>
+    <p>
+        &copy; Copyright 2021, OpenDILab
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
+
         </div>
       </div>
+
     </section>
+
   </div>
-  <script>
+  
+
+
+  <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>
