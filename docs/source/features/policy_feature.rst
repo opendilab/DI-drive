@@ -10,7 +10,7 @@ DI-drive defines policy in a more complex but powerful way. One policy can have 
 in order to be suitable for various kinds of training and test procedures, i.e. a Reinforcement Learning policy
 may act differently when sampling data and evaluating, a Supervised Learning policy may have different outputs
 when labels are not equal to control signal.
-As a result of this, DI-drive follows the policy definiation of 
+As a result of this, DI-drive follows the policy definition of 
 `DI-engine <https://github.com/opendilab/DI-engine>`_ which defines
 three modes: *collect*, *eval* and *learn*. Different modes of policy may have different
 behavior but share some core modules such as a Neural Network computation graph, and can be

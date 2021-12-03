@@ -37,10 +37,13 @@ class SerialEvaluator(BaseEvaluator):
     """
 
     config = dict(
+        # whether transform obs into tensro manually
         transform_obs=False,
-        # Evaluate every "eval_freq" training iterations.
+        # evaluate every "eval_freq" training iterations.
         eval_freq=100,
+        # evaluate times in each evaluation
         n_episode=10,
+        # stop value of success rate
         stop_rate=1,
     )
 

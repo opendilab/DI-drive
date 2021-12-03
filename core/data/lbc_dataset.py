@@ -190,7 +190,7 @@ class LBCImageDataset(Dataset):
         self._batch_read_number = batch_read_number
         self._batch_aug = batch_aug
 
-        print("augment with ", augment_strategy)
+        print("augment with", augment_strategy)
         if augment_strategy is not None and augment_strategy != 'None':
             self.augmenter = getattr(augmenter, augment_strategy)
         else:
@@ -297,7 +297,8 @@ class LBCImageDataset(Dataset):
             # if len()
             #     import pdb; pdb.set_trace()
             rgb_images = torch.stack([self.rgb_transform(img) for img in rgb_images])
-        birdview = self.bird_view_transform(birdview)
+
+        # birdview = self.bird_view_transform(birdview)
 
         return {
             'rgb': rgb_images,

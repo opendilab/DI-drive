@@ -7,19 +7,19 @@ Simulator Features
 Overview
 =============
 
-DI-drive defines simualtor instance to unify the interfaces and standardize sub-modules. As a result, users can customize
+DI-drive defines simulator instance to unify the interfaces and standardize sub-modules. As a result, users can customize
 their simulator setting with a config dictionary, and get expected data by calling the instance's methods.
 DI-drive currently uses Carla 0.9.9.4 for simulating Autonomous Driving. The Interaction between Carla server
-and DI-drive is proceeded through :class:`CarlaSimulator <core.simulators.carla_simualtor.CarlaSimulator>`.
+and DI-drive is proceeded through :class:`CarlaSimulator <core.simulators.carla_simulator.CarlaSimulator>`.
 The simulator contains a world map with roads, buildings and weather. The simulator has a hero vehicle for the user
-to control and get observations. The obervation may come from a **sensor** created in the simulator associated to hero
+to control and get observations. The observation may come from a **sensor** created in the simulator associated to hero
 vehicle, a **planner** in the simulator to get target waypoints and select road options, and other running status returned
 by methods.
 
 Carla Simulator Configuring
 =============================
 
-All the settings of simualtor can be customized by a config dict. Here 
+All the settings of simulator can be customized by a config dict. Here 
 we show the default setting of the simulator and explain its contents.
 
 .. code:: python
@@ -92,7 +92,7 @@ Here we explain some common configurations about world map and npc settings in s
             -   Soft Rain Sunset
 
 - sync_mode
-    Whether to run the simulator in synchronous mode. It is suggestted to set to TRUE throughout the simulation.
+    Whether to run the simulator in synchronous mode. It is suggested to set to TRUE throughout the simulation.
 - delta_seconds
     Time step in seconds between two frames. Only make sense in sync mode. We suggest to remain same throughout the simulation.
 - no_rendering
@@ -119,7 +119,7 @@ Planner configurations
 
 Here we explain the 'planner' key in config.
 
-The Planner in Carla simulator is modified from default Carla planners. A global planner in Carls Python API is used
+The Planner in Carla simulator is modified from default Carla planners. A global planner in Carla Python API is used
 to generate route and road options from start to end location. The local planner is defined in DI-drive to add navigation
 into observation. It provides current waypoint location, next waypoint location, road option command
 and distance to final target. Planners may also take nearby walkers, vehicles and traffic lights into account.
@@ -141,7 +141,7 @@ Some of the default config setting is as following:
 - type
     Type of local planner
 - min_distance
-    Dictance to find waypoint ahead vehicle.
+    Distance to find waypoint ahead vehicle.
 - resolution
     Distance between waypoints when tracking route.
 
@@ -162,7 +162,7 @@ They are tagged by provided 'name' key in config dict.
 
 DI-drive simulator supports several types of sensor in Carla, including 'rgb' camera, 'depth' camera, 'segmentation' camera,
 and 'lidar' sensors. We also add 'bev' image to paint a bird-eye view image for the hero actor. It contains
-following informations: road lines, lane lines, traffic lights, other vehicles, pedestrians, hero vehicles,
+following information: road lines, lane lines, traffic lights, other vehicles, pedestrians, hero vehicles,
 forward waypoints list. Each stored in one channel (traffic lights in three channels). The simulator can only
 have one bird-eye view image to draw and store in sensor data. Here are the default configs for these sensors:
 
@@ -230,7 +230,7 @@ value range of the augmentation.
 Running status
 ===================
 
-DI-drive simualtor can get and record some running status in each frame, including basic status, navigations,
+DI-drive simulator can get and record some running status in each frame, including basic status, navigation,
 information about simulation. They are automatically checked in each frame. Simulator provides interfaces to
 get dictionary about these info, stored in each key.
 
@@ -248,7 +248,7 @@ Status
     * 1: Yellow
     * 2: Green
     * 3: Off
-- tl_dis (float): Dictance between vehicle and currrent road end
+- tl_dis (float): Distance between vehicle and current road end
 
 Navigation
 ------------

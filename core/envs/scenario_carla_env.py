@@ -38,8 +38,11 @@ class ScenarioCarlaEnv(BaseCarlaEnv):
     observation_space = spaces.Dict({})
     config = dict(
         simulator=dict(),
-        finish_reward=100,
+        # reward value if success
+        success_reward=10,
+        # whether open visualize
         visualize=None,
+        # outputs of scenario conclusion
         outputs=[],
         output_dir='',
     )
@@ -71,7 +74,7 @@ class ScenarioCarlaEnv(BaseCarlaEnv):
         self._output_dir = self._cfg.output_dir
         self._outputs = self._cfg.outputs
 
-        self._finish_reward = self._cfg.finish_reward
+        self._success_reward = self._cfg.success_reward
         self._is_success = False
         self._is_failure = False
         self._collided = False
@@ -296,10 +299,10 @@ class ScenarioCarlaEnv(BaseCarlaEnv):
         """
         goal_reward = 0
         if self._is_success:
-            goal_reward += self._finish_reward
+            goal_reward += self._success_reward
 
         elif self._is_failure:
-            goal_reward -= self._finish_reward
+            goal_reward -= self._success_reward
 
         criteria_dict = self._simulator.get_criteria()
 
@@ -341,7 +344,7 @@ class ScenarioCarlaEnv(BaseCarlaEnv):
             'tick': self._tick,
             'end_timeout': self._simulator.end_timeout,
             'end_distance': self._simulator.end_distance,
-            'total_distance': self._simulator.total_diatance,
+            'total_distance': self._simulator.total_distance,
         }
         render_info.update(self._simulator_databuffer['state'])
         render_info.update(self._simulator_databuffer['navigation'])

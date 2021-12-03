@@ -42,6 +42,7 @@ class BaseEvaluator(object):
         self._logger, _ = build_logger(
             path='./{}/log/{}'.format(self._exp_name, self._instance_name), name=self._instance_name, need_tb=False
         )
+        self._close_flag = False
 
         self._timer = EasyTimer()
         if env is not None:

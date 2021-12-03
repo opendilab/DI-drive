@@ -45,7 +45,7 @@ lbc_config = dict(
         ),
         wrapper=dict(),
     ),
-    server=[dict(carla_host='localhost', carla_ports=[9000, 9002, 2])],
+    server=[dict(carla_host='localhost', carla_ports=[9000, 9010, 2])],
     policy=dict(
         ckpt_path='model-256.th',
         eval=dict(
@@ -79,7 +79,7 @@ def main(cfg, seed=0):
 
     carla_env.seed(seed)
     set_pkg_seed(seed)
-    lbc_policy = LBCBirdviewPolicy(cfg.policy).eval_mode
+    lbc_policy = LBCBirdviewPolicy(cfg.policy, ['eval']).eval_mode
     state_dict = torch.load(cfg.policy.ckpt_path)
     lbc_policy.load_state_dict(state_dict)
 

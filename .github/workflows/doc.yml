@@ -21,8 +21,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Generate
         run: |
-          python -m pip install .
-          python -m pip install sphinx_rtd_theme sphinx
+          python -m pip install .[doc]
           wget http://opendilab.org/download/DI-drive/carla-0.9.9-py3.7-linux-x86_64.egg
           easy_install carla-0.9.9-py3.7-linux-x86_64.egg
           make -C ./docs html

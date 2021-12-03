@@ -1,14 +1,14 @@
 import torch
 from easydict import EasyDict
 
-from core.envs import SimpleCarlaEnv
+from core.envs import SimpleCarlaEnv, CarlaEnvWrapper
 from core.utils.others.tcp_helper import parse_carla_tcp
 from core.eval import SingleCarlaEvaluator
 from ding.policy import PPOPolicy
 from ding.utils import set_pkg_seed
 from ding.utils.default_helper import deep_merge_dicts
 from demo.simple_rl.model import PPORLModel
-from demo.simple_rl.env_wrapper import ContinuousBenchmarkEnvWrapper
+from demo.simple_rl.env_wrapper import ContinuousEnvWrapper
 
 eval_config = dict(
     env=dict(
@@ -63,7 +63,7 @@ def main(cfg, seed=0):
     tcp_list = parse_carla_tcp(cfg.server)
     host, port = tcp_list[0]
 
-    carla_env = ContinuousBenchmarkEnvWrapper(SimpleCarlaEnv(cfg.env, host, port), cfg.env.wrapper)
+    carla_env = CarlaEnvWrapper(ContinuousEnvWrapper(SimpleCarlaEnv(cfg.env, host, port)), cfg.env.wrapper)
     carla_env.seed(seed)
     set_pkg_seed(seed)
     model = PPORLModel(**cfg.model)

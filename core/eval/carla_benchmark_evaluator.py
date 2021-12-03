@@ -13,7 +13,6 @@ from core.data.benchmark import ALL_SUITES
 from core.data.benchmark.benchmark_utils import get_suites_list, gather_results, read_pose_txt, get_benchmark_dir
 from ding.envs import BaseEnvManager
 from ding.torch_utils.data_helper import to_tensor
-from ding.utils import build_logger
 
 
 class CarlaBenchmarkEvaluator(BaseEvaluator):
@@ -44,14 +43,22 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
 
     config = dict(
         benchmark_dir=None,
+        # dir path to resume&save eval .csv files
         result_dir='',
+        # whether to transform obs into tensor manually
         transform_obs=False,
+        # num of episodes to eval in a suite
         episodes_per_suite=100,
+        # stop value of success rate
         stop_rate=1,
+        # whether resume an existing evaluation result in .csv
         resume=False,
+        # suite name, can be str or list
         suite='FullTown01-v0',
+        # manually set weathers rather than read from suite
         weathers=None,
         seed=0,
+        # whether save as .csv file
         save_files=True,
     )
 
@@ -80,7 +87,6 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
         self._weathers = self._cfg.weathers
         self._save_files = self._cfg.save_files
 
-        self._close_flag = False
         self._last_eval_iter = 0
         self._max_success_rate = 0
 
@@ -167,7 +173,7 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
         success_episodes = 0
         self.reset()
 
-        for suite in tqdm(self._eval_suite_list):
+        for suite in self._eval_suite_list:
             args, kwargs = ALL_SUITES[suite]
             assert len(args) == 0
             reset_params = kwargs.copy()
@@ -175,7 +181,7 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
             weathers = reset_params.pop('weathers')
             suite_name = suite + '_seed%d' % self._seed
             summary_csv = os.path.join(self._result_dir, suite_name + ".csv")
-            if os.path.exists(summary_csv):
+            if os.path.exists(summary_csv) and self._resume:
                 summary = pd.read_csv(summary_csv)
             else:
                 summary = pd.DataFrame()
@@ -212,6 +218,7 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
             if not running_env_params:
                 self._logger.info("[EVALUATOR] Nothing to eval.")
             else:
+                pbar = tqdm(total=len(running_env_params) + len(episode_queue))
                 for env_id in running_env_params:
                     self._env_manager.seed({env_id: self._seed})
                 self._env_manager.reset(running_env_params)
@@ -245,10 +252,13 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
                                     'timecost': int(t.info['tick']),
                                 }
                                 results.append(result)
+                                pbar.update(1)
                                 if episode_queue:
                                     reset_param = episode_queue.pop()
                                     self._env_manager.reset({i: reset_param})
                                     running_env_params[i] = reset_param
+                                else:
+                                    running_env_params.pop(i)
                         if self._env_manager.done:
                             break
                 duration = self._timer.value
@@ -295,6 +305,7 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
                 total_episodes += episode_num
                 success_episodes += success_num
                 total_time += duration
+                pbar.close()
 
         if self._save_files:
             results = gather_results(self._result_dir)

@@ -11,7 +11,7 @@ from collections import defaultdict
 
 
 class FakeSimulator(BaseSimulator):
-    # To do: complete fake simulator
+    # TODO: complete fake simulator
     def __init__(self, cfg):
         super(FakeSimulator, self).__init__(cfg)
 

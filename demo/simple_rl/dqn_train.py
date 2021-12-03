@@ -5,7 +5,7 @@ from easydict import EasyDict
 import copy
 from tensorboardX import SummaryWriter
 
-from core.envs import SimpleCarlaEnv
+from core.envs import SimpleCarlaEnv, BenchmarkEnvWrapper
 from core.utils.others.tcp_helper import parse_carla_tcp
 from core.eval import SerialEvaluator
 from ding.envs import SyncSubprocessEnvManager, BaseEnvManager
@@ -15,7 +15,7 @@ from ding.utils import set_pkg_seed
 from ding.rl_utils import get_epsilon_greedy_fn
 
 from demo.simple_rl.model import DQNRLModel
-from demo.simple_rl.env_wrapper import DiscreteBenchmarkEnvWrapper
+from demo.simple_rl.env_wrapper import DiscreteEnvWrapper
 from core.utils.data_utils.bev_utils import unpack_birdview
 from core.utils.others.ding_utils import compile_config
 
@@ -92,6 +92,7 @@ train_config = dict(
                 hook=dict(
                     # Pre-train model path
                     load_ckpt_before_run='',
+                    log_show_after_iter=1000,
                 ),
             ),
         ),
@@ -105,8 +106,8 @@ train_config = dict(
         ),
         eval=dict(
             evaluator=dict(
-                eval_freq=5000,
-                n_episode=3,
+                eval_freq=2000,
+                n_episode=5,
                 stop_rate=0.7,
                 transform_obs=True,
             ),
@@ -137,7 +138,8 @@ main_config = EasyDict(train_config)
 
 
 def wrapped_env(env_cfg, wrapper_cfg, host, port, tm_port=None):
-    return DiscreteBenchmarkEnvWrapper(SimpleCarlaEnv(env_cfg, host, port, tm_port), wrapper_cfg)
+    env = SimpleCarlaEnv(env_cfg, host, port, tm_port)
+    return BenchmarkEnvWrapper(DiscreteEnvWrapper(env), wrapper_cfg)
 
 
 def main(cfg, seed=0):
@@ -184,7 +186,7 @@ def main(cfg, seed=0):
     epsilon_greedy = get_epsilon_greedy_fn(eps_cfg.start, eps_cfg.end, eps_cfg.decay, eps_cfg.type)
 
     learner.call_hook('before_run')
-    eps = epsilon_greedy(learner.train_iter)
+    eps = epsilon_greedy(collector.envstep)
     new_data = collector.collect(n_sample=10000, train_iter=learner.train_iter, policy_kwargs={'eps': eps})
     replay_buffer.push(new_data, cur_collector_envstep=collector.envstep)
 
@@ -193,7 +195,7 @@ def main(cfg, seed=0):
             stop, rate = evaluator.eval(learner.save_checkpoint, learner.train_iter, collector.envstep)
             if stop:
                 break
-        eps = epsilon_greedy(learner.train_iter)
+        eps = epsilon_greedy(collector.envstep)
         # Sampling data from environments
         new_data = collector.collect(train_iter=learner.train_iter, policy_kwargs={'eps': eps})
         update_per_collect = len(new_data) // cfg.policy.learn.batch_size * 4

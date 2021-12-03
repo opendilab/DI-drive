@@ -1,3 +1,16 @@
+## v0.2.2 (2021.12.3)
+- Add fail count and retry for benchmark collector
+- Add LBC Image training phase 0 & 1
+- Add comments for commonly used default config
+- Add LBC Image train doc; scenario doc; save replay doc
+- Update ci and setup
+- Update simple rl env wrappers
+- Update args in all Carla policy
+- Modify all eps-greedy input into learn iterations
+- Fix bug in CILRS model
+- Fix typos in doc and comments
+
+
 ## v0.2.1 (2021.11.18)
 - Add NoCrash Carla099
 - Add bev dataset

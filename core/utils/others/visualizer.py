@@ -143,7 +143,7 @@ class Visualizer(object):
             if 'tick' in data_dict:
                 text = 'Time: %d' % data_dict['tick']
                 if 'end_timeout' in data_dict:
-                    text += '/%d' % data_dict['end_timeout']
+                    text += '/%.1f' % data_dict['end_timeout']
                 _write(text, right_text_pos, 9, fontsize=fontsize)
                 right_text_pos += 1
             if 'reward' in data_dict:

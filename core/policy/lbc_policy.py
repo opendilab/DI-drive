@@ -26,8 +26,13 @@ class LBCBirdviewPolicy(BaseCarlaPolicy):
     envs should use the correct env id to make the PID controller works well, and the
     controller should be reset when starting a new episode.
 
+    It contains 2 modes: `eval` and `learn`. The learn mode will calculate all losses,
+    but will not back-propregate it. In `eval` mode, the output control signal will be
+    postprocessed to standard control signal in Carla.
+
     :Arguments:
         - cfg (Dict): Config Dict.
+        - enable_field(List): Enable policy filed, default to ['eval', 'learn']
 
     :Interfaces:
         reset, forward
@@ -45,9 +50,8 @@ class LBCBirdviewPolicy(BaseCarlaPolicy):
         pixels_per_meter=5,
     )
 
-    def __init__(self, cfg: dict) -> None:
-        super().__init__(cfg, enable_field=[])
-        self._enable_field = ['eval', 'learn']
+    def __init__(self, cfg: dict, enable_field: List = ['eval', 'learn']) -> None:
+        super().__init__(cfg, enable_field=enable_field)
         self._controller_dict = dict()
 
         if self._cfg.cuda:
@@ -135,6 +139,7 @@ class LBCBirdviewPolicy(BaseCarlaPolicy):
             for id in self._controller_dict:
                 self._reset_single(id)
 
+    @torch.no_grad()
     def _forward_eval(self, data: Dict) -> Dict[str, Any]:
         """
         Running forward to get control signal of `eval` mode.
@@ -157,16 +162,15 @@ class LBCBirdviewPolicy(BaseCarlaPolicy):
         if command.ndim == 1:
             command = command.unsqueeze(0)
 
-        with torch.no_grad():
-            _birdview = birdview.to(self._device)
-            _speed = speed.to(self._device)
-            _command = command.to(self._device)
+        _birdview = birdview.to(self._device)
+        _speed = speed.to(self._device)
+        _command = command.to(self._device)
 
-            if self._model._all_branch:
-                _locations, _ = self._model(_birdview, _speed, _command)
-            else:
-                _locations = self._model(_birdview, _speed, _command)
-            _locations = _locations.detach().cpu().numpy()
+        if self._model._all_branch:
+            _locations, _ = self._model(_birdview, _speed, _command)
+        else:
+            _locations = self._model(_birdview, _speed, _command)
+        _locations = _locations.detach().cpu().numpy()
 
         map_locations = _locations
         actions = {}
@@ -227,7 +231,7 @@ class LBCBirdviewPolicy(BaseCarlaPolicy):
     def _reset_eval(self, data_ids: Optional[List[int]] = None) -> None:
         """
         Reset policy of `eval` mode. It will change the NN model into 'eval' mode and reset
-        the controllers in providded env id.
+        the controllers in provided env id.
 
         :Arguments:
             - data_id (List[int], optional): List of env id to reset. Defaults to None.
@@ -236,6 +240,15 @@ class LBCBirdviewPolicy(BaseCarlaPolicy):
         self._reset(data_ids)
 
     def _forward_learn(self, data: Dict) -> Dict[str, Any]:
+        """
+        Running forward of `learn` mode to get loss.
+
+        :Arguments:
+            - data (Dict): Input dict, with env id in keys and related observations in values,
+
+        :Returns:
+            Dict: information about training loss.
+        """
         birdview = to_dtype(data['birdview'], dtype=torch.float32).permute(0, 3, 1, 2)
         speed = to_dtype(data['speed'], dtype=torch.float32)
         command_index = [i.item() - 1 for i in data['command']]
@@ -248,19 +261,34 @@ class LBCBirdviewPolicy(BaseCarlaPolicy):
         _command = command.to(self._device)
 
         if self._model._all_branch:
-            _locations, _ = self._model(_birdview, _speed, _command)
+            _locations, _all_branch_locations = self._model(_birdview, _speed, _command)
         else:
             _locations = self._model(_birdview, _speed, _command)
 
         locations_pred = _locations
+        if self._model._all_branch:
+            all_branch_locations_pred = _all_branch_locations
         location_gt = data['location'].to(self._device)
         loss = self._criterion(locations_pred, location_gt)
+
+        if self._model._all_branch:
+            return {
+                'loss': loss,
+                'locations_pred': locations_pred,
+                'all_branch_locations_pred': all_branch_locations_pred
+            }
         return {
             'loss': loss,
             'locations_pred': locations_pred,
         }
 
     def _reset_learn(self, data_ids: Optional[List[int]] = None) -> None:
+        """
+        Reset policy of `learn` mode. It will change the NN model into 'train' mode.
+
+        :Arguments:
+            - data_id (List[int], optional): List of env id to reset. Defaults to None.
+        """
         self._model.train()
 
 
@@ -280,7 +308,9 @@ class LBCImagePolicy(BaseCarlaPolicy):
     """
 
     config = dict(
-        model=dict(cuda=True, backbone='resnet34', all_branch=False),
+        cuda=True,
+        model=dict(),
+        learn=dict(loss='l1', ),
         camera_args=dict(
             fixed_offset=4.0,
             fov=90,
@@ -294,11 +324,11 @@ class LBCImagePolicy(BaseCarlaPolicy):
         dt=0.1,
     )
 
-    def __init__(self, cfg: Dict) -> None:
-        super().__init__(cfg, enable_field=set(['eval', 'learn']))
+    def __init__(self, cfg: dict, enable_field: List = ['eval', 'learn']) -> None:
+        super().__init__(cfg, enable_field=enable_field)
         self._controller_dict = dict()
 
-        if self._cfg.model.cuda:
+        if self._cfg.cuda:
             if not torch.cuda.is_available():
                 print('[POLICY] No cuda device found! Use cpu by default')
                 self._device = torch.device('cpu')
@@ -353,14 +383,17 @@ class LBCImagePolicy(BaseCarlaPolicy):
         self._engine_brake_threshold = 2.0
         self._brake_threshold = 2.0
 
-        self._model = LBCImageModel(self._cfg.model.backbone, False, all_branch=self._cfg.model.all_branch)
-        self._model = self._model.to(self._device)
+        self._model = LBCImageModel(**self._cfg.model)
+        self._model.to(self._device)
+
+        for field in self._enable_field:
+            getattr(self, '_init_' + field)()
 
     def _init_learn(self) -> None:
         if self._cfg.learn.loss == 'l1':
-            self._criterion = LocationLoss(choise='l1')
+            self._criterion = LocationLoss(choice='l1')
         elif self._cfg.policy.learn.loss == 'l2':
-            self._criterion = LocationLoss(choise='l2')
+            self._criterion = LocationLoss(choice='l2')
 
     def _reset_single(self, data_id):
         if data_id in self._controller_dict:
@@ -427,6 +460,7 @@ class LBCImagePolicy(BaseCarlaPolicy):
         data = default_collate(list(data.values()))
 
         rgb = to_dtype(data['rgb'], dtype=torch.float32).permute(0, 3, 1, 2)
+
         speed = data['speed']
         command_index = [i.item() - 1 for i in data['command']]
         command = self._one_hot[command_index]
@@ -437,7 +471,7 @@ class LBCImagePolicy(BaseCarlaPolicy):
             _rgb = rgb.to(self._device)
             _speed = speed.to(self._device)
             _command = command.to(self._device)
-            if self._model.all_branch:
+            if self._model._all_branch:
                 model_pred, _ = self._model(_rgb, _speed, _command)
             else:
                 model_pred = self._model(_rgb, _speed, _command)
@@ -498,7 +532,7 @@ class LBCImagePolicy(BaseCarlaPolicy):
     def _reset_eval(self, data_ids: Optional[List[int]]) -> None:
         """
         Reset policy of `eval` mode. It will change the NN model into 'eval' mode and reset
-        the controllers in providded env id.
+        the controllers in provided env id.
 
         :Arguments:
             - data_id (List[int], optional): List of env id to reset. Defaults to None.
@@ -507,7 +541,17 @@ class LBCImagePolicy(BaseCarlaPolicy):
         self._reset(data_ids)
 
     def _forward_learn(self, data: Dict) -> Dict[str, Any]:
-        rgb = to_dtype(data['rgb'], dtype=torch.float32).permute(0, 3, 1, 2)
+        """
+        Running forward of `learn` mode to get loss.
+
+        :Arguments:
+            - data (Dict): Input dict, with env id in keys and related observations in values,
+
+        :Returns:
+            Dict: information about training loss.
+        """
+        # rgb = to_dtype(data['rgb'], dtype=torch.float32).permute(0, 3, 1, 2)
+        rgb = to_dtype(data['rgb'], dtype=torch.float32)
         speed = to_dtype(data['speed'], dtype=torch.float32)
         command_index = [i.item() - 1 for i in data['command']]
         command = self._one_hot[command_index]
@@ -519,19 +563,35 @@ class LBCImagePolicy(BaseCarlaPolicy):
         _command = command.to(self._device)
 
         if self._model._all_branch:
-            _locations, _ = self._model(_rgb, _speed, _command)
+            _locations, _all_branch_locations = self._model(_rgb, _speed, _command)
         else:
             _locations = self._model(_rgb, _speed, _command)
 
         locations_pred = _locations
+        if self._model._all_branch:
+            all_branch_locations_pred = _all_branch_locations
         location_gt = data['location'].to(self._device)
         loss = self._criterion(locations_pred, location_gt)
+
+        if self._model._all_branch:
+            return {
+                'loss': loss,
+                'locations_pred': locations_pred,
+                'all_branch_locations_pred': all_branch_locations_pred
+            }
+
         return {
             'loss': loss,
-            'location_pred': locations_pred,
+            'locations_pred': locations_pred,
         }
 
     def _reset_learn(self, data_ids: Optional[List[int]] = None) -> None:
+        """
+        Reset policy of `learn` mode. It will change the NN model into 'train' mode.
+
+        :Arguments:
+            - data_id (List[int], optional): List of env id to reset. Defaults to None.
+        """
         self._model.train()
 
 

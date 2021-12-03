@@ -78,7 +78,7 @@ def main(cfg, seed=0):
     )
     carla_env.seed(seed)
     set_pkg_seed(seed)
-    cilrs_policy = CILRSPolicy(cfg.policy).eval_mode
+    cilrs_policy = CILRSPolicy(cfg.policy, ['eval']).eval_mode
     if cfg.policy.ckpt_path is not None:
         state_dict = torch.load(cfg.policy.ckpt_path)
         cilrs_policy.load_state_dict(state_dict)

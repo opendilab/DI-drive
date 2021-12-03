@@ -77,7 +77,7 @@ def main(cfg, seed=0):
 
     carla_env.seed(seed)
     set_pkg_seed(seed)
-    lbc_policy = LBCImagePolicy(cfg.policy).eval_mode
+    lbc_policy = LBCImagePolicy(cfg.policy, ['eval']).eval_mode
     state_dict = torch.load(cfg.policy.ckpt_path)
     lbc_policy.load_state_dict(state_dict)
 

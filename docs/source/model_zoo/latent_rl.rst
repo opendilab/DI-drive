@@ -6,14 +6,14 @@ Latent Reinforcement Learning
 
 Latent Reinforcement Learning is a category of policy settings which generate
 latent representations that can completely characterize the features related to
-the driving task in the input observation. Techically, it uses a Variational
-Autoencoder (VAE) to get latent embeddings, and takes it as observation to
+the driving task in the input observation. Technically, it uses a Variational
+Auto-encoder (VAE) to get latent embeddings, and takes it as observation to
 train RL policies.
 
 Our implementation refers to `Model-free RL for AD <https://arxiv.org/abs/1904.09503>`_
 with **DI-drive** and **DI-engine** and transfers it to more general cases. All
 entries can be found in ``demo/latent_rl``. In the
-following documents, it will be explained detailly.
+following documents, it will be explained in detail.
 
 
 Training auto-encoder
@@ -49,18 +49,18 @@ Trainging RL agent
 ========================
 
 Following Model-free RL for AD , we use DDQN as the
-discrete RL algorithm and TD3 as the continous RL algorithm.
+discrete RL algorithm and TD3 as the continuous RL algorithm.
 For DDQN, we discrete the steering and throttle to 10 class, which
 means the whole action space is 100. The steering and throttle is
 mapping to [-1, -0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8] and
 [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9] respectively.
 although the action space is discrete, the vehicle can run smoothly when
 turning.
-For TD3, we use continuous action space. The policy network's ouput is
-the mean and log scale standard deviation of a Gaussion distribution.
+For TD3, we use continuous action space. The policy network's output is
+the mean and log scale standard deviation of a Gaussian distribution.
 At each state of collecting data, we sample an action following the
-generated Gaussion distribution. For TD3, we found that the steering
-changes drasticly. The steering is -1 or 0.8 and the throttle is
+generated Gaussian distribution. For TD3, we found that the steering
+changes drastically. The steering is -1 or 0.8 and the throttle is
 always 0.9. However, the car can drive well. This is a point to be
 improved.
 

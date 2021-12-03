@@ -17,7 +17,9 @@ Python version: 3.6, 3.7
 
 PyTorch version: >=1.4, <=1.8
 
-Hardware requirements: NVIDIA GPU with 4GB memory to run Carla
+DI-engine version: >=0.2
+
+Hardware requirements: NVIDIA GPU with at least 4GB memory to run Carla
 
 Get and install DI-drive
 ===========================
@@ -48,7 +50,7 @@ Or try to install manually via PyPI:
 
 .. code-block:: bash
 
-    pip install di-engine==0.1.1
+    pip install di-engine==0.2
 
 Download and install Carla Python API
 ============================================

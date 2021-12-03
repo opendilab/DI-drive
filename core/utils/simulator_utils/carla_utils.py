@@ -13,7 +13,7 @@ BACKGROUND = [0, 0, 0]
 
 def control_to_signal(control):
     for k, v in control.items():
-        if isinstance(v, np.ndarray):
+        if k in ['steer', 'throttle', 'brake', 'manual_gear_shift', 'gear']:
             control[k] = float(v)
     control_signal = carla.VehicleControl()
     control_signal.steer = control['steer'] if 'steer' in control else 0.0

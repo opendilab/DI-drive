@@ -2,11 +2,11 @@ import os
 import torch
 from easydict import EasyDict
 
-from core.envs import SimpleCarlaEnv
+from core.envs import SimpleCarlaEnv, CarlaEnvWrapper
 from core.utils.others.tcp_helper import parse_carla_tcp
 from core.eval import SingleCarlaEvaluator
 from demo.simple_rl.model import DDPGRLModel
-from demo.simple_rl.env_wrapper import ContinuousBenchmarkEnvWrapper
+from demo.simple_rl.env_wrapper import ContinuousEnvWrapper
 from ding.policy import DDPGPolicy
 from ding.utils import set_pkg_seed
 from ding.utils.default_helper import deep_merge_dicts
@@ -65,7 +65,7 @@ def main(cfg, seed=0):
     assert len(tcp_list) > 0, "No Carla server found!"
     host, port = tcp_list[0]
 
-    carla_env = ContinuousBenchmarkEnvWrapper(SimpleCarlaEnv(cfg.env, host, port), cfg.env.wrapper)
+    carla_env = CarlaEnvWrapper(ContinuousEnvWrapper(SimpleCarlaEnv(cfg.env, host, port)), cfg.env.wrapper)
     carla_env.seed(seed)
     set_pkg_seed(seed)
     model = DDPGRLModel(**cfg.policy.model)

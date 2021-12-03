@@ -1,3 +1,4 @@
+import random
 import numpy as np
 from typing import Any, Callable, Dict, Optional
 
@@ -28,9 +29,10 @@ class SteerNoiseWrapper(object):
     ) -> None:
         self._model = model
         self._noise_func = get_noise_generator(noise_type, noise_args)
-        self._noise_seq = {'drive': [drive_len, 'noise'], 'noise': [noise_len, 'drive']}
+        self._noise_seq = {'drive': [noise_len, 'noise'], 'noise': [drive_len, 'drive']}
         self._noise_range = noise_range
         self._noise_state = 'drive'
+        self._num_steps = drive_len
         self._state_step = 0
         self._last_throttle = 0
         self._last_brake = 0
@@ -52,7 +54,6 @@ class SteerNoiseWrapper(object):
         self._state_step += 1
 
         last_state = self._noise_state
-        num_steps, next_state = self._noise_seq[self._noise_state]
 
         if self._noise_state == 'noise':
             control['steer'] = self._noise_steer
@@ -64,9 +65,11 @@ class SteerNoiseWrapper(object):
             control['brake'] = real_control['brake']
         control['noise_state'] = self._noise_state
 
-        if self._state_step >= num_steps:
+        if self._state_step >= self._num_steps:
             self._state_step = 0
-            self._noise_state = next_state
+            self._num_steps, self._noise_state = self._noise_seq[self._noise_state]
+            self._num_steps += random.randint(-self._num_steps // 10, self._num_steps // 10)
+            assert last_state != self._noise_state
             self._noise_steer = self._noise_func()
             if self._noise_range is not None:
                 self._noise_steer = np.clip(self._noise_steer, self._noise_range['min'], self._noise_range['max'])

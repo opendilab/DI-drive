@@ -28,7 +28,7 @@ class AgentState(Enum):
 
 class BasicPlanner(object):
     """
-    Basic local planner for Carla simualtor. It can set route with a pair of start and end waypoints,
+    Basic local planner for Carla simulator. It can set route with a pair of start and end waypoints,
     or directly set with a waypoint list. The planner will provide target waypoint and road option
     in current route position, and record current route distance and end timeout. The planner will
     also judge agent state by checking surrounding vehicles, walkers and traffic lights.

@@ -20,6 +20,7 @@ class CILRSPolicy(BaseCarlaPolicy):
 
     :Arguments:
         - cfg (Dict): Config Dict.
+        - enable_field(List): Enable policy filed, default to ['eval', 'learn']
 
     :Interfaces:
         reset, forward
@@ -42,9 +43,9 @@ class CILRSPolicy(BaseCarlaPolicy):
     def __init__(
             self,
             cfg: Dict,
+            enable_field: List = ['eval', 'learn']
     ) -> None:
-        super().__init__(cfg, enable_field=[])
-        self._enable_field = ['eval', 'learn']
+        super().__init__(cfg, enable_field=enable_field)
         self._cuda = self._cfg.cuda
         self._max_throttle = self._cfg.max_throttle
         self._model = CILRSModel(**self._cfg.model)
