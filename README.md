@@ -1,6 +1,6 @@
 # DI-drive
 
-<img src="./docs/figs/DI-drive.png" width="200" alt="icon"/>
+<img src="./docs/figs/di-drive_logo.png" width="200" alt="icon"/>
 
 Updated on 2021.12.3 DI-drive-v0.2.2 (beta)
 

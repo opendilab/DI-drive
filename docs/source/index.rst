@@ -9,7 +9,7 @@ DI-drive Documentation
 .. toctree::
     :maxdepth: 2
 
-.. figure:: ../figs/DI-drive.png
+.. figure:: ../figs/di-drive_logo.png
    :alt: DI-drive
    :width: 300px
 
