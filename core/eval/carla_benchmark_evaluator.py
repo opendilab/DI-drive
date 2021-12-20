@@ -164,7 +164,7 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
             policy_kwargs = dict()
         if n_episode is None:
             n_episode = self._episodes_per_suite
-        assert n_episode >= self._env_num, "Env num must be more than episode num!"
+        assert n_episode >= self._env_num, "Episode num must be more than env num!"
         if self._result_dir != '':
             os.makedirs(self._result_dir, exist_ok=True)
 
@@ -197,8 +197,6 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
             running_envs = 0
 
             for episode, (weather, (start, end)) in enumerate(product(weathers, pose_pairs)):
-                if episode >= n_episode:
-                    break
                 param = reset_params.copy()
                 param['start'] = start
                 param['end'] = end
