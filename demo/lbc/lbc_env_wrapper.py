@@ -23,7 +23,7 @@ class LBCEnvWrapper(CarlaEnvWrapper):
         return new_obs
 
     def reset(self, *args, **kwargs) -> Any:
-        obs = super().reset()
+        obs = super().reset(**kwargs)
         obs_out = self._get_obs(obs)
         return obs_out
 
