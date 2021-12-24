@@ -180,7 +180,10 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
             poses_txt = reset_params.pop('poses_txt')
             weathers = reset_params.pop('weathers')
             n_vehicles = reset_params.pop('n_vehicles')
-            n_pedestrians = reset_params.pop('n_pedestrians')
+            n_pedestrians = None
+            if reset_params.get('n_pedestrains'):
+                n_pedestrians = reset_params.pop('n_pedestrians')
+                print(f'n_pedestrains: {n_pedestrians}')
 
             suite_name = suite + '_seed%d' % self._seed
             summary_csv = os.path.join(self._result_dir, suite_name + ".csv")
@@ -204,7 +207,8 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
                     break
                 param = reset_params.copy()
                 param['n_vehicles'] = n_vehicles
-                param['n_pedestrains'] = n_pedestrians
+                if n_pedestrians:
+                    param['n_pedestrains'] = n_pedestrians
                 param['start'] = start
                 param['end'] = end
                 param['weather'] = weather
