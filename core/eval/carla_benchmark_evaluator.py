@@ -99,6 +99,7 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
         assert not _env_manager._auto_reset, "auto reset for env manager should be closed!"
         self._end_flag = False
         self._env_manager = _env_manager
+        self._env_manager.launch()
         self._env_num = self._env_manager.env_num
 
     def close(self) -> None:
@@ -176,15 +177,8 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
             args, kwargs = ALL_SUITES[suite]
             assert len(args) == 0
             reset_params = kwargs.copy()
-
             poses_txt = reset_params.pop('poses_txt')
             weathers = reset_params.pop('weathers')
-            n_vehicles = reset_params.pop('n_vehicles')
-            n_pedestrians = None
-            if reset_params.get('n_pedestrains'):
-                n_pedestrians = reset_params.pop('n_pedestrians')
-                print(f'n_pedestrains: {n_pedestrians}')
-
             suite_name = suite + '_seed%d' % self._seed
             summary_csv = os.path.join(self._result_dir, suite_name + ".csv")
             if os.path.exists(summary_csv) and self._resume:
@@ -206,9 +200,6 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
                 if episode >= n_episode:
                     break
                 param = reset_params.copy()
-                param['n_vehicles'] = n_vehicles
-                if n_pedestrians:
-                    param['n_pedestrains'] = n_pedestrians
                 param['start'] = start
                 param['end'] = end
                 param['weather'] = weather
@@ -230,7 +221,7 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
                 pbar = tqdm(total=len(running_env_params) + len(episode_queue))
                 for env_id in running_env_params:
                     self._env_manager.seed({env_id: self._seed})
-                self._env_manager.launch(running_env_params)
+                self._env_manager.reset(running_env_params)
                 with self._timer:
                     while True:
                         obs = self._env_manager.ready_obs
