@@ -64,12 +64,11 @@ class LBCPlannerNew(BasicPlanner):
                 threshold = self._threshold_after
 
             if distance < threshold:
-                self.node_waypoint = node
-                self.node_road_option = command
                 max_index = i
 
         if max_index >= 0:
             for i in range(max_index + 1):
+                self.node_waypoint, self.node_road_option = self._waypoints_buffer.popleft()
                 if self._waypoints_queue:
                     self._waypoints_buffer.append(self._waypoints_queue.popleft())
                 if self.distances:
