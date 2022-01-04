@@ -60,6 +60,8 @@ class LBCBirdViewDataset(Dataset):
         self._lmdb_list = []
         self._idx_list = []
 
+        n_episodes = 0
+
         for item in epi_folder:
             lmdb_file = lmdb.open(os.path.join(root_dir, item, 'measurements.lmdb')).begin(write=False)
             max_len = int(lmdb_file.get('len'.encode())) - self._gap * self._n_step
@@ -68,11 +70,21 @@ class LBCBirdViewDataset(Dataset):
             ]
             png_files.sort()
             for i in range(max_len):
+                if self._max_frames and len(self) >= self._max_frames:
+                    break
+
                 png_file = png_files[i]
                 index = int(png_file.split('_')[1].split('.')[0])
                 self._img_list.append(os.path.join(root_dir, item, png_file))
                 self._idx_list.append(index)
                 self._lmdb_list.append(lmdb_file)
+
+            n_episodes += 1
+
+            if self._max_frames and len(self) >= self._max_frames:
+                break
+
+        print('%s: %d frames, %d episodes.' % (root_dir, len(self), n_episodes))
 
     def __len__(self):
         return len(self._img_list)
@@ -142,7 +154,7 @@ class LBCBirdViewDataset(Dataset):
             locations.append([pixel_x, pixel_y])
             orientations.append([ori_dx, ori_dy])
 
-        #birdview = self.bird_view_transform(birdview)
+        birdview = self.bird_view_transform(birdview)
 
         # Create mask
         output_size = self._crop_size // self._down_ratio
@@ -205,6 +217,8 @@ class LBCImageDataset(Dataset):
         self._lmdb_list = []
         self._idx_list = []
 
+        count = 0
+
         for item in epi_folder:
             lmdb_file = lmdb.open(os.path.join(root_dir, item, 'measurements.lmdb')).begin(write=False)
             max_len = int(lmdb_file.get('len'.encode())) - self._gap * self._n_step
@@ -218,6 +232,10 @@ class LBCImageDataset(Dataset):
                 self._img_list.append(os.path.join(root_dir, item, png_file))
                 self._idx_list.append(index)
                 self._lmdb_list.append(lmdb_file)
+
+            count += max_len
+        
+        print('Finished loading %s. Length: %d' % (root_dir, count))
 
     def __len__(self):
         return len(self._img_list)
@@ -297,8 +315,10 @@ class LBCImageDataset(Dataset):
             # if len()
             #     import pdb; pdb.set_trace()
             rgb_images = torch.stack([self.rgb_transform(img) for img in rgb_images])
+        
+        birdview = self.bird_view_transform(birdview)
 
-        # birdview = self.bird_view_transform(birdview)
+        self._batch_read_number += 1
 
         return {
             'rgb': rgb_images,
