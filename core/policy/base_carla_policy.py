@@ -1,7 +1,7 @@
 from collections import namedtuple, deque
 from typing import List, Dict, Optional, Union, Any, NamedTuple
 
-from core.utils.others.config_helper import deep_merge_dicts
+from ding.utils.default_helper import deep_merge_dicts
 from ding.policy import Policy
 
 

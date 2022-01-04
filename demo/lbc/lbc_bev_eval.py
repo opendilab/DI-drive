@@ -6,7 +6,7 @@ from core.envs import SimpleCarlaEnv
 from core.policy import LBCBirdviewPolicy
 from core.eval import CarlaBenchmarkEvaluator
 from core.utils.others.tcp_helper import parse_carla_tcp
-from core.utils.others.config_helper import deep_merge_dicts
+from ding.utils.default_helper import deep_merge_dicts
 from ding.envs import AsyncSubprocessEnvManager
 from ding.utils import set_pkg_seed
 from demo.lbc.lbc_env_wrapper import LBCEnvWrapper

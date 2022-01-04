@@ -8,7 +8,7 @@ from itertools import product
 from core.data.benchmark import ALL_SUITES
 from core.eval.carla_benchmark_evaluator import get_suites_list, read_pose_txt, get_benchmark_dir
 from .base_carla_env import BaseCarlaEnv
-from core.utils.others.config_helper import deep_merge_dicts
+from ding.utils.default_helper import deep_merge_dicts
 from ding.envs.env.base_env import BaseEnvTimestep, BaseEnvInfo
 from ding.envs.common.env_element import EnvElementInfo
 from ding.torch_utils.data_helper import to_ndarray

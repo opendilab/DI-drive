@@ -10,7 +10,7 @@ from easydict import EasyDict
 import gym
 from gym import utils
 
-from core.utils.others.config_helper import deep_merge_dicts
+from ding.utils.default_helper import deep_merge_dicts
 
 
 class BaseCarlaEnv(gym.Env, utils.EzPickle):
