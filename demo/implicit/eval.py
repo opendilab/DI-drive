@@ -3,7 +3,7 @@ import argparse
 from easydict import EasyDict
 from functools import partial
 
-from core.envs import SimpleCarlaEnv, CarlaEnvWrapper
+from core.envs import SimpleCarlaEnv, DriveEnvWrapper
 from eval_policy import ImplicitPolicy
 from core.utils.others.tcp_helper import parse_carla_tcp
 from core.eval import CarlaBenchmarkEvaluator
@@ -50,7 +50,7 @@ main_config = EasyDict(eval_config)
 
 
 def wrapped_env(env_cfg, host, port, tm_port=None):
-    return CarlaEnvWrapper(SimpleCarlaEnv(env_cfg, host, port, tm_port))
+    return DriveEnvWrapper(SimpleCarlaEnv(env_cfg, host, port, tm_port))
 
 
 def main(cfg, policy_cfg, seed=0):

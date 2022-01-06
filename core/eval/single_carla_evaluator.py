@@ -24,7 +24,7 @@ class SingleCarlaEvaluator(BaseEvaluator):
     :Interfaces: reset, eval, close
 
     :Properties:
-        - env (BaseCarlaEnv): Environment used to evaluate.
+        - env (BaseDriveEnv): Environment used to evaluate.
         - policy (Any): Policy instance to interact with envs.
     """
 

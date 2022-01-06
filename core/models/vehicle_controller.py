@@ -8,8 +8,6 @@ from collections import deque
 import math
 from typing import Dict, List
 import numpy as np
-import carla
-from core.simulators.carla_data_provider import CarlaDataProvider
 
 
 class VehiclePIDController():

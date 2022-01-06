@@ -54,6 +54,9 @@ def get_log_visualization(birdview, command, loss, locations, locations_pred, si
 
     images = list()
 
+    command_index = [i.item() - 1 for i in command]
+    command = torch.FloatTensor(torch.eye(4))[command_index]
+
     for i in range(min(birdview.shape[0], size)):
         loss_i = loss[i].sum()
         _bev = birdview[i].detach().cpu().numpy().copy()

@@ -3,11 +3,11 @@ import numpy as np
 from typing import Dict, Any
 import math
 
-from core.envs import CarlaEnvWrapper
+from core.envs import DriveEnvWrapper
 from core.utils.model_utils import common
 
 
-class LBCEnvWrapper(CarlaEnvWrapper):
+class LBCEnvWrapper(DriveEnvWrapper):
 
     def _get_obs(self, obs):
         new_obs = {
@@ -23,7 +23,7 @@ class LBCEnvWrapper(CarlaEnvWrapper):
         return new_obs
 
     def reset(self, *args, **kwargs) -> Any:
-        obs = super().reset()
+        obs = super().reset(*args, **kwargs)
         obs_out = self._get_obs(obs)
         return obs_out
 

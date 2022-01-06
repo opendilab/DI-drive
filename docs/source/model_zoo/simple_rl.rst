@@ -5,7 +5,8 @@ BeV Speed End-to-end Reinforcement Learning
     :maxdepth: 2
 
 This is a simple Reinforcement Learning demo to show the basic usage of **DI-drive** environments
-and **DI-engine** RL policies.
+and **DI-engine** RL policies. All training, evaluation and testing entry can be found in
+`demo/simple_rl`
 
 .. image:: ../../figs/dqn_demo1.gif
     :alt: dqn_demo1

@@ -1,5 +1,5 @@
-Simulator Features
-#####################
+Carla Simulator Features
+##########################
 
 .. toctree::
     :maxdepth: 2

@@ -3,7 +3,7 @@ from functools import partial
 import torch
 from easydict import EasyDict
 
-from core.envs import CarlaEnvWrapper
+from core.envs import DriveEnvWrapper
 from core.utils.others.tcp_helper import parse_carla_tcp
 from core.eval import CarlaBenchmarkEvaluator
 from ding.envs import AsyncSubprocessEnvManager, BaseEnvManager
@@ -71,7 +71,7 @@ main_config = EasyDict(eval_config)
 
 
 def wrapped_env(env_cfg, wrapper_cfg, host, port, tm_port=None):
-    return CarlaEnvWrapper(CarlaLatentEvalEnv(env_cfg, host, port, tm_port), wrapper_cfg)
+    return DriveEnvWrapper(CarlaLatentEvalEnv(env_cfg, host, port, tm_port), wrapper_cfg)
 
 
 def main(cfg, seed=0):

@@ -3,7 +3,7 @@ from typing import List, Dict, Optional
 
 from .base_carla_policy import BaseCarlaPolicy
 from core.models import VehiclePIDController, SteerNoiseWrapper, MPCController
-from core.utils.others.config_helper import deep_merge_dicts
+from ding.utils.default_helper import deep_merge_dicts
 from ding.torch_utils.data_helper import to_ndarray
 
 DEFAULT_LATERAL_DICT = {'K_P': 1, 'K_D': 0.1, 'K_I': 0, 'dt': 0.1}

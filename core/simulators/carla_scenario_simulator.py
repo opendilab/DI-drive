@@ -30,7 +30,7 @@ class CarlaScenarioSimulator(CarlaSimulator):
         - host (str, optional): TCP host Carla client link to. Defaults to 'localhost'.
         - port (int, optional): TCP port Carla client link to. Defaults to 9000.
         - tm_port (int, optional): Traffic manager port Carla client link to. Defaults to None.
-        - timeout (float, optional): Carla client link timeout. Defaults to 10.0.
+        - timeout (float, optional): Carla client link timeout. Defaults to 60.0.
 
     :Interfaces:
         init, get_state, get_sensor_data, get_navigation, get_information, apply_control, run_step, clean_up
@@ -72,7 +72,7 @@ class CarlaScenarioSimulator(CarlaSimulator):
             host: str = 'localhost',
             port: int = 9000,
             tm_port: int = 9050,
-            timeout: float = 10.0,
+            timeout: float = 60.0,
             **kwargs
     ) -> None:
         """

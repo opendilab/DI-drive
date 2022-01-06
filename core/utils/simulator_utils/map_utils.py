@@ -12,7 +12,7 @@ import copy
 
 import carla
 from carla import TrafficLightState as tls
-from core.utils.others.config_helper import deep_merge_dicts
+from ding.utils.default_helper import deep_merge_dicts
 
 # ==============================================================================
 # -- Constants -----------------------------------------------------------------

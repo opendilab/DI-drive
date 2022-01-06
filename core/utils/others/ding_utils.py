@@ -1,3 +1,5 @@
+import os
+from importlib import import_module
 from ding.envs.env_manager.base_env_manager import BaseEnvManager
 from ding.utils import deep_merge_dicts
 
@@ -28,3 +30,10 @@ def compile_config(
     if buffer is not None:
         cfg.policy.other.replay_buffer = deep_merge_dicts(buffer.default_config(), cfg.policy.other.replay_buffer)
     return cfg
+
+
+def read_ding_config(cfg_path):
+    cfg_module = os.path.splitext(cfg_path)[0]
+    module = import_module(cfg_module)
+    cfg_dict = {k: v for k, v in module.__dict__.items() if not k.startswith('_')}
+    return cfg_dict['default_train_config']

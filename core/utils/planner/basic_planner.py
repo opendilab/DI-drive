@@ -11,7 +11,7 @@ from core.utils.simulator_utils.carla_agents.navigation.global_route_planner imp
 from core.utils.simulator_utils.carla_agents.navigation import RoadOption
 from core.simulators.carla_data_provider import CarlaDataProvider
 from core.utils.simulator_utils.carla_agents.tools.misc import draw_waypoints
-from core.utils.others.config_helper import deep_merge_dicts
+from ding.utils.default_helper import deep_merge_dicts
 
 
 class AgentState(Enum):

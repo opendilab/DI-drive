@@ -1,3 +1,17 @@
+## v0.3.0 (2022.1.7)
+- Add MetaDrive support (env, entry, doc)
+- Add simulator selection when import
+- Rename all common modules without 'carla'
+- Add MetaDrive basic env training
+- Add MetaDrive Macro env training and test
+- Add all env registry
+- Update DriveEnvWrapper
+- Update logo
+- Update doc, add metadrive guide and tutorial
+- Reformat simple rl, all policies now have common entry(train eval test)
+- Fix LBC planner bug
+- Delete config helper
+
 ## v0.2.2 (2021.12.3)
 - Add fail count and retry for benchmark collector
 - Add LBC Image training phase 0 & 1

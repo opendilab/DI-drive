@@ -164,7 +164,7 @@ class CarlaBenchmarkEvaluator(BaseEvaluator):
             policy_kwargs = dict()
         if n_episode is None:
             n_episode = self._episodes_per_suite
-        assert n_episode >= self._env_num, "Env num must be more than episode num!"
+        assert n_episode >= self._env_num, "Episode num must be more than env num!"
         if self._result_dir != '':
             os.makedirs(self._result_dir, exist_ok=True)
 

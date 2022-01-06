@@ -3,7 +3,7 @@ from abc import abstractmethod
 from typing import Any, Dict
 from easydict import EasyDict
 
-from core.utils.others.config_helper import deep_merge_dicts
+from ding.utils.default_helper import deep_merge_dicts
 from ding.utils import EasyTimer
 
 
