@@ -5,13 +5,13 @@ from datetime import datetime
 from typing import Any, Dict
 from gym import spaces
 
-from .base_carla_env import BaseCarlaEnv
+from .base_drive_env import BaseDriveEnv
 from core.simulators import CarlaScenarioSimulator
 from core.utils.others.visualizer import Visualizer
 from core.utils.simulator_utils.carla_utils import visualize_birdview
 
 
-class ScenarioCarlaEnv(BaseCarlaEnv):
+class ScenarioCarlaEnv(BaseDriveEnv):
     """
     Carla Scenario Environment with a single hero vehicle. It uses ``CarlaScenarioSimulator`` to load scenario
     configurations and interacts with Carla server to get running status. The Env is initialized with a scenario

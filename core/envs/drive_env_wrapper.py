@@ -7,20 +7,20 @@ from itertools import product
 
 from core.data.benchmark import ALL_SUITES
 from core.eval.carla_benchmark_evaluator import get_suites_list, read_pose_txt, get_benchmark_dir
-from .base_carla_env import BaseCarlaEnv
+from .base_drive_env import BaseDriveEnv
 from ding.utils.default_helper import deep_merge_dicts
 from ding.envs.env.base_env import BaseEnvTimestep, BaseEnvInfo
 from ding.envs.common.env_element import EnvElementInfo
 from ding.torch_utils.data_helper import to_ndarray
 
 
-class CarlaEnvWrapper(gym.Wrapper):
+class DriveEnvWrapper(gym.Wrapper):
     """
     Environment wrapper to make ``gym.Env`` align with DI-engine definitions, so as to use utilities in DI-engine.
     It changes ``step``, ``reset`` and ``info`` method of ``gym.Env``, while others are straightly delivered.
 
     :Arguments:
-        - env (BaseCarlaEnv): The environment to be wrapped.
+        - env (BaseDriveEnv): The environment to be wrapped.
         - cfg (Dict): Config dict.
 
     :Interfaces: reset, step, info, render, seed, close
@@ -28,7 +28,7 @@ class CarlaEnvWrapper(gym.Wrapper):
 
     config = dict()
 
-    def __init__(self, env: BaseCarlaEnv, cfg: Dict = None, **kwargs) -> None:
+    def __init__(self, env: BaseDriveEnv, cfg: Dict = None, **kwargs) -> None:
         if cfg is None:
             self._cfg = self.__class__.default_config()
         elif 'cfg_type' not in cfg:
@@ -47,7 +47,9 @@ class CarlaEnvWrapper(gym.Wrapper):
             Any: Observations from environment
         """
         obs = self.env.reset(*args, **kwargs)
-        obs = to_ndarray(obs)
+        obs = to_ndarray(obs, dtype=np.float32)
+        if isinstance(obs, np.ndarray) and len(obs.shape) == 3:
+            obs = obs.transpose((2, 0, 1))
         self._final_eval_reward = 0.0
         return obs
 
@@ -68,11 +70,18 @@ class CarlaEnvWrapper(gym.Wrapper):
 
         obs, rew, done, info = self.env.step(action)
         self._final_eval_reward += rew
-        obs = to_ndarray(obs)
+        obs = to_ndarray(obs, dtype=np.float32)
+        if isinstance(obs, np.ndarray) and len(obs.shape) == 3:
+            obs = obs.transpose((2, 0, 1))
         rew = to_ndarray([rew], dtype=np.float32)
         if done:
             info['final_eval_reward'] = self._final_eval_reward
         return BaseEnvTimestep(obs, rew, done, info)
+
+    def seed(self, seed: int, dynamic_seed: bool = True) -> None:
+        self._seed = seed
+        self._dynamic_seed = dynamic_seed
+        np.random.seed(self._seed)
 
     def info(self) -> BaseEnvInfo:
         """
@@ -83,9 +92,25 @@ class CarlaEnvWrapper(gym.Wrapper):
         :Returns:
             BaseEnvInfo: Env information instance defined in DI-engine.
         """
-        obs_space = self.env.observation_space
-        act_space = self.env.action_space
-        return BaseEnvInfo(agent_num=1, obs_space=obs_space, act_space=act_space, use_wrappers=None)
+        obs_space = EnvElementInfo(shape=self.env.observation_space, value={'min': 0., 'max': 1., 'dtype': np.float32})
+        act_space = EnvElementInfo(
+            shape=self.env.action_space,
+            value={
+                'min': np.float32("-inf"),
+                'max': np.float32("inf"),
+                'dtype': np.float32
+            },
+        )
+        rew_space = EnvElementInfo(
+            shape=1,
+            value={
+                'min': np.float32("-inf"),
+                'max': np.float32("inf")
+            },
+        )
+        return BaseEnvInfo(
+            agent_num=1, obs_space=obs_space, act_space=act_space, rew_space=rew_space, use_wrappers=None
+        )
 
     def enable_save_replay(self, replay_path: Optional[str] = None) -> None:
         if replay_path is None:
@@ -106,7 +131,7 @@ class CarlaEnvWrapper(gym.Wrapper):
         self.env.render()
 
 
-class BenchmarkEnvWrapper(CarlaEnvWrapper):
+class BenchmarkEnvWrapper(DriveEnvWrapper):
     """
     Environment Wrapper for Carla Benchmark suite evaluations. It wraps an environment with Benchmark
     suite so that the env will always run with a benchmark suite setting. It has 2 mode to get reset
@@ -114,7 +139,7 @@ class BenchmarkEnvWrapper(CarlaEnvWrapper):
     order.
 
     :Arguments:
-        - env (BaseCarlaEnv): The environment to be wrapped.
+        - env (BaseDriveEnv): The environment to be wrapped.
         - cfg (Dict): Config dict.
     """
 
@@ -124,7 +149,7 @@ class BenchmarkEnvWrapper(CarlaEnvWrapper):
         mode='random',
     )
 
-    def __init__(self, env: BaseCarlaEnv, cfg: Dict, **kwargs) -> None:
+    def __init__(self, env: BaseDriveEnv, cfg: Dict, **kwargs) -> None:
         super().__init__(env, cfg=cfg, **kwargs)
         suite = self._cfg.suite
         benchmark_dir = self._cfg.benchmark_dir
@@ -208,9 +233,9 @@ class BenchmarkEnvWrapper(CarlaEnvWrapper):
 
 
 # TODO: complete scenario env wrapper
-class ScenarioEnvWrapper(CarlaEnvWrapper):
+class ScenarioEnvWrapper(DriveEnvWrapper):
 
     config = dict()
 
-    def __init__(self, env: BaseCarlaEnv, cfg: Dict, **kwargs) -> None:
+    def __init__(self, env: BaseDriveEnv, cfg: Dict, **kwargs) -> None:
         super().__init__(env, cfg=cfg, **kwargs)

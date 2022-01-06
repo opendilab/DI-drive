@@ -40,11 +40,7 @@ class CILRSPolicy(BaseCarlaPolicy):
         ),
     )
 
-    def __init__(
-            self,
-            cfg: Dict,
-            enable_field: List = ['eval', 'learn']
-    ) -> None:
+    def __init__(self, cfg: Dict, enable_field: List = ['eval', 'learn']) -> None:
         super().__init__(cfg, enable_field=enable_field)
         self._cuda = self._cfg.cuda
         self._max_throttle = self._cfg.max_throttle

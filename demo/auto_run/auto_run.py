@@ -6,7 +6,7 @@ Description:
 from easydict import EasyDict
 from ding.utils import set_pkg_seed
 
-from core.envs import SimpleCarlaEnv, CarlaEnvWrapper
+from core.envs import SimpleCarlaEnv, DriveEnvWrapper
 from core.eval import SingleCarlaEvaluator
 from core.policy import AutoPIDPolicy
 from core.utils.others.tcp_helper import parse_carla_tcp
@@ -64,7 +64,7 @@ def main(cfg, seed=0):
     tcp_list = parse_carla_tcp(cfg.server)
     host, port = tcp_list[0]
 
-    carla_env = CarlaEnvWrapper(SimpleCarlaEnv(cfg.env, host, port), cfg.env.wrapper)
+    carla_env = DriveEnvWrapper(SimpleCarlaEnv(cfg.env, host, port), cfg.env.wrapper)
     carla_env.seed(seed)
     set_pkg_seed(seed)
     auto_policy = AutoPIDPolicy(cfg.policy)

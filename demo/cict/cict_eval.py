@@ -14,7 +14,7 @@ from ding.envs import SyncSubprocessEnvManager
 from ding.utils import set_pkg_seed
 from ding.utils.default_helper import deep_merge_dicts
 
-from core.envs import SimpleCarlaEnv, CarlaEnvWrapper
+from core.envs import SimpleCarlaEnv, DriveEnvWrapper
 from core.eval import CarlaBenchmarkEvaluator
 from core.utils.others.tcp_helper import parse_carla_tcp
 from ding.torch_utils.data_helper import to_tensor
@@ -114,7 +114,7 @@ main_config.policy.update(policy_config)
 
 
 def wrapped_env(env_cfg, host, port, tm_port=None):
-    return CarlaEnvWrapper(SimpleCarlaEnv(env_cfg, host, port, tm_port))
+    return DriveEnvWrapper(SimpleCarlaEnv(env_cfg, host, port, tm_port))
 
 
 '''

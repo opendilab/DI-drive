@@ -3,7 +3,7 @@ import argparse
 import torch
 from easydict import EasyDict
 
-from core.envs import SimpleCarlaEnv, CarlaEnvWrapper
+from core.envs import SimpleCarlaEnv, DriveEnvWrapper
 from core.utils.others.tcp_helper import parse_carla_tcp
 from core.eval import SingleCarlaEvaluator
 from ding.policy import DQNPolicy, DDPGPolicy, TD3Policy, PPOPolicy, SACPolicy
@@ -89,9 +89,9 @@ def main(args, seed=0):
     host, port = tcp_list[0]
 
     if args.policy == 'dqn':
-        carla_env = CarlaEnvWrapper(DiscreteEnvWrapper(SimpleCarlaEnv(cfg.env, host, port)), cfg.env.wrapper)
+        carla_env = DriveEnvWrapper(DiscreteEnvWrapper(SimpleCarlaEnv(cfg.env, host, port)), cfg.env.wrapper)
     else:
-        carla_env = CarlaEnvWrapper(ContinuousEnvWrapper(SimpleCarlaEnv(cfg.env, host, port)), cfg.env.wrapper)
+        carla_env = DriveEnvWrapper(ContinuousEnvWrapper(SimpleCarlaEnv(cfg.env, host, port)), cfg.env.wrapper)
     carla_env.seed(seed)
     set_pkg_seed(seed)
 

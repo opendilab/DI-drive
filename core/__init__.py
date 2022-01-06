@@ -4,3 +4,5 @@ __DESCRIPTION__ = "Decision AI Auto-Driving Platform"
 __AUTHOR__ = "OpenDILab Contributors"
 __AUTHOR_EMAIL__ = "opendilab.contact@gmail.com"
 __version__ = __VERSION__
+
+SIMULATORS = ['metadrive']

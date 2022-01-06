@@ -13,13 +13,13 @@ from gym import utils
 from ding.utils.default_helper import deep_merge_dicts
 
 
-class BaseCarlaEnv(gym.Env, utils.EzPickle):
+class BaseDriveEnv(gym.Env, utils.EzPickle):
     """
     Base class for environments. It is inherited from `gym.Env` and uses the same interfaces.
-    All Carla Env class is supposed to inherit from this class.
+    All Drive Env class is supposed to inherit from this class.
 
     Note:
-        To run Reinforcement Learning on DI-engine platform, the environment should be wrapped with `CarlaEnvWrapper`.
+        To run Reinforcement Learning on DI-engine platform, the environment should be wrapped with `DingEnvWrapper`.
 
     :Arguments:
         - cfg (Dict): Config Dict.

@@ -3,11 +3,11 @@ import numpy as np
 from typing import Dict, Any
 import PIL
 
-from core.envs import CarlaEnvWrapper
+from core.envs import DriveEnvWrapper
 from core.utils.model_utils import common
 
 
-class CILRSEnvWrapper(CarlaEnvWrapper):
+class CILRSEnvWrapper(DriveEnvWrapper):
 
     config = dict(
         scale=1,

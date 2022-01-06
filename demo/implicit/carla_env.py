@@ -10,7 +10,7 @@ import carla
 import torch
 
 from core.simulators import CarlaSimulator
-from core.envs.base_carla_env import BaseCarlaEnv
+from core.envs.base_drive_env import BaseDriveEnv
 from models import ImplicitSupervisedModel
 from ding.envs import BaseEnv, BaseEnvTimestep
 from ding.torch_utils import to_ndarray, to_tensor
@@ -19,7 +19,7 @@ from utils import adapt_order, compute_angle, compute_point_line_dis, compute_ci
 Orders = Enum("Order", "Follow_Lane Straight Right Left ChangelaneLeft ChangelaneRight")
 
 
-class ImplicitCarlaEnv(BaseCarlaEnv):
+class ImplicitCarlaEnv(BaseDriveEnv):
     '''
     The Carla environment for RL training
     '''

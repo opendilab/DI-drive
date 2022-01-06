@@ -5,9 +5,9 @@ envs
     :maxdepth: 2
 
 
-BaseCarlaEnv
+BaseDriveEnv
 ===============
-.. autoclass:: core.envs.BaseCarlaEnv
+.. autoclass:: core.envs.BaseDriveEnv
     :members: 
 
 
@@ -23,9 +23,9 @@ ScenarioCarlaEnv
     :members: 
 
 
-CarlaEnvWrapper
+DriveEnvWrapper
 =======================
-.. autoclass:: core.envs.CarlaEnvWrapper
+.. autoclass:: core.envs.DriveEnvWrapper
     :members:
 
 

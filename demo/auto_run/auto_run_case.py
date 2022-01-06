@@ -3,7 +3,7 @@ import argparse
 from argparse import RawTextHelpFormatter
 from easydict import EasyDict
 
-from core.envs import CarlaEnvWrapper, ScenarioCarlaEnv
+from core.envs import DriveEnvWrapper, ScenarioCarlaEnv
 from core.policy import AutoPIDPolicy
 from ding.utils import set_pkg_seed
 from core.simulators.srunner.tools.route_parser import RouteParser
@@ -60,7 +60,7 @@ def main(args, cfg, seed=0):
     if args.scenario is not None:
         configs += ScenarioConfigurationParser.parse_scenario_configuration(args.scenario)
 
-    carla_env = CarlaEnvWrapper(ScenarioCarlaEnv(cfg.env, args.host, args.port))
+    carla_env = DriveEnvWrapper(ScenarioCarlaEnv(cfg.env, args.host, args.port))
     carla_env.seed(seed)
     set_pkg_seed(seed)
     auto_policy = AutoPIDPolicy(cfg.policy).eval_mode
