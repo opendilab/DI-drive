@@ -15,7 +15,7 @@ DI-drive Documentation
 
 Decision Intelligence Platform for Autonomous Driving simulation.
 
-Last updated on 2022.1.6
+Last updated on 2022.1.7
 
 -----
 
