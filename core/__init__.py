@@ -7,13 +7,13 @@ __version__ = __VERSION__
 
 SIMULATORS = ['carla', 'metadrive']
 
-if 'carla' in SIMULATORS:
-    try:
-        import carla
-    except:
-        raise ImportError("Import carla failed! Please install carla Python API first.")
-if 'metadrive' in SIMULATORS:
-    try:
-        import metadrive
-    except:
-        raise ImportError("Import metadrive failed! Please install metadrive simulator first.")
+# if 'carla' in SIMULATORS:
+#     try:
+#         import carla
+#     except:
+#         raise ImportError("Import carla failed! Please install carla Python API first.")
+# if 'metadrive' in SIMULATORS:
+#     try:
+#         import metadrive
+#     except:
+#         raise ImportError("Import metadrive failed! Please install metadrive simulator first.")
