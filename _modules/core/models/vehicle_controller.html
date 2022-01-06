@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>core.models.carla_controller &mdash; DI-drive 0.2.2 documentation</title>
+  <title>core.models.vehicle_controller &mdash; DI-drive 0.3.0 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.2.2
+                0.3.0
               </div>
             
           
@@ -148,7 +148,7 @@
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
-      <li>core.models.carla_controller</li>
+      <li>core.models.vehicle_controller</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -163,7 +163,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for core.models.carla_controller</h1><div class="highlight"><pre>
+  <h1>Source code for core.models.vehicle_controller</h1><div class="highlight"><pre>
 <span></span><span class="c1"># Copyright (c) # Copyright (c) 2018-2020 CVC.</span>
 <span class="c1">#</span>
 <span class="c1"># This work is licensed under the terms of the MIT license.</span>
@@ -174,8 +174,6 @@
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">carla</span>
-<span class="kn">from</span> <span class="nn">core.simulators.carla_data_provider</span> <span class="kn">import</span> <span class="n">CarlaDataProvider</span>
 
 
 <div class="viewcode-block" id="VehiclePIDController"><a class="viewcode-back" href="../../../api_doc/models.html#core.models.VehiclePIDController">[docs]</a><span class="k">class</span> <span class="nc">VehiclePIDController</span><span class="p">():</span>

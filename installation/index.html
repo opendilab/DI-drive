@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Installation &mdash; DI-drive 0.2.2 documentation</title>
+  <title>Installation &mdash; DI-drive 0.3.0 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.2.2
+                0.3.0
               </div>
             
           
@@ -90,8 +90,11 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#get-and-install-di-drive">Get and install DI-drive</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#download-and-install-carla-python-api">Download and install Carla Python API</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#run-carla-server">Run Carla server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#additional-installation-for-carla">Additional Installation for Carla</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#download-and-install-carla-python-api">Download and install Carla Python API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#run-carla-server">Run Carla server</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -189,7 +192,7 @@
 <p>Python version: 3.6, 3.7</p>
 <p>PyTorch version: &gt;=1.4, &lt;=1.8</p>
 <p>DI-engine version: &gt;=0.2</p>
-<p>Hardware requirements: NVIDIA GPU with at least 4GB memory to run Carla</p>
+<p>Hardware requirements: NVIDIA GPU with at least 4GB memory <em>if you with to run Carla server</em></p>
 </div>
 <div class="section" id="get-and-install-di-drive">
 <h2>Get and install DI-drive<a class="headerlink" href="#get-and-install-di-drive" title="Permalink to this headline">¶</a></h2>
@@ -205,18 +208,33 @@ pip install . --user
 
 <span class="c1"># install for development(if you want to modify DI-drive)</span>
 pip install -e . --user
+
+<span class="c1"># install for automatically add MetaDrive simulator</span>
+pip install <span class="s1">&#39;.[metadrive]&#39;</span> --user
 </pre></div>
 </div>
-<p>We use DI-engine —— distributed Reinforcement Learning system to train and evaluate RL agent.
+<p>DI-drive uses <strong>DI-engine</strong> —— distributed Reinforcement Learning system to train and evaluate RL agent.
 If any questions raised when install DI-engine, please follow
 <a class="reference external" href="https://opendilab.github.io/DI-engine/installation/index.html">DI-engine installation</a> for help.
 Or try to install manually via PyPI:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install di-engine<span class="o">==</span><span class="m">0</span>.2
 </pre></div>
 </div>
+<p>DI-drive supports both <strong>Carla</strong> and <strong>MetaDrive</strong>. If you want to use Carla, refer to the next section.
+If you want to use MetaDrive, you can install DI-drive like above, or manually install via <code class="docutils literal notranslate"><span class="pre">pip</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install metadrive-simulator --user
+</pre></div>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can configure the simulator used by DI-drive in <code class="docutils literal notranslate"><span class="pre">core/__init__.py</span></code> .
+Only related modules will be imported in each file. By default all simulators are used.</p>
+</div>
+</div>
+<div class="section" id="additional-installation-for-carla">
+<h2>Additional Installation for Carla<a class="headerlink" href="#additional-installation-for-carla" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="download-and-install-carla-python-api">
-<h2>Download and install Carla Python API<a class="headerlink" href="#download-and-install-carla-python-api" title="Permalink to this headline">¶</a></h2>
+<h3>Download and install Carla Python API<a class="headerlink" href="#download-and-install-carla-python-api" title="Permalink to this headline">¶</a></h3>
 <p>DI-drive uses Carla simulator version 0.9.9. It is needed to install Carla Python API from their released pack.
 If you have any problem dealing with Carla, we record some common problem you may meet in the
 <a class="reference external" href="../faq/index.html">FAQ</a> page.</p>
@@ -245,7 +263,7 @@ easy_install --user carla-0.9.9-py3.7-linux-x86_64.egg
 <p>Then everything will be ok if no error raised.</p>
 </div>
 <div class="section" id="run-carla-server">
-<h2>Run Carla server<a class="headerlink" href="#run-carla-server" title="Permalink to this headline">¶</a></h2>
+<h3>Run Carla server<a class="headerlink" href="#run-carla-server" title="Permalink to this headline">¶</a></h3>
 <p>To use Carla simulator you need to run a Carla server and use its IP host and port to connect to it.</p>
 <ul class="simple">
 <li><p>run a Carla server</p></li>
@@ -267,6 +285,7 @@ You will see:</p>
 <p>If running successfully, you will see:</p>
 <img alt="installation_2" src="../_images/installation_2.png" />
 <p>Now you can use DI-drive to run code under this server.</p>
+</div>
 </div>
 </div>
 

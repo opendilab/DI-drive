@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>DI-drive Documentation &mdash; DI-drive 0.2.2 documentation</title>
+  <title>DI-drive Documentation &mdash; DI-drive 0.3.0 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.2.2
+                0.3.0
               </div>
             
           
@@ -171,17 +171,17 @@
 <div class="toctree-wrapper compound">
 </div>
 <div class="figure align-default">
-<a class="reference internal image-reference" href="_images/DI-drive.png"><img alt="DI-drive" src="_images/DI-drive.png" style="width: 300px;" /></a>
+<a class="reference internal image-reference" href="_images/di-drive_logo.png"><img alt="DI-drive" src="_images/di-drive_logo.png" style="width: 300px;" /></a>
 </div>
 <p>Decision Intelligence Platform for Autonomous Driving simulation.</p>
-<p>Last updated on 2021.12.3</p>
+<p>Last updated on 2022.1.7</p>
 <hr class="docutils" />
 <p><strong>DI-drive</strong> is an open-sourece application platform under <strong>OpenDILab</strong>.
 <strong>DI-drive</strong> applies Deep Learning method to decision, planning and controlling task in Autonomous Driving simulation,
 with <strong>high ease of use</strong> and <strong>low difficulty to hands-on</strong>.
 <strong>DI-drive</strong> designes <strong>Casezoo</strong> to make simulation environment closer to real driving.
 <strong>DI-drive</strong> develops Deep Learning driving policy with <a class="reference external" href="http://pytorch.org">Pytorch</a> and <a class="reference external" href="https://github.com/opendilab/DI-engine">DI-engine</a>
-and mainly uses <a class="reference external" href="http://carla.org">Carla</a> simulator.</p>
+and supports <a class="reference external" href="http://carla.org">Carla</a> and <a class="reference external" href="https://decisionforce.github.io/metadrive">MetaDrive</a> simulator.</p>
 <div class="section" id="main-features-for-di-drive">
 <h2>Main features for <strong>DI-drive</strong><a class="headerlink" href="#main-features-for-di-drive" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
@@ -226,8 +226,7 @@ provided quick start guidence.</p>
 <li class="toctree-l1"><a class="reference internal" href="installation/index.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="installation/index.html#prerequisites">Prerequisites</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation/index.html#get-and-install-di-drive">Get and install DI-drive</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/index.html#download-and-install-carla-python-api">Download and install Carla Python API</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/index.html#run-carla-server">Run Carla server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/index.html#additional-installation-for-carla">Additional Installation for Carla</a></li>
 </ul>
 </li>
 </ul>
@@ -256,8 +255,8 @@ provided quick start guidence.</p>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="tutorial/rl_tutorial.html">Simple Reinforcement Learning</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="tutorial/rl_tutorial.html#prerequisites">Prerequisites</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tutorial/rl_tutorial.html#di-drive-rl-training-using-di-engine">DI-drive RL training using DI-engine</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tutorial/rl_tutorial.html#evaluate-and-test-the-trained-model">Evaluate and test the trained model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/rl_tutorial.html#carla-rl-tutorial">Carla RL Tutorial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/rl_tutorial.html#metadrive-rl-tutorial">MetaDrive RL Tutorial</a></li>
 </ul>
 </li>
 </ul>
@@ -267,12 +266,12 @@ provided quick start guidence.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="features/index.html">Features</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="features/simulator_feature.html">Simulator Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="features/simulator_feature.html">Carla Simulator Features</a></li>
 <li class="toctree-l2"><a class="reference internal" href="features/policy_feature.html">Policy Features</a></li>
 <li class="toctree-l2"><a class="reference internal" href="features/visualize.html">Visualization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="features/datasets.html">Datasets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="features/carla_benchmark.html">Benchmark Evaluation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="features/casezoo.html">Scenario and Casezoo Evaluation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="features/carla_benchmark.html">Carla Benchmark Evaluation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="features/casezoo.html">Carla Scenario and Casezoo Evaluation</a></li>
 </ul>
 </li>
 </ul>

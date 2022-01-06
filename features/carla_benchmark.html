@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Benchmark Evaluation &mdash; DI-drive 0.2.2 documentation</title>
+  <title>Carla Benchmark Evaluation &mdash; DI-drive 0.3.0 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Scenario and Casezoo Evaluation" href="casezoo.html" />
+    <link rel="next" title="Carla Scenario and Casezoo Evaluation" href="casezoo.html" />
     <link rel="prev" title="Datasets" href="datasets.html" /> 
 </head>
 
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.2.2
+                0.3.0
               </div>
             
           
@@ -94,17 +94,17 @@
 </ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Features</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="simulator_feature.html">Simulator Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulator_feature.html">Carla Simulator Features</a></li>
 <li class="toctree-l2"><a class="reference internal" href="policy_feature.html">Policy Features</a></li>
 <li class="toctree-l2"><a class="reference internal" href="visualize.html">Visualization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="datasets.html">Datasets</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Benchmark Evaluation</a><ul>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Carla Benchmark Evaluation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#sample-images">Sample images</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#performance-metrics">Performance Metrics</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#reference">Reference</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="casezoo.html">Scenario and Casezoo Evaluation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="casezoo.html">Carla Scenario and Casezoo Evaluation</a></li>
 </ul>
 </li>
 </ul>
@@ -163,7 +163,7 @@
         
           <li><a href="index.html">Features</a> &raquo;</li>
         
-      <li>Benchmark Evaluation</li>
+      <li>Carla Benchmark Evaluation</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -182,8 +182,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="benchmark-evaluation">
-<h1>Benchmark Evaluation<a class="headerlink" href="#benchmark-evaluation" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="carla-benchmark-evaluation">
+<h1>Carla Benchmark Evaluation<a class="headerlink" href="#carla-benchmark-evaluation" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
 <p>DI-drive provides hands-on benchmark environment settings <sup>[1]</sup> for Carla simulator. The benchmark setting consists of several suites.
@@ -194,7 +194,7 @@ routes. Other settings like weathers and NPCs are defined by the number of versi
 for example <em>town1</em> represents all commonly used suites in ‘town1’.</p>
 <p>Carla benchmark setting is widely used in other literature as training and evaluation standard.
 DI-drive allows users to quickly build up an environment with a benchmark suite setting by deploying
-<a class="reference internal" href="../api_doc/envs.html#core.envs.BenchmarkEnvWrapper" title="core.envs.carla_env_wrapper.BenchmarkEnvWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">BenchmarkEnvWrapper</span></code></a>. Once an environment is wrapped, it will ignore
+<code class="xref py py-class docutils literal notranslate"><span class="pre">BenchmarkEnvWrapper</span></code>. Once an environment is wrapped, it will ignore
 the passed arguments in <code class="docutils literal notranslate"><span class="pre">reset</span></code> method, and choose one from the suite’s route list according to configuration. It can be used
 in RL training, to sampling data in benchmark environment settings.</p>
 <p>Also, DI-drive deploys <a class="reference internal" href="../api_doc/eval.html#core.eval.CarlaBenchmarkEvaluator" title="core.eval.carla_benchmark_evaluator.CarlaBenchmarkEvaluator"><code class="xref py py-class docutils literal notranslate"><span class="pre">CarlaBenchmarkEvaluator</span></code></a> and
@@ -431,7 +431,7 @@ Here we show benchmark settings for ‘Town01’ and ‘Town02’<sup>[2]</sup>.
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="casezoo.html" class="btn btn-neutral float-right" title="Scenario and Casezoo Evaluation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="casezoo.html" class="btn btn-neutral float-right" title="Carla Scenario and Casezoo Evaluation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="datasets.html" class="btn btn-neutral float-left" title="Datasets" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

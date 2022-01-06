@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Tutorial &mdash; DI-drive 0.3.0 documentation</title>
+  <title>MetaDrive Macro RL &mdash; DI-drive 0.3.0 documentation</title>
   
 
   
@@ -37,8 +37,8 @@
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Core Concepts and Processes" href="core_concepts.html" />
-    <link rel="prev" title="Installation" href="../installation/index.html" /> 
+    <link rel="next" title="API Doc" href="../api_doc/index.html" />
+    <link rel="prev" title="Latent Reinforcement Learning" href="latent_rl.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -89,21 +89,27 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
 </ul>
-<ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="core_concepts.html">Core Concepts and Processes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="carla_tutorial.html">Carla tutorial</a></li>
-<li class="toctree-l2"><a class="reference internal" href="auto_run.html">Auto policy running and visualization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="il_tutorial.html">Simple Imitation Learning</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rl_tutorial.html">Simple Reinforcement Learning</a></li>
-</ul>
-</li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/index.html">Tutorial</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../features/index.html">Features</a></li>
 </ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../model_zoo/index.html">Model Zoo</a></li>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Model Zoo</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#imitation-learning-model-zoo">Imitation Learning Model Zoo</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#reinforcement-learning-model-zoo">Reinforcement Learning Model Zoo</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="simple_rl.html">BeV Speed End-to-end Reinforcement Learning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="implicit.html">End-to-End Model-Free Reinforcement Learning for Urban Driving using Implicit Affordances</a></li>
+<li class="toctree-l3"><a class="reference internal" href="latent_rl.html">Latent Reinforcement Learning</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">MetaDrive Macro RL</a><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#other-method">Other Method</a></li>
+</ul>
+</li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../api_doc/index.html">API Doc</a></li>
@@ -155,13 +161,15 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-      <li>Tutorial</li>
+          <li><a href="index.html">Model Zoo</a> &raquo;</li>
+        
+      <li>MetaDrive Macro RL</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/tutorial/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/model_zoo/md_macro.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -174,37 +182,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="tutorial">
-<h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="metadrive-macro-rl">
+<h1>MetaDrive Macro RL<a class="headerlink" href="#metadrive-macro-rl" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="core_concepts.html">Core Concepts and Processes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="carla_tutorial.html">Carla tutorial</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="carla_tutorial.html#basic-concept-of-carla">Basic Concept of Carla</a></li>
-<li class="toctree-l2"><a class="reference internal" href="carla_tutorial.html#quickly-create-carla-server-via-docker">Quickly Create Carla server via Docker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="carla_tutorial.html#carla-server-settings">Carla server settings</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="auto_run.html">Auto policy running and visualization</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="auto_run.html#running-with-start-and-target-waypoint">Running with start and target waypoint</a></li>
-<li class="toctree-l2"><a class="reference internal" href="auto_run.html#running-with-scenario-in-casezoo">Running with scenario in Casezoo</a></li>
-<li class="toctree-l2"><a class="reference internal" href="auto_run.html#visualization">Visualization</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="il_tutorial.html">Simple Imitation Learning</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="il_tutorial.html#datasets-collection">Datasets collection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="il_tutorial.html#model-training">Model training</a></li>
-<li class="toctree-l2"><a class="reference internal" href="il_tutorial.html#model-evaluation">Model evaluation</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="rl_tutorial.html">Simple Reinforcement Learning</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="rl_tutorial.html#prerequisites">Prerequisites</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rl_tutorial.html#carla-rl-tutorial">Carla RL Tutorial</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rl_tutorial.html#metadrive-rl-tutorial">MetaDrive RL Tutorial</a></li>
-</ul>
-</li>
-</ul>
 </div>
+<p>Pending</p>
 </div>
 
 
@@ -215,10 +197,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="core_concepts.html" class="btn btn-neutral float-right" title="Core Concepts and Processes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../api_doc/index.html" class="btn btn-neutral float-right" title="API Doc" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../installation/index.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="latent_rl.html" class="btn btn-neutral float-left" title="Latent Reinforcement Learning" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

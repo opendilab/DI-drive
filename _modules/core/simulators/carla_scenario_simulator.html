@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>core.simulators.carla_scenario_simulator &mdash; DI-drive 0.2.2 documentation</title>
+  <title>core.simulators.carla_scenario_simulator &mdash; DI-drive 0.3.0 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.2.2
+                0.3.0
               </div>
             
           
@@ -196,7 +196,7 @@
 <span class="sd">        - host (str, optional): TCP host Carla client link to. Defaults to &#39;localhost&#39;.</span>
 <span class="sd">        - port (int, optional): TCP port Carla client link to. Defaults to 9000.</span>
 <span class="sd">        - tm_port (int, optional): Traffic manager port Carla client link to. Defaults to None.</span>
-<span class="sd">        - timeout (float, optional): Carla client link timeout. Defaults to 10.0.</span>
+<span class="sd">        - timeout (float, optional): Carla client link timeout. Defaults to 60.0.</span>
 
 <span class="sd">    :Interfaces:</span>
 <span class="sd">        init, get_state, get_sensor_data, get_navigation, get_information, apply_control, run_step, clean_up</span>
@@ -238,7 +238,7 @@
             <span class="n">host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;localhost&#39;</span><span class="p">,</span>
             <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">9000</span><span class="p">,</span>
             <span class="n">tm_port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">9050</span><span class="p">,</span>
-            <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">60.0</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>

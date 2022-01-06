@@ -6,30 +6,36 @@ Simple Reinforcement Learning
 
 
 **DI-drive** + **DI-engine** make RL for Autonomous Driving very easy. Here we show how to
-use **DI-drive** to run a simple Reinforcement Learning driving policy.
-The policy takes a small Bird-eye View image together with
-current speed as input, and directly outputs control signals.
+use **DI-drive** to run a simple Reinforcement Learning driving policy with Carla and MetaDrive
+separately. 
 
 Prerequisites
-----------------
+=====================
 
 Ubuntu 16.04 system + Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz + 32G
 memory + GPU1060
 
 
-DI-drive RL training using DI-engine
+Carla RL Tutorial
+=======================
+
+DI-drive support several RL policies and provide a simple RL env running with Carla server.
+The policy takes a small Bird-eye View image together with
+current speed as input, and directly outputs control signals.
+
+RL training using DI-engine
 --------------------------------------
 
 We build simple RL demos that can run varies RL algorithm with the aforementioned simple environment setting.
 All the code can be found in ``demo/simple_rl``, including training, evaluating and testing.
 
 Here we show how to run the DQN demo. It follows the standard deployment of a DI-engine RL entry.
-Other RL demo is written in same way.
+Other RL policies run in same way.
 
 .. code:: bash
 
     cd demo/simple_rl
-    python dqn_train.py
+    python simple_rl_train.py -p dqn
 
 The config part defines the env and policy settings. Notes that you need to change the Carla server
 host and port, and modify the environment nums according to yours. By default it uses 8 Carla servers on
@@ -83,7 +89,7 @@ After training, you can evaluate the trained model on a benchmark suite. Simply 
 
 .. code:: bash
 
-    python dqn_eval.py
+    python simple_rl_eval.py -p dqn -c PATH_TO_YOUR_CKPT
 
 You may need to change Carla server numbers and settints, change the suite you want to evaluate, and add
 your pre-trained weights in policy's config.
@@ -120,7 +126,7 @@ Also, you can test the policy in a town route with a visualized screen. Simply r
 
 .. code:: bash
 
-    python dqn_test.py
+    python simple_rl_test.py -p dqn -c PATH_TO_YOUR_CKPT
 
 You may need to change Carla server settints, switch on/off visualization or save a replay gif/video
 and add your pre-trained weights in policy's config.
@@ -152,4 +158,33 @@ and add your pre-trained weights in policy's config.
             ),
             ...
         ),
+    )
+
+
+MetaDrive RL Tutorial
+===========================
+
+DI-drive provide a simple entry that can run MetaDrive default environments
+with DI-engine policies. The training entry can be found in `demo/metadrive`
+
+.. code:: bash
+
+    cd demo/metadrive
+    python basic_env_train.py
+
+MetaDrive has standard `gym` environments. Adding an ``EnvWrapper`` together with
+other components and pipeline in DI-engine, RL experiments is able to run.
+
+Here, we use "MetaDrive-1000envs-v0" to train and "MetaDrive-validation-v0" to evaluate
+an on-policy PPO policy. You can modify the env num in config to suit your device.
+
+.. code:: python
+
+    metadrive_basic_config = dict(
+        env=dict(
+            ...
+            collector_env_num=4,
+            evaluator_env_num=1,
+        ),
+        ...
     )

@@ -21,6 +21,7 @@ Reinforcement Learning Model Zoo
    simple_rl
    implicit
    latent_rl
+   md_macro
 
 
 Other Method
