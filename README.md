@@ -24,16 +24,18 @@ and most importantly, to **put these all together!**
 
 **DI-drive** uses [DI-engine](https://github.com/opendilab/DI-engine), a Reinforcement Learning
 platform to build most of the running modules and demos. **DI-drive** currently supports [Carla](http://carla.org),
-an open-source Autonomous Drining simulator to operate driving simualtion.
+an open-source Autonomous Drining simulator to operate driving simualtion, and [MetaDrive](https://decisionforce.github.io/metadrive/),
+a diverse driving scenarios for Generalizable Reinforcement Learning. Users can specify any of them to run in global config under `core`.
 
 ## Installation
 
-**DI-drive** needs to run [Carla](http://carla.org) server for simulation. Besides, The client needs to have the following modules installed:
+**DI-drive** needs to have the following modules installed:
 
 - Pytorch
 - DI-engine
-- Carla Python API
 
+[MetaDrive](https://decisionforce.github.io/metadrive/) can be easily installed via `pip`.
+If [Carla](http://carla.org) server is used for simulation, users need to install 'Carla Python API' in addition.
 Please refer to the [documentation](https://opendilab.github.io/DI-drive/) for details about installation and user guide of **DI-drive**.
 We provide IL and RL tutorials, and full guidance for quick run existing policy for beginners.
 
@@ -52,6 +54,7 @@ Please refer to [FAQ](https://opendilab.github.io/DI-drive/faq/index.html) for f
 - BeV Speed RL
 - [Implicit Affordance](https://arxiv.org/abs/1911.10868)
 - [Latent DRL](https://arxiv.org/abs/2001.08726)
+- MetaDrive Macro RL
 
 ## DI-drive Casezoo
 
@@ -71,10 +74,12 @@ DI-engine released under the Apache 2.0 license.
 
 ## Citation
 
+```latex
 @misc{didrive,
     title={{DI-drive: OpenDILab} Decision Intelligence platform for Autonomous Driving simulation},
     author={DI-drive Contributors},
     publisher = {GitHub},
-    howpublished = {\url{`https://github.com/opendilab/DI-drive`}},
+    howpublished = {\url{https://github.com/opendilab/DI-drive}},
     year={2021},
 }
+```

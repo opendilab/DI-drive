@@ -23,6 +23,11 @@ ScenarioCarlaEnv
     :members: 
 
 
+MetaDriveMacroEnv
+=====================
+.. autoclass:: core.envs.MetaDriveMacroEnv
+
+
 DriveEnvWrapper
 =======================
 .. autoclass:: core.envs.DriveEnvWrapper

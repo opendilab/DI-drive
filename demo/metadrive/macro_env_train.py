@@ -8,15 +8,13 @@ from ding.envs import BaseEnvManager, SyncSubprocessEnvManager
 from ding.config import compile_config
 from ding.policy import PPOPolicy
 from ding.worker import SampleSerialCollector, InteractionSerialEvaluator, BaseLearner
-from core.envs import DriveEnvWrapper, MetaDriveMacroEnv
+from core.envs import DriveEnvWrapper
 
 
 metadrive_rush_config = dict(
     exp_name = 'metadrive_macro_ppo',
     env=dict(
-        metadrive=dict(
-
-        ),
+        metadrive=dict(),
         manager=dict(
             shared_memory=False,
             max_retry=2,
@@ -52,7 +50,7 @@ main_config = EasyDict(metadrive_rush_config)
 
 
 def wrapped_env(env_cfg, wrapper_cfg=None):
-    return DriveEnvWrapper(MetaDriveMacroEnv(env_cfg), wrapper_cfg)
+    return DriveEnvWrapper(gym.make("Macro-v1", config=env_cfg), wrapper_cfg)
 
 
 def main(cfg):

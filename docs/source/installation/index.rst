@@ -19,7 +19,7 @@ PyTorch version: >=1.4, <=1.8
 
 DI-engine version: >=0.2
 
-Hardware requirements: NVIDIA GPU with at least 4GB memory to run Carla
+Hardware requirements: NVIDIA GPU with at least 4GB memory *if you with to run Carla server*
 
 Get and install DI-drive
 ===========================
@@ -43,7 +43,10 @@ Install DI-drive
     # install for development(if you want to modify DI-drive)
     pip install -e . --user
 
-We use DI-engine —— distributed Reinforcement Learning system to train and evaluate RL agent.
+    # install for automatically add MetaDrive simulator
+    pip install '.[metadrive]' --user
+
+DI-drive uses **DI-engine** —— distributed Reinforcement Learning system to train and evaluate RL agent.
 If any questions raised when install DI-engine, please follow 
 `DI-engine installation <https://opendilab.github.io/DI-engine/installation/index.html>`_ for help.
 Or try to install manually via PyPI:
@@ -52,8 +55,25 @@ Or try to install manually via PyPI:
 
     pip install di-engine==0.2
 
+
+DI-drive supports both **Carla** and **MetaDrive**. If you want to use Carla, refer to the next section.
+If you want to use MetaDrive, you can install DI-drive like above, or manually install via ``pip``.
+
+.. code-block:: bash
+
+    pip install metadrive-simulator --user
+
+.. note::
+
+    You can configure the simulator used by DI-drive in ``core/__init__.py`` .
+    Only related modules will be imported in each file. By default all simulators are used.
+
+
+Additional Installation for Carla
+===================================
+
 Download and install Carla Python API
-============================================
+----------------------------------------
 
 DI-drive uses Carla simulator version 0.9.9. It is needed to install Carla Python API from their released pack.
 If you have any problem dealing with Carla, we record some common problem you may meet in the 
@@ -84,7 +104,7 @@ If you have any problem dealing with Carla, we record some common problem you ma
 Then everything will be ok if no error raised.
 
 Run Carla server
-=======================
+------------------------
 
 To use Carla simulator you need to run a Carla server and use its IP host and port to connect to it.
 

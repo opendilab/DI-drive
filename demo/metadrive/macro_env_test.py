@@ -1,10 +1,11 @@
 import argparse
 import random
-
+import gym
 import numpy as np
 import matplotlib.pyplot as plt
+
 from metadrive.constants import HELP_MESSAGE
-from core.envs import MetaDriveMacroEnv
+import core.envs
 
 
 def draw_multi_channels_top_down_observation(obs, show_time=4):
@@ -43,7 +44,7 @@ def main(args):
     )
     if args.observation == "rgb_camera":
         config.update(dict(offscreen_render=True))
-    env = MetaDriveMacroEnv(config)
+    env = gym.make("Macro-v1", config=config)
 
     obs = env.reset()
     print(HELP_MESSAGE)

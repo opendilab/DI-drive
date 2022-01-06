@@ -11,8 +11,8 @@ from ding.worker import SampleSerialCollector, InteractionSerialEvaluator, BaseL
 from core.envs import DriveEnvWrapper
 
 
-metadrive_debug_config = dict(
-    exp_name = 'debug',
+metadrive_basic_config = dict(
+    exp_name = 'metadrive_basic_ppo',
     env=dict(
         metadrive=dict(use_render=False),
         manager=dict(

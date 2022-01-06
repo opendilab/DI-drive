@@ -9,6 +9,7 @@ from typing import Union, Dict, AnyStr, Tuple, Optional
 from gym.envs.registration import register
 import logging
 
+from ding.utils import ENV_REGISTRY
 from core.utils.simulator_utils.md_utils.discrete_policy import DiscreteMetaAction
 from core.utils.simulator_utils.md_utils.agent_manager_utils import MacroAgentManager
 from core.utils.simulator_utils.md_utils.engine_utils import initialize_engine, close_engine, \
@@ -96,7 +97,20 @@ DIDRIVE_DEFAULT_CONFIG = dict(
 )
 
 
+@ENV_REGISTRY.register("md_macro")
 class MetaDriveMacroEnv(BaseEnv):
+    """
+    MetaDrive single-agent env controlled by a "macro" action. The agent is controlled by
+    a discrete action set. Each one related to a series of control signals that can complish
+    the macro action defined in the set. The observation is a top-down view image with 5 channel
+    containing the temporary and history information of surroundings. This env is registered
+    and can be used via `gym.make`.
+
+    :Arguments:
+        - config (Dict): Env config dict.
+
+    :Interfaces: reset, step, close, render, seed
+    """
 
     @classmethod
     def default_config(cls) -> "Config":
@@ -107,7 +121,7 @@ class MetaDriveMacroEnv(BaseEnv):
         config["map_config"].register_type("config", None)
         return config
 
-    def __init__(self, config: dict = None):
+    def __init__(self, config: dict = None) -> None:
         merged_config = self._merge_extra_config(config)
         global_config = self._post_process_config(merged_config)
         self.config = global_config
@@ -440,9 +454,3 @@ class MetaDriveMacroEnv(BaseEnv):
         )
         #o = TopDownMultiChannel(vehicle_config, self, False)
         return o
-
-
-register(
-    id='Macro-v1',
-    entry_point='core.envs.md_macro_env:MetaDriveMacroEnv',
-)
