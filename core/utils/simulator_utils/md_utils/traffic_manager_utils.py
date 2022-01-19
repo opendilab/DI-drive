@@ -74,6 +74,11 @@ class MacroTrafficManager(TrafficManager):
     def _create_synch_vehicles(self, map: BaseMap, traffic_density: float):
         vehicle_num = 0
         for block in map.blocks[1:]:
+            xb_dist = min(abs(block.bounding_box[0]), abs(block.bounding_box[1]))
+            yb_dist = min(abs(block.bounding_box[2]), abs(block.bounding_box[3]))
+            dist_constrain = 200
+            if xb_dist * xb_dist + yb_dist * yb_dist > dist_constrain * dist_constrain:
+                continue
             trigger_lanes = block.get_intermediate_spawn_lanes()
             if self.engine.global_config["need_inverse_traffic"] and block.ID in ["S", "C", "r", "R"]:
                 neg_lanes = block.block_network.get_negative_lanes()

@@ -32,7 +32,7 @@ def initialize_engine(env_global_config):
 
 
 def get_engine():
-    return BaseEngine.singleton
+    return MacroBaseEngine.singleton
 
 
 def get_object(object_name):
@@ -40,13 +40,13 @@ def get_object(object_name):
 
 
 def engine_initialized():
-    return False if BaseEngine.singleton is None else True
+    return False if MacroBaseEngine.singleton is None else True
 
 
 def close_engine():
-    if BaseEngine.singleton is not None:
-        BaseEngine.singleton.close()
-        BaseEngine.singleton = None
+    if MacroBaseEngine.singleton is not None:
+        MacroBaseEngine.singleton.close()
+        MacroBaseEngine.singleton = None
 
 
 def get_global_config():

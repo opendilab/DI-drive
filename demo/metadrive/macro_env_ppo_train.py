@@ -11,10 +11,10 @@ from ding.worker import SampleSerialCollector, InteractionSerialEvaluator, BaseL
 from core.envs import DriveEnvWrapper
 
 
-metadrive_basic_config = dict(
-    exp_name = 'metadrive_basic_ppo',
+metadrive_macro_config = dict(
+    exp_name = 'metadrive_macro_ppo',
     env=dict(
-        metadrive=dict(use_render=False),
+        metadrive=dict(use_render=False,),
         manager=dict(
             shared_memory=False,
             max_retry=2,
@@ -24,17 +24,19 @@ metadrive_basic_config = dict(
         stop_value=99999,
         collector_env_num=4,
         evaluator_env_num=1,
+        wrapper=dict(),
     ),
     policy=dict(
         cuda=True,
-        continuous=True,
+        continuous=False,
         model=dict(
-            obs_shape=259,
-            action_shape=2,
-            continuous=True,
+            obs_shape=[5, 200, 200],
+            action_shape=5,
+            continuous=False,
+            encoder_hidden_size_list=[128, 128, 64],
         ),
         learn=dict(
-            epoch_per_collect=2,
+            epoch_per_collect=10,
             batch_size=64,
             learning_rate=3e-4,
         ),
@@ -44,17 +46,11 @@ metadrive_basic_config = dict(
     ),
 )
 
-main_config = EasyDict(metadrive_basic_config)
+main_config = EasyDict(metadrive_macro_config)
 
 
-def wrapped_train_env(env_cfg):
-    env = gym.make("MetaDrive-1000envs-v0", config=env_cfg)
-    return DriveEnvWrapper(env)
-
-
-def wrapped_eval_env(env_cfg):
-    env = gym.make("MetaDrive-validation-v0", config=env_cfg)
-    return DriveEnvWrapper(env)
+def wrapped_env(env_cfg, wrapper_cfg=None):
+    return DriveEnvWrapper(gym.make("Macro-v1", config=env_cfg), wrapper_cfg)
 
 
 def main(cfg):
@@ -66,14 +62,15 @@ def main(cfg):
         SampleSerialCollector,
         InteractionSerialEvaluator
     )
+    print(cfg.policy.collect.collector)
 
     collector_env_num, evaluator_env_num = cfg.env.collector_env_num, cfg.env.evaluator_env_num
     collector_env = SyncSubprocessEnvManager(
-        env_fn=[partial(wrapped_train_env, cfg.env.metadrive) for _ in range(collector_env_num)],
+        env_fn=[partial(wrapped_env, cfg.env.metadrive) for _ in range(collector_env_num)],
         cfg=cfg.env.manager,
     )
     evaluator_env = SyncSubprocessEnvManager(
-        env_fn=[partial(wrapped_eval_env, cfg.env.metadrive) for _ in range(evaluator_env_num)],
+        env_fn=[partial(wrapped_env, cfg.env.metadrive) for _ in range(evaluator_env_num)],
         cfg=cfg.env.manager,
     )
 

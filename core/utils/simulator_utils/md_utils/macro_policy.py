@@ -142,19 +142,6 @@ class FrontBackObjects:
         return cls(front_ret, back_ret, min_front_long, min_back_long)
 
 
-# class ManualControllableIDMPolicy(IDMPolicy):
-#     def __init__(self, *args, **kwargs):
-#         super(ManualControllableIDMPolicy, self).__init__(*args, **kwargs)
-#         self.manual_control_policy = ManualControlPolicy()
-
-#     def act(self, agent_id):
-#         if self.control_object is self.engine.current_track_vehicle and self.engine.global_config["manual_control"]\
-#                 and not self.engine.current_track_vehicle.expert_takeover:
-#             return self.manual_control_policy.act(agent_id)
-#         else:
-#             return super(ManualControllableIDMPolicy, self).act(agent_id)
-
-
 class ManualMacroDiscretePolicy(BasePolicy):
     NORMAL_SPEED = 65  # 65
     ACC_FACTOR = 1.0
@@ -166,12 +153,13 @@ class ManualMacroDiscretePolicy(BasePolicy):
         self.inputs.watchWithModifiers('deccelerate', 's')
         self.inputs.watchWithModifiers('laneLeft', 'a')
         self.inputs.watchWithModifiers('laneRight', 'd')
+        self.manual = False
         # self.heading_pid = PIDController(1.7, 0.01, 3.5)
         # self.lateral_pid = PIDController(0.3, .002, 0.05)
 
         self.heading_pid = PIDController(1.7, 0.01, 3.5)
         self.lateral_pid = PIDController(0.2, .002, 0.3)
-        self.DELTA_SPEED = 5
+        self.DELTA_SPEED = 10
         self.DELTA = 10
         self.target_lane = self.get_neighboring_lanes()[1]
         self.target_speed = self.NORMAL_SPEED
@@ -181,17 +169,26 @@ class ManualMacroDiscretePolicy(BasePolicy):
         lanes = self.get_neighboring_lanes()
         if (self.control_object.arrive_destination and hasattr(self.control_object, 'macro_succ')):
             self.control_object.macro_succ = True
+            #print('arrive dest zt')
         if (self.control_object.crash_vehicle and hasattr(self.control_object, 'crash_vehicle')):
             self.control_object.macro_crash = True
 
         #print('vel: {}'.format(self.control_object.velocity))
         if (len(args) >= 2):
             macro_action = args[1]
-            # print('macro_control: {}'.format(macro_action))
-        #print('arg length: {}'.format(len(args)))
-        # agent_id = args[0]
-        # macro_action = args[1]
-        #print('macro_control: {}'.format(macro_action))
+
+        if self.manual is True:
+            if self.inputs.isSet('laneLeft'):
+                macro_action = "LANE_LEFT"
+            elif self.inputs.isSet('laneRight'):
+                macro_action = "LANE_RIGHT"
+            elif self.inputs.isSet('accelerate'):
+                macro_action = "FASTER"
+            elif self.inputs.isSet('deccelerate'):
+                macro_action = "SLOWER"
+            else:
+                macro_action = "Holdon"
+
         if macro_action != "Holdon" and macro_action is not None:
             self.stop_label = False
         if macro_action == "FASTER":
