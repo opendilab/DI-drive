@@ -10,9 +10,8 @@ from ding.policy import PPOPolicy
 from ding.worker import SampleSerialCollector, InteractionSerialEvaluator, BaseLearner
 from core.envs import DriveEnvWrapper
 
-
 metadrive_basic_config = dict(
-    exp_name = 'metadrive_basic_ppo',
+    exp_name='metadrive_basic_ppo',
     env=dict(
         metadrive=dict(use_render=False),
         manager=dict(
@@ -27,11 +26,11 @@ metadrive_basic_config = dict(
     ),
     policy=dict(
         cuda=True,
-        continuous=True,
+        action_space='continuous',
         model=dict(
             obs_shape=259,
             action_shape=2,
-            continuous=True,
+            action_space='continuous',
         ),
         learn=dict(
             epoch_per_collect=2,
@@ -59,12 +58,7 @@ def wrapped_eval_env(env_cfg):
 
 def main(cfg):
     cfg = compile_config(
-        cfg,
-        SyncSubprocessEnvManager,
-        PPOPolicy,
-        BaseLearner,
-        SampleSerialCollector,
-        InteractionSerialEvaluator
+        cfg, SyncSubprocessEnvManager, PPOPolicy, BaseLearner, SampleSerialCollector, InteractionSerialEvaluator
     )
 
     collector_env_num, evaluator_env_num = cfg.env.collector_env_num, cfg.env.evaluator_env_num
@@ -81,8 +75,12 @@ def main(cfg):
 
     tb_logger = SummaryWriter('./log/{}/'.format(cfg.exp_name))
     learner = BaseLearner(cfg.policy.learn.learner, policy.learn_mode, tb_logger, exp_name=cfg.exp_name)
-    collector = SampleSerialCollector(cfg.policy.collect.collector, collector_env, policy.collect_mode, tb_logger, exp_name=cfg.exp_name)
-    evaluator = InteractionSerialEvaluator(cfg.policy.eval.evaluator, evaluator_env, policy.eval_mode, tb_logger, exp_name=cfg.exp_name)
+    collector = SampleSerialCollector(
+        cfg.policy.collect.collector, collector_env, policy.collect_mode, tb_logger, exp_name=cfg.exp_name
+    )
+    evaluator = InteractionSerialEvaluator(
+        cfg.policy.eval.evaluator, evaluator_env, policy.eval_mode, tb_logger, exp_name=cfg.exp_name
+    )
 
     learner.call_hook('before_run')
 
@@ -99,6 +97,7 @@ def main(cfg):
     collector.close()
     evaluator.close()
     learner.close()
+
 
 if __name__ == '__main__':
     main(main_config)

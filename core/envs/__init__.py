@@ -13,10 +13,12 @@ env_map = {}
 if 'carla' in SIMULATORS:
     from .simple_carla_env import SimpleCarlaEnv
     from .scenario_carla_env import ScenarioCarlaEnv
-    env_map.update({
-        "SimpleCarla-v1": 'core.envs.simple_carla_env.SimpleCarlaEnv',
-        "ScenarioCarla-v1": 'core.envs.scenario_carla_env.ScenarioCarlaEnv'
-    })
+    env_map.update(
+        {
+            "SimpleCarla-v1": 'core.envs.simple_carla_env.SimpleCarlaEnv',
+            "ScenarioCarla-v1": 'core.envs.scenario_carla_env.ScenarioCarlaEnv'
+        }
+    )
 
 if 'metadrive' in SIMULATORS:
     from .md_macro_env import MetaDriveMacroEnv

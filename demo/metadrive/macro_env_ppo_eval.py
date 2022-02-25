@@ -10,12 +10,10 @@ from ding.policy import PPOPolicy
 from ding.worker import SampleSerialCollector, InteractionSerialEvaluator, BaseLearner
 from core.envs import DriveEnvWrapper, MetaDriveMacroEnv
 
-
 metadrive_macro_config = dict(
-    exp_name = 'metadrive_macro_ppo_eval',
+    exp_name='metadrive_macro_ppo_eval',
     env=dict(
-        metadrive=dict(use_render=True,
-        ),
+        metadrive=dict(use_render=True, ),
         manager=dict(
             shared_memory=False,
             max_retry=2,
@@ -45,14 +43,10 @@ main_config = EasyDict(metadrive_macro_config)
 def wrapped_env(env_cfg, wrapper_cfg=None):
     return DriveEnvWrapper(MetaDriveMacroEnv(env_cfg), wrapper_cfg)
 
+
 def main(cfg):
     cfg = compile_config(
-        cfg,
-        SyncSubprocessEnvManager,
-        PPOPolicy,
-        BaseLearner,
-        SampleSerialCollector,
-        InteractionSerialEvaluator
+        cfg, SyncSubprocessEnvManager, PPOPolicy, BaseLearner, SampleSerialCollector, InteractionSerialEvaluator
     )
     print(cfg.policy.collect.collector)
 
@@ -68,10 +62,13 @@ def main(cfg):
     policy.eval_mode.load_state_dict(state_dict)
 
     tb_logger = SummaryWriter('./log/{}/'.format(cfg.exp_name))
-    evaluator = InteractionSerialEvaluator(cfg.policy.eval.evaluator, evaluator_env, policy.eval_mode, tb_logger, exp_name=cfg.exp_name)
+    evaluator = InteractionSerialEvaluator(
+        cfg.policy.eval.evaluator, evaluator_env, policy.eval_mode, tb_logger, exp_name=cfg.exp_name
+    )
     for iter in range(5):
         stop, reward = evaluator.eval()
     evaluator.close()
+
 
 if __name__ == '__main__':
     main(main_config)

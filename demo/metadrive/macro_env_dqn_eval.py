@@ -10,9 +10,8 @@ from ding.policy import PPOPolicy, DQNPolicy
 from ding.worker import SampleSerialCollector, InteractionSerialEvaluator, BaseLearner, AdvancedReplayBuffer
 from core.envs import DriveEnvWrapper, MetaDriveMacroEnv
 
-
 metadrive_macro_config = dict(
-    exp_name = 'metadrive_macro_dqn_eval',
+    exp_name='metadrive_macro_dqn_eval',
     env=dict(
         metadrive=dict(use_render=True),
         manager=dict(
@@ -69,12 +68,15 @@ def main(cfg):
     policy.eval_mode.load_state_dict(state_dict)
 
     tb_logger = SummaryWriter('./log/{}/'.format(cfg.exp_name))
-    evaluator = InteractionSerialEvaluator(cfg.policy.eval.evaluator, evaluator_env, policy.eval_mode, tb_logger, exp_name=cfg.exp_name)
+    evaluator = InteractionSerialEvaluator(
+        cfg.policy.eval.evaluator, evaluator_env, policy.eval_mode, tb_logger, exp_name=cfg.exp_name
+    )
 
     for i in range(5):
         print('total {} times'.format(i))
         stop, rate = evaluator.eval()
     evaluator.close()
+
 
 if __name__ == '__main__':
     main(main_config)

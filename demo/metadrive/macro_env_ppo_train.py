@@ -10,11 +10,10 @@ from ding.policy import PPOPolicy
 from ding.worker import SampleSerialCollector, InteractionSerialEvaluator, BaseLearner
 from core.envs import DriveEnvWrapper
 
-
 metadrive_macro_config = dict(
-    exp_name = 'metadrive_macro_ppo',
+    exp_name='metadrive_macro_ppo',
     env=dict(
-        metadrive=dict(use_render=False,),
+        metadrive=dict(use_render=False, ),
         manager=dict(
             shared_memory=False,
             max_retry=2,
@@ -28,11 +27,11 @@ metadrive_macro_config = dict(
     ),
     policy=dict(
         cuda=True,
-        continuous=False,
+        action_space='discrete',
         model=dict(
             obs_shape=[5, 200, 200],
             action_shape=5,
-            continuous=False,
+            action_space='discrete',
             encoder_hidden_size_list=[128, 128, 64],
         ),
         learn=dict(
@@ -55,14 +54,8 @@ def wrapped_env(env_cfg, wrapper_cfg=None):
 
 def main(cfg):
     cfg = compile_config(
-        cfg,
-        SyncSubprocessEnvManager,
-        PPOPolicy,
-        BaseLearner,
-        SampleSerialCollector,
-        InteractionSerialEvaluator
+        cfg, SyncSubprocessEnvManager, PPOPolicy, BaseLearner, SampleSerialCollector, InteractionSerialEvaluator
     )
-    print(cfg.policy.collect.collector)
 
     collector_env_num, evaluator_env_num = cfg.env.collector_env_num, cfg.env.evaluator_env_num
     collector_env = SyncSubprocessEnvManager(
@@ -78,8 +71,12 @@ def main(cfg):
 
     tb_logger = SummaryWriter('./log/{}/'.format(cfg.exp_name))
     learner = BaseLearner(cfg.policy.learn.learner, policy.learn_mode, tb_logger, exp_name=cfg.exp_name)
-    collector = SampleSerialCollector(cfg.policy.collect.collector, collector_env, policy.collect_mode, tb_logger, exp_name=cfg.exp_name)
-    evaluator = InteractionSerialEvaluator(cfg.policy.eval.evaluator, evaluator_env, policy.eval_mode, tb_logger, exp_name=cfg.exp_name)
+    collector = SampleSerialCollector(
+        cfg.policy.collect.collector, collector_env, policy.collect_mode, tb_logger, exp_name=cfg.exp_name
+    )
+    evaluator = InteractionSerialEvaluator(
+        cfg.policy.eval.evaluator, evaluator_env, policy.eval_mode, tb_logger, exp_name=cfg.exp_name
+    )
 
     learner.call_hook('before_run')
 
@@ -96,6 +93,7 @@ def main(cfg):
     collector.close()
     evaluator.close()
     learner.close()
+
 
 if __name__ == '__main__':
     main(main_config)

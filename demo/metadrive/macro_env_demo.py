@@ -39,9 +39,7 @@ def draw_multi_channels_top_down_observation(obs, show_time=4):
 
 
 def main(args):
-    config = dict(
-        use_render=True,
-    )
+    config = dict(use_render=True, )
     if args.observation == "rgb_camera":
         config.update(dict(offscreen_render=True))
     env = gym.make("Macro-v1", config=config)
