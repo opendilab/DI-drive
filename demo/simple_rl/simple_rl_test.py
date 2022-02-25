@@ -48,6 +48,7 @@ eval_config = dict(
     ),
     policy=dict(
         cuda=True,
+        action_space='continuous',
         # Pre-train model path
         ckpt_path='',
         model=dict(),

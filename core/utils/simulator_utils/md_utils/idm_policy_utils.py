@@ -8,17 +8,7 @@ class MacroIDMPolicy(IDMPolicy):
         super(MacroIDMPolicy, self).__init__(control_object=control_object, random_seed=random_seed)
         self.NORMAL_SPEED_CONST = 50
         self.NORMAL_SPEED = self.NORMAL_SPEED_CONST
-
-    # def lane_change_policy(self, all_objects):
-    #     current_lanes = self.control_object.navigation.current_ref_lanes
-    #     surrounding_objects = FrontBackObjects.get_find_front_back_objs(
-    #         all_objects, self.routing_target_lane, self.control_object.position, self.MAX_LONG_DIST, current_lanes
-    #     )
-    #     if not surrounding_objects.right_lane_exist():
-    #         self.NORMAL_SPEED = self.NORMAL_SPEED_CONST + 5
-    #     elif not surrounding_objects.left_lane_exist():
-    #         self.NORMAL_SPEED = self.NORMAL_SPEED_CONST - 5
-    #     IDMPolicy.lane_change_policy(self, all_objects)
+        self.LANE_CHANGE_FREQ = 300
 
     def act(self, *args, **kwargs):
         # concat lane
@@ -59,8 +49,8 @@ class MacroIDMPolicy(IDMPolicy):
             all_objects, self.routing_target_lane, self.control_object.position, self.MAX_LONG_DIST, current_lanes
         )
         if not surrounding_objects.right_lane_exist():
-            self.NORMAL_SPEED = self.NORMAL_SPEED_CONST + 5
+            self.NORMAL_SPEED = self.NORMAL_SPEED_CONST - 10
         elif not surrounding_objects.left_lane_exist():
-            self.NORMAL_SPEED = self.NORMAL_SPEED_CONST - 5
+            self.NORMAL_SPEED = self.NORMAL_SPEED_CONST + 10
         else:
             self.NORMAL_SPEED = self.NORMAL_SPEED_CONST

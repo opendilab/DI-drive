@@ -4,7 +4,7 @@ dqn_config = dict(
     exp_name='dqn21_bev32_buf2e5_lr1e4_bs128_ns3000_update4_train_ft',
     env=dict(
         # Collect and eval env num
-        collector_env_num=7,
+        collector_env_num=4,
         evaluator_env_num=1,
         simulator=dict(
             town='Town01',
@@ -42,7 +42,7 @@ dqn_config = dict(
                 auto_reset=True,
                 shared_memory=False,
                 context='spawn',
-                max_retry=2,
+                max_retry=5,
                 retry_type='renew',
                 step_timeout=120,
                 reset_timeout=120,
@@ -57,13 +57,14 @@ dqn_config = dict(
     ),
     server=[
         # Need to change to you own carla server
-        dict(carla_host='localhost', carla_ports=[9000, 9016, 2]),
+        dict(carla_host='localhost', carla_ports=[9000, 9010, 2]),
     ],
     policy=dict(
         cuda=True,
         priority=True,
         nstep=1,
         model=dict(),
+        random_collect_size=10000,
         learn=dict(
             batch_size=128,
             learning_rate=0.0001,
@@ -104,7 +105,7 @@ dqn_config = dict(
                 replay_buffer_size=200000,
                 monitor=dict(
                     sampled_data_attr=dict(
-                        print_freq=100,
+                        print_freq=200,
                     ),
                     periodic_thruput=dict(
                         seconds=120,

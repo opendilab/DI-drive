@@ -285,8 +285,8 @@ class PPORLModel(nn.Module):
             self,
             obs_shape: Tuple = [5, 32, 32],
             action_shape: Union[int, Tuple] = 2,
+            action_space: str = 'continuous',
             share_encoder: bool = True,
-            continuous: bool = True,
             encoder_embedding_size: int = 512,
             encoder_hidden_size_list: List = [64, 128, 256],
             actor_head_hidden_size: int = 512,
@@ -316,8 +316,9 @@ class PPORLModel(nn.Module):
         self.critic_head = RegressionHead(
             critic_head_hidden_size, 1, critic_head_layer_num, activation=activation, norm_type=norm_type
         )
-        self.continuous = continuous
-        if self.continuous:
+        self.action_space = action_space
+        assert self.action_space in ['discrete', 'continuous', 'hybrid'], self.action_space
+        if self.action_space == 'continuous':
             self.multi_head = False
             self.actor_head = ReparameterizationHead(
                 actor_head_hidden_size,
@@ -328,7 +329,7 @@ class PPORLModel(nn.Module):
                 norm_type=norm_type,
                 bound_type=bound_type
             )
-        else:
+        elif self.action_space == 'discrete':
             multi_head = not isinstance(action_shape, int)
             self.multi_head = multi_head
             if multi_head:
@@ -350,6 +351,7 @@ class PPORLModel(nn.Module):
                 )
         # for convenience of call some apis(such as: self.critic.parameters()), but may cause
         # misunderstanding when print(self)
+
         if self.share_encoder:
             self.actor = nn.ModuleList([self.encoder, self.actor_head])
             self.critic = nn.ModuleList([self.encoder, self.critic_head])
@@ -368,23 +370,31 @@ class PPORLModel(nn.Module):
         else:
             actor_embedding = self.actor_encoder(inputs)
             critic_embedding = self.critic_encoder(inputs)
-        value = self.critic_head(critic_embedding)
-        actor_output = self.actor_head(actor_embedding)
-        if self.continuous:
-            logit = [actor_output['mu'], actor_output['sigma']]
-        else:
-            logit = actor_output['logit']
-        return {'logit': logit, 'value': value['pred']}
+
+        value = self.critic_head(critic_embedding)['pred']
+
+        if self.action_space == 'continuous':
+            logit = self.actor_head(actor_embedding)
+            return {'logit': logit, 'value': value}
+        elif self.action_space == 'discrete':
+            logit = self.actor_head(actor_embedding)['logit']
+        return {'logit': logit, 'value': value}
 
     def compute_actor(self, inputs: Dict) -> Dict:
         if self.share_encoder:
             x = self.encoder(inputs)
         else:
             x = self.actor_encoder(inputs)
-        x = self.actor_head(x)
-        if self.continuous:
-            x = {'logit': [x['mu'], x['sigma']]}
-        return x
+        
+        if self.action_space == 'discrete':
+            return self.actor_head(x)
+        elif self.action_space == 'continuous':
+            x = self.actor_head(x)  # mu, sigma
+            return {'logit': x}
+        elif self.action_space == 'hybrid':
+            action_type = self.actor_head[0](x)
+            action_args = self.actor_head[1](x)
+            return {'logit': {'action_type': action_type['logit'], 'action_args': action_args}}
 
     def compute_critic(self, inputs: Dict) -> Dict:
         if self.share_encoder:

@@ -3,7 +3,7 @@ from easydict import EasyDict
 sac_config = dict(
     exp_name='sac2_bev32_buf2e5_lr1e4_bs128_ns3000_update4_train_ft',
     env=dict(
-        collector_env_num=7,
+        collector_env_num=4,
         evaluator_env_num=1,
         simulator=dict(
             town='Town01',
@@ -36,7 +36,7 @@ sac_config = dict(
                 auto_reset=True,
                 shared_memory=False,
                 context='spawn',
-                max_retry=2,
+                max_retry=5,
                 retry_type='renew',
                 step_timeout=120,
                 reset_timeout=120,
@@ -50,10 +50,11 @@ sac_config = dict(
         ),
     ),
     server=[
-        dict(carla_host='localhost', carla_ports=[9000, 9016, 2]),
+        dict(carla_host='localhost', carla_ports=[9000, 9010, 2]),
     ],
     policy=dict(
         cuda=True,
+        random_collect_size=10000,
         model=dict(
             action_shape=2,
             twin_critic=True
@@ -92,16 +93,7 @@ sac_config = dict(
         other=dict(
             replay_buffer=dict(
                 replay_buffer_size=400000,
-                replay_buffer_start_size=10000,
-                max_use=16,
-                monitor=dict(
-                    sampled_data_attr=dict(
-                        print_freq=100,  # times
-                    ),
-                    periodic_thruput=dict(
-                        seconds=120,
-                    ),
-                ),
+                periodic_thruput_seconds=120,
             ),
         ),
     ),

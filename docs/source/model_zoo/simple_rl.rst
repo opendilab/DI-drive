@@ -5,7 +5,7 @@ BeV Speed End-to-end Reinforcement Learning
     :maxdepth: 2
 
 This is a simple Reinforcement Learning demo to show the basic usage of **DI-drive** environments
-and **DI-engine** RL policies. All training, evaluation and testing entry can be found in
+and **DI-engine** RL policies. All training, evaluation and testing entry can be found in 
 `demo/simple_rl`
 
 .. image:: ../../figs/dqn_demo1.gif
@@ -95,44 +95,93 @@ can modify the reward types you want to use via config.
 Training and Evaluation
 ========================
 
-The entry files of all the RL methods are written in standard way using **DI-engine** to run RL experiments.
+The entry files of all the RL methods are written in standard distributed way using **DI-engine** to run RL experiments.
 The sub-process env manager in **Di-engine** is used to run multi-env in parallel.
-Off-policy methods use collector, learner, replay buffer in **DI-engine** and **evaluator** in DI-drive. On-policy
-method does not use replay buffer.
+Off-policy methods use ``collector``, ``learner``, ``replay buffer`` in **DI-engine** and ``evaluator`` in DI-drive.
+On-policy method does not use replay buffer.
 
-Off-policy training loop:
+We follow the standard deployment of the `Distributed` feature in
+DI-engine. Details can be referred in `Distributed <https://di-engine-docs.readthedocs.io/en/latest/distributed/index.html>`_. 
+All training pipeline is divided into different procedures and are combined by a ``Task`` object. 
+Information between different middleware are communicated by a ``ctx`` dict. On-policy and Off-policy
+method has different ``collect`` procedure, with others remain.
 
-.. code:: python
-
-    while True:
-        if evaluator.should_eval(learner.train_iter):
-            stop, rate = evaluator.eval(learner.save_checkpoint, learner.train_iter, collector.envstep)
-            if stop:
-                break
-        new_data = collector.collect(train_iter=learner.train_iter)
-        update_per_collect = len(new_data) // cfg.policy.learn.batch_size * 4
-        replay_buffer.push(new_data, cur_collector_envstep=collector.envstep)
-        # Training
-        for i in range(update_per_collect):
-            train_data = replay_buffer.sample(cfg.policy.learn.batch_size, learner.train_iter)
-            if train_data is not None:
-                train_data = copy.deepcopy(train_data)
-                unpack_birdview(train_data)
-                learner.train(train_data, collector.envstep)
-            replay_buffer.update(learner.priority_info)
-
-On-policy training loop:
+Training loop:
 
 .. code:: python
 
-    while True:
-        if evaluator.should_eval(learner.train_iter):
-            stop, rate = evaluator.eval(learner.save_checkpoint, learner.train_iter, collector.envstep)
-            if stop:
-                break
-        new_data = collector.collect(n_sample=3000, train_iter=learner.train_iter)
-        unpack_birdview(new_data)
-        learner.train(new_data, collector.envstep)
+    with Task(async_mode=args.use_async) as task:
+        task.use_step_wrapper(StepTimer(print_per_step=1)) 
+        task.use(evaluate(task, evaluator, learner))
+        if replay_buffer is None:
+            task.use(on_policy_collect(collector))
+        else:
+            task.use(off_policy_collect(epsilon_greedy, collector, replay_buffer, cfg))
+        task.use(train(learner, replay_buffer, cfg))
+        task.run(max_step=int(1e8))
+
+On-policy collection:
+
+.. code:: python
+
+    def on_policy_collect(collector):
+        def _collect(ctx):
+            ctx.setdefault("train_iter", -1)
+            new_data = collector.collect(n_sample=3000, train_iter=ctx.train_iter)
+            unpack_birdview(new_data)
+            ctx.new_data = new_data
+        return _collect
+
+Off-policy collection:
+
+.. code:: python
+
+    def off_policy_collect(epsilon_greedy, collector, replay_buffer, cfg):
+        def _collect(ctx):
+            ctx.setdefault("train_iter", -1)
+            if epsilon_greedy is not None:
+                eps = epsilon_greedy(collector.envstep)
+                new_data = collector.collect(train_iter=ctx.train_iter, policy_kwargs={'eps': eps})
+            else:
+                new_data = collector.collect(train_iter=ctx.train_iter)
+            ctx.update_per_collect = len(new_data) // cfg.policy.learn.batch_size * 4
+            replay_buffer.push(new_data, cur_collector_envstep=collector.envstep)
+        return _collect
+
+Other procedures:
+
+.. code:: python
+
+    def evaluate(task, evaluator, learner):
+        def _evaluate(ctx):
+            ctx.setdefault("envstep", -1)  # Avoid attribute not existing
+            ctx.setdefault("train_iter", -1)
+            if evaluator.should_eval(ctx.train_iter):
+                stop, rate = evaluator.eval(learner.save_checkpoint, learner.train_iter, ctx.envstep)
+                if stop:
+                    task.finish = True
+                    return
+        return _evaluate
+    
+    def train(learner, replay_buffer, cfg):
+        def _train(ctx):
+            ctx.setdefault("envstep", -1)
+            if 'new_data' in ctx:
+                learner.train(ctx.new_data, ctx.envstep)
+            else:
+                if 'update_per_collect' in ctx:
+                    update_per_collect = ctx.update_per_collect
+                else:
+                    update_per_collect = cfg.policy.learn.update_per_collect
+                for i in range(update_per_collect):
+                    train_data = replay_buffer.sample(cfg.policy.learn.batch_size, learner.train_iter)
+                    if train_data is not None:
+                        train_data = copy.deepcopy(train_data)
+                        unpack_birdview(train_data)
+                        learner.train(train_data, ctx.envstep)
+                    if cfg.policy.get('priority', False):
+                        replay_buffer.update(learner.priority_info)
+        return _train
 
 
 The are two kinds of evaluation provided in this demo, `Carla benchmark <../features/carla_benchmark.html>`_ 

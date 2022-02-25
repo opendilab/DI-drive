@@ -35,19 +35,19 @@ DIDRIVE_DEFAULT_CONFIG = dict(
     environment_num=1,
 
     # ===== Map Config =====
-    map='SSSS',  # int or string: an easy way to fill map_config
+    map='SSSSSSSSSS',  # int or string: an easy way to fill map_config
     random_lane_width=True,
     random_lane_num=True,
     map_config={
         BaseMap.GENERATE_TYPE: MapGenerateMethod.BIG_BLOCK_SEQUENCE,
-        BaseMap.GENERATE_CONFIG: 'SSS',  # None,  # it can be a file path / block num / block ID sequence
+        BaseMap.GENERATE_CONFIG: 'SSSSSSSSSS',  # None,  # it can be a file path / block num / block ID sequence
         BaseMap.LANE_WIDTH: 3.5,
         BaseMap.LANE_NUM: 3,
-        "exit_length": 50,
+        "exit_length": 70,
     },
 
     # ===== Traffic =====
-    traffic_density=0.2,
+    traffic_density=0.3,
     on_screen=False,
     rgb_clip=True,
     need_inverse_traffic=False,
@@ -74,14 +74,14 @@ DIDRIVE_DEFAULT_CONFIG = dict(
 
     # ===== Agent =====
     target_vehicle_configs={
-        DEFAULT_AGENT: dict(use_special_color=True, spawn_lane_index=(FirstPGBlock.NODE_1, FirstPGBlock.NODE_2, 0))
+        DEFAULT_AGENT: dict(use_special_color=True, spawn_lane_index=(FirstPGBlock.NODE_1, FirstPGBlock.NODE_2, 2))
     },
 
     # ===== Reward Scheme =====
     # See: https://github.com/decisionforce/metadrive/issues/283
     success_reward=10.0,
     out_of_road_penalty=5.0,
-    crash_vehicle_penalty=5.0,
+    crash_vehicle_penalty=1.0,
     crash_object_penalty=5.0,
     driving_reward=1.0,
     speed_reward=0.1,
@@ -93,7 +93,8 @@ DIDRIVE_DEFAULT_CONFIG = dict(
     out_of_road_cost=1.0,
 
     # ===== Termination Scheme =====
-    out_of_route_done=False,
+    out_of_route_done=True,
+    physics_world_step_size=3e-2,
 )
 
 
@@ -286,7 +287,7 @@ class MetaDriveMacroEnv(BaseEnv):
             current_lane = vehicle.navigation.current_ref_lanes[0]
             current_road = vehicle.navigation.current_road
             positive_road = 1 if not current_road.is_negative_road() else -1
-        long_last, _ = current_lane.local_coordinates(vehicle.last_position)
+        long_last, _ = current_lane.local_coordinates(vehicle.last_macro_position)
         long_now, lateral_now = current_lane.local_coordinates(vehicle.position)
 
         # reward for lane keeping, without it vehicle can learn to overtake but fail to keep in lane
@@ -296,16 +297,24 @@ class MetaDriveMacroEnv(BaseEnv):
             lateral_factor = 1.0
 
         reward = 0.0
+        lateral_factor *= 0.02
         reward += self.config["driving_reward"] * (long_now - long_last) * lateral_factor * positive_road
         reward += self.config["speed_reward"] * (vehicle.speed / vehicle.max_speed) * positive_road
+        #print('vel speed: {}'.format(vehicle.speed))
+        speed_rwd = -0.3 if vehicle.speed < 60 else 0
+        reward += speed_rwd
 
         step_info["step_reward"] = reward
 
         if vehicle.arrive_destination:
             reward = +self.config["success_reward"]
+        elif vehicle.macro_succ:
+            reward = +self.config["success_reward"]
         elif self._is_out_of_road(vehicle):
             reward = -self.config["out_of_road_penalty"]
         elif vehicle.crash_vehicle:
+            reward = -self.config["crash_vehicle_penalty"]
+        elif vehicle.macro_crash:
             reward = -self.config["crash_vehicle_penalty"]
         elif vehicle.crash_object:
             reward = -self.config["crash_object_penalty"]
@@ -339,10 +348,9 @@ class MetaDriveMacroEnv(BaseEnv):
         super(MetaDriveMacroEnv, self).setup_engine()
         self.engine.accept("b", self.switch_to_top_down_view)
         self.engine.accept("q", self.switch_to_third_person_view)
-        from metadrive.manager.traffic_manager import TrafficManager
-        from metadrive.manager.map_manager import MapManager
         from core.utils.simulator_utils.md_utils.traffic_manager_utils import MacroTrafficManager
-        self.engine.register_manager("map_manager", MapManager())
+        from core.utils.simulator_utils.md_utils.map_manager_utils import MacroMapManager
+        self.engine.register_manager("map_manager", MacroMapManager())
         self.engine.register_manager("traffic_manager", MacroTrafficManager())
 
     def _reset_global_seed(self, force_seed=None):
@@ -374,7 +382,7 @@ class MetaDriveMacroEnv(BaseEnv):
         return actions
 
     def _step_macro_simulator(self, actions):
-        simulation_frequency = 80  # 80
+        simulation_frequency = 30  # 60 80
         policy_frequency = 1
         frames = int(simulation_frequency / policy_frequency)
         self.time = 0
@@ -420,8 +428,13 @@ class MetaDriveMacroEnv(BaseEnv):
         self.remove_init_stop = False
         if self.remove_init_stop:
             return o
-        for i in range(2):
+        for i in range(8):
             o, r, d, info = self.step(self.action_type.actions_indexes["Holdon"])
+        for v_id, v in self.vehicles.items():
+            if hasattr(v, 'macro_succ'):
+                p = self.engine.get_policy(v.name)
+                target_speed = p.NORMAL_SPEED * 0.1
+                v.set_velocity(v.heading, target_speed)
         for i in range(1):
             o, r, d, info = self.step(self.action_type.actions_indexes["IDLE"])
             o = o

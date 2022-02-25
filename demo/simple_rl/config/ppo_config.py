@@ -3,7 +3,7 @@ from easydict import EasyDict
 ppo_config = dict(
     exp_name='ppo21_bev32_lr1e4_bs128_ns3000_update5_train_ft',
     env=dict(
-        collector_env_num=7,
+        collector_env_num=4,
         evaluator_env_num=1,
         simulator=dict(
             town='Town01',
@@ -36,7 +36,7 @@ ppo_config = dict(
                 auto_reset=True,
                 shared_memory=False,
                 context='spawn',
-                max_retry=2,
+                max_retry=5,
                 retry_type='renew',
                 step_timeout=120,
                 reset_timeout=120,
@@ -50,12 +50,14 @@ ppo_config = dict(
         ),
     ),
     server=[
-        dict(carla_host='localhost', carla_ports=[9000, 9016, 2]),
+        # Need to change to you own carla server
+        dict(carla_host='localhost', carla_ports=[9000, 9010, 2]),
     ],
     policy=dict(
         cuda=True,
         nstep_return=False,
         on_policy=True,
+        action_space='continuous',
         model=dict(),
         learn=dict(
             epoch_per_collect=5,
@@ -75,7 +77,8 @@ ppo_config = dict(
             ),
         ),
         collect=dict(
-            collector=dict(
+            # n_sample=3000,
+            collector=dict(    
                 collect_print_freq=1000,
                 deepcopy_obs=True,
                 transform_obs=True,

@@ -54,6 +54,7 @@ eval_config = dict(
         cuda=True,
         # Pre-train model path
         ckpt_path='',
+        action_space='continuous',
         model=dict(),
         eval=dict(
             evaluator=dict(
