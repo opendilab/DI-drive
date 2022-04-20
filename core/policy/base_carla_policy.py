@@ -72,6 +72,15 @@ class BaseCarlaPolicy(Policy):
             data = list(data)
         return data
 
+    def _state_dict_learn(self) -> Dict[str, Any]:
+        return {'model': self._model.state_dict()}
+
+    def _state_dict_collect(self) -> Dict[str, Any]:
+        return {'model': self._model.state_dict()}
+
+    def _state_dict_eval(self) -> Dict[str, Any]:
+        return {'model': self._model.state_dict()}
+
     def _load_state_dict_learn(self, state_dict: Dict[str, Any]) -> None:
         self._model.load_state_dict(state_dict['model'], strict=True)
 

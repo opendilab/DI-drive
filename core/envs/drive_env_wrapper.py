@@ -37,6 +37,8 @@ class DriveEnvWrapper(gym.Wrapper):
         else:
             self._cfg = cfg
         self.env = env
+        if not hasattr(self.env, 'reward_space'):
+            self.reward_space = None
 
     def reset(self, *args, **kwargs) -> Any:
         """

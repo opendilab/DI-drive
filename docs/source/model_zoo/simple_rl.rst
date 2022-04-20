@@ -127,9 +127,10 @@ On-policy collection:
     def on_policy_collect(collector):
         def _collect(ctx):
             ctx.setdefault("train_iter", -1)
-            new_data = collector.collect(n_sample=3000, train_iter=ctx.train_iter)
+            new_data = collector.collect(train_iter=ctx.train_iter)
             unpack_birdview(new_data)
             ctx.new_data = new_data
+            ctx.envstep = collector.envstep
         return _collect
 
 Off-policy collection:
@@ -146,6 +147,7 @@ Off-policy collection:
                 new_data = collector.collect(train_iter=ctx.train_iter)
             ctx.update_per_collect = len(new_data) // cfg.policy.learn.batch_size * 4
             replay_buffer.push(new_data, cur_collector_envstep=collector.envstep)
+            ctx.envstep = collector.envstep
         return _collect
 
 Other procedures:
@@ -155,8 +157,7 @@ Other procedures:
     def evaluate(task, evaluator, learner):
         def _evaluate(ctx):
             ctx.setdefault("envstep", -1)  # Avoid attribute not existing
-            ctx.setdefault("train_iter", -1)
-            if evaluator.should_eval(ctx.train_iter):
+            if evaluator.should_eval(learner.train_iter):
                 stop, rate = evaluator.eval(learner.save_checkpoint, learner.train_iter, ctx.envstep)
                 if stop:
                     task.finish = True
@@ -181,6 +182,7 @@ Other procedures:
                         learner.train(train_data, ctx.envstep)
                     if cfg.policy.get('priority', False):
                         replay_buffer.update(learner.priority_info)
+            ctx.train_iter = learner.train_iter
         return _train
 
 
@@ -190,3 +192,7 @@ of a policy in a benchmark suite, the latter one is mostly used to visualize dri
 They can be implement using ``CarlaBenchmarkEvaluator`` and ``SerialEvaluator`` separately.
 
 For more details, it is recommended to check the `API doc <../api_doc/index.html>`_ for the modules above.
+
+We provide pre-train weights of DQN policy that can be evaluated and visualized directly as well as a
+performance reference of your training.
+`link <http://opendilab.org/download/DI-drive/simple_rl/Plus25.pth>`_
