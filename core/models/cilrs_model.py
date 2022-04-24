@@ -41,6 +41,7 @@ class CILRSModel(nn.Module):
                 nn.ReLU(True),
                 nn.Linear(hidden_size, embedding_dim),
             )
+            embedding_dim *= 2
 
         # Project feature to speed prediction
         if predict_speed:
@@ -94,7 +95,7 @@ class CILRSModel(nn.Module):
         if self._input_speed:
             if len(speed.shape) == 1:
                 speed = speed.unsqueeze(1)
-            embedding += self._speed_in(speed)
+            embedding = torch.cat([embedding, self._speed_in(speed)], 1)
 
         control_pred = 0.
         for i, branch in enumerate(self._branches):
