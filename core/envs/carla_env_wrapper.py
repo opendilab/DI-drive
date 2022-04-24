@@ -9,7 +9,7 @@ from core.data.benchmark import ALL_SUITES
 from core.eval.carla_benchmark_evaluator import get_suites_list, read_pose_txt, get_benchmark_dir
 from .base_carla_env import BaseCarlaEnv
 from ding.utils.default_helper import deep_merge_dicts
-from ding.envs.env.base_env import BaseEnvTimestep, BaseEnvInfo
+from ding.envs.env.base_env import BaseEnvTimestep
 from ding.envs.common.env_element import EnvElementInfo
 from ding.torch_utils.data_helper import to_ndarray
 
@@ -37,6 +37,8 @@ class CarlaEnvWrapper(gym.Wrapper):
         else:
             self._cfg = cfg
         self.env = env
+        if not hasattr(self.env, 'reward_space'):
+            self.reward_space = gym.spaces.Box(low=-float('inf'), high=float('inf'), shape=(1, ))
 
     def reset(self, *args, **kwargs) -> Any:
         """
@@ -74,18 +76,10 @@ class CarlaEnvWrapper(gym.Wrapper):
             info['final_eval_reward'] = self._final_eval_reward
         return BaseEnvTimestep(obs, rew, done, info)
 
-    def info(self) -> BaseEnvInfo:
-        """
-        Interface of ``info`` method to suit DI-engine format env.
-        It returns a namedtuple ``BaseEnvInfo`` defined in DI-engine
-        which contains information about observation, action and reward space.
-
-        :Returns:
-            BaseEnvInfo: Env information instance defined in DI-engine.
-        """
-        obs_space = self.env.observation_space
-        act_space = self.env.action_space
-        return BaseEnvInfo(agent_num=1, obs_space=obs_space, act_space=act_space, use_wrappers=None)
+    def seed(self, seed: int, dynamic_seed: bool = True) -> None:
+        self._seed = seed
+        self._dynamic_seed = dynamic_seed
+        np.random.seed(self._seed)
 
     def enable_save_replay(self, replay_path: Optional[str] = None) -> None:
         if replay_path is None:
