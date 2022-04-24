@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>BeV Speed End-to-end Reinforcement Learning &mdash; DI-drive 0.3.0 documentation</title>
+  <title>BeV Speed End-to-end Reinforcement Learning &mdash; DI-drive 0.3.1 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.3.0
+                0.3.1
               </div>
             
           
@@ -107,7 +107,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="implicit.html">End-to-End Model-Free Reinforcement Learning for Urban Driving using Implicit Affordances</a></li>
 <li class="toctree-l3"><a class="reference internal" href="latent_rl.html">Latent Reinforcement Learning</a></li>
-<li class="toctree-l3"><a class="reference internal" href="md_macro.html">MetaDrive Macro RL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="md_macro.html">MetaDrive Macro Environment</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#other-method">Other Method</a></li>
@@ -258,38 +258,84 @@ can modify the reward types you want to use via config.</p>
 </div>
 <div class="section" id="training-and-evaluation">
 <h2>Training and Evaluation<a class="headerlink" href="#training-and-evaluation" title="Permalink to this headline">¶</a></h2>
-<p>The entry files of all the RL methods are written in standard way using <strong>DI-engine</strong> to run RL experiments.
+<p>The entry files of all the RL methods are written in standard distributed way using <strong>DI-engine</strong> to run RL experiments.
 The sub-process env manager in <strong>Di-engine</strong> is used to run multi-env in parallel.
-Off-policy methods use collector, learner, replay buffer in <strong>DI-engine</strong> and <strong>evaluator</strong> in DI-drive. On-policy
-method does not use replay buffer.</p>
-<p>Off-policy training loop:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">evaluator</span><span class="o">.</span><span class="n">should_eval</span><span class="p">(</span><span class="n">learner</span><span class="o">.</span><span class="n">train_iter</span><span class="p">):</span>
-        <span class="n">stop</span><span class="p">,</span> <span class="n">rate</span> <span class="o">=</span> <span class="n">evaluator</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">learner</span><span class="o">.</span><span class="n">save_checkpoint</span><span class="p">,</span> <span class="n">learner</span><span class="o">.</span><span class="n">train_iter</span><span class="p">,</span> <span class="n">collector</span><span class="o">.</span><span class="n">envstep</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">stop</span><span class="p">:</span>
-            <span class="k">break</span>
-    <span class="n">new_data</span> <span class="o">=</span> <span class="n">collector</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">train_iter</span><span class="o">=</span><span class="n">learner</span><span class="o">.</span><span class="n">train_iter</span><span class="p">)</span>
-    <span class="n">update_per_collect</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_data</span><span class="p">)</span> <span class="o">//</span> <span class="n">cfg</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">learn</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">*</span> <span class="mi">4</span>
-    <span class="n">replay_buffer</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">new_data</span><span class="p">,</span> <span class="n">cur_collector_envstep</span><span class="o">=</span><span class="n">collector</span><span class="o">.</span><span class="n">envstep</span><span class="p">)</span>
-    <span class="c1"># Training</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">update_per_collect</span><span class="p">):</span>
-        <span class="n">train_data</span> <span class="o">=</span> <span class="n">replay_buffer</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">learn</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">learner</span><span class="o">.</span><span class="n">train_iter</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">train_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">train_data</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">train_data</span><span class="p">)</span>
-            <span class="n">unpack_birdview</span><span class="p">(</span><span class="n">train_data</span><span class="p">)</span>
-            <span class="n">learner</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">train_data</span><span class="p">,</span> <span class="n">collector</span><span class="o">.</span><span class="n">envstep</span><span class="p">)</span>
-        <span class="n">replay_buffer</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">learner</span><span class="o">.</span><span class="n">priority_info</span><span class="p">)</span>
+Off-policy methods use <code class="docutils literal notranslate"><span class="pre">collector</span></code>, <code class="docutils literal notranslate"><span class="pre">learner</span></code>, <code class="docutils literal notranslate"><span class="pre">replay</span> <span class="pre">buffer</span></code> in <strong>DI-engine</strong> and <code class="docutils literal notranslate"><span class="pre">evaluator</span></code> in DI-drive.
+On-policy method does not use replay buffer.</p>
+<p>We follow the standard deployment of the <cite>Distributed</cite> feature in
+DI-engine. Details can be referred in <a class="reference external" href="https://di-engine-docs.readthedocs.io/en/latest/distributed/index.html">Distributed</a>.
+All training pipeline is divided into different procedures and are combined by a <code class="docutils literal notranslate"><span class="pre">Task</span></code> object.
+Information between different middleware are communicated by a <code class="docutils literal notranslate"><span class="pre">ctx</span></code> dict. On-policy and Off-policy
+method has different <code class="docutils literal notranslate"><span class="pre">collect</span></code> procedure, with others remain.</p>
+<p>Training loop:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">Task</span><span class="p">(</span><span class="n">async_mode</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">use_async</span><span class="p">)</span> <span class="k">as</span> <span class="n">task</span><span class="p">:</span>
+    <span class="n">task</span><span class="o">.</span><span class="n">use_step_wrapper</span><span class="p">(</span><span class="n">StepTimer</span><span class="p">(</span><span class="n">print_per_step</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">task</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="n">evaluate</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">evaluator</span><span class="p">,</span> <span class="n">learner</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">replay_buffer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">task</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="n">on_policy_collect</span><span class="p">(</span><span class="n">collector</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">task</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="n">off_policy_collect</span><span class="p">(</span><span class="n">epsilon_greedy</span><span class="p">,</span> <span class="n">collector</span><span class="p">,</span> <span class="n">replay_buffer</span><span class="p">,</span> <span class="n">cfg</span><span class="p">))</span>
+    <span class="n">task</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="n">train</span><span class="p">(</span><span class="n">learner</span><span class="p">,</span> <span class="n">replay_buffer</span><span class="p">,</span> <span class="n">cfg</span><span class="p">))</span>
+    <span class="n">task</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">max_step</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mf">1e8</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>On-policy training loop:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">evaluator</span><span class="o">.</span><span class="n">should_eval</span><span class="p">(</span><span class="n">learner</span><span class="o">.</span><span class="n">train_iter</span><span class="p">):</span>
-        <span class="n">stop</span><span class="p">,</span> <span class="n">rate</span> <span class="o">=</span> <span class="n">evaluator</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">learner</span><span class="o">.</span><span class="n">save_checkpoint</span><span class="p">,</span> <span class="n">learner</span><span class="o">.</span><span class="n">train_iter</span><span class="p">,</span> <span class="n">collector</span><span class="o">.</span><span class="n">envstep</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">stop</span><span class="p">:</span>
-            <span class="k">break</span>
-    <span class="n">new_data</span> <span class="o">=</span> <span class="n">collector</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">n_sample</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span> <span class="n">train_iter</span><span class="o">=</span><span class="n">learner</span><span class="o">.</span><span class="n">train_iter</span><span class="p">)</span>
-    <span class="n">unpack_birdview</span><span class="p">(</span><span class="n">new_data</span><span class="p">)</span>
-    <span class="n">learner</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">new_data</span><span class="p">,</span> <span class="n">collector</span><span class="o">.</span><span class="n">envstep</span><span class="p">)</span>
+<p>On-policy collection:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">on_policy_collect</span><span class="p">(</span><span class="n">collector</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_collect</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;train_iter&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">new_data</span> <span class="o">=</span> <span class="n">collector</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">train_iter</span><span class="o">=</span><span class="n">ctx</span><span class="o">.</span><span class="n">train_iter</span><span class="p">)</span>
+        <span class="n">unpack_birdview</span><span class="p">(</span><span class="n">new_data</span><span class="p">)</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">new_data</span> <span class="o">=</span> <span class="n">new_data</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">envstep</span> <span class="o">=</span> <span class="n">collector</span><span class="o">.</span><span class="n">envstep</span>
+    <span class="k">return</span> <span class="n">_collect</span>
+</pre></div>
+</div>
+<p>Off-policy collection:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">off_policy_collect</span><span class="p">(</span><span class="n">epsilon_greedy</span><span class="p">,</span> <span class="n">collector</span><span class="p">,</span> <span class="n">replay_buffer</span><span class="p">,</span> <span class="n">cfg</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_collect</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;train_iter&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">epsilon_greedy</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">eps</span> <span class="o">=</span> <span class="n">epsilon_greedy</span><span class="p">(</span><span class="n">collector</span><span class="o">.</span><span class="n">envstep</span><span class="p">)</span>
+            <span class="n">new_data</span> <span class="o">=</span> <span class="n">collector</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">train_iter</span><span class="o">=</span><span class="n">ctx</span><span class="o">.</span><span class="n">train_iter</span><span class="p">,</span> <span class="n">policy_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;eps&#39;</span><span class="p">:</span> <span class="n">eps</span><span class="p">})</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_data</span> <span class="o">=</span> <span class="n">collector</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">train_iter</span><span class="o">=</span><span class="n">ctx</span><span class="o">.</span><span class="n">train_iter</span><span class="p">)</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">update_per_collect</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_data</span><span class="p">)</span> <span class="o">//</span> <span class="n">cfg</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">learn</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">*</span> <span class="mi">4</span>
+        <span class="n">replay_buffer</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">new_data</span><span class="p">,</span> <span class="n">cur_collector_envstep</span><span class="o">=</span><span class="n">collector</span><span class="o">.</span><span class="n">envstep</span><span class="p">)</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">envstep</span> <span class="o">=</span> <span class="n">collector</span><span class="o">.</span><span class="n">envstep</span>
+    <span class="k">return</span> <span class="n">_collect</span>
+</pre></div>
+</div>
+<p>Other procedures:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">evaluator</span><span class="p">,</span> <span class="n">learner</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_evaluate</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;envstep&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># Avoid attribute not existing</span>
+        <span class="k">if</span> <span class="n">evaluator</span><span class="o">.</span><span class="n">should_eval</span><span class="p">(</span><span class="n">learner</span><span class="o">.</span><span class="n">train_iter</span><span class="p">):</span>
+            <span class="n">stop</span><span class="p">,</span> <span class="n">rate</span> <span class="o">=</span> <span class="n">evaluator</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">learner</span><span class="o">.</span><span class="n">save_checkpoint</span><span class="p">,</span> <span class="n">learner</span><span class="o">.</span><span class="n">train_iter</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">envstep</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">stop</span><span class="p">:</span>
+                <span class="n">task</span><span class="o">.</span><span class="n">finish</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">return</span>
+    <span class="k">return</span> <span class="n">_evaluate</span>
+
+<span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="n">learner</span><span class="p">,</span> <span class="n">replay_buffer</span><span class="p">,</span> <span class="n">cfg</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_train</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;envstep&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;new_data&#39;</span> <span class="ow">in</span> <span class="n">ctx</span><span class="p">:</span>
+            <span class="n">learner</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">new_data</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">envstep</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;update_per_collect&#39;</span> <span class="ow">in</span> <span class="n">ctx</span><span class="p">:</span>
+                <span class="n">update_per_collect</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">update_per_collect</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">update_per_collect</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">learn</span><span class="o">.</span><span class="n">update_per_collect</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">update_per_collect</span><span class="p">):</span>
+                <span class="n">train_data</span> <span class="o">=</span> <span class="n">replay_buffer</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">learn</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">learner</span><span class="o">.</span><span class="n">train_iter</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">train_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">train_data</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">train_data</span><span class="p">)</span>
+                    <span class="n">unpack_birdview</span><span class="p">(</span><span class="n">train_data</span><span class="p">)</span>
+                    <span class="n">learner</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">train_data</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">envstep</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;priority&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+                    <span class="n">replay_buffer</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">learner</span><span class="o">.</span><span class="n">priority_info</span><span class="p">)</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">train_iter</span> <span class="o">=</span> <span class="n">learner</span><span class="o">.</span><span class="n">train_iter</span>
+    <span class="k">return</span> <span class="n">_train</span>
 </pre></div>
 </div>
 <p>The are two kinds of evaluation provided in this demo, <a class="reference external" href="../features/carla_benchmark.html">Carla benchmark</a>
@@ -297,6 +343,9 @@ evaluation and close-loop driving test. The former one is to evaluate the genera
 of a policy in a benchmark suite, the latter one is mostly used to visualize driving results in a route.
 They can be implement using <code class="docutils literal notranslate"><span class="pre">CarlaBenchmarkEvaluator</span></code> and <code class="docutils literal notranslate"><span class="pre">SerialEvaluator</span></code> separately.</p>
 <p>For more details, it is recommended to check the <a class="reference external" href="../api_doc/index.html">API doc</a> for the modules above.</p>
+<p>We provide pre-train weights of DQN policy that can be evaluated and visualized directly as well as a
+performance reference of your training.
+<a class="reference external" href="http://opendilab.org/download/DI-drive/simple_rl/Plus25.pth">link</a></p>
 </div>
 </div>
 
