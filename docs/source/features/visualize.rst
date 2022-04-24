@@ -6,7 +6,7 @@ Visualization
 
 
 DI-drive builds an online visualizer for the user to check the situation of a running simulator and save gif/video files. The
-visualizer is added in the environment's :func:`render <core.envs.BaseCarlaEnv.render>`. When calling this method, if
+visualizer is added in the environment's :func:`render <core.envs.BaseDriveEnv.render>`. When calling this method, if
 a visualizer is created by config settings, it will take a sensor data as canvas and put some info text onto it, including
 actions, road options, agent state, reward, traffic light records and so on. Then
 the canvas can be showed in the screen or saved as a gif or video file to watch.

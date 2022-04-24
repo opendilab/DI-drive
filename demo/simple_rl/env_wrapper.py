@@ -4,9 +4,8 @@ from typing import Dict, Any, List
 import math
 import gym
 
-from core.envs import BaseCarlaEnv
+from core.envs import BaseDriveEnv
 from ding.torch_utils.data_helper import to_ndarray
-
 
 DEFAULT_ACC_LIST = [
     (0, 1),
@@ -26,7 +25,7 @@ DEFAULT_STEER_LIST = [
 
 class DiscreteEnvWrapper(gym.Wrapper):
 
-    def __init__(self, env: BaseCarlaEnv, acc_list: List = None, steer_list: List = None) -> None:
+    def __init__(self, env: BaseDriveEnv, acc_list: List = None, steer_list: List = None) -> None:
         super().__init__(env)
         self._acc_list = acc_list
         if acc_list is None:
@@ -69,7 +68,7 @@ class DiscreteEnvWrapper(gym.Wrapper):
 
 class MultiDiscreteEnvWrapper(gym.Wrapper):
 
-    def __init__(self, env: BaseCarlaEnv, acc_list: List = None, steer_list: List = None) -> None:
+    def __init__(self, env: BaseDriveEnv, acc_list: List = None, steer_list: List = None) -> None:
         super().__init__(env)
         self._acc_list = acc_list
         if acc_list is None:

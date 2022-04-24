@@ -106,7 +106,7 @@ class SerialEvaluator(BaseEvaluator):
         :Returns:
             bool: Whether should run iteration
         """
-        if (train_iter - self._last_eval_iter) < self._cfg.eval_freq and train_iter != 0:
+        if (train_iter - self._last_eval_iter) < self._cfg.eval_freq and train_iter > 0:
             return False
         self._last_eval_iter = train_iter
         return True

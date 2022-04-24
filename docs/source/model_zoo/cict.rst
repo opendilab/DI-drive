@@ -333,6 +333,9 @@ velocity loss         0.44275
 acceleration loss     3.52583
 ==================    =========
 
+We provide pre-train weights under these configs. You can download it using this 
+`link <http://opendilab.org/download/DI-drive/cict/il/>`_
+
 Benchmark Evaluating
 =======================
 

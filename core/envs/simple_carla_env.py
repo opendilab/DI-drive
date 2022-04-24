@@ -6,7 +6,7 @@ from typing import Any, Dict, Optional, Tuple
 from gym import spaces
 from collections import defaultdict
 
-from .base_carla_env import BaseCarlaEnv
+from .base_drive_env import BaseDriveEnv
 from core.simulators import CarlaSimulator
 from core.utils.others.visualizer import Visualizer
 from core.utils.simulator_utils.carla_utils import visualize_birdview
@@ -14,7 +14,7 @@ from core.utils.env_utils.stuck_detector import StuckDetector
 from core.utils.simulator_utils.carla_utils import lane_mid_distance
 
 
-class SimpleCarlaEnv(BaseCarlaEnv):
+class SimpleCarlaEnv(BaseDriveEnv):
     """
     A simple deployment of Carla Environment with single hero vehicle. It use ``CarlaSimulator`` to interact with
     Carla server and gets running status. The observation is obtained from simulator's state, information and

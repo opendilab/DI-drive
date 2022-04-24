@@ -8,7 +8,7 @@ from PIL import Image
 import numpy as np
 
 from core.data import CarlaBenchmarkCollector
-from core.envs import SimpleCarlaEnv, CarlaEnvWrapper
+from core.envs import SimpleCarlaEnv, DriveEnvWrapper
 from core.policy import AutoPIDPolicy
 from core.utils.others.tcp_helper import parse_carla_tcp
 from ding.envs import BaseEnvManager, SyncSubprocessEnvManager
@@ -93,7 +93,7 @@ def write_episode_data(episode_path, episode_data):
 
 
 def wrapped_env(env_cfg, wrapper_cfg, host, port, tm_port=None):
-    return CarlaEnvWrapper(SimpleCarlaEnv(env_cfg, host, port, tm_port), wrapper_cfg)
+    return DriveEnvWrapper(SimpleCarlaEnv(env_cfg, host, port, tm_port), wrapper_cfg)
 
 
 def main(cfg, seed=0):

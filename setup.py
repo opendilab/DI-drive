@@ -78,6 +78,9 @@ setup(
             'yapf==0.29.0',
             'flake8',
         ],
+        'metadrive': [
+            'metadrive-simulator==0.2.3',
+        ],
     },
     classifiers=[
         'Development Status :: 5 - Production/Stable',

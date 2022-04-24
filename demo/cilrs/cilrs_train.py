@@ -63,7 +63,10 @@ def train(policy, optimizer, loader, tb_logger=None, start_iter=0):
         optimizer.step()
         log_vars['cur_lr'] = optimizer.defaults['lr']
         for k, v in log_vars.items():
-            loss_epoch[k] += [log_vars[k].item()]
+            if isinstance(v, torch.Tensor):
+                loss_epoch[k] += [log_vars[k].item()]
+            else:
+                loss_epoch[k] += [log_vars[k]]
             if iter_num % 50 == 0 and tb_logger is not None:
                 tb_logger.add_scalar("train_iter/" + k, v, iter_num)
         iter_num += 1
@@ -78,7 +81,10 @@ def validate(policy, loader, tb_logger=None, epoch=0):
         with torch.no_grad():
             log_vars = policy.forward(data)
         for k in list(log_vars.keys()):
-            loss_epoch[k] += [log_vars[k]]
+            if isinstance(log_vars[k], torch.Tensor):
+                loss_epoch[k] += [log_vars[k].item()]
+            else:
+                loss_epoch[k] += [log_vars[k]]
     loss_epoch = {k: np.mean(v) for k, v in loss_epoch.items()}
     if tb_logger is not None:
         for k, v in loss_epoch.items():
