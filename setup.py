@@ -64,7 +64,7 @@ setup(
             'sphinx_rtd_theme~=0.4.3',
             'enum_tools',
             'sphinx-toolbox',
-            'metadrive-simulator==0.2.3',
+            'metadrive-simulator==0.2.4',
         ],
         'test': [
             'pytest==5.1.1',
