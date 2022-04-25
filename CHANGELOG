@@ -1,3 +1,14 @@
+## v0.3.2 (2022.4.24)
+- Update banner logo
+- Update to DI-engine 0.3, modify env properties
+- Fix Basic policy bug
+- Fix CILRS model bug
+- Fix bugs in evaluator
+- Fix bug in ppo config
+- Fix bug in simple rl pipeline
+- Add pre-train weights path in foc
+
+
 ## v0.3.1 (2022.2.25)
 - Add MetaDrive Macro Env
 - Add common models
