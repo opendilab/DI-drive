@@ -9,9 +9,8 @@ DI-drive Documentation
 .. toctree::
     :maxdepth: 2
 
-.. figure:: ../figs/di-drive_logo.png
+.. figure:: ../figs/di-drive_banner.png
    :alt: DI-drive
-   :width: 300px
 
 Decision Intelligence Platform for Autonomous Driving simulation.
 

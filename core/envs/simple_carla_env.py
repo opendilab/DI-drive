@@ -38,6 +38,7 @@ class SimpleCarlaEnv(BaseDriveEnv):
     metadata = {'render.modes': ['rgb_array']}
     action_space = spaces.Dict({})
     observation_space = spaces.Dict({})
+    reward_space = spaces.Box(low=-float('inf'), high=float('inf'), shape=(1, ))
     reward_type = ['goal', 'distance', 'speed', 'angle', 'steer', 'lane', 'failure']
     config = dict(
         simulator=dict(),
