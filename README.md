@@ -2,17 +2,7 @@
 
 <img src="./docs/figs/di-drive_banner.png" alt="icon"/>
 
-Updated on 2022.4.16 DI-drive-v0.3.2 (beta)
-
-DI-drive - Decision Intelligence Platform for Autonomous Driving simulation.
-
-DI-drive is application platform under [OpenDILab](http://opendilab.org/)
-
-![icon](./docs/figs/big_cam_auto.png)
-
-## Introduction
-
-**DI-drive** is an open-source application platform under **OpenDILab**. DI-drive applies different simulator/datasets/cases in **Decision Intelligence** Training & Testing for **Autonomous Driving** Policy.
+**DI-drive** is an open-source Decision Intelligencr Platform of Autonomous Driving simulation. DI-drive applies different simulator/datasets/cases in **Decision Intelligence** Training & Testing for **Autonomous Driving** Policy.
 It aims to
 
 - run Imitation Learning, Reinforcement Learning, GAIL etc. in a single platform and simple unified entry
@@ -25,21 +15,60 @@ and most importantly, to **put these all together!**
 **DI-drive** uses [DI-engine](https://github.com/opendilab/DI-engine), a Reinforcement Learning
 platform to build most of the running modules and demos. **DI-drive** currently supports [Carla](http://carla.org),
 an open-source Autonomous Drining simulator to operate driving simualtion, and [MetaDrive](https://decisionforce.github.io/metadrive/),
-a diverse driving scenarios for Generalizable Reinforcement Learning. Users can specify any of them to run in global config under `core`.
+a diverse driving scenarios for Generalizable Reinforcement Learning. DI-drive is application platform under [OpenDILab](http://opendilab.org/)
+
+![icon](./docs/figs/big_cam_auto.png)
+<center> Visualization of Carla driving in DI-drive </center>
+
+## Outline
+
+ * [Installation](#installation)
+ * [Quick Start](#quick-start)
+ * [Model Zoo](#model-zoo)
+ * [Casezoo](#di-drive-casezoo)
+ * [File Structure](#file-structure)
+ * [Contributing](#contributing)
+ * [License](#license)
+ * [Citation](#citation)
 
 ## Installation
 
-**DI-drive** needs to have the following modules installed:
+**DI-drive** runs with **Python >= 3.5** and **DI-engine >= 0.3.1** (Pytorch is needed in DI-engine). You can install DI-drive from the source code:
 
-- Pytorch
-- DI-engine
+```bash
+git clone https://gitlab.bj.sensetime.com/open-XLab/cell/xad.git
+cd xad
+pip install -e .
+```
 
-[MetaDrive](https://decisionforce.github.io/metadrive/) can be easily installed via `pip`.
-If [Carla](http://carla.org) server is used for simulation, users need to install 'Carla Python API' in addition.
-Please refer to the [documentation](https://opendilab.github.io/DI-drive/) for details about installation and user guide of **DI-drive**.
-We provide IL and RL tutorials, and full guidance for quick run existing policy for beginners.
+DI-engine and Pytorch will be installed automatically.
 
-Please refer to [FAQ](https://opendilab.github.io/DI-drive/faq/index.html) for frequently asked questions.
+In addition, at least one simulator in Carla and MetaDrive need to be able to run in DI-drive. [MetaDrive](https://decisionforce.github.io/metadrive/) can be easily installed via `pip`.
+If [Carla](http://carla.org) server is used for simulation, users need to install 'Carla Python API' in addition. You can use eigher one of them or both. Make sure to modify the activated simulators in `core.__init__.py` to avoid import error.
+
+Please refer to the [installation guide](https://opendilab.github.io/DI-drive/installation/index.html) for details about installation about **DI-drive**.
+
+## Quick Start
+
+### Carla
+
+Users can check the installation of Carla and watch the visualization by running an 'auto' policy in provided town map. You need to start a Carla server first and modify the Carla host and port in `auto_run.py` into yours. Then run:
+
+```bash
+cd demo/auto_run
+python auto_run.py
+```
+
+### MetaDrive
+
+After installation of MetaDrive, you can start an RL training in MetaDrive Macro Environment by running the following code:
+
+```bash
+cd demo/metadrive
+python macro_env_dqn_train.py.
+```
+
+We provide detail guidance for IL and RL experiments in all simulators and quick run of existing policy for beginners in our [documentation](https://opendilab.github.io/DI-drive/). Please refer to it if you have further questions.
 
 ## Model Zoo
 
@@ -63,6 +92,96 @@ Please refer to [FAQ](https://opendilab.github.io/DI-drive/faq/index.html) for f
 **Casezoo** supports both evaluating and training, whick makes the simulation closer to real driving.
 
 Please see [casezoo instruction](docs/casezoo_instruction.md) for details about **Casezoo**.
+
+## File Structure
+
+```
+DI-drive
+|-- .flake8
+|-- .gitignore
+|-- .style.yapf
+|-- CHANGELOG
+|-- LICENSE
+|-- README.md
+|-- format.sh
+|-- setup.py
+|-- core
+|   |-- __init__.py
+|   |-- data
+|   |   |-- __init__.py
+|   |   |-- base_collector.py
+|   |   |-- benchmark_dataset_saver.py
+|   |   |-- bev_vae_dataset.py
+|   |   |-- carla_benchmark_collector.py
+|   |   |-- cict_dataset.py
+|   |   |-- cilrs_dataset.py
+|   |   |-- lbc_dataset.py
+|   |   |-- benchmark
+|   |   |-- casezoo
+|   |   |-- srunner
+|   |-- envs
+|   |   |-- __init__.py
+|   |   |-- base_drive_env.py
+|   |   |-- drive_env_wrapper.py
+|   |   |-- md_macro_env.py
+|   |   |-- scenario_carla_env.py
+|   |   |-- simple_carla_env.py
+|   |-- eval
+|   |   |-- __init__.py
+|   |   |-- base_evaluator.py
+|   |   |-- carla_benchmark_evaluator.py
+|   |   |-- serial_evaluator.py
+|   |   |-- single_carla_evaluator.py
+|   |-- models
+|   |   |-- __init__.py
+|   |   |-- bev_speed_model.py
+|   |   |-- cilrs_model.py
+|   |   |-- common_model.py
+|   |   |-- lbc_model.py
+|   |   |-- model_wrappers.py
+|   |   |-- mpc_controller.py
+|   |   |-- pid_controller.py
+|   |   |-- vae_model.py
+|   |   |-- vehicle_controller.py
+|   |-- policy
+|   |   |-- __init__.py
+|   |   |-- auto_policy.py
+|   |   |-- base_carla_policy.py
+|   |   |-- cilrs_policy.py
+|   |   |-- lbc_policy.py
+|   |-- simulators
+|   |   |-- __init__.py
+|   |   |-- base_simulator.py
+|   |   |-- carla_data_provider.py
+|   |   |-- carla_scenario_simulator.py
+|   |   |-- carla_simulator.py
+|   |   |-- fake_simulator.py
+|   |   |-- srunner
+|   |-- utils
+|       |-- __init__.py
+|       |-- data_utils
+|       |-- env_utils
+|       |-- learner_utils
+|       |-- model_utils
+|       |-- others
+|       |-- planner
+|       |-- simulator_utils
+|-- demo
+|   |-- auto_run
+|   |-- cict
+|   |-- cilrs
+|   |-- implicit
+|   |-- latent_rl
+|   |-- lbc
+|   |-- metadrive
+|   |-- simple_rl
+|-- docs
+|   |-- .gitignore
+|   |-- Makefile
+|   |-- casezoo_instruction.md
+|   |-- figs
+|   |-- source
+```
 
 ## Contributing
 
