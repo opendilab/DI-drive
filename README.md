@@ -2,11 +2,11 @@
 
 <img src="./docs/figs/di-drive_banner.png" alt="icon"/>
 
-**DI-drive** is an open-source Decision Intelligencr Platform of Autonomous Driving simulation. DI-drive applies different simulator/datasets/cases in **Decision Intelligence** Training & Testing for **Autonomous Driving** Policy.
+**DI-drive** is an open-source Decision Intelligence Platform for Autonomous Driving simulation. DI-drive applies different simulators/datasets/cases in **Decision Intelligence** Training & Testing for **Autonomous Driving** Policy.
 It aims to
 
 - run Imitation Learning, Reinforcement Learning, GAIL etc. in a single platform and simple unified entry
-- apply Decision Intelligence in any parts of driving simulation
+- apply Decision Intelligence in any part of the driving simulation
 - suit most of the driving simulators input & output
 - run designed driving cases and scenarios
 
@@ -14,11 +14,11 @@ and most importantly, to **put these all together!**
 
 **DI-drive** uses [DI-engine](https://github.com/opendilab/DI-engine), a Reinforcement Learning
 platform to build most of the running modules and demos. **DI-drive** currently supports [Carla](http://carla.org),
-an open-source Autonomous Drining simulator to operate driving simualtion, and [MetaDrive](https://decisionforce.github.io/metadrive/),
-a diverse driving scenarios for Generalizable Reinforcement Learning. DI-drive is application platform under [OpenDILab](http://opendilab.org/)
+an open-source Autonomous Driving simulator to operate driving simulation, and [MetaDrive](https://decisionforce.github.io/metadrive/),
+a diverse driving scenarios for Generalizable Reinforcement Learning. DI-drive is an application platform under [OpenDILab](http://opendilab.org/)
 
 ![icon](./docs/figs/big_cam_auto.png)
-<center> Visualization of Carla driving in DI-drive </center>
+<p align="center"> Visualization of Carla driving in DI-drive </p>
 
 ## Outline
 
@@ -44,9 +44,9 @@ pip install -e .
 DI-engine and Pytorch will be installed automatically.
 
 In addition, at least one simulator in Carla and MetaDrive need to be able to run in DI-drive. [MetaDrive](https://decisionforce.github.io/metadrive/) can be easily installed via `pip`.
-If [Carla](http://carla.org) server is used for simulation, users need to install 'Carla Python API' in addition. You can use eigher one of them or both. Make sure to modify the activated simulators in `core.__init__.py` to avoid import error.
+If [Carla](http://carla.org) server is used for simulation, users need to install 'Carla Python API' in addition. You can use either one of them or both. Make sure to modify the activated simulators in `core.__init__.py` to avoid import error.
 
-Please refer to the [installation guide](https://opendilab.github.io/DI-drive/installation/index.html) for details about installation about **DI-drive**.
+Please refer to the [installation guide](https://opendilab.github.io/DI-drive/installation/index.html) for details about the installation of **DI-drive**.
 
 ## Quick Start
 
@@ -87,9 +87,9 @@ We provide detail guidance for IL and RL experiments in all simulators and quick
 
 ## DI-drive Casezoo
 
-**DI-drive Casezoo** is a scenario set for training and testing of Autonomous Driving policy in simulator.
-**Casezoo** combines data collected by real vehicles and Shanghai Lingang road license test Scenarios.
-**Casezoo** supports both evaluating and training, whick makes the simulation closer to real driving.
+**DI-drive Casezoo** is a scenario set for training and testing the Autonomous Driving policy in simulator.
+**Casezoo** combines data collected from actual vehicles and Shanghai Lingang road license test Scenarios.
+**Casezoo** supports both evaluating and training, which makes the simulation closer to real driving.
 
 Please see [casezoo instruction](docs/casezoo_instruction.md) for details about **Casezoo**.
 
@@ -97,7 +97,6 @@ Please see [casezoo instruction](docs/casezoo_instruction.md) for details about 
 
 ```
 DI-drive
-|-- .flake8
 |-- .gitignore
 |-- .style.yapf
 |-- CHANGELOG
@@ -106,9 +105,7 @@ DI-drive
 |-- format.sh
 |-- setup.py
 |-- core
-|   |-- __init__.py
 |   |-- data
-|   |   |-- __init__.py
 |   |   |-- base_collector.py
 |   |   |-- benchmark_dataset_saver.py
 |   |   |-- bev_vae_dataset.py
@@ -120,20 +117,18 @@ DI-drive
 |   |   |-- casezoo
 |   |   |-- srunner
 |   |-- envs
-|   |   |-- __init__.py
 |   |   |-- base_drive_env.py
 |   |   |-- drive_env_wrapper.py
 |   |   |-- md_macro_env.py
+|   |   |-- md_traj_env.py
 |   |   |-- scenario_carla_env.py
 |   |   |-- simple_carla_env.py
 |   |-- eval
-|   |   |-- __init__.py
 |   |   |-- base_evaluator.py
 |   |   |-- carla_benchmark_evaluator.py
 |   |   |-- serial_evaluator.py
 |   |   |-- single_carla_evaluator.py
 |   |-- models
-|   |   |-- __init__.py
 |   |   |-- bev_speed_model.py
 |   |   |-- cilrs_model.py
 |   |   |-- common_model.py
@@ -144,13 +139,11 @@ DI-drive
 |   |   |-- vae_model.py
 |   |   |-- vehicle_controller.py
 |   |-- policy
-|   |   |-- __init__.py
 |   |   |-- auto_policy.py
 |   |   |-- base_carla_policy.py
 |   |   |-- cilrs_policy.py
 |   |   |-- lbc_policy.py
 |   |-- simulators
-|   |   |-- __init__.py
 |   |   |-- base_simulator.py
 |   |   |-- carla_data_provider.py
 |   |   |-- carla_scenario_simulator.py
@@ -158,7 +151,6 @@ DI-drive
 |   |   |-- fake_simulator.py
 |   |   |-- srunner
 |   |-- utils
-|       |-- __init__.py
 |       |-- data_utils
 |       |-- env_utils
 |       |-- learner_utils
@@ -176,16 +168,18 @@ DI-drive
 |   |-- metadrive
 |   |-- simple_rl
 |-- docs
-|   |-- .gitignore
-|   |-- Makefile
 |   |-- casezoo_instruction.md
 |   |-- figs
 |   |-- source
 ```
 
-## Contributing
+## Join and Contribute
 
-We appreciate all contributions to improve DI-drive, both algorithms and system designs.
+We appreciate all contributions to improve DI-drive, both algorithms and system designs. Welcome to OpenDILab community! Scan the QR code and add us on Wechat:
+
+![icon](./docs/figs/qr.png)
+
+Or you can contact us with [slack](https://opendilab.slack.com/join/shared_invite/zt-v9tmv4fp-nUBAQEH1_Kuyu_q4plBssQ#/shared-invite/email) or email (opendilab.contact@gmail.com).
 
 ## License
 
