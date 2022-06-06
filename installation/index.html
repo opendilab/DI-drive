@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Installation &mdash; DI-drive 0.3.2 documentation</title>
+  <title>Installation &mdash; DI-drive 0.3.3 documentation</title>
   
 
   
@@ -62,7 +63,7 @@
             
             
               <div class="version">
-                0.3.2
+                0.3.3
               </div>
             
           
@@ -176,11 +177,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="installation">
+  <section id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
-<div class="section" id="prerequisites">
+<section id="prerequisites">
 <h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
 <p>System version:</p>
 <blockquote>
@@ -193,8 +194,8 @@
 <p>PyTorch version: &gt;=1.4, &lt;=1.8</p>
 <p>DI-engine version: &gt;=0.2</p>
 <p>Hardware requirements: NVIDIA GPU with at least 4GB memory <em>if you with to run Carla server</em></p>
-</div>
-<div class="section" id="get-and-install-di-drive">
+</section>
+<section id="get-and-install-di-drive">
 <h2>Get and install DI-drive<a class="headerlink" href="#get-and-install-di-drive" title="Permalink to this headline">¶</a></h2>
 <p>First get and download the official repository with the following command line.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/opendilab/DI-drive.git
@@ -230,10 +231,10 @@ If you want to use MetaDrive, you can install DI-drive like above, or manually i
 <p>You can configure the simulator used by DI-drive in <code class="docutils literal notranslate"><span class="pre">core/__init__.py</span></code> .
 Only related modules will be imported in each file. By default all simulators are used.</p>
 </div>
-</div>
-<div class="section" id="additional-installation-for-carla">
+</section>
+<section id="additional-installation-for-carla">
 <h2>Additional Installation for Carla<a class="headerlink" href="#additional-installation-for-carla" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="download-and-install-carla-python-api">
+<section id="download-and-install-carla-python-api">
 <h3>Download and install Carla Python API<a class="headerlink" href="#download-and-install-carla-python-api" title="Permalink to this headline">¶</a></h3>
 <p>DI-drive uses Carla simulator version 0.9.9. It is needed to install Carla Python API from their released pack.
 If you have any problem dealing with Carla, we record some common problem you may meet in the
@@ -261,8 +262,8 @@ easy_install --user carla-0.9.9-py3.7-linux-x86_64.egg
 </pre></div>
 </div>
 <p>Then everything will be ok if no error raised.</p>
-</div>
-<div class="section" id="run-carla-server">
+</section>
+<section id="run-carla-server">
 <h3>Run Carla server<a class="headerlink" href="#run-carla-server" title="Permalink to this headline">¶</a></h3>
 <p>To use Carla simulator you need to run a Carla server and use its IP host and port to connect to it.</p>
 <ul class="simple">
@@ -285,9 +286,9 @@ You will see:</p>
 <p>If running successfully, you will see:</p>
 <img alt="installation_2" src="../_images/installation_2.png" />
 <p>Now you can use DI-drive to run code under this server.</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>

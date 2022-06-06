@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Simple Imitation Learning &mdash; DI-drive 0.3.2 documentation</title>
+  <title>Simple Imitation Learning &mdash; DI-drive 0.3.3 documentation</title>
   
 
   
@@ -62,7 +63,7 @@
             
             
               <div class="version">
-                0.3.2
+                0.3.3
               </div>
             
           
@@ -181,7 +182,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="simple-imitation-learning">
+  <section id="simple-imitation-learning">
 <span id="header-n2"></span><h1>Simple Imitation Learning<a class="headerlink" href="#simple-imitation-learning" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
@@ -199,7 +200,7 @@ steer, throttle and brake under certain navigation command, together with a spee
 <li><p>Close-loop evaluation under driving curcumstance</p></li>
 </ul>
 <p>For now, we will show you step by step. All demo codes can be found in <code class="docutils literal notranslate"><span class="pre">demo/cilrs</span></code></p>
-<div class="section" id="datasets-collection">
+<section id="datasets-collection">
 <span id="header-n14"></span><h2>Datasets collection<a class="headerlink" href="#datasets-collection" title="Permalink to this headline">¶</a></h2>
 <p>To collect expert data, the first step is to start Carla servers</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>./CarlaUE4.sh -fps<span class="o">=</span><span class="m">10</span> -benchmark -world-port<span class="o">=[</span>PORT NUM<span class="o">]</span>
@@ -234,8 +235,8 @@ this step, there should be an <code class="docutils literal notranslate"><span c
 <p>We recommend to collect both training and validating datasets with different suite to get
 better performance.</p>
 <p>Once you finish the data collection, the next step is to train an CILRS model.</p>
-</div>
-<div class="section" id="model-training">
+</section>
+<section id="model-training">
 <span id="header-n26"></span><h2>Model training<a class="headerlink" href="#model-training" title="Permalink to this headline">¶</a></h2>
 <p>The training part of IL enables a model to mimic the
 output of an expert policy with the same input. To apply the model training
@@ -259,15 +260,15 @@ above.</p>
 </pre></div>
 </div>
 <p>You will see training procedure shown on the screen like this.</p>
-<div class="figure align-center">
+<figure class="align-center">
 <a class="reference internal image-reference" href="../_images/image-il_1.png"><img alt="image-il_1" src="../_images/image-il_1.png" style="width: 600px;" /></a>
-</div>
+</figure>
 <p>The training checkpoints will be saved under <code class="docutils literal notranslate"><span class="pre">checkpoints</span></code> folder. The
 training process will last for 7~8 hours (i7-9900k and GeForce RTX 2080Ti), up to your machine hardware.</p>
 <p>if you want to customize your training configuration such as the model architecture and
 learning rates, please modify the config in <code class="docutils literal notranslate"><span class="pre">cilrs_train.py</span></code></p>
-</div>
-<div class="section" id="model-evaluation">
+</section>
+<section id="model-evaluation">
 <span id="header-n35"></span><h2>Model evaluation<a class="headerlink" href="#model-evaluation" title="Permalink to this headline">¶</a></h2>
 <p>We provide benchmark evaluation and close-loop test in environment (mostly for visualization) for
 a trained CILRS model with <strong>DI-drive</strong>. To evaluate your trained model, just run</p>
@@ -285,22 +286,22 @@ a trained CILRS model with <strong>DI-drive</strong>. To evaluate your trained m
 </pre></div>
 </div>
 <p>When the evaluation is finished, you will get a performance table.</p>
-<div class="figure align-center">
+<figure class="align-center">
 <a class="reference internal image-reference" href="../_images/image-il_2.png"><img alt="image-il_2" src="../_images/image-il_2.png" style="width: 800px;" /></a>
-</div>
+</figure>
 <p>Also, you can visual the real-time close-loop test by running</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">cilrs_test</span><span class="o">.</span><span class="n">py</span>
 </pre></div>
 </div>
 <p>You can see a visualized screen of the running policy.</p>
-<div class="figure align-center">
+<figure class="align-center">
 <a class="reference internal image-reference" href="../_images/image-il_3.png"><img alt="image-il_3" src="../_images/image-il_3.png" style="width: 500px;" /></a>
-</div>
+</figure>
 <p>You can customize the evaluation and test configuration by modifying the config in
 <code class="docutils literal notranslate"><span class="pre">cilrs_eval.py</span></code> and <code class="docutils literal notranslate"><span class="pre">cilrs_test.py</span></code></p>
 <p>Congratulations! You have finished the imitation learning tutorial.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

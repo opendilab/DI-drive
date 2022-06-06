@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>MetaDrive Macro Environment &mdash; DI-drive 0.3.2 documentation</title>
+  <title>MetaDrive Macro Environment &mdash; DI-drive 0.3.3 documentation</title>
   
 
   
@@ -62,7 +63,7 @@
             
             
               <div class="version">
-                0.3.2
+                0.3.3
               </div>
             
           
@@ -184,7 +185,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="metadrive-macro-environment">
+  <section id="metadrive-macro-environment">
 <h1>MetaDrive Macro Environment<a class="headerlink" href="#metadrive-macro-environment" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
@@ -195,7 +196,7 @@ vehicles. The env use a top-down view as input and outputs a discrete macro acti
 The macro action takes effect in a following time period in simulator, and the vehicle
 is drived by a IDM policy that can achieve the target macro action.</p>
 <a class="reference internal image-reference" href="../_images/macro_demo1.gif"><img alt="macro_demo1" class="align-center" src="../_images/macro_demo1.gif" style="width: 500px;" /></a>
-<div class="section" id="environments">
+<section id="environments">
 <h2>Environments<a class="headerlink" href="#environments" title="Permalink to this headline">¶</a></h2>
 <p>The environment is established following the standard <code class="docutils literal notranslate"><span class="pre">gym.Env</span></code> form. Detail information
 is listed below.</p>
@@ -223,8 +224,8 @@ is listed below.</p>
 <li><p>Hold speed</p></li>
 </ul>
 <p>Each action costs 30 system timestep, and is converted to control signals through a PID controller.</p>
-</div>
-<div class="section" id="training-test">
+</section>
+<section id="training-test">
 <h2>Training &amp; Test<a class="headerlink" href="#training-test" title="Permalink to this headline">¶</a></h2>
 <p>All the entry can be found in <code class="docutils literal notranslate"><span class="pre">demo/metadrive</span></code></p>
 <p>DI-drive provide two RL policy training entries: DQN and Discrete PPO. Run the following
@@ -250,8 +251,8 @@ scripts to start training DQN demos.</p>
 <p>You may need to change the checkpoint path in config. Here we provide a pre-trained
 DQN weights as example.</p>
 <p><a class="reference external" href="http://opendilab.org/download/DI-drive/metadrive/iteration_40000.pth.tar">iteration_40000.pth.tar</a></p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

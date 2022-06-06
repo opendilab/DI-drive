@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Latent Reinforcement Learning &mdash; DI-drive 0.3.2 documentation</title>
+  <title>Latent Reinforcement Learning &mdash; DI-drive 0.3.3 documentation</title>
   
 
   
@@ -62,7 +63,7 @@
             
             
               <div class="version">
-                0.3.2
+                0.3.3
               </div>
             
           
@@ -184,7 +185,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="latent-reinforcement-learning">
+  <section id="latent-reinforcement-learning">
 <h1>Latent Reinforcement Learning<a class="headerlink" href="#latent-reinforcement-learning" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
@@ -197,7 +198,7 @@ train RL policies.</p>
 with <strong>DI-drive</strong> and <strong>DI-engine</strong> and transfers it to more general cases. All
 entries can be found in <code class="docutils literal notranslate"><span class="pre">demo/latent_rl</span></code>. In the
 following documents, it will be explained in detail.</p>
-<div class="section" id="training-auto-encoder">
+<section id="training-auto-encoder">
 <h2>Training auto-encoder<a class="headerlink" href="#training-auto-encoder" title="Permalink to this headline">¶</a></h2>
 <p>The first step is to train a VAE to encode input image
 into a imbedding feature. We deploy the model and training following
@@ -221,8 +222,8 @@ python train_vae.py
 </pre></div>
 </div>
 <p>You can custom the configurations in the files above.</p>
-</div>
-<div class="section" id="trainging-rl-agent">
+</section>
+<section id="trainging-rl-agent">
 <h2>Trainging RL agent<a class="headerlink" href="#trainging-rl-agent" title="Permalink to this headline">¶</a></h2>
 <p>Following Model-free RL for AD , we use DDQN as the
 discrete RL algorithm and TD3 as the continuous RL algorithm.
@@ -253,8 +254,8 @@ python latent_dqn_test.py
 </pre></div>
 </div>
 <p>Pending</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

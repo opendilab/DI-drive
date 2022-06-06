@@ -28,6 +28,11 @@ MetaDriveMacroEnv
 .. autoclass:: core.envs.MetaDriveMacroEnv
 
 
+MetaDriveTrajEnv
+=====================
+.. autoclass:: core.envs.MetaDriveTrajEnv
+
+
 DriveEnvWrapper
 =======================
 .. autoclass:: core.envs.DriveEnvWrapper

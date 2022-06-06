@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Carla Benchmark Evaluation &mdash; DI-drive 0.3.2 documentation</title>
+  <title>Carla Benchmark Evaluation &mdash; DI-drive 0.3.3 documentation</title>
   
 
   
@@ -62,7 +63,7 @@
             
             
               <div class="version">
-                0.3.2
+                0.3.3
               </div>
             
           
@@ -182,7 +183,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="carla-benchmark-evaluation">
+  <section id="carla-benchmark-evaluation">
 <h1>Carla Benchmark Evaluation<a class="headerlink" href="#carla-benchmark-evaluation" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
@@ -197,8 +198,8 @@ DI-drive allows users to quickly build up an environment with a benchmark suite 
 <code class="xref py py-class docutils literal notranslate"><span class="pre">BenchmarkEnvWrapper</span></code>. Once an environment is wrapped, it will ignore
 the passed arguments in <code class="docutils literal notranslate"><span class="pre">reset</span></code> method, and choose one from the suite’s route list according to configuration. It can be used
 in RL training, to sampling data in benchmark environment settings.</p>
-<p>Also, DI-drive deploys <a class="reference internal" href="../api_doc/eval.html#core.eval.CarlaBenchmarkEvaluator" title="core.eval.carla_benchmark_evaluator.CarlaBenchmarkEvaluator"><code class="xref py py-class docutils literal notranslate"><span class="pre">CarlaBenchmarkEvaluator</span></code></a> and
-<a class="reference internal" href="../api_doc/data.html#core.data.carla_benchmark_collector.CarlaBenchmarkCollector" title="core.data.carla_benchmark_collector.CarlaBenchmarkCollector"><code class="xref py py-class docutils literal notranslate"><span class="pre">CarlaBenchmarkCollector</span></code></a> to run with a policy
+<p>Also, DI-drive deploys <code class="xref py py-class docutils literal notranslate"><span class="pre">CarlaBenchmarkEvaluator</span></code> and
+<code class="xref py py-class docutils literal notranslate"><span class="pre">CarlaBenchmarkCollector</span></code> to run with a policy
 and a <code class="docutils literal notranslate"><span class="pre">EnvManager</span></code> in DI-engine that can run several environments in parallel. They can parse reset params in the provided
 suite to a list and run all the episodes in order.
 The <code class="docutils literal notranslate"><span class="pre">Evaluator</span></code> is used to evaluate a policy by running an amount or the entire benchmark suits,
@@ -208,20 +209,24 @@ in the suite. The <code class="docutils literal notranslate"><span class="pre">C
 <p class="admonition-title">Note</p>
 <p>Check these modules in <a class="reference external" href="../api_doc/index.html">API doc</a> for detail information.</p>
 </div>
-<div class="section" id="sample-images">
+<section id="sample-images">
 <h2>Sample images<a class="headerlink" href="#sample-images" title="Permalink to this headline">¶</a></h2>
 <p>You can check routes in each benchmark suite file in <a class="reference external" href="../../../data/benchmark">benchmark</a> and find start &amp; end waypoint.
 Here we show benchmark settings for ‘Town01’ and ‘Town02’<sup>[2]</sup>.</p>
-<div class="figure align-center" id="id1">
+<figure class="align-center" id="id1">
 <a class="reference internal image-reference" href="../_images/roadmaps.png"><img alt="roadmaps" src="../_images/roadmaps.png" style="width: 600px;" /></a>
-<p class="caption"><span class="caption-text">Road maps od Town01 and Town02</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
-</div>
-<div class="figure align-center" id="id2">
+<figcaption>
+<p><span class="caption-text">Road maps od Town01 and Town02</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id2">
 <a class="reference internal image-reference" href="../_images/weathers.png"><img alt="weathers" src="../_images/weathers.png" style="width: 600px;" /></a>
-<p class="caption"><span class="caption-text">Weather settings for train, test and eval</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
-</div>
-</div>
-<div class="section" id="performance-metrics">
+<figcaption>
+<p><span class="caption-text">Weather settings for train, test and eval</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="performance-metrics">
 <h2>Performance Metrics<a class="headerlink" href="#performance-metrics" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>CILRS</p></li>
@@ -413,15 +418,15 @@ Here we show benchmark settings for ‘Town01’ and ‘Town02’<sup>[2]</sup>.
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="reference">
+</section>
+<section id="reference">
 <h2>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
 <div class="line">[1] J  Hawke, et al. <a class="reference external" href="http://vladlen.info/papers/conditional-imitation.pdf">“Urban Driving with Conditional Imitation Learning.”</a> (2019).</div>
 <div class="line">[2] Xiao, Y. , et al. <a class="reference external" href="https://arxiv.org/abs/1906.03199v1">“Multimodal End-to-End Autonomous Driving.”</a> (2019).</div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

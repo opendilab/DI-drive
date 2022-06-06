@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Visualization &mdash; DI-drive 0.3.2 documentation</title>
+  <title>Visualization &mdash; DI-drive 0.3.3 documentation</title>
   
 
   
@@ -62,7 +63,7 @@
             
             
               <div class="version">
-                0.3.2
+                0.3.3
               </div>
             
           
@@ -179,7 +180,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="visualization">
+  <section id="visualization">
 <h1>Visualization<a class="headerlink" href="#visualization" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
@@ -227,14 +228,18 @@ will be run every 3 frames.</p>
 </li>
 </ul>
 <p>Here we show some visualization results. You can check how to get these visualizations in <a class="reference external" href="../tutorial/auto_run.html">auto run</a></p>
-<div class="figure align-center" id="id1">
+<figure class="align-center" id="id1">
 <a class="reference internal image-reference" href="../_images/auto_run_rgb.png"><img alt="auto_run_rgb" src="../_images/auto_run_rgb.png" style="width: 500px;" /></a>
-<p class="caption"><span class="caption-text">Visualization of RGB camera</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
-</div>
-<div class="figure align-center" id="id2">
+<figcaption>
+<p><span class="caption-text">Visualization of RGB camera</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id2">
 <a class="reference internal image-reference" href="../_images/auto_run_bev.png"><img alt="auto_run_bev" src="../_images/auto_run_bev.png" style="width: 500px;" /></a>
-<p class="caption"><span class="caption-text">Visualization of Bird-eye View image</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">Visualization of Bird-eye View image</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <p>There is also another visualization method using <code class="docutils literal notranslate"><span class="pre">gym.wrappers.Monitor</span></code> to record the visualized
 canvas returned by <code class="docutils literal notranslate"><span class="pre">render</span></code> method of an environment, and make video using <code class="docutils literal notranslate"><span class="pre">ffmpeg</span></code> lib.
 This can be switched on by calling <code class="docutils literal notranslate"><span class="pre">enable_save_replay</span></code> of an env manager. The visualization
@@ -248,7 +253,7 @@ video and logs will be recorded in the provided folder path.</p>
 <p>If you are using your own env class, be careful dealing with env instance when using visualization
 with ‘enable_save_replay’.</p>
 </div>
-</div>
+</section>
 
 
            </div>

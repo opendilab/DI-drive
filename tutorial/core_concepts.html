@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Core Concepts and Processes &mdash; DI-drive 0.3.2 documentation</title>
+  <title>Core Concepts and Processes &mdash; DI-drive 0.3.3 documentation</title>
   
 
   
@@ -62,7 +63,7 @@
             
             
               <div class="version">
-                0.3.2
+                0.3.3
               </div>
             
           
@@ -176,15 +177,15 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="core-concepts-and-processes">
+  <section id="core-concepts-and-processes">
 <h1>Core Concepts and Processes<a class="headerlink" href="#core-concepts-and-processes" title="Permalink to this headline">¶</a></h1>
 <p>DI-drive decomposes Autonomous Driving framework into two parts: <strong>Policy</strong> and <strong>Env</strong>.
 Policy maps observations to agent actions, and Env simulates the world with an
 output of new observations. Thus, the simulation iterates and information can be used
 to update models, visualize environments and evaluate policies.</p>
-<div class="figure align-center">
+<figure class="align-center">
 <a class="reference internal image-reference" href="../_images/icon_2.png"><img alt="icon_2" src="../_images/icon_2.png" style="width: 800px;" /></a>
-</div>
+</figure>
 <p>One policy can have different running modes, in order to be suitable for varies kinds
 of functions in Deep Learning. DI-drive defines 3 modes in policy: collect, eval and learn,
 together with <strong>collector</strong>, <strong>evaluator</strong> and <strong>learner</strong> to interact.
@@ -205,7 +206,7 @@ can be represented as sampling data and storing to a <strong>dataset</strong>, t
 in policy. <strong>Reinforcement Learning</strong> similarly sampling data into <strong>replay buffer</strong> and updating
 policy immediately or laterly. Other methods such IRL and GAIL can be promoted from these
 modules.</p>
-</div>
+</section>
 
 
            </div>

@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Policy Features &mdash; DI-drive 0.3.2 documentation</title>
+  <title>Policy Features &mdash; DI-drive 0.3.3 documentation</title>
   
 
   
@@ -62,7 +63,7 @@
             
             
               <div class="version">
-                0.3.2
+                0.3.3
               </div>
             
           
@@ -179,7 +180,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="policy-features">
+  <section id="policy-features">
 <h1>Policy Features<a class="headerlink" href="#policy-features" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
@@ -198,9 +199,9 @@ called with the same interfaces.</p>
 policy with interfaces that can be directly called by the user. For example, calling <code class="docutils literal notranslate"><span class="pre">forward</span></code> method of a
 <code class="docutils literal notranslate"><span class="pre">policy.collect_mode</span></code> is the same as calling <code class="docutils literal notranslate"><span class="pre">policy._forward_collect</span></code> method. Same as <code class="docutils literal notranslate"><span class="pre">init</span></code>, <code class="docutils literal notranslate"><span class="pre">reset</span></code>,
 <code class="docutils literal notranslate"><span class="pre">state_dict</span></code> and <code class="docutils literal notranslate"><span class="pre">load_state_dict</span></code>. This makes the policy polymorphic under the same core computing logic.</p>
-<div class="figure align-center">
+<figure class="align-center">
 <img alt="policy_mode" src="../_images/policy_mode.png" />
-</div>
+</figure>
 <p>After that, it is natural to use the same policy with different modes in some worker instances to realize various
 functions during training, collecting and evaluating etc. What is more, users are allowed to design their own
 policy mode in this way. Just keep the external interface <code class="docutils literal notranslate"><span class="pre">init</span></code>, <code class="docutils literal notranslate"><span class="pre">reset</span></code> and <code class="docutils literal notranslate"><span class="pre">forward</span></code> (<code class="docutils literal notranslate"><span class="pre">state_dict</span></code> as
@@ -233,7 +234,7 @@ information for each environment to run correctly.</p>
 <span class="c1"># policy should return a dict with all actions of environments in the passed obs dict, like {env_id: action, ...}</span>
 </pre></div>
 </div>
-</div>
+</section>
 
 
            </div>

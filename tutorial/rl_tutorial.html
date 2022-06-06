@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Simple Reinforcement Learning &mdash; DI-drive 0.3.2 documentation</title>
+  <title>Simple Reinforcement Learning &mdash; DI-drive 0.3.3 documentation</title>
   
 
   
@@ -62,7 +63,7 @@
             
             
               <div class="version">
-                0.3.2
+                0.3.3
               </div>
             
           
@@ -185,24 +186,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="simple-reinforcement-learning">
+  <section id="simple-reinforcement-learning">
 <h1>Simple Reinforcement Learning<a class="headerlink" href="#simple-reinforcement-learning" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
 <p><strong>DI-drive</strong> + <strong>DI-engine</strong> make RL for Autonomous Driving very easy. Here we show how to
 use <strong>DI-drive</strong> to run a simple Reinforcement Learning driving policy with Carla and MetaDrive
 separately.</p>
-<div class="section" id="prerequisites">
+<section id="prerequisites">
 <h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
 <p>Ubuntu 16.04 system + Intel(R) Core(TM) i7-8700 CPU &#64; 3.20GHz + 32G
 memory + GPU1060</p>
-</div>
-<div class="section" id="carla-rl-tutorial">
+</section>
+<section id="carla-rl-tutorial">
 <h2>Carla RL Tutorial<a class="headerlink" href="#carla-rl-tutorial" title="Permalink to this headline">¶</a></h2>
 <p>DI-drive support several RL policies and provide a simple RL env running with Carla server.
 The policy takes a small Bird-eye View image together with
 current speed as input, and directly outputs control signals.</p>
-<div class="section" id="rl-training-using-di-engine">
+<section id="rl-training-using-di-engine">
 <h3>RL training using DI-engine<a class="headerlink" href="#rl-training-using-di-engine" title="Permalink to this headline">¶</a></h3>
 <p>We build simple RL demos that can run varies RL algorithm with the aforementioned simple environment setting.
 All the code can be found in <code class="docutils literal notranslate"><span class="pre">demo/simple_rl</span></code>, including training, evaluating and testing.</p>
@@ -234,20 +235,20 @@ you may concern about the replay buffer size and sample num per collection.</p>
 <p>When you see the information in terminal that contains the content in
 the following picture, it means that you are beginning to train the
 model.</p>
-<div class="figure align-center">
+<figure class="align-center">
 <a class="reference internal image-reference" href="../_images/rl_tutorial_log.png"><img alt="rl_tutorial_log" src="../_images/rl_tutorial_log.png" style="width: 1000px;" /></a>
-</div>
+</figure>
 <p>In the process of training, you can use the tensorboard as a monitor,
 the default log path is in your working directory.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tensorboard --logdir<span class="o">=</span><span class="s1">&#39;./log&#39;</span>
 </pre></div>
 </div>
 <p>After running for about 24 hours, you will get:</p>
-<div class="figure align-center">
+<figure class="align-center">
 <a class="reference internal image-reference" href="../_images/rl_tutorial_tb.png"><img alt="rl_tutorial_tb" src="../_images/rl_tutorial_tb.png" style="width: 800px;" /></a>
-</div>
-</div>
-<div class="section" id="evaluate-and-test-the-trained-model">
+</figure>
+</section>
+<section id="evaluate-and-test-the-trained-model">
 <h3>Evaluate and test the trained model<a class="headerlink" href="#evaluate-and-test-the-trained-model" title="Permalink to this headline">¶</a></h3>
 <p>After training, you can evaluate the trained model on a benchmark suite. Simply run the following code.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python simple_rl_eval.py -p dqn -c PATH_TO_YOUR_CKPT
@@ -315,9 +316,9 @@ and add your pre-trained weights in policy’s config.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="metadrive-rl-tutorial">
+</section>
+</section>
+<section id="metadrive-rl-tutorial">
 <h2>MetaDrive RL Tutorial<a class="headerlink" href="#metadrive-rl-tutorial" title="Permalink to this headline">¶</a></h2>
 <p>DI-drive provide a simple entry that can run MetaDrive default environments
 with DI-engine policies. The training entry can be found in <cite>demo/metadrive</cite></p>
@@ -339,8 +340,8 @@ an on-policy PPO policy. You can modify the env num in config to suit your devic
 <span class="p">)</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

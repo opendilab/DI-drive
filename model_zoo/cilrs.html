@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Conditional Imitation Learning &mdash; DI-drive 0.3.2 documentation</title>
+  <title>Conditional Imitation Learning &mdash; DI-drive 0.3.3 documentation</title>
   
 
   
@@ -62,7 +63,7 @@
             
             
               <div class="version">
-                0.3.2
+                0.3.3
               </div>
             
           
@@ -184,7 +185,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="conditional-imitation-learning">
+  <section id="conditional-imitation-learning">
 <h1>Conditional Imitation Learning<a class="headerlink" href="#conditional-imitation-learning" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
@@ -197,20 +198,24 @@ command.</p>
 <p>The CIL model uses CNN to capture visual information and concat it with measurements
 information (vehicle speed), then use the provided navigation command to select a
 branch to give predictions.</p>
-<div class="figure align-center" id="id1">
+<figure class="align-center" id="id1">
 <img alt="image-cilrs_1" src="../_images/image-cilrs_1.png" />
-<p class="caption"><span class="caption-text">CIL model structure</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">CIL model structure</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <p>CILRS uses deeper ResNet model and predicts speed in outputs as well to get better
 imitating behavior.</p>
-<div class="figure align-center" id="id2">
+<figure class="align-center" id="id2">
 <a class="reference internal image-reference" href="../_images/image-cilrs_2.png"><img alt="image-cilrs_2" src="../_images/image-cilrs_2.png" style="width: 600px;" /></a>
-<p class="caption"><span class="caption-text">CILRS model structure</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">CILRS model structure</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <p><strong>DI-drive</strong> supports full pipeline of CILRS, including datasets collecting, model
 training, and benchmark evaluation. Quick start of CILRS has been
 introduced in the tutorial. All code in this page can be found in <code class="docutils literal notranslate"><span class="pre">./demo/cilrs</span></code></p>
-<div class="section" id="data-collection">
+<section id="data-collection">
 <h2>Data collection<a class="headerlink" href="#data-collection" title="Permalink to this headline">¶</a></h2>
 <p>The configuration of dataset collection has been set up in
 <code class="docutils literal notranslate"><span class="pre">cilrs_data_collect.py</span></code>. It uses <code class="docutils literal notranslate"><span class="pre">CarlaBenchmarkCollector</span></code> and <code class="docutils literal notranslate"><span class="pre">BenchmarkDatasaver</span></code>
@@ -263,8 +268,8 @@ to collect training data. You can custom the configuration as follow.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="model-training">
+</section>
+<section id="model-training">
 <h2>Model training<a class="headerlink" href="#model-training" title="Permalink to this headline">¶</a></h2>
 <p>The training of CILRS is a standard imitation learning process. It takes
 RGB image and measurement as input then mimic the export label. You can custom
@@ -307,8 +312,8 @@ on in <code class="docutils literal notranslate"><span class="pre">cilrs_train.p
 <span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="model-evaluation">
+</section>
+<section id="model-evaluation">
 <h2>Model evaluation<a class="headerlink" href="#model-evaluation" title="Permalink to this headline">¶</a></h2>
 <p>DI-drive supports model evaluation with Carla benchmark. To custom the
 evaluation process, you can modify the configuration in <code class="docutils literal notranslate"><span class="pre">cilrs_eval.py</span></code>.</p>
@@ -379,8 +384,8 @@ evaluation process, you can modify the configuration in <code class="docutils li
 <span class="p">}</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

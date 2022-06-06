@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>from Continuous Intention to Continuous Trajectory &mdash; DI-drive 0.3.2 documentation</title>
+  <title>from Continuous Intention to Continuous Trajectory &mdash; DI-drive 0.3.3 documentation</title>
   
 
   
@@ -62,7 +63,7 @@
             
             
               <div class="version">
-                0.3.2
+                0.3.3
               </div>
             
           
@@ -186,7 +187,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="from-continuous-intention-to-continuous-trajectory">
+  <section id="from-continuous-intention-to-continuous-trajectory">
 <h1>from Continuous Intention to Continuous Trajectory<a class="headerlink" href="#from-continuous-intention-to-continuous-trajectory" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
@@ -197,7 +198,7 @@ network to generate a detailed trajectory together with the placement.</p>
 <a class="reference internal image-reference" href="../_images/cict_1.png"><img alt="cict_1" class="align-center" src="../_images/cict_1.png" style="width: 800px;" /></a>
 <p>DI-drive prepares training and evaluation for the GAN network and trajectory network in CICT. The IL
 datasets is colleted via Carla. The close-loop control test is supported using the two trained networks.</p>
-<div class="section" id="data-preparation">
+<section id="data-preparation">
 <h2>Data Preparation<a class="headerlink" href="#data-preparation" title="Permalink to this headline">¶</a></h2>
 <p>The collection settings can be modified in <code class="docutils literal notranslate"><span class="pre">demo/cict_demo/post.py</span></code>. By default we collect 40
 episodes in total, 37 for training and 3 for evaluation.
@@ -269,8 +270,8 @@ in default config before running.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python collect_data.py
 </pre></div>
 </div>
-</div>
-<div class="section" id="training">
+</section>
+<section id="training">
 <h2>Training<a class="headerlink" href="#training" title="Permalink to this headline">¶</a></h2>
 <p>CICT is a two-stage method. <code class="docutils literal notranslate"><span class="pre">cict_train_GAN.py</span></code> and <code class="docutils literal notranslate"><span class="pre">cict_train_traj.py</span></code> are used for training of each stage.
 You may need to change the dataset path and pre-train model path.</p>
@@ -383,8 +384,8 @@ You may need to change the dataset path and pre-train model path.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python cict_train_traj.py
 </pre></div>
 </div>
-</div>
-<div class="section" id="evaluation">
+</section>
+<section id="evaluation">
 <h2>Evaluation<a class="headerlink" href="#evaluation" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">cict_eval_GAN.py</span></code> and <code class="docutils literal notranslate"><span class="pre">cict_eval_traj.py</span></code> are used for training of each stage.
 Note that you must evaluate the first stage before evaluate the second stage.
@@ -472,8 +473,8 @@ Also you may need to change the dataset path and pre-train weights path.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python cict_eval_traj.py
 </pre></div>
 </div>
-</div>
-<div class="section" id="results">
+</section>
+<section id="results">
 <h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
 <p>The ground-truth potential map and predicted potential map on evaluation dataset at the first stage:</p>
 <img alt="result_GAN" class="align-center" src="../_images/result_GAN.png" />
@@ -497,8 +498,8 @@ Also you may need to change the dataset path and pre-train weights path.</p>
 </table>
 <p>We provide pre-train weights under these configs. You can download it using this
 <a class="reference external" href="http://opendilab.org/download/DI-drive/cict/il/">link</a></p>
-</div>
-<div class="section" id="benchmark-evaluating">
+</section>
+<section id="benchmark-evaluating">
 <h2>Benchmark Evaluating<a class="headerlink" href="#benchmark-evaluating" title="Permalink to this headline">¶</a></h2>
 <p>The Benchmark evaluation runs with the two trained network in a Carla town suite. You may need to
 change the environment num, server IP and port and suite’s name in config.</p>
@@ -617,8 +618,8 @@ change the environment num, server IP and port and suite’s name in config.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

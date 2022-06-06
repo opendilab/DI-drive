@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>BeV Speed End-to-end Reinforcement Learning &mdash; DI-drive 0.3.2 documentation</title>
+  <title>BeV Speed End-to-end Reinforcement Learning &mdash; DI-drive 0.3.3 documentation</title>
   
 
   
@@ -62,7 +63,7 @@
             
             
               <div class="version">
-                0.3.2
+                0.3.3
               </div>
             
           
@@ -185,7 +186,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="bev-speed-end-to-end-reinforcement-learning">
+  <section id="bev-speed-end-to-end-reinforcement-learning">
 <h1>BeV Speed End-to-end Reinforcement Learning<a class="headerlink" href="#bev-speed-end-to-end-reinforcement-learning" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
@@ -196,7 +197,7 @@ and <strong>DI-engine</strong> RL policies. All training, evaluation and testing
 <a class="reference internal image-reference" href="../_images/dqn_demo2.gif"><img alt="dqn_demo2" src="../_images/dqn_demo2.gif" style="width: 250px;" /></a>
 <a class="reference internal image-reference" href="../_images/dqn_demo3.gif"><img alt="dqn_demo3" src="../_images/dqn_demo3.gif" style="width: 250px;" /></a>
 <a class="reference internal image-reference" href="../_images/dqn_demo4.gif"><img alt="dqn_demo4" src="../_images/dqn_demo4.gif" style="width: 250px;" /></a>
-<div class="section" id="inputs-nn-models-and-policies">
+<section id="inputs-nn-models-and-policies">
 <h2>Inputs, NN models and Policies<a class="headerlink" href="#inputs-nn-models-and-policies" title="Permalink to this headline">¶</a></h2>
 <p>The simple RL policy takes a Bird-eye View(BeV) image with size of 32x32x5 and speed scalar as observations.
 The BeV image consists of roads, lanes, vehicles, pedestrians and target route. Each occupies a channel
@@ -210,8 +211,8 @@ define NN models similarly.</p>
 <p>Currently we have DQN, DDPG, TD3, SAC and PPO demos. We provide training and evaluation entry for all of
 them. All these policies are implemented from <strong>DI-engine</strong> standard policy zoo. You can refer to
 <strong>DI-engine</strong>’s document to get how to modify the training hyper-parameters in config.</p>
-</div>
-<div class="section" id="environment">
+</section>
+<section id="environment">
 <h2>Environment<a class="headerlink" href="#environment" title="Permalink to this headline">¶</a></h2>
 <p>The simple RL experiments use the environment instance <code class="docutils literal notranslate"><span class="pre">SimpleCarlaEnv</span></code> which is well defined with
 specified inputs and outputs.  The standard usage to customize the env interfaces is to add <code class="docutils literal notranslate"><span class="pre">EnvWrapper</span></code>
@@ -255,8 +256,8 @@ traffic signal channels in BeV image. Other wrappers work in the same way.</p>
 <p>We have tried amounts of reward shaping and add varies kinds of reward function in the Env. By default
 only [‘goal’, ‘distance’, ‘speed’, ‘angle’, ‘failure’] 5 types of reward is taken into account. You
 can modify the reward types you want to use via config.</p>
-</div>
-<div class="section" id="training-and-evaluation">
+</section>
+<section id="training-and-evaluation">
 <h2>Training and Evaluation<a class="headerlink" href="#training-and-evaluation" title="Permalink to this headline">¶</a></h2>
 <p>The entry files of all the RL methods are written in standard distributed way using <strong>DI-engine</strong> to run RL experiments.
 The sub-process env manager in <strong>Di-engine</strong> is used to run multi-env in parallel.
@@ -346,8 +347,8 @@ They can be implement using <code class="docutils literal notranslate"><span cla
 <p>We provide pre-train weights of DQN policy that can be evaluated and visualized directly as well as a
 performance reference of your training.
 <a class="reference external" href="http://opendilab.org/download/DI-drive/simple_rl/Plus25.pth">link</a></p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

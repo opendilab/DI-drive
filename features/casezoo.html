@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Carla Scenario and Casezoo Evaluation &mdash; DI-drive 0.3.2 documentation</title>
+  <title>Carla Scenario and Casezoo Evaluation &mdash; DI-drive 0.3.3 documentation</title>
   
 
   
@@ -62,7 +63,7 @@
             
             
               <div class="version">
-                0.3.2
+                0.3.3
               </div>
             
           
@@ -181,7 +182,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="carla-scenario-and-casezoo-evaluation">
+  <section id="carla-scenario-and-casezoo-evaluation">
 <h1>Carla Scenario and Casezoo Evaluation<a class="headerlink" href="#carla-scenario-and-casezoo-evaluation" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
@@ -192,7 +193,7 @@ DI-drive refer to the existing Carla <a class="reference external" href="https:/
 to set up scenarios, and add interfaces to suit for DI-drive, so as to run Deep Learning method easily.
 DI-drive also supports both ScenarioRunner’s example scenarios and routes. They can be run in the same way as
 follow.</p>
-<div class="section" id="overview">
+<section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <p>Currently Deep Learning literatures in Carla simulator mostly use <strong>Benchmark</strong> env setting to train and evaluate
 their policies. Benchmark defines several suites of routes by a start and end point, divided into three difficulties. Each suite
@@ -221,8 +222,8 @@ This makes the RL training quickly and conveniently for users.</p>
 <li><p>Suitable for IL &amp; RL training</p></li>
 <li><p>Interacted with same interfaces in <code class="docutils literal notranslate"><span class="pre">Env</span></code></p></li>
 </ul>
-</div>
-<div class="section" id="running-guide">
+</section>
+<section id="running-guide">
 <h2>Running Guide<a class="headerlink" href="#running-guide" title="Permalink to this headline">¶</a></h2>
 <p>The scenario defines a route to follow in <cite>Town03</cite>, <cite>Town04</cite> and <cite>Town05</cite>. The route is stored in a <cite>.xml</cite> file.
 There are also individual scenarios defined in <cite>python</cite> files. The individual scenario can be triggered when hero
@@ -232,7 +233,7 @@ a <cite>.json</cite> file with the same file name as the route file.</p>
 <cite>xml</cite> files. Each type of scenario possess sevaral cases at a specific location and a name saved in the <cite>xml</cite> file.
 Details of all routes and scenarios are shown in
 <a class="reference external" href="https://github.com/opendilab/DI-drive/blob/main/docs/casezoo_instruction.md">Casezoo instruction</a>.</p>
-<p>DI-drive defines <a class="reference internal" href="../api_doc/envs.html#core.envs.ScenarioCarlaEnv" title="core.envs.scenario_carla_env.ScenarioCarlaEnv"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScenarioCarlaEnv</span></code></a>, which uses
+<p>DI-drive defines <code class="xref py py-class docutils literal notranslate"><span class="pre">ScenarioCarlaEnv</span></code>, which uses
 <code class="xref py py-class docutils literal notranslate"><span class="pre">ScenarioSimulator</span></code> to run Casezoo.
 You need to parse the scenario files and get a configuration instance, then pass the configuration into
 the <code class="docutils literal notranslate"><span class="pre">reset</span></code> method of a <code class="docutils literal notranslate"><span class="pre">ScenarioEnv</span></code>. The environment is able to get the scenario type by itself
@@ -266,8 +267,8 @@ common RL environments to train and evaluate.</p>
 single case to start an episode in scenario environments.</p>
 </div>
 <p>You can run auto policy in scenario environments with <code class="docutils literal notranslate"><span class="pre">demo/auto_run/auto_run_case.py</span></code></p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
