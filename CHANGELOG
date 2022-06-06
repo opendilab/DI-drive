@@ -1,3 +1,9 @@
+## v0.3.3 (2022.6.5)
+- Update readme, reorganize info
+- Add MetaDriveTrajEnv and doc
+- Add utils for MetaDrive
+- Modify utils for macro env
+   
 ## v0.3.2 (2022.4.24)
 - Update banner logo
 - Update to DI-engine 0.3, modify env properties

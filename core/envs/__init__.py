@@ -22,8 +22,10 @@ if 'carla' in SIMULATORS:
 
 if 'metadrive' in SIMULATORS:
     from .md_macro_env import MetaDriveMacroEnv
+    from .md_traj_env import MetaDriveTrajEnv
     env_map.update({
         "Macro-v1": 'core.envs.md_macro_env:MetaDriveMacroEnv',
+        "Traj-v1": 'core.envs.md_traj_env:MetaDriveTrajEnv'
     })
 
 for k, v in env_map.items():

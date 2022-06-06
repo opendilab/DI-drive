@@ -1402,10 +1402,16 @@ htmlcov
 *.lock
 .coverage*
 
-project_test.py
+## DI-engine
+*total_config.py
+openaigym*
+
+## Carla
 *.csv
 *.avi
+
+.vscode
+project_test.py
 *episode_metainfo.json
 *measurements.lmdb
 *index.txt
-openaigym*

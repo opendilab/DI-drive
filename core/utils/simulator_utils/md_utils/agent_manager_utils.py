@@ -1,5 +1,7 @@
 from metadrive.manager.agent_manager import AgentManager
 from core.utils.simulator_utils.md_utils.macro_policy import ManualMacroDiscretePolicy
+from core.utils.simulator_utils.md_utils.traj_policy import TrajPolicy
+from core.utils.simulator_utils.md_utils.vehicle_utils import MDDefaultVehicle
 from metadrive.utils.space import ParameterSpace, VehicleParameterSpace
 from metadrive.component.vehicle.vehicle_type import DefaultVehicle
 from metadrive.utils import Config, safe_clip_for_small_array
@@ -60,6 +62,50 @@ class MacroAgentManager(AgentManager):
         # v_type = random_vehicle_type(self.np_random) if self.engine.global_config["random_agent_model"] else \
         #     vehicle_type[self.engine.global_config["vehicle_config"]["vehicle_model"]]
         v_type = MacroDefaultVehicle
+        for agent_id, v_config in config_dict.items():
+            obj = self.spawn_object(v_type, vehicle_config=v_config)
+            ret[agent_id] = obj
+            policy = self._get_policy(obj)
+            self.engine.add_policy(obj.id, policy)
+        return ret
+
+
+class TrajAgentManager(AgentManager):
+
+    def _get_policy(self, obj):
+        policy = TrajPolicy(obj, self.generate_seed())
+        return policy
+
+    def before_step(self, frame=0, wps=None):
+        # not in replay mode
+        self._agents_finished_this_frame = dict()
+        step_infos = {}
+        for agent_id in self.active_agents.keys():
+            policy = self.engine.get_policy(self._agent_to_object[agent_id])
+            if agent_id in wps.keys():
+                waypoints = wps[agent_id]
+            self.get_agent(agent_id).before_macro_step(frame)
+            action = policy.act(agent_id, frame, waypoints)
+            step_infos[agent_id] = policy.get_action_info()
+            step_infos[agent_id].update(self.get_agent(agent_id).before_step(action))
+
+        finished = set()
+        for v_name in self._dying_objects.keys():
+            self._dying_objects[v_name][1] -= 1
+            if self._dying_objects[v_name][1] == 0:  # Countdown goes to 0, it's time to remove the vehicles!
+                v = self._dying_objects[v_name][0]
+                self._remove_vehicle(v)
+                finished.add(v_name)
+        for v_name in finished:
+            self._dying_objects.pop(v_name)
+        return step_infos
+
+    def _get_vehicles(self, config_dict: dict):
+        from metadrive.component.vehicle.vehicle_type import random_vehicle_type, vehicle_type
+        ret = {}
+        # v_type = random_vehicle_type(self.np_random) if self.engine.global_config["random_agent_model"] else \
+        #     vehicle_type[self.engine.global_config["vehicle_config"]["vehicle_model"]]
+        v_type = MDDefaultVehicle
         for agent_id, v_config in config_dict.items():
             obj = self.spawn_object(v_type, vehicle_config=v_config)
             ret[agent_id] = obj
