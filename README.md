@@ -2,6 +2,20 @@
 
 <img src="./docs/figs/di-drive_banner.png" alt="icon"/>
 
+[![Twitter](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2Fopendilab)](https://twitter.com/opendilab)
+![Style](https://github.com/opendilab/DI-drive/actions/workflows/style.yml/badge.svg)
+![Docs](https://github.com/opendilab/DI-drive/actions/workflows/doc.yml/badge.svg)
+
+![GitHub Org's stars](https://img.shields.io/github/stars/opendilab)
+[![GitHub stars](https://img.shields.io/github/stars/opendilab/DI-drive)](https://github.com/opendilab/DI-drive/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/opendilab/DI-drive)](https://github.com/opendilab/DI-drive/network)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/opendilab/DI-drive)
+[![GitHub license](https://img.shields.io/github/license/opendilab/DI-drive)](https://github.com/opendilab/DI-drive/blob/master/LICENSE)
+
+## Introduction
+
+[DI-drive doc](https://opendilab.github.io/DI-drive/)
+
 **DI-drive** is an open-source Decision Intelligence Platform for Autonomous Driving simulation. DI-drive applies different simulators/datasets/cases in **Decision Intelligence** Training & Testing for **Autonomous Driving** Policy.
 It aims to
 
@@ -22,6 +36,8 @@ a diverse driving scenarios for Generalizable Reinforcement Learning. DI-drive i
 
 ## Outline
 
+ * [Introduction](#introduction)
+ * [Outline](#outline)
  * [Installation](#installation)
  * [Quick Start](#quick-start)
  * [Model Zoo](#model-zoo)
