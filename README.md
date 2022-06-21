@@ -52,8 +52,8 @@ a diverse driving scenarios for Generalizable Reinforcement Learning. DI-drive i
 **DI-drive** runs with **Python >= 3.5** and **DI-engine >= 0.3.1** (Pytorch is needed in DI-engine). You can install DI-drive from the source code:
 
 ```bash
-git clone https://gitlab.bj.sensetime.com/open-XLab/cell/xad.git
-cd xad
+git clone https://github.com/opendilab/DI-drive.git
+cd DI-drive
 pip install -e .
 ```
 
