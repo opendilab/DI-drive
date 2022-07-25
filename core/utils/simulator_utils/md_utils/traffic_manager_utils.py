@@ -76,7 +76,7 @@ class MacroTrafficManager(TrafficManager):
         for block in map.blocks[1:]:
             xb_dist = min(abs(block.bounding_box[0]), abs(block.bounding_box[1]))
             yb_dist = min(abs(block.bounding_box[2]), abs(block.bounding_box[3]))
-            dist_constrain = 200
+            dist_constrain = 250
             if xb_dist * xb_dist + yb_dist * yb_dist > dist_constrain * dist_constrain:
                 continue
             trigger_lanes = block.get_intermediate_spawn_lanes()
@@ -116,8 +116,6 @@ class MacroTrafficManager(TrafficManager):
             vehicle_num += len(vehicles_on_block)
         self.block_triggered_vehicles.reverse()
         respawn_lanes = self._get_available_respawn_lanes(map)
-        for lane in respawn_lanes:
-            self._traffic_vehicles += self._create_respawn_vehicles_with_density(traffic_density, lane, True)
 
     def _create_respawn_vehicles_with_density(self, traffic_density: float, lane: AbstractLane, is_respawn_lane):
         """

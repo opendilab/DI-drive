@@ -50,7 +50,7 @@ setup(
         'py-trees==0.8.3',
         'pygame',
         'torchvision',
-        'di-engine>=0.3',
+        'di-engine',
         'scikit-image',
         'setuptools==50',
         'shapely',
@@ -81,7 +81,7 @@ setup(
             'flake8',
         ],
         'metadrive': [
-            'metadrive-simulator==0.2.3',
+            'metadrive-simulator',
         ],
     },
     classifiers=[

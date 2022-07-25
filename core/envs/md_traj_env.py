@@ -11,7 +11,8 @@ import logging
 from ding.utils import ENV_REGISTRY
 from core.utils.simulator_utils.md_utils.discrete_policy import DiscreteMetaAction
 from core.utils.simulator_utils.md_utils.agent_manager_utils import TrajAgentManager
-from core.utils.simulator_utils.md_utils.engine_utils import TrajEngine
+from core.utils.simulator_utils.md_utils.engine_utils import TrajEngine, initialize_engine, close_engine, \
+     engine_initialized, set_global_random_seed
 from core.utils.simulator_utils.md_utils.traffic_manager_utils import TrafficMode
 from metadrive.constants import RENDER_MODE_NONE, DEFAULT_AGENT, REPLAY_DONE, TerminationState
 from metadrive.envs.base_env import BaseEnv
@@ -23,7 +24,6 @@ from metadrive.utils import Config, merge_dicts, get_np_random, clip, concat_ste
 from metadrive.envs.base_env import BASE_DEFAULT_CONFIG
 from metadrive.obs.top_down_obs_multi_channel import TopDownMultiChannel
 from metadrive.engine.base_engine import BaseEngine
-from metadrive.utils.utils import auto_termination
 
 DIDRIVE_DEFAULT_CONFIG = dict(
     # ===== Generalization =====
@@ -77,8 +77,8 @@ DIDRIVE_DEFAULT_CONFIG = dict(
     # ===== Reward Scheme =====
     # See: https://github.com/decisionforce/metadrive/issues/283
     success_reward=10.0,  # 10.0,
-    out_of_road_penalty=1.0,  # 5.0,
-    crash_vehicle_penalty=1.0,  # 1.0,
+    out_of_road_penalty=5.0,  # 5.0,
+    crash_vehicle_penalty=5.0,  # 1.0,
     crash_object_penalty=5.0,  # 5.0,
     run_out_of_time_penalty=5.0,  # 5.0,
 
@@ -668,14 +668,14 @@ class MetaDriveTrajEnv(BaseEnv):
 
         should_done = engine_info.get(REPLAY_DONE, False
                                       ) or (self.config["horizon"] and self.episode_steps >= self.config["horizon"])
-        termination_infos = self.for_each_vehicle(auto_termination, should_done)
+        #termination_infos = self.for_each_vehicle(self.auto_termination, should_done)
 
         step_infos = concat_step_infos([
             engine_info,
             done_infos,
             reward_infos,
             cost_infos,
-            termination_infos,
+            #termination_infos,
         ])
 
         if should_done:
@@ -847,10 +847,9 @@ class MetaDriveTrajEnv(BaseEnv):
         :return: None
         """
         # It is the true init() func to create the main vehicle and its module, to avoid incompatible with ray
-        if TrajEngine.singleton is not None:
+        if engine_initialized():
             return
-        TrajEngine.singleton = TrajEngine(self.config)
-        self.engine = TrajEngine.singleton
+        self.engine = initialize_engine(self.config)
         # engine setup
         self.setup_engine()
         # other optional initialization
@@ -883,3 +882,9 @@ class MetaDriveTrajEnv(BaseEnv):
                                       ) * average_speed * self.config['physics_world_step_size']
         max_step = int(distance / average_dist_per_step) + 1
         return max_step
+
+    def close(self):
+        if self.engine is not None:
+            close_engine()
+        if self._top_down_renderer is not None:
+            self._top_down_renderer.close()
