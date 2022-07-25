@@ -159,7 +159,7 @@ class MetadriveEvaluator(InteractionSerialEvaluator):
 
         return stop_flag, eval_reward
 
-    def evall(
+    def eval_verbose(
             self,
             save_ckpt_fn: Callable = None,
             train_iter: int = -1,
