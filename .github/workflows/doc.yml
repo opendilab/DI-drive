@@ -10,16 +10,9 @@ jobs:
   doc:
     runs-on: ubuntu-latest
     container: opendilab/didrive-ci:0.1.0
-    strategy:
-      matrix:
-        python-version: [3.7]
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
       - name: Generate
         run: |
           python -m pip install .[doc]
