@@ -1,10 +1,15 @@
 name: style
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [main, 'doc/*']
+  pull_request:
+    branches: [main, 'doc/*']
 
 jobs:
   style:
     runs-on: ubuntu-latest
+    container: opendilab/didrive-ci:0.1.0
     strategy:
       matrix:
         python-version: [3.6, 3.7]
@@ -15,7 +20,13 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-      - name: code style
+      - name: Install
+        run: |
+          python -m pip install .
+          python -c 'import carla'
+          python -c 'import metadrive'
+          python -c 'import core'
+      - name: Code style
         run: |
           python -m pip install .[style]
           bash format.sh ./core --test
