@@ -1,10 +1,6 @@
 name: style
 
-on:
-  push:
-    branches: [main, 'doc/*']
-  pull_request:
-    branches: [main, 'doc/*']
+on: [push, pull_request]
 
 jobs:
   style:
