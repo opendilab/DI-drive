@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   doc:
-    runs-on: ubuntu-latest
+    runs-on: opendilab/didrive-ci:0.1.0
     strategy:
       matrix:
         python-version: [3.6, 3.7]
@@ -18,8 +18,6 @@ jobs:
       - name: install
         run: |
           python -m pip install .
-          wget http://opendilab.org/download/DI-drive/carla-0.9.9-py3.7-linux-x86_64.egg
-          easy_install carla-0.9.9-py3.7-linux-x86_64.egg
           python -c 'import carla'
           python -c 'import metadrive'
           python -c 'import core'

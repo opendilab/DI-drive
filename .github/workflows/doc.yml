@@ -8,7 +8,7 @@ on:
 
 jobs:
   doc:
-    runs-on: ubuntu-latest
+    runs-on: opendilab/didrive-ci:0.1.0
     strategy:
       matrix:
         python-version: [3.7]
@@ -22,8 +22,6 @@ jobs:
       - name: Generate
         run: |
           python -m pip install .[doc]
-          wget http://opendilab.org/download/DI-drive/carla-0.9.9-py3.7-linux-x86_64.egg
-          easy_install carla-0.9.9-py3.7-linux-x86_64.egg
           make -C ./docs html
           mv docs/build/html public
           rm -rf docs/build
