@@ -2,7 +2,9 @@ name: doc
 
 on:
   push:
-    branches: [main, 'doc/*', 'gl-dev/*']
+    branches: [main, 'doc/*']
+  pull_request:
+    branches: [main]
 
 jobs:
   doc:
