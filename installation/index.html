@@ -9,7 +9,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Installation &mdash; DI-drive 0.3.3 documentation</title>
+  <title>Installation &mdash; DI-drive 0.3.4 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.3.3
+                0.3.4
               </div>
             
           
@@ -192,7 +192,7 @@
 </div></blockquote>
 <p>Python version: 3.6, 3.7</p>
 <p>PyTorch version: &gt;=1.4, &lt;=1.8</p>
-<p>DI-engine version: &gt;=0.2</p>
+<p>DI-engine version: &gt;=0.3.1</p>
 <p>Hardware requirements: NVIDIA GPU with at least 4GB memory <em>if you with to run Carla server</em></p>
 </section>
 <section id="get-and-install-di-drive">
@@ -218,7 +218,7 @@ pip install <span class="s1">&#39;.[metadrive]&#39;</span> --user
 If any questions raised when install DI-engine, please follow
 <a class="reference external" href="https://opendilab.github.io/DI-engine/installation/index.html">DI-engine installation</a> for help.
 Or try to install manually via PyPI:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install di-engine<span class="o">==</span><span class="m">0</span>.2
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install di-engine --user
 </pre></div>
 </div>
 <p>DI-drive supports both <strong>Carla</strong> and <strong>MetaDrive</strong>. If you want to use Carla, refer to the next section.
@@ -236,23 +236,23 @@ Only related modules will be imported in each file. By default all simulators ar
 <h2>Additional Installation for Carla<a class="headerlink" href="#additional-installation-for-carla" title="Permalink to this headline">¶</a></h2>
 <section id="download-and-install-carla-python-api">
 <h3>Download and install Carla Python API<a class="headerlink" href="#download-and-install-carla-python-api" title="Permalink to this headline">¶</a></h3>
-<p>DI-drive uses Carla simulator version 0.9.9. It is needed to install Carla Python API from their released pack.
+<p>DI-drive uses Carla simulator version higher than 0.9.9. It is needed to install Carla Python API from their released pack.
 If you have any problem dealing with Carla, we record some common problem you may meet in the
 <a class="reference external" href="../faq/index.html">FAQ</a> page.</p>
 <ul class="simple">
 <li><p>download Carla released pack</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wget https://carla-releases.s3.eu-west-3.amazonaws.com/Linux/CARLA_0.9.9.4.tar.gz
-mkdir carla_099
-tar -xvzf CARLA_0.9.9.4.tar.gz -C carla_099
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wget https://carla-releases.s3.eu-west-3.amazonaws.com/Linux/CARLA_0.9.10.1.tar.gz
+mkdir carla_0910
+tar -xvzf CARLA_0.9.10.1.tar.gz -C carla_0910
 </pre></div>
 </div>
 <ul class="simple">
 <li><p>install Carla Python API</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># install compiled Carla 099 python api, then you can import Carla in python scripts</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># install compiled Carla 0910 python api, then you can import Carla in python scripts</span>
 <span class="nb">cd</span> PythonAPI/carla/dist
-easy_install --user carla-0.9.9-py3.7-linux-x86_64.egg
+easy_install --user carla-0.9.10-py3.7-linux-x86_64.egg
 </pre></div>
 </div>
 <ul class="simple">

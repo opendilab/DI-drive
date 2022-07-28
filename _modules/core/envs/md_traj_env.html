@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>core.envs.md_traj_env &mdash; DI-drive 0.3.3 documentation</title>
+  <title>core.envs.md_traj_env &mdash; DI-drive 0.3.4 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.3.3
+                0.3.4
               </div>
             
           
@@ -177,7 +177,8 @@
 <span class="kn">from</span> <span class="nn">ding.utils</span> <span class="kn">import</span> <span class="n">ENV_REGISTRY</span>
 <span class="kn">from</span> <span class="nn">core.utils.simulator_utils.md_utils.discrete_policy</span> <span class="kn">import</span> <span class="n">DiscreteMetaAction</span>
 <span class="kn">from</span> <span class="nn">core.utils.simulator_utils.md_utils.agent_manager_utils</span> <span class="kn">import</span> <span class="n">TrajAgentManager</span>
-<span class="kn">from</span> <span class="nn">core.utils.simulator_utils.md_utils.engine_utils</span> <span class="kn">import</span> <span class="n">TrajEngine</span>
+<span class="kn">from</span> <span class="nn">core.utils.simulator_utils.md_utils.engine_utils</span> <span class="kn">import</span> <span class="n">TrajEngine</span><span class="p">,</span> <span class="n">initialize_engine</span><span class="p">,</span> <span class="n">close_engine</span><span class="p">,</span> \
+     <span class="n">engine_initialized</span><span class="p">,</span> <span class="n">set_global_random_seed</span>
 <span class="kn">from</span> <span class="nn">core.utils.simulator_utils.md_utils.traffic_manager_utils</span> <span class="kn">import</span> <span class="n">TrafficMode</span>
 <span class="kn">from</span> <span class="nn">metadrive.constants</span> <span class="kn">import</span> <span class="n">RENDER_MODE_NONE</span><span class="p">,</span> <span class="n">DEFAULT_AGENT</span><span class="p">,</span> <span class="n">REPLAY_DONE</span><span class="p">,</span> <span class="n">TerminationState</span>
 <span class="kn">from</span> <span class="nn">metadrive.envs.base_env</span> <span class="kn">import</span> <span class="n">BaseEnv</span>
@@ -189,7 +190,6 @@
 <span class="kn">from</span> <span class="nn">metadrive.envs.base_env</span> <span class="kn">import</span> <span class="n">BASE_DEFAULT_CONFIG</span>
 <span class="kn">from</span> <span class="nn">metadrive.obs.top_down_obs_multi_channel</span> <span class="kn">import</span> <span class="n">TopDownMultiChannel</span>
 <span class="kn">from</span> <span class="nn">metadrive.engine.base_engine</span> <span class="kn">import</span> <span class="n">BaseEngine</span>
-<span class="kn">from</span> <span class="nn">metadrive.utils.utils</span> <span class="kn">import</span> <span class="n">auto_termination</span>
 
 <span class="n">DIDRIVE_DEFAULT_CONFIG</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
     <span class="c1"># ===== Generalization =====</span>
@@ -243,8 +243,8 @@
     <span class="c1"># ===== Reward Scheme =====</span>
     <span class="c1"># See: https://github.com/decisionforce/metadrive/issues/283</span>
     <span class="n">success_reward</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span>  <span class="c1"># 10.0,</span>
-    <span class="n">out_of_road_penalty</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>  <span class="c1"># 5.0,</span>
-    <span class="n">crash_vehicle_penalty</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>  <span class="c1"># 1.0,</span>
+    <span class="n">out_of_road_penalty</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>  <span class="c1"># 5.0,</span>
+    <span class="n">crash_vehicle_penalty</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>  <span class="c1"># 1.0,</span>
     <span class="n">crash_object_penalty</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>  <span class="c1"># 5.0,</span>
     <span class="n">run_out_of_time_penalty</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>  <span class="c1"># 5.0,</span>
 
@@ -834,14 +834,14 @@
 
         <span class="n">should_done</span> <span class="o">=</span> <span class="n">engine_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">REPLAY_DONE</span><span class="p">,</span> <span class="kc">False</span>
                                       <span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;horizon&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">episode_steps</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;horizon&quot;</span><span class="p">])</span>
-        <span class="n">termination_infos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">for_each_vehicle</span><span class="p">(</span><span class="n">auto_termination</span><span class="p">,</span> <span class="n">should_done</span><span class="p">)</span>
+        <span class="c1">#termination_infos = self.for_each_vehicle(self.auto_termination, should_done)</span>
 
         <span class="n">step_infos</span> <span class="o">=</span> <span class="n">concat_step_infos</span><span class="p">([</span>
             <span class="n">engine_info</span><span class="p">,</span>
             <span class="n">done_infos</span><span class="p">,</span>
             <span class="n">reward_infos</span><span class="p">,</span>
             <span class="n">cost_infos</span><span class="p">,</span>
-            <span class="n">termination_infos</span><span class="p">,</span>
+            <span class="c1">#termination_infos,</span>
         <span class="p">])</span>
 
         <span class="k">if</span> <span class="n">should_done</span><span class="p">:</span>
@@ -1013,10 +1013,9 @@
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># It is the true init() func to create the main vehicle and its module, to avoid incompatible with ray</span>
-        <span class="k">if</span> <span class="n">TrajEngine</span><span class="o">.</span><span class="n">singleton</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">engine_initialized</span><span class="p">():</span>
             <span class="k">return</span>
-        <span class="n">TrajEngine</span><span class="o">.</span><span class="n">singleton</span> <span class="o">=</span> <span class="n">TrajEngine</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span> <span class="o">=</span> <span class="n">TrajEngine</span><span class="o">.</span><span class="n">singleton</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span> <span class="o">=</span> <span class="n">initialize_engine</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
         <span class="c1"># engine setup</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setup_engine</span><span class="p">()</span>
         <span class="c1"># other optional initialization</span>
@@ -1048,7 +1047,13 @@
         <span class="n">average_dist_per_step</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;seq_traj_len&#39;</span><span class="p">]</span>
                                       <span class="p">)</span> <span class="o">*</span> <span class="n">average_speed</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;physics_world_step_size&#39;</span><span class="p">]</span>
         <span class="n">max_step</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">distance</span> <span class="o">/</span> <span class="n">average_dist_per_step</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
-        <span class="k">return</span> <span class="n">max_step</span></div>
+        <span class="k">return</span> <span class="n">max_step</span>
+
+    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">close_engine</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_top_down_renderer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_top_down_renderer</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 </pre></div>
 
            </div>

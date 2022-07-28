@@ -17,7 +17,7 @@ Python version: 3.6, 3.7
 
 PyTorch version: >=1.4, <=1.8
 
-DI-engine version: >=0.2
+DI-engine version: >=0.3.1
 
 Hardware requirements: NVIDIA GPU with at least 4GB memory *if you with to run Carla server*
 
@@ -53,7 +53,7 @@ Or try to install manually via PyPI:
 
 .. code-block:: bash
 
-    pip install di-engine==0.2
+    pip install di-engine --user
 
 
 DI-drive supports both **Carla** and **MetaDrive**. If you want to use Carla, refer to the next section.
@@ -75,7 +75,7 @@ Additional Installation for Carla
 Download and install Carla Python API
 ----------------------------------------
 
-DI-drive uses Carla simulator version 0.9.9. It is needed to install Carla Python API from their released pack.
+DI-drive uses Carla simulator version higher than 0.9.9. It is needed to install Carla Python API from their released pack.
 If you have any problem dealing with Carla, we record some common problem you may meet in the 
 `FAQ <../faq/index.html>`_ page.
 
@@ -83,17 +83,17 @@ If you have any problem dealing with Carla, we record some common problem you ma
 
 .. code:: bash
 
-    wget https://carla-releases.s3.eu-west-3.amazonaws.com/Linux/CARLA_0.9.9.4.tar.gz
-    mkdir carla_099
-    tar -xvzf CARLA_0.9.9.4.tar.gz -C carla_099
+    wget https://carla-releases.s3.eu-west-3.amazonaws.com/Linux/CARLA_0.9.10.1.tar.gz
+    mkdir carla_0910
+    tar -xvzf CARLA_0.9.10.1.tar.gz -C carla_0910
 
 - install Carla Python API
 
 .. code-block:: bash
 
-    # install compiled Carla 099 python api, then you can import Carla in python scripts
+    # install compiled Carla 0910 python api, then you can import Carla in python scripts
     cd PythonAPI/carla/dist 
-    easy_install --user carla-0.9.9-py3.7-linux-x86_64.egg
+    easy_install --user carla-0.9.10-py3.7-linux-x86_64.egg
 
 - check import
 

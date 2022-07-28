@@ -20,7 +20,7 @@ establishing the server.
 
     ./CarlaUE4.sh --carla-world-port=N
 
-Usually `N` is set as an even number, because the port `N+1` is simultanously occupied to connect the server. Carla 0.9.9.4
+Usually `N` is set as an even number, because the port `N+1` is simultanously occupied to connect the server. Carla
 also uses a Traffic Manager port to control global behaviors of vehicles. It is specified at the
 client side. TM client can not only be built by DI-drive via automatically finding free port in current system,
 but also manually set by users.
@@ -54,11 +54,11 @@ Then, just pull the Carla image and run with port.
 
 .. code:: bash
 
-    docker pull carlasim/carla:0.9.9.4
+    docker pull carlasim/carla:0.9.10
     # by default
-    docker run -p 2000-2002:9000-9002 --runtime=nvidia --gpus <gpu_id> carlasim/carla:0.9.9.4
+    docker run -p 2000-2002:9000-9002 --runtime=nvidia --gpus <gpu_id> carlasim/carla:0.9.10
     # with parameters
-    docker run -p 2000-2002:9000-9002 --runtime=nvidia --gpus <gpu_id> carlasim/carla:0.9.9.4 /bin/bash CarlaUE4.sh <list of paremeters>
+    docker run -p 2000-2002:9000-9002 --runtime=nvidia --gpus <gpu_id> carlasim/carla:0.9.10 /bin/bash CarlaUE4.sh <list of paremeters>
 
 We also provide an easily used multi-carla docker image that can start an amount of Carla servers.
 You can pull the image from `dockerhub <https://hub.docker.com>`_ and start with your own settings.
@@ -67,8 +67,8 @@ from 9000 to 9014
 
 .. code:: bash
 
-    docker pull opendilab/multi-carla:0.9.9
-    docker run -p 9000-9016:9000-9016 --runtime=nvidia opendilab/multi-carla:0.9.9 /bin/bash run_carla.sh -n 8 -p 9000
+    docker pull opendilab/multi-carla:0.9.10
+    docker run -p 9000-9016:9000-9016 --runtime=nvidia opendilab/multi-carla:0.9.10 /bin/bash run_carla.sh -n 8 -p 9000
 
 Generally, the option ``-n NUMS`` sets the number of Carla server and the option ``-p PORT`` sets
 the start port of servers. The other servers' port are set to the following even number.

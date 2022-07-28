@@ -9,7 +9,7 @@ Overview
 
 DI-drive defines simulator instance to unify the interfaces and standardize sub-modules. As a result, users can customize
 their simulator setting with a config dictionary, and get expected data by calling the instance's methods.
-DI-drive currently uses Carla 0.9.9.4 for simulating Autonomous Driving. The Interaction between Carla server
+DI-drive currently uses Carla version **higher than 0.9.9** for simulating Autonomous Driving. The Interaction between Carla server
 and DI-drive is proceeded through :class:`CarlaSimulator <core.simulators.carla_simulator.CarlaSimulator>`.
 The simulator contains a world map with roads, buildings and weather. The simulator has a hero vehicle for the user
 to control and get observations. The observation may come from a **sensor** created in the simulator associated to hero

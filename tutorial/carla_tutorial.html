@@ -9,7 +9,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Carla tutorial &mdash; DI-drive 0.3.3 documentation</title>
+  <title>Carla tutorial &mdash; DI-drive 0.3.4 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.3.3
+                0.3.4
               </div>
             
           
@@ -198,7 +198,7 @@ establishing the server.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./CarlaUE4.sh --carla-world-port<span class="o">=</span>N
 </pre></div>
 </div>
-<p>Usually <cite>N</cite> is set as an even number, because the port <cite>N+1</cite> is simultanously occupied to connect the server. Carla 0.9.9.4
+<p>Usually <cite>N</cite> is set as an even number, because the port <cite>N+1</cite> is simultanously occupied to connect the server. Carla
 also uses a Traffic Manager port to control global behaviors of vehicles. It is specified at the
 client side. TM client can not only be built by DI-drive via automatically finding free port in current system,
 but also manually set by users.</p>
@@ -222,19 +222,19 @@ much easier and can run multiple Carla servers. DI-drive follows guidance in Car
 <a class="reference external" href="https://docs.docker.com/engine/install/ubuntu">docker CE</a> and
 <a class="reference external" href="https://github.com/NVIDIA/nvidia-docker">nvidia docker2</a>.</p>
 <p>Then, just pull the Carla image and run with port.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker pull carlasim/carla:0.9.9.4
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker pull carlasim/carla:0.9.10
 <span class="c1"># by default</span>
-docker run -p <span class="m">2000</span>-2002:9000-9002 --runtime<span class="o">=</span>nvidia --gpus &lt;gpu_id&gt; carlasim/carla:0.9.9.4
+docker run -p <span class="m">2000</span>-2002:9000-9002 --runtime<span class="o">=</span>nvidia --gpus &lt;gpu_id&gt; carlasim/carla:0.9.10
 <span class="c1"># with parameters</span>
-docker run -p <span class="m">2000</span>-2002:9000-9002 --runtime<span class="o">=</span>nvidia --gpus &lt;gpu_id&gt; carlasim/carla:0.9.9.4 /bin/bash CarlaUE4.sh &lt;list of paremeters&gt;
+docker run -p <span class="m">2000</span>-2002:9000-9002 --runtime<span class="o">=</span>nvidia --gpus &lt;gpu_id&gt; carlasim/carla:0.9.10 /bin/bash CarlaUE4.sh &lt;list of paremeters&gt;
 </pre></div>
 </div>
 <p>We also provide an easily used multi-carla docker image that can start an amount of Carla servers.
 You can pull the image from <a class="reference external" href="https://hub.docker.com">dockerhub</a> and start with your own settings.
 For example, the following command will start a container with 8 Carla server whose ports are set
 from 9000 to 9014</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker pull opendilab/multi-carla:0.9.9
-docker run -p <span class="m">9000</span>-9016:9000-9016 --runtime<span class="o">=</span>nvidia opendilab/multi-carla:0.9.9 /bin/bash run_carla.sh -n <span class="m">8</span> -p <span class="m">9000</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker pull opendilab/multi-carla:0.9.10
+docker run -p <span class="m">9000</span>-9016:9000-9016 --runtime<span class="o">=</span>nvidia opendilab/multi-carla:0.9.10 /bin/bash run_carla.sh -n <span class="m">8</span> -p <span class="m">9000</span>
 </pre></div>
 </div>
 <p>Generally, the option <code class="docutils literal notranslate"><span class="pre">-n</span> <span class="pre">NUMS</span></code> sets the number of Carla server and the option <code class="docutils literal notranslate"><span class="pre">-p</span> <span class="pre">PORT</span></code> sets

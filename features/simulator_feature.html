@@ -9,7 +9,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Carla Simulator Features &mdash; DI-drive 0.3.3 documentation</title>
+  <title>Carla Simulator Features &mdash; DI-drive 0.3.4 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.3.3
+                0.3.4
               </div>
             
           
@@ -201,7 +201,7 @@
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <p>DI-drive defines simulator instance to unify the interfaces and standardize sub-modules. As a result, users can customize
 their simulator setting with a config dictionary, and get expected data by calling the instance’s methods.
-DI-drive currently uses Carla 0.9.9.4 for simulating Autonomous Driving. The Interaction between Carla server
+DI-drive currently uses Carla version <strong>higher than 0.9.9</strong> for simulating Autonomous Driving. The Interaction between Carla server
 and DI-drive is proceeded through <a class="reference internal" href="../api_doc/simulators.html#core.simulators.CarlaSimulator" title="core.simulators.carla_simulator.CarlaSimulator"><code class="xref py py-class docutils literal notranslate"><span class="pre">CarlaSimulator</span></code></a>.
 The simulator contains a world map with roads, buildings and weather. The simulator has a hero vehicle for the user
 to control and get observations. The observation may come from a <strong>sensor</strong> created in the simulator associated to hero
