@@ -1,3 +1,11 @@
+## v0.3.4 (2022.7.25)
+- Add Traj SAC and PPO policy
+- Add MetaDrive evaluator
+- Add MetaDrive TREX demo and doc
+- Update Carla support to 0.9.10
+- Fix bug of MetaDrive reset conflice with EnvManager
+- Fix bug in DingEnvManager
+
 ## v0.3.3 (2022.6.5)
 - Update readme, reorganize info
 - Add MetaDriveTrajEnv and doc

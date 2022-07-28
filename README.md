@@ -59,7 +59,7 @@ pip install -e .
 
 DI-engine and Pytorch will be installed automatically.
 
-In addition, at least one simulator in Carla and MetaDrive need to be able to run in DI-drive. [MetaDrive](https://decisionforce.github.io/metadrive/) can be easily installed via `pip`.
+In addition, at least one simulator in **Carla** and **MetaDrive** need to be installed to run in DI-drive. [MetaDrive](https://decisionforce.github.io/metadrive/) can be easily installed via `pip`.
 If [Carla](http://carla.org) server is used for simulation, users need to install 'Carla Python API' in addition. You can use either one of them or both. Make sure to modify the activated simulators in `core.__init__.py` to avoid import error.
 
 Please refer to the [installation guide](https://opendilab.github.io/DI-drive/installation/index.html) for details about the installation of **DI-drive**.
@@ -100,6 +100,10 @@ We provide detail guidance for IL and RL experiments in all simulators and quick
 - [Implicit Affordance](https://arxiv.org/abs/1911.10868)
 - [Latent DRL](https://arxiv.org/abs/2001.08726)
 - MetaDrive Macro RL
+
+### Other Method
+
+- [DREX](http://proceedings.mlr.press/v100/brown20a.html)
 
 ## DI-drive Casezoo
 
@@ -155,6 +159,7 @@ DI-drive
 |   |   |-- vae_model.py
 |   |   |-- vehicle_controller.py
 |   |-- policy
+|   |   |-- traj_policy
 |   |   |-- auto_policy.py
 |   |   |-- base_carla_policy.py
 |   |   |-- cilrs_policy.py

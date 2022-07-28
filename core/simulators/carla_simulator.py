@@ -69,7 +69,7 @@ class CarlaSimulator(BaseSimulator):
     The simulator stores and gets some information from a static class ``CarlaDataProvider``
     to avoid frequently sending message to Carla server and speed up.
 
-    Up to now, it uses Carla version 0.9.9.
+    Up to now, it uses Carla version higher than 0.9.9.
 
     If no traffic manager port is provided, it will find random free port in system.
 
