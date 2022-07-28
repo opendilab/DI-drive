@@ -9,7 +9,7 @@ on:
 jobs:
   doc:
     runs-on: ubuntu-latest
-    container: opendilab/didrive-ci:0.3.4
+    container: opendilab/didrive-ci:0.3.4.1
 
     steps:
       - uses: actions/checkout@v2
