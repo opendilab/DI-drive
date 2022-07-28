@@ -9,13 +9,20 @@ on:
 jobs:
   doc:
     runs-on: ubuntu-latest
-    container: opendilab/didrive-ci:0.3.4.1
+    strategy:
+      matrix:
+        python-version: [3.7]
 
     steps:
       - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
       - name: Generate
         run: |
-          python3 -m pip install .[doc]
+          python -m pip install .[doc]
+          python -m pip install carla
           make -C ./docs html
           mv docs/build/html public
           rm -rf docs/build
