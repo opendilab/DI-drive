@@ -6,6 +6,11 @@
 ![Style](https://github.com/opendilab/DI-drive/actions/workflows/style.yml/badge.svg)
 ![Docs](https://github.com/opendilab/DI-drive/actions/workflows/doc.yml/badge.svg)
 
+[![Style](https://github.com/opendilab/di-drive/actions/workflows/style.yml/badge.svg)](https://github.com/opendilab/DI-drive/actions/workflows/style.yml?query=workflow%3A%22Style+And+Badge%22)
+[![Docs](https://github.com/opendilab/di-drive/actions/workflows/doc.yml/badge.svg)](https://github.com/opendilab/DI-drive/actions/workflows/doc.yml?query=workflow%3A%22Docs+Deploy%22)
+![Loc](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/RobinC94/4e40f96d252cf02bbfc03333eeef6ee1/raw/loc.json)
+![Comments](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/RobinC94/4e40f96d252cf02bbfc03333eeef6ee1/raw/comments.json)
+
 ![GitHub Org's stars](https://img.shields.io/github/stars/opendilab)
 [![GitHub stars](https://img.shields.io/github/stars/opendilab/DI-drive)](https://github.com/opendilab/DI-drive/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/opendilab/DI-drive)](https://github.com/opendilab/DI-drive/network)
