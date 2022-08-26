@@ -73,7 +73,7 @@ main_config = EasyDict(config)
 
 
 def cilrs_postprocess(observasion, scale=1, crop=256):
-    rgb = observasion['rgb'].copy()
+    rgb = observasion['rgb'].copy().astype(np.unit8)
     im = PIL.Image.fromarray(rgb)
     (width, height) = (int(im.width // scale), int(im.height // scale))
     rgb = im.resize((width, height))
