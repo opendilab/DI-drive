@@ -65,7 +65,7 @@ nstep = 3
 train_config = dict(
     exp_name='implicit_affordance',
     env=dict(
-        env_num=8,
+        env_num=1,
         simulator=dict(
             town='Town04',
             disable_two_wheels=True,
@@ -94,7 +94,7 @@ train_config = dict(
         ),
     ),
     server=[
-        dict(carla_host='localhost', carla_ports=[9000, 9016, 2]),
+        dict(carla_host='localhost', carla_ports=[2000, 2002, 2]),
     ],
     policy=dict(
         cuda=True,
