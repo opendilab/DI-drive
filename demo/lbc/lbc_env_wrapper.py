@@ -15,7 +15,7 @@ class LBCEnvWrapper(DriveEnvWrapper):
             'speed': np.float32(obs['speed'] / 3.6),
         }
         if 'rgb' in obs:
-            new_obs['rgb'] = obs['rgb'] / 255.
+            new_obs['rgb'] = obs['rgb'].transpose(2, 0, 1) / 255.
         elif 'birdview' in obs:
             birdview = obs['birdview'][..., :7]
             birdview = common.crop_birdview(birdview, dx=-10)

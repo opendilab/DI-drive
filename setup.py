@@ -50,7 +50,7 @@ setup(
         'py-trees==0.8.3',
         'pygame',
         'torchvision',
-        'di-engine',
+        'di-engine>0.3',
         'scikit-image',
         'setuptools==50',
         'shapely',
@@ -78,7 +78,7 @@ setup(
         ],
         'style': [
             'yapf==0.29.0',
-            'flake8',
+            'flake8<5',
         ],
         'metadrive': [
             'metadrive-simulator',
