@@ -16,7 +16,7 @@ from ding.utils.default_helper import deep_merge_dicts
 
 config = dict(
     env=dict(
-        env_num=5,
+        env_num=1,
         simulator=dict(
             disable_two_wheels=True,
             waypoint_num=32,
@@ -54,12 +54,13 @@ config = dict(
             auto_reset=False,
             shared_memory=False,
             context='spawn',
-            max_retry=1,
+            retry_type ='renew',
+            max_retry=3,
         ),
         wrapper=dict(),
     ),
     server=[
-        dict(carla_host='localhost', carla_ports=[9000, 9010, 2]),
+        dict(carla_host='localhost', carla_ports=[2000, 2002, 2]),
     ],
     policy=dict(
         target_speed=25,
@@ -88,7 +89,7 @@ def write_episode_data(episode_path, episode_data):
             for key in lmdb_store_keys:
                 txn.put(('%s_%05d' % (key, i)).encode(), np.ascontiguousarray(data[key]).astype(np.float32))
             for key in sensor_keys:
-                image = Image.fromarray(data[key])
+                image = Image.fromarray(data[key].astype(np.uint8))
                 image.save(os.path.join(episode_path, "%s_%05d.png" % (key, i)))
 
 
@@ -97,14 +98,14 @@ def wrapped_env(env_cfg, wrapper_cfg, host, port, tm_port=None):
 
 
 def main(cfg, seed=0):
-    cfg.env.manager = deep_merge_dicts(SyncSubprocessEnvManager.default_config(), cfg.env.manager)
+    cfg.env.manager = deep_merge_dicts(BaseEnvManager.default_config(), cfg.env.manager)
 
     tcp_list = parse_carla_tcp(cfg.server)
     env_num = cfg.env.env_num
     assert len(tcp_list) >= env_num, \
         "Carla server not enough! Need {} servers but only found {}.".format(env_num, len(tcp_list))
 
-    collector_env = SyncSubprocessEnvManager(
+    collector_env = BaseEnvManager(
         env_fn=[partial(wrapped_env, cfg.env, cfg.env.wrapper, *tcp_list[i]) for i in range(env_num)],
         cfg=cfg.env.manager,
     )
