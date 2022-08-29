@@ -53,8 +53,10 @@ class DriveEnvWrapper(gym.Wrapper):
         if isinstance(obs, np.ndarray) and len(obs.shape) == 3:
             obs = obs.transpose((2, 0, 1))
         # elif isinstance(obs, dict):
-        #     birdview = obs['birdview'].transpose((2, 0, 1))
-        #     obs = {'birdview': birdview, 'vehicle_state': obs['vehicle_state']}
+        #     if 'birdview' in obs:
+        #         obs['birdview'] = obs['birdview'].transpose((2, 0, 1))
+        #     if 'rgb' in obs:
+        #         obs['rgb'] = obs['rgb'].transpose((2, 0, 1))
         self._final_eval_reward = 0.0
         return obs
 
@@ -79,8 +81,10 @@ class DriveEnvWrapper(gym.Wrapper):
         if isinstance(obs, np.ndarray) and len(obs.shape) == 3:
             obs = obs.transpose((2, 0, 1))
         # elif isinstance(obs, dict):
-        #     birdview = obs['birdview'].transpose((2, 0, 1))
-        #     obs = {'birdview': birdview, 'vehicle_state': obs['vehicle_state']}
+        #     if 'birdview' in obs:
+        #         obs['birdview'] = obs['birdview'].transpose((2, 0, 1))
+        #     if 'rgb' in obs:
+        #         obs['rgb'] = obs['rgb'].transpose((2, 0, 1))
         rew = to_ndarray([rew], dtype=np.float32)
         if done:
             info['final_eval_reward'] = self._final_eval_reward
