@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -25,6 +25,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
@@ -178,15 +179,15 @@
            <div itemprop="articleBody">
             
   <section id="faq">
-<h1>FAQ<a class="headerlink" href="#faq" title="Permalink to this headline">¶</a></h1>
+<h1>FAQ<a class="headerlink" href="#faq" title="Permalink to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
 <section id="carla-installation-problem">
-<h2>Carla installation problem<a class="headerlink" href="#carla-installation-problem" title="Permalink to this headline">¶</a></h2>
+<h2>Carla installation problem<a class="headerlink" href="#carla-installation-problem" title="Permalink to this heading">¶</a></h2>
 <section id="q1-no-easy-install">
-<h3>Q1: No <cite>easy_install</cite><a class="headerlink" href="#q1-no-easy-install" title="Permalink to this headline">¶</a></h3>
+<h3>Q1: No <cite>easy_install</cite><a class="headerlink" href="#q1-no-easy-install" title="Permalink to this heading">¶</a></h3>
 <dl class="field-list">
-<dt class="field-odd">A1</dt>
+<dt class="field-odd">A1<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">easy_install</span></code> is used in old version of <code class="docutils literal notranslate"><span class="pre">setuptools</span></code>, and may not be added in conda/pyenv by
 default. You may need to install by yourself.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install <span class="nv">setuptools</span><span class="o">==</span><span class="m">50</span>
@@ -196,9 +197,9 @@ default. You may need to install by yourself.</p>
 </dl>
 </section>
 <section id="q2-carla-egg-installation-error-or-can-not-import">
-<h3>Q2: <cite>carla.egg</cite> installation error or can not import<a class="headerlink" href="#q2-carla-egg-installation-error-or-can-not-import" title="Permalink to this headline">¶</a></h3>
+<h3>Q2: <cite>carla.egg</cite> installation error or can not import<a class="headerlink" href="#q2-carla-egg-installation-error-or-can-not-import" title="Permalink to this heading">¶</a></h3>
 <dl class="field-list simple">
-<dt class="field-odd">A2</dt>
+<dt class="field-odd">A2<span class="colon">:</span></dt>
 <dd class="field-odd"><p>This is usually because the <code class="docutils literal notranslate"><span class="pre">easy_install</span></code> command you have run (linked to) is not the one
 installed in your environment.
 You can manually add it to your <code class="docutils literal notranslate"><span class="pre">PATH</span></code> or simply find in
@@ -207,9 +208,9 @@ the <code class="docutils literal notranslate"><span class="pre">./bin</span></c
 </dl>
 </section>
 <section id="q3-error-with-libpng-libjpeg">
-<h3>Q3: Error with ‘libpng’, ‘libjpeg’<a class="headerlink" href="#q3-error-with-libpng-libjpeg" title="Permalink to this headline">¶</a></h3>
+<h3>Q3: Error with ‘libpng’, ‘libjpeg’<a class="headerlink" href="#q3-error-with-libpng-libjpeg" title="Permalink to this heading">¶</a></h3>
 <dl class="field-list">
-<dt class="field-odd">A3</dt>
+<dt class="field-odd">A3<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Carla python API needs library of <code class="docutils literal notranslate"><span class="pre">png</span></code> and <code class="docutils literal notranslate"><span class="pre">jpeg</span></code> that may not be installed in your environment.
 Install them manually if error shows.</p>
 <p>png:</p>
@@ -230,9 +231,9 @@ conda install <span class="nv">jpeg</span><span class="o">=</span>8d -c conda-fo
 </dl>
 </section>
 <section id="q4-error-with-alsa-lib-confxxx">
-<h3>Q4: Error with ‘ALSA lib confxxx’<a class="headerlink" href="#q4-error-with-alsa-lib-confxxx" title="Permalink to this headline">¶</a></h3>
+<h3>Q4: Error with ‘ALSA lib confxxx’<a class="headerlink" href="#q4-error-with-alsa-lib-confxxx" title="Permalink to this heading">¶</a></h3>
 <dl class="field-list simple">
-<dt class="field-odd">A4</dt>
+<dt class="field-odd">A4<span class="colon">:</span></dt>
 <dd class="field-odd"><p>This error shows because Carla needs a sound card to run simulation.
 If this makes no sense to anything, just ignore it. Or you can fix it by adding
 <code class="docutils literal notranslate"><span class="pre">pcm.!default</span> <span class="pre">{</span> <span class="pre">type</span> <span class="pre">plug</span> <span class="pre">slave.pcm</span> <span class="pre">&quot;null&quot;</span> <span class="pre">}</span></code>
@@ -241,9 +242,9 @@ into a new line of <code class="docutils literal notranslate"><span class="pre">
 </dl>
 </section>
 <section id="q5-error-import-shapely">
-<h3>Q5: Error import <cite>shapely</cite><a class="headerlink" href="#q5-error-import-shapely" title="Permalink to this headline">¶</a></h3>
+<h3>Q5: Error import <cite>shapely</cite><a class="headerlink" href="#q5-error-import-shapely" title="Permalink to this heading">¶</a></h3>
 <dl class="field-list">
-<dt class="field-odd">A5</dt>
+<dt class="field-odd">A5<span class="colon">:</span></dt>
 <dd class="field-odd"><p>This often happens with showing the following error log.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ne">OSError</span><span class="p">:</span> <span class="p">[</span><span class="n">WinError</span> <span class="mi">126</span><span class="p">]</span> <span class="n">The</span> <span class="n">specified</span> <span class="n">module</span> <span class="n">could</span> <span class="ow">not</span> <span class="n">be</span> <span class="n">found</span>
 

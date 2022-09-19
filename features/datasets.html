@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -25,6 +25,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
@@ -190,16 +191,16 @@
            <div itemprop="articleBody">
             
   <section id="datasets">
-<h1>Datasets<a class="headerlink" href="#datasets" title="Permalink to this headline">¶</a></h1>
+<h1>Datasets<a class="headerlink" href="#datasets" title="Permalink to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
 <section id="benchmark-datasets">
-<h2>Benchmark Datasets<a class="headerlink" href="#benchmark-datasets" title="Permalink to this headline">¶</a></h2>
+<h2>Benchmark Datasets<a class="headerlink" href="#benchmark-datasets" title="Permalink to this heading">¶</a></h2>
 <p>DI-drive defines a unified benchmark dataset format that makes data collection and loading procedure easily for users.
 It is suggested to save datasets with <code class="xref py py-class docutils literal notranslate"><span class="pre">BenchmarkDatasetSaver</span></code>.
 It can automatically create folders and save all sensor data and measurements into datasets as desired form.</p>
 <section id="general-structure">
-<h3>General structure<a class="headerlink" href="#general-structure" title="Permalink to this headline">¶</a></h3>
+<h3>General structure<a class="headerlink" href="#general-structure" title="Permalink to this heading">¶</a></h3>
 <p>A dataset directory should look like the structure below. The following sections
 will explain each one of the components described.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&lt;dataset_name&gt;
@@ -224,7 +225,7 @@ will explain each one of the components described.</p>
 <p>A dataset contains dataset metadata, episode metadata, sensor data and measurements.</p>
 </section>
 <section id="dataset-metadata">
-<h3>Dataset metadata<a class="headerlink" href="#dataset-metadata" title="Permalink to this headline">¶</a></h3>
+<h3>Dataset metadata<a class="headerlink" href="#dataset-metadata" title="Permalink to this heading">¶</a></h3>
 <p>Each dataset contains a metadata file with information provided by user.
 It may have the following contents:</p>
 <ul class="simple">
@@ -234,7 +235,7 @@ It may have the following contents:</p>
 </ul>
 </section>
 <section id="episode-metadata">
-<h3>Episode metadata<a class="headerlink" href="#episode-metadata" title="Permalink to this headline">¶</a></h3>
+<h3>Episode metadata<a class="headerlink" href="#episode-metadata" title="Permalink to this heading">¶</a></h3>
 <p>Each episode is stored in a folder.
 For each collected episode we generate a json file containing
 its general aspects that are:</p>
@@ -253,12 +254,12 @@ into two different categories, sensor data
 stored as PNG images, and measurement data stored as json files.</p>
 </section>
 <section id="sensor-data">
-<h3>Sensor data<a class="headerlink" href="#sensor-data" title="Permalink to this headline">¶</a></h3>
+<h3>Sensor data<a class="headerlink" href="#sensor-data" title="Permalink to this heading">¶</a></h3>
 <p>All images collected are stored as png files. The name consists of its tag in observation configurations
 and the frame number.</p>
 </section>
 <section id="measurements">
-<h3>Measurements<a class="headerlink" href="#measurements" title="Permalink to this headline">¶</a></h3>
+<h3>Measurements<a class="headerlink" href="#measurements" title="Permalink to this heading">¶</a></h3>
 <p>Measurements represent all the float data collected for each simulation
 step. Each measurement arranges its content in a fixed order,
 and stores them in a .lmdb file. The content is shown follow:</p>
@@ -279,10 +280,10 @@ and stores them in a .lmdb file. The content is shown follow:</p>
 <li><p>tl_state (int)</p></li>
 <li><p>tl_dis (float)</p></li>
 </ul>
-<p>Their meaning is the same as the observation returned in <a class="reference internal" href="../api_doc/envs.html#core.envs.SimpleCarlaEnv" title="core.envs.simple_carla_env.SimpleCarlaEnv"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimpleCarlaEnv</span></code></a></p>
+<p>Their meaning is the same as the observation returned in <code class="xref py py-class docutils literal notranslate"><span class="pre">SimpleCarlaEnv</span></code></p>
 </section>
 <section id="others">
-<h3>Others<a class="headerlink" href="#others" title="Permalink to this headline">¶</a></h3>
+<h3>Others<a class="headerlink" href="#others" title="Permalink to this heading">¶</a></h3>
 <p>It is allowed to add user customized data into datasets. The data can be post-processed and stored in an ‘other’ key,
 with no effect to measurements. Users can organize their necessary information into datasets freely.</p>
 </section>

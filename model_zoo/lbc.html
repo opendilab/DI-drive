@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -25,6 +25,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
@@ -187,7 +188,7 @@
            <div itemprop="articleBody">
             
   <section id="learning-by-cheating">
-<h1>Learning by Cheating<a class="headerlink" href="#learning-by-cheating" title="Permalink to this headline">¶</a></h1>
+<h1>Learning by Cheating<a class="headerlink" href="#learning-by-cheating" title="Permalink to this heading">¶</a></h1>
 <p><a class="reference external" href="https://arxiv.org/abs/1912.12294">Learning by Cheating(LBC)</a>
 is an Imitation Learning method which driving in Carla using waypoint prediction and
 two-stage training – cheating model and target model. The cheating model takes
@@ -205,7 +206,7 @@ throttle and brake.</p>
 model, including data collection, birdview model training, image model training, mimicing
 cheating model and evaluation. All entries can be found in <code class="docutils literal notranslate"><span class="pre">demo/lbc</span></code></p>
 <section id="datasets-collection">
-<h2>Datasets collection<a class="headerlink" href="#datasets-collection" title="Permalink to this headline">¶</a></h2>
+<h2>Datasets collection<a class="headerlink" href="#datasets-collection" title="Permalink to this heading">¶</a></h2>
 <p><strong>DI-drive</strong> provides benchmark data collection for LBC. The dataset is formatted to save
 rgb data as <cite>.png</cite> files and BeV data into <cite>.lmdb</cite> files. The configuration of dataset
 collection is set up in <code class="docutils literal notranslate"><span class="pre">lbc_collect_data.py</span></code>. You may need to change the Carla server,
@@ -248,11 +249,11 @@ dataset path, collection suites, planner configs and noise args etc.</p>
 </div>
 </section>
 <section id="model-training">
-<h2>Model training<a class="headerlink" href="#model-training" title="Permalink to this headline">¶</a></h2>
+<h2>Model training<a class="headerlink" href="#model-training" title="Permalink to this heading">¶</a></h2>
 <p>The training of LBC model contains 3 stages: training privileged model, offline
 training target model, on-line fine-tuning target model.</p>
 <section id="training-privileged-model">
-<h3>Training privileged model<a class="headerlink" href="#training-privileged-model" title="Permalink to this headline">¶</a></h3>
+<h3>Training privileged model<a class="headerlink" href="#training-privileged-model" title="Permalink to this heading">¶</a></h3>
 <p>The training of privileged model is a supervise learning procedure. You can check
 the training code in <code class="docutils literal notranslate"><span class="pre">lbc_birdview_train.py</span></code>. By default it will save checkpoint
 and tensorboard logs in <code class="docutils literal notranslate"><span class="pre">./log</span></code>. You can check the training progress and effects.</p>
@@ -261,7 +262,7 @@ and tensorboard logs in <code class="docutils literal notranslate"><span class="
 </div>
 </section>
 <section id="offline-training-target-model">
-<h3>Offline training target model<a class="headerlink" href="#offline-training-target-model" title="Permalink to this headline">¶</a></h3>
+<h3>Offline training target model<a class="headerlink" href="#offline-training-target-model" title="Permalink to this heading">¶</a></h3>
 <p>The off-line training of target model consists of 2 procedures, first warm-up training
 with dataset label, then mimicing with privileged model label. Both training codes are
 provided in <code class="docutils literal notranslate"><span class="pre">lbc_img_train_phase0.py</span></code> and <code class="docutils literal notranslate"><span class="pre">lbc_img_train_phase1.py</span></code>.</p>
@@ -272,12 +273,12 @@ provided in <code class="docutils literal notranslate"><span class="pre">lbc_img
 <p>You may need to change the dataset path, checkpoint path etc.</p>
 </section>
 <section id="online-training-target-model">
-<h3>Online training target model<a class="headerlink" href="#online-training-target-model" title="Permalink to this headline">¶</a></h3>
+<h3>Online training target model<a class="headerlink" href="#online-training-target-model" title="Permalink to this heading">¶</a></h3>
 <p>Pending</p>
 </section>
 </section>
 <section id="model-evaluation">
-<h2>Model evaluation<a class="headerlink" href="#model-evaluation" title="Permalink to this headline">¶</a></h2>
+<h2>Model evaluation<a class="headerlink" href="#model-evaluation" title="Permalink to this heading">¶</a></h2>
 <p>DI-drive provides benchmark evaluation for both cheating model and target model,
 together with pre-trained weights. You may need to change the Carla server settings
 to yours.</p>
@@ -291,7 +292,7 @@ python lbc_image_eval.py
 <p>Then you will get the performance table.</p>
 </section>
 <section id="model-testing">
-<h2>Model testing<a class="headerlink" href="#model-testing" title="Permalink to this headline">¶</a></h2>
+<h2>Model testing<a class="headerlink" href="#model-testing" title="Permalink to this heading">¶</a></h2>
 <p>DI-drive provides a simple entry for testing LBC models in a benchmark or Casezoo
 environment and visualize the running. You may need to change the Carla server settings
 to yours.</p>

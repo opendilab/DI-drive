@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -25,6 +25,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
@@ -184,7 +185,7 @@
            <div itemprop="articleBody">
             
   <section id="drex-in-metadrive">
-<h1>DREX in MetaDrive<a class="headerlink" href="#drex-in-metadrive" title="Permalink to this headline">¶</a></h1>
+<h1>DREX in MetaDrive<a class="headerlink" href="#drex-in-metadrive" title="Permalink to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
 <p><a class="reference external" href="http://proceedings.mlr.press/v100/brown20a.html">DREX</a> is an preference based
@@ -194,7 +195,7 @@ through injecting different level noise.</p>
 <p>DREX model takes Top-Down Semantic Maps and Vehicle’s states(including steer and speed)
 as input to learn the reward model from given demonstrations ranked by their noise level.</p>
 <section id="training-drex-reward-model">
-<h2>Training DREX reward model<a class="headerlink" href="#training-drex-reward-model" title="Permalink to this headline">¶</a></h2>
+<h2>Training DREX reward model<a class="headerlink" href="#training-drex-reward-model" title="Permalink to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">train_drex_model.py</span></code> are used for training the reward model.
 You may need to change the dataset path.</p>
 <p>The Default setting for DREX is setting noise level from 0 to 1, the interval is 0.1, total
@@ -216,7 +217,7 @@ You may need to change the dataset path.</p>
 </div>
 </section>
 <section id="training-ppo-with-drex">
-<h2>Training PPO with DREX<a class="headerlink" href="#training-ppo-with-drex" title="Permalink to this headline">¶</a></h2>
+<h2>Training PPO with DREX<a class="headerlink" href="#training-ppo-with-drex" title="Permalink to this heading">¶</a></h2>
 <p>Default Configuration of training PPO with DREX:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">metadrive_basic_config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
     <span class="n">exp_name</span><span class="o">=</span><span class="s1">&#39;drex_ppo_train&#39;</span><span class="p">,</span>
@@ -282,7 +283,7 @@ You may need to change the dataset path.</p>
 </div>
 </section>
 <section id="results">
-<h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
+<h2>Results<a class="headerlink" href="#results" title="Permalink to this heading">¶</a></h2>
 <p>compare DREX result with PPO training with expert-defined reward.
 The blue curve is PPO with DREX reward model.
 The red curve is PPO with expert-defined reward.</p>

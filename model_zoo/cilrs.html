@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -25,6 +25,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
@@ -186,7 +187,7 @@
            <div itemprop="articleBody">
             
   <section id="conditional-imitation-learning">
-<h1>Conditional Imitation Learning<a class="headerlink" href="#conditional-imitation-learning" title="Permalink to this headline">¶</a></h1>
+<h1>Conditional Imitation Learning<a class="headerlink" href="#conditional-imitation-learning" title="Permalink to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
 <p><a class="reference external" href="https://arxiv.org/abs/1904.08980">CILRS</a> together with some other implementations
@@ -216,7 +217,7 @@ imitating behavior.</p>
 training, and benchmark evaluation. Quick start of CILRS has been
 introduced in the tutorial. All code in this page can be found in <code class="docutils literal notranslate"><span class="pre">./demo/cilrs</span></code></p>
 <section id="data-collection">
-<h2>Data collection<a class="headerlink" href="#data-collection" title="Permalink to this headline">¶</a></h2>
+<h2>Data collection<a class="headerlink" href="#data-collection" title="Permalink to this heading">¶</a></h2>
 <p>The configuration of dataset collection has been set up in
 <code class="docutils literal notranslate"><span class="pre">cilrs_data_collect.py</span></code>. It uses <code class="docutils literal notranslate"><span class="pre">CarlaBenchmarkCollector</span></code> and <code class="docutils literal notranslate"><span class="pre">BenchmarkDatasaver</span></code>
 to collect training data. You can custom the configuration as follow.</p>
@@ -270,7 +271,7 @@ to collect training data. You can custom the configuration as follow.</p>
 </div>
 </section>
 <section id="model-training">
-<h2>Model training<a class="headerlink" href="#model-training" title="Permalink to this headline">¶</a></h2>
+<h2>Model training<a class="headerlink" href="#model-training" title="Permalink to this heading">¶</a></h2>
 <p>The training of CILRS is a standard imitation learning process. It takes
 RGB image and measurement as input then mimic the export label. You can custom
 the training by changing model architecture, learning rate, steps and so
@@ -314,7 +315,7 @@ on in <code class="docutils literal notranslate"><span class="pre">cilrs_train.p
 </div>
 </section>
 <section id="model-evaluation">
-<h2>Model evaluation<a class="headerlink" href="#model-evaluation" title="Permalink to this headline">¶</a></h2>
+<h2>Model evaluation<a class="headerlink" href="#model-evaluation" title="Permalink to this heading">¶</a></h2>
 <p>DI-drive supports model evaluation with Carla benchmark. To custom the
 evaluation process, you can modify the configuration in <code class="docutils literal notranslate"><span class="pre">cilrs_eval.py</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cilrs_config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>

@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -25,6 +25,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
@@ -187,7 +188,7 @@
            <div itemprop="articleBody">
             
   <section id="bev-speed-end-to-end-reinforcement-learning">
-<h1>BeV Speed End-to-end Reinforcement Learning<a class="headerlink" href="#bev-speed-end-to-end-reinforcement-learning" title="Permalink to this headline">¶</a></h1>
+<h1>BeV Speed End-to-end Reinforcement Learning<a class="headerlink" href="#bev-speed-end-to-end-reinforcement-learning" title="Permalink to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
 <p>This is a simple Reinforcement Learning demo to show the basic usage of <strong>DI-drive</strong> environments
@@ -198,7 +199,7 @@ and <strong>DI-engine</strong> RL policies. All training, evaluation and testing
 <a class="reference internal image-reference" href="../_images/dqn_demo3.gif"><img alt="dqn_demo3" src="../_images/dqn_demo3.gif" style="width: 250px;" /></a>
 <a class="reference internal image-reference" href="../_images/dqn_demo4.gif"><img alt="dqn_demo4" src="../_images/dqn_demo4.gif" style="width: 250px;" /></a>
 <section id="inputs-nn-models-and-policies">
-<h2>Inputs, NN models and Policies<a class="headerlink" href="#inputs-nn-models-and-policies" title="Permalink to this headline">¶</a></h2>
+<h2>Inputs, NN models and Policies<a class="headerlink" href="#inputs-nn-models-and-policies" title="Permalink to this heading">¶</a></h2>
 <p>The simple RL policy takes a Bird-eye View(BeV) image with size of 32x32x5 and speed scalar as observations.
 The BeV image consists of roads, lanes, vehicles, pedestrians and target route. Each occupies a channel
 with 0-1 value. The traffic light information is excluded from observations.</p>
@@ -213,7 +214,7 @@ them. All these policies are implemented from <strong>DI-engine</strong> standar
 <strong>DI-engine</strong>’s document to get how to modify the training hyper-parameters in config.</p>
 </section>
 <section id="environment">
-<h2>Environment<a class="headerlink" href="#environment" title="Permalink to this headline">¶</a></h2>
+<h2>Environment<a class="headerlink" href="#environment" title="Permalink to this heading">¶</a></h2>
 <p>The simple RL experiments use the environment instance <code class="docutils literal notranslate"><span class="pre">SimpleCarlaEnv</span></code> which is well defined with
 specified inputs and outputs.  The standard usage to customize the env interfaces is to add <code class="docutils literal notranslate"><span class="pre">EnvWrapper</span></code>
 and change the input, output, reward of Env. For example:</p>
@@ -258,7 +259,7 @@ only [‘goal’, ‘distance’, ‘speed’, ‘angle’, ‘failure’] 5 typ
 can modify the reward types you want to use via config.</p>
 </section>
 <section id="training-and-evaluation">
-<h2>Training and Evaluation<a class="headerlink" href="#training-and-evaluation" title="Permalink to this headline">¶</a></h2>
+<h2>Training and Evaluation<a class="headerlink" href="#training-and-evaluation" title="Permalink to this heading">¶</a></h2>
 <p>The entry files of all the RL methods are written in standard distributed way using <strong>DI-engine</strong> to run RL experiments.
 The sub-process env manager in <strong>Di-engine</strong> is used to run multi-env in parallel.
 Off-policy methods use <code class="docutils literal notranslate"><span class="pre">collector</span></code>, <code class="docutils literal notranslate"><span class="pre">learner</span></code>, <code class="docutils literal notranslate"><span class="pre">replay</span> <span class="pre">buffer</span></code> in <strong>DI-engine</strong> and <code class="docutils literal notranslate"><span class="pre">evaluator</span></code> in DI-drive.

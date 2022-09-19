@@ -24,6 +24,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
@@ -321,7 +322,7 @@
 
         <span class="n">data</span> <span class="o">=</span> <span class="n">default_collate</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
 
-        <span class="n">birdview</span> <span class="o">=</span> <span class="n">to_dtype</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;birdview&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">birdview</span> <span class="o">=</span> <span class="n">to_dtype</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;birdview&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
         <span class="n">speed</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;speed&#39;</span><span class="p">]</span>
         <span class="n">command_index</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;command&#39;</span><span class="p">]]</span>
         <span class="n">command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_one_hot</span><span class="p">[</span><span class="n">command_index</span><span class="p">]</span>
@@ -415,7 +416,7 @@
 <span class="sd">        :Returns:</span>
 <span class="sd">            Dict: information about training loss.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">birdview</span> <span class="o">=</span> <span class="n">to_dtype</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;birdview&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">birdview</span> <span class="o">=</span> <span class="n">to_dtype</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;birdview&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
         <span class="n">speed</span> <span class="o">=</span> <span class="n">to_dtype</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;speed&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
         <span class="n">command_index</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;command&#39;</span><span class="p">]]</span>
         <span class="n">command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_one_hot</span><span class="p">[</span><span class="n">command_index</span><span class="p">]</span>
@@ -625,7 +626,7 @@
 
         <span class="n">data</span> <span class="o">=</span> <span class="n">default_collate</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
 
-        <span class="n">rgb</span> <span class="o">=</span> <span class="n">to_dtype</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;rgb&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">rgb</span> <span class="o">=</span> <span class="n">to_dtype</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;rgb&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
         <span class="n">speed</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;speed&#39;</span><span class="p">]</span>
         <span class="n">command_index</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;command&#39;</span><span class="p">]]</span>
@@ -716,7 +717,6 @@
 <span class="sd">        :Returns:</span>
 <span class="sd">            Dict: information about training loss.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># rgb = to_dtype(data[&#39;rgb&#39;], dtype=torch.float32).permute(0, 3, 1, 2)</span>
         <span class="n">rgb</span> <span class="o">=</span> <span class="n">to_dtype</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;rgb&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
         <span class="n">speed</span> <span class="o">=</span> <span class="n">to_dtype</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;speed&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
         <span class="n">command_index</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;command&#39;</span><span class="p">]]</span>

@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -25,6 +25,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
@@ -184,7 +185,7 @@
            <div itemprop="articleBody">
             
   <section id="carla-benchmark-evaluation">
-<h1>Carla Benchmark Evaluation<a class="headerlink" href="#carla-benchmark-evaluation" title="Permalink to this headline">¶</a></h1>
+<h1>Carla Benchmark Evaluation<a class="headerlink" href="#carla-benchmark-evaluation" title="Permalink to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
 <p>DI-drive provides hands-on benchmark environment settings <sup>[1]</sup> for Carla simulator. The benchmark setting consists of several suites.
@@ -210,7 +211,7 @@ in the suite. The <code class="docutils literal notranslate"><span class="pre">C
 <p>Check these modules in <a class="reference external" href="../api_doc/index.html">API doc</a> for detail information.</p>
 </div>
 <section id="sample-images">
-<h2>Sample images<a class="headerlink" href="#sample-images" title="Permalink to this headline">¶</a></h2>
+<h2>Sample images<a class="headerlink" href="#sample-images" title="Permalink to this heading">¶</a></h2>
 <p>You can check routes in each benchmark suite file in <a class="reference external" href="../../../data/benchmark">benchmark</a> and find start &amp; end waypoint.
 Here we show benchmark settings for ‘Town01’ and ‘Town02’<sup>[2]</sup>.</p>
 <figure class="align-center" id="id1">
@@ -227,17 +228,11 @@ Here we show benchmark settings for ‘Town01’ and ‘Town02’<sup>[2]</sup>.
 </figure>
 </section>
 <section id="performance-metrics">
-<h2>Performance Metrics<a class="headerlink" href="#performance-metrics" title="Permalink to this headline">¶</a></h2>
+<h2>Performance Metrics<a class="headerlink" href="#performance-metrics" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>CILRS</p></li>
 </ul>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 30%" />
-<col style="width: 30%" />
-<col style="width: 21%" />
-<col style="width: 19%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Suite</p></th>
 <th class="head"><p>Success rate</p></th>
@@ -262,12 +257,6 @@ Here we show benchmark settings for ‘Town01’ and ‘Town02’<sup>[2]</sup>.
 <li><p>Implicit Affordance (single lane)</p></li>
 </ul>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 30%" />
-<col style="width: 32%" />
-<col style="width: 20%" />
-<col style="width: 18%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Suite</p></th>
 <th class="head"><p>Success rate</p></th>
@@ -302,12 +291,6 @@ Here we show benchmark settings for ‘Town01’ and ‘Town02’<sup>[2]</sup>.
 <li><p>Implicit Affordance (multi lane)</p></li>
 </ul>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 38%" />
-<col style="width: 28%" />
-<col style="width: 18%" />
-<col style="width: 16%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Suite</p></th>
 <th class="head"><p>Success rate</p></th>
@@ -352,12 +335,6 @@ Here we show benchmark settings for ‘Town01’ and ‘Town02’<sup>[2]</sup>.
 <li><p>Simple RL DQN</p></li>
 </ul>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 30%" />
-<col style="width: 32%" />
-<col style="width: 20%" />
-<col style="width: 18%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Suite</p></th>
 <th class="head"><p>Success rate</p></th>
@@ -392,12 +369,6 @@ Here we show benchmark settings for ‘Town01’ and ‘Town02’<sup>[2]</sup>.
 <li><p>Simple RL PPO</p></li>
 </ul>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 30%" />
-<col style="width: 32%" />
-<col style="width: 20%" />
-<col style="width: 18%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Suite</p></th>
 <th class="head"><p>Success rate</p></th>
@@ -420,7 +391,7 @@ Here we show benchmark settings for ‘Town01’ and ‘Town02’<sup>[2]</sup>.
 </table>
 </section>
 <section id="reference">
-<h2>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
+<h2>Reference<a class="headerlink" href="#reference" title="Permalink to this heading">¶</a></h2>
 <div class="line-block">
 <div class="line">[1] J  Hawke, et al. <a class="reference external" href="http://vladlen.info/papers/conditional-imitation.pdf">“Urban Driving with Conditional Imitation Learning.”</a> (2019).</div>
 <div class="line">[2] Xiao, Y. , et al. <a class="reference external" href="https://arxiv.org/abs/1906.03199v1">“Multimodal End-to-End Autonomous Driving.”</a> (2019).</div>

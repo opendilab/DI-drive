@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -25,6 +25,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
@@ -186,7 +187,7 @@
            <div itemprop="articleBody">
             
   <section id="latent-reinforcement-learning">
-<h1>Latent Reinforcement Learning<a class="headerlink" href="#latent-reinforcement-learning" title="Permalink to this headline">¶</a></h1>
+<h1>Latent Reinforcement Learning<a class="headerlink" href="#latent-reinforcement-learning" title="Permalink to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
 <p>Latent Reinforcement Learning is a category of policy settings which generate
@@ -199,7 +200,7 @@ with <strong>DI-drive</strong> and <strong>DI-engine</strong> and transfers it t
 entries can be found in <code class="docutils literal notranslate"><span class="pre">demo/latent_rl</span></code>. In the
 following documents, it will be explained in detail.</p>
 <section id="training-auto-encoder">
-<h2>Training auto-encoder<a class="headerlink" href="#training-auto-encoder" title="Permalink to this headline">¶</a></h2>
+<h2>Training auto-encoder<a class="headerlink" href="#training-auto-encoder" title="Permalink to this heading">¶</a></h2>
 <p>The first step is to train a VAE to encode input image
 into a imbedding feature. We deploy the model and training following
 open source VAE <a class="reference external" href="https://github.com/AntixK/PyTorch-VAE">vae</a>.
@@ -224,7 +225,7 @@ python train_vae.py
 <p>You can custom the configurations in the files above.</p>
 </section>
 <section id="trainging-rl-agent">
-<h2>Trainging RL agent<a class="headerlink" href="#trainging-rl-agent" title="Permalink to this headline">¶</a></h2>
+<h2>Trainging RL agent<a class="headerlink" href="#trainging-rl-agent" title="Permalink to this heading">¶</a></h2>
 <p>Following Model-free RL for AD , we use DDQN as the
 discrete RL algorithm and TD3 as the continuous RL algorithm.
 For DDQN, we discrete the steering and throttle to 10 class, which

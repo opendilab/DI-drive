@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -25,6 +25,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
@@ -186,7 +187,7 @@
            <div itemprop="articleBody">
             
   <section id="metadrive-macro-environment">
-<h1>MetaDrive Macro Environment<a class="headerlink" href="#metadrive-macro-environment" title="Permalink to this headline">¶</a></h1>
+<h1>MetaDrive Macro Environment<a class="headerlink" href="#metadrive-macro-environment" title="Permalink to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
 <p>MetaDrive Macro Environment is a control option based RL environment on MetaDrive.
@@ -197,7 +198,7 @@ The macro action takes effect in a following time period in simulator, and the v
 is drived by a IDM policy that can achieve the target macro action.</p>
 <a class="reference internal image-reference" href="../_images/macro_demo1.gif"><img alt="macro_demo1" class="align-center" src="../_images/macro_demo1.gif" style="width: 500px;" /></a>
 <section id="environments">
-<h2>Environments<a class="headerlink" href="#environments" title="Permalink to this headline">¶</a></h2>
+<h2>Environments<a class="headerlink" href="#environments" title="Permalink to this heading">¶</a></h2>
 <p>The environment is established following the standard <code class="docutils literal notranslate"><span class="pre">gym.Env</span></code> form. Detail information
 is listed below.</p>
 <p>The state of macro env is Top-down Sematic Maps containing 5 channels:</p>
@@ -226,7 +227,7 @@ is listed below.</p>
 <p>Each action costs 30 system timestep, and is converted to control signals through a PID controller.</p>
 </section>
 <section id="training-test">
-<h2>Training &amp; Test<a class="headerlink" href="#training-test" title="Permalink to this headline">¶</a></h2>
+<h2>Training &amp; Test<a class="headerlink" href="#training-test" title="Permalink to this heading">¶</a></h2>
 <p>All the entry can be found in <code class="docutils literal notranslate"><span class="pre">demo/metadrive</span></code></p>
 <p>DI-drive provide two RL policy training entries: DQN and Discrete PPO. Run the following
 scripts to start training DQN demos.</p>

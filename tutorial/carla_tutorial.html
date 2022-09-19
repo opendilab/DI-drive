@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -25,6 +25,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
@@ -183,13 +184,13 @@
            <div itemprop="articleBody">
             
   <section id="carla-tutorial">
-<h1>Carla tutorial<a class="headerlink" href="#carla-tutorial" title="Permalink to this headline">¶</a></h1>
+<h1>Carla tutorial<a class="headerlink" href="#carla-tutorial" title="Permalink to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
 <p>Carla is currently the mainly used simulator in DI-drive. This page shows some bacis concepts and
 a quick user guide to run Carla simulator, for quick hands-on use of Carla in DI-drive</p>
 <section id="basic-concept-of-carla">
-<h2>Basic Concept of Carla<a class="headerlink" href="#basic-concept-of-carla" title="Permalink to this headline">¶</a></h2>
+<h2>Basic Concept of Carla<a class="headerlink" href="#basic-concept-of-carla" title="Permalink to this heading">¶</a></h2>
 <p>Carla simulator runs in a client-server architecture. The sever and clients run individually. The server
 contains map, weather, actors and all physical simulation. The clients can control the actors by
 sending commands and ticking world in Carla server by its Python API. The server and clients
@@ -216,7 +217,7 @@ So make sure to call the <code class="docutils literal notranslate"><span class=
 changed by the client.</p>
 </section>
 <section id="quickly-create-carla-server-via-docker">
-<h2>Quickly Create Carla server via Docker<a class="headerlink" href="#quickly-create-carla-server-via-docker" title="Permalink to this headline">¶</a></h2>
+<h2>Quickly Create Carla server via Docker<a class="headerlink" href="#quickly-create-carla-server-via-docker" title="Permalink to this heading">¶</a></h2>
 <p>It is recommended to run Carla server in <a class="reference external" href="https://www.docker.com">docker</a> which makes the installation
 much easier and can run multiple Carla servers. DI-drive follows guidance in Carla doc which uses
 <a class="reference external" href="https://docs.docker.com/engine/install/ubuntu">docker CE</a> and
@@ -246,7 +247,7 @@ by the parameters in carla scripts, the external ones are set when creating the 
 </div>
 </section>
 <section id="carla-server-settings">
-<h2>Carla server settings<a class="headerlink" href="#carla-server-settings" title="Permalink to this headline">¶</a></h2>
+<h2>Carla server settings<a class="headerlink" href="#carla-server-settings" title="Permalink to this heading">¶</a></h2>
 <p>We provide config setting to quickly set host and port for several Carla servers. The <code class="docutils literal notranslate"><span class="pre">server</span></code> key in config
 file is used to set Carla servers. For example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>

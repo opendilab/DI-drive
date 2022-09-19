@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -25,6 +25,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
@@ -194,11 +195,11 @@
            <div itemprop="articleBody">
             
   <section id="carla-simulator-features">
-<h1>Carla Simulator Features<a class="headerlink" href="#carla-simulator-features" title="Permalink to this headline">¶</a></h1>
+<h1>Carla Simulator Features<a class="headerlink" href="#carla-simulator-features" title="Permalink to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
 <section id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">¶</a></h2>
 <p>DI-drive defines simulator instance to unify the interfaces and standardize sub-modules. As a result, users can customize
 their simulator setting with a config dictionary, and get expected data by calling the instance’s methods.
 DI-drive currently uses Carla version <strong>higher than 0.9.9</strong> for simulating Autonomous Driving. The Interaction between Carla server
@@ -209,7 +210,7 @@ vehicle, a <strong>planner</strong> in the simulator to get target waypoints and
 by methods.</p>
 </section>
 <section id="carla-simulator-configuring">
-<h2>Carla Simulator Configuring<a class="headerlink" href="#carla-simulator-configuring" title="Permalink to this headline">¶</a></h2>
+<h2>Carla Simulator Configuring<a class="headerlink" href="#carla-simulator-configuring" title="Permalink to this heading">¶</a></h2>
 <p>All the settings of simulator can be customized by a config dict. Here
 we show the default setting of the simulator and explain its contents.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
@@ -238,7 +239,7 @@ we show the default setting of the simulator and explain its contents.</p>
 <a class="reference internal" href="../api_doc/simulators.html#core.simulators.CarlaSimulator" title="core.simulators.carla_simulator.CarlaSimulator"><code class="xref py py-func docutils literal notranslate"><span class="pre">init</span></code></a> method, in order to make difference among episodes.</p>
 </div>
 <section id="common-configurations">
-<h3>Common configurations<a class="headerlink" href="#common-configurations" title="Permalink to this headline">¶</a></h3>
+<h3>Common configurations<a class="headerlink" href="#common-configurations" title="Permalink to this heading">¶</a></h3>
 <p>Here we explain some common configurations about world map and npc settings in simulator, the instruction of ‘planner’, ‘obs’ and
 ‘aug’ are shown next.</p>
 <ul>
@@ -250,10 +251,6 @@ we show the default setting of the simulator and explain its contents.</p>
 <li><dl>
 <dt>weather</dt><dd><p>Weather setting in the simulator. List as followings. If set to ‘random’, the simulator will randomly choose one.</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>Value</p></td>
 <td><p>Weather</p></td>
@@ -359,7 +356,7 @@ we show the default setting of the simulator and explain its contents.</p>
 <p>Users may need to check Carla documents for detailed information about configs.</p>
 </section>
 <section id="planner-configurations">
-<h3>Planner configurations<a class="headerlink" href="#planner-configurations" title="Permalink to this headline">¶</a></h3>
+<h3>Planner configurations<a class="headerlink" href="#planner-configurations" title="Permalink to this heading">¶</a></h3>
 <p>Here we explain the ‘planner’ key in config.</p>
 <p>The Planner in Carla simulator is modified from default Carla planners. A global planner in Carla Python API is used
 to generate route and road options from start to end location. The local planner is defined in DI-drive to add navigation
@@ -401,7 +398,7 @@ in simulators.</p>
 </div>
 </section>
 <section id="sensor-configurations">
-<h3>Sensor configurations<a class="headerlink" href="#sensor-configurations" title="Permalink to this headline">¶</a></h3>
+<h3>Sensor configurations<a class="headerlink" href="#sensor-configurations" title="Permalink to this heading">¶</a></h3>
 <p>Here we explain the ‘obs’ and ‘aug’ key in config</p>
 <p>Sensor config is used to set up sensors and get image observation in simulation. There are several types of
 sensors and images available to add into config list. You can add more than one sensor of same type.
@@ -469,12 +466,12 @@ value range of the augmentation.</p>
 </section>
 </section>
 <section id="running-status">
-<h2>Running status<a class="headerlink" href="#running-status" title="Permalink to this headline">¶</a></h2>
+<h2>Running status<a class="headerlink" href="#running-status" title="Permalink to this heading">¶</a></h2>
 <p>DI-drive simulator can get and record some running status in each frame, including basic status, navigation,
 information about simulation. They are automatically checked in each frame. Simulator provides interfaces to
 get dictionary about these info, stored in each key.</p>
 <section id="status">
-<h3>Status<a class="headerlink" href="#status" title="Permalink to this headline">¶</a></h3>
+<h3>Status<a class="headerlink" href="#status" title="Permalink to this heading">¶</a></h3>
 <ul>
 <li><p>speed (float): speed in km/h</p></li>
 <li><p>location (np.ndarray): 3D location vector</p></li>
@@ -495,7 +492,7 @@ get dictionary about these info, stored in each key.</p>
 </ul>
 </section>
 <section id="navigation">
-<h3>Navigation<a class="headerlink" href="#navigation" title="Permalink to this headline">¶</a></h3>
+<h3>Navigation<a class="headerlink" href="#navigation" title="Permalink to this heading">¶</a></h3>
 <ul>
 <li><p>agent_state (int): Agent navigation state</p>
 <blockquote>
@@ -530,7 +527,7 @@ get dictionary about these info, stored in each key.</p>
 </ul>
 </section>
 <section id="information">
-<h3>Information<a class="headerlink" href="#information" title="Permalink to this headline">¶</a></h3>
+<h3>Information<a class="headerlink" href="#information" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>tick (int): Ticks for time in current episode</p></li>
 <li><p>timestamp (float): Real timestamp run in current episode</p></li>

@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -25,6 +25,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
@@ -183,7 +184,7 @@
            <div itemprop="articleBody">
             
   <section id="auto-policy-running-and-visualization">
-<h1>Auto policy running and visualization<a class="headerlink" href="#auto-policy-running-and-visualization" title="Permalink to this headline">¶</a></h1>
+<h1>Auto policy running and visualization<a class="headerlink" href="#auto-policy-running-and-visualization" title="Permalink to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
 <p>DI-drive provides an <a class="reference internal" href="../api_doc/policy.html#core.policy.AutoPIDPolicy" title="core.policy.auto_policy.AutoPIDPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">AutoPIDPolicy</span></code></a> which can navigate through
@@ -191,8 +192,8 @@ a target waypoint and command in observation. It can be used for data sampling, 
 visualization, reward design, etc.</p>
 <p>To quickly run the demo, start a Carla server first. Then you can connect to the server and run policy.</p>
 <section id="running-with-start-and-target-waypoint">
-<h2>Running with start and target waypoint<a class="headerlink" href="#running-with-start-and-target-waypoint" title="Permalink to this headline">¶</a></h2>
-<p>In this part, the policy runs in <a class="reference internal" href="../api_doc/envs.html#core.envs.SimpleCarlaEnv" title="core.envs.simple_carla_env.SimpleCarlaEnv"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimpleCarlaEnv</span></code></a>.
+<h2>Running with start and target waypoint<a class="headerlink" href="#running-with-start-and-target-waypoint" title="Permalink to this heading">¶</a></h2>
+<p>In this part, the policy runs in <code class="xref py py-class docutils literal notranslate"><span class="pre">SimpleCarlaEnv</span></code>.
 It follows a route calculated by provided start and end waypoint index when calling <code class="docutils literal notranslate"><span class="pre">reset</span></code> method.
 Simply run the following command. You may need to change the Carla server host and port in <code class="docutils literal notranslate"><span class="pre">auto_run.py</span></code>
 first.</p>
@@ -213,8 +214,8 @@ python auto_run.py
 </div>
 </section>
 <section id="running-with-scenario-in-casezoo">
-<h2>Running with scenario in Casezoo<a class="headerlink" href="#running-with-scenario-in-casezoo" title="Permalink to this headline">¶</a></h2>
-<p>In this part, the policy runs in <a class="reference internal" href="../api_doc/envs.html#core.envs.ScenarioCarlaEnv" title="core.envs.scenario_carla_env.ScenarioCarlaEnv"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScenarioCarlaEnv</span></code></a>.
+<h2>Running with scenario in Casezoo<a class="headerlink" href="#running-with-scenario-in-casezoo" title="Permalink to this heading">¶</a></h2>
+<p>In this part, the policy runs in <code class="xref py py-class docutils literal notranslate"><span class="pre">ScenarioCarlaEnv</span></code>.
 It runs with provided Casezoo route and config file, or the single scenario name.
 Check <a class="reference external" href="https://github.com/opendilab/DI-drive/blob/main/docs/casezoo_instruction.md">Casezoo instruction</a> for all scenario name and description in Casezoo.</p>
 <p>Simply run the following command.</p>
@@ -228,7 +229,7 @@ python auto_run_case.py --host &lt;your Carla server host&gt; --port &lt;your Ca
 </div>
 </section>
 <section id="visualization">
-<h2>Visualization<a class="headerlink" href="#visualization" title="Permalink to this headline">¶</a></h2>
+<h2>Visualization<a class="headerlink" href="#visualization" title="Permalink to this heading">¶</a></h2>
 <p>We provide two default sensor data to visualize. You can switch the shown image in visualizer by change the
 ‘type’ key in the visualize config. The sensor config can be change them whatever you want.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">autorun_config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>

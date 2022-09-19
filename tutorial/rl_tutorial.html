@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -25,6 +25,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
@@ -187,24 +188,24 @@
            <div itemprop="articleBody">
             
   <section id="simple-reinforcement-learning">
-<h1>Simple Reinforcement Learning<a class="headerlink" href="#simple-reinforcement-learning" title="Permalink to this headline">¶</a></h1>
+<h1>Simple Reinforcement Learning<a class="headerlink" href="#simple-reinforcement-learning" title="Permalink to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
 <p><strong>DI-drive</strong> + <strong>DI-engine</strong> make RL for Autonomous Driving very easy. Here we show how to
 use <strong>DI-drive</strong> to run a simple Reinforcement Learning driving policy with Carla and MetaDrive
 separately.</p>
 <section id="prerequisites">
-<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">¶</a></h2>
 <p>Ubuntu 16.04 system + Intel(R) Core(TM) i7-8700 CPU &#64; 3.20GHz + 32G
 memory + GPU1060</p>
 </section>
 <section id="carla-rl-tutorial">
-<h2>Carla RL Tutorial<a class="headerlink" href="#carla-rl-tutorial" title="Permalink to this headline">¶</a></h2>
+<h2>Carla RL Tutorial<a class="headerlink" href="#carla-rl-tutorial" title="Permalink to this heading">¶</a></h2>
 <p>DI-drive support several RL policies and provide a simple RL env running with Carla server.
 The policy takes a small Bird-eye View image together with
 current speed as input, and directly outputs control signals.</p>
 <section id="rl-training-using-di-engine">
-<h3>RL training using DI-engine<a class="headerlink" href="#rl-training-using-di-engine" title="Permalink to this headline">¶</a></h3>
+<h3>RL training using DI-engine<a class="headerlink" href="#rl-training-using-di-engine" title="Permalink to this heading">¶</a></h3>
 <p>We build simple RL demos that can run varies RL algorithm with the aforementioned simple environment setting.
 All the code can be found in <code class="docutils literal notranslate"><span class="pre">demo/simple_rl</span></code>, including training, evaluating and testing.</p>
 <p>Here we show how to run the DQN demo. It follows the standard deployment of a DI-engine RL entry.
@@ -249,7 +250,7 @@ the default log path is in your working directory.</p>
 </figure>
 </section>
 <section id="evaluate-and-test-the-trained-model">
-<h3>Evaluate and test the trained model<a class="headerlink" href="#evaluate-and-test-the-trained-model" title="Permalink to this headline">¶</a></h3>
+<h3>Evaluate and test the trained model<a class="headerlink" href="#evaluate-and-test-the-trained-model" title="Permalink to this heading">¶</a></h3>
 <p>After training, you can evaluate the trained model on a benchmark suite. Simply run the following code.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python simple_rl_eval.py -p dqn -c PATH_TO_YOUR_CKPT
 </pre></div>
@@ -319,7 +320,7 @@ and add your pre-trained weights in policy’s config.</p>
 </section>
 </section>
 <section id="metadrive-rl-tutorial">
-<h2>MetaDrive RL Tutorial<a class="headerlink" href="#metadrive-rl-tutorial" title="Permalink to this headline">¶</a></h2>
+<h2>MetaDrive RL Tutorial<a class="headerlink" href="#metadrive-rl-tutorial" title="Permalink to this heading">¶</a></h2>
 <p>DI-drive provide a simple entry that can run MetaDrive default environments
 with DI-engine policies. The training entry can be found in <cite>demo/metadrive</cite></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> demo/metadrive
