@@ -20,21 +20,10 @@ from ding.utils import SequenceType
 from ding.model.common import FCEncoder
 from ding.utils.data import offline_data_save_type, default_collate
 from ding.utils import build_logger
-from dizoo.atari.envs.atari_wrappers import wrap_deepmind
-from dizoo.mujoco.envs.mujoco_wrappers import wrap_mujoco
 from ding.torch_utils import to_tensor
-
 from ding.reward_model.base_reward_model import BaseRewardModel
 from ding.reward_model.rnd_reward_model import collect_states 
 import os 
-
-
-# assert os.path.exists(trex_path)
-# if not os.path.exists(trex_reward_folder):
-#     os.makedirs(trex_reward_folder)
-
-# trex_reward_folder = trex_path + '/reward_model'
-# trex_ckpt_name = trex_reward_folder + '/reward_ckpt_sigmoid_drex_20state'
 
 config = dict(
     dataset_path = '/test_drex',

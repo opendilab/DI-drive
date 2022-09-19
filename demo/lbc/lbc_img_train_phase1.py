@@ -17,6 +17,7 @@ from core.utils.learner_utils.log_saver_utils import Experiment
 
 lbc_config = dict(
     exp_name='lbc_img_train_p1',
+    phase0_name='lbc_img_train_p0',
     data=dict(
         train=dict(
             root_dir='lbc_datasets_train',
@@ -315,9 +316,9 @@ def main(cfg):
         val_dataset, cfg.policy.learn.batch_size, num_workers=16, shuffle=False, drop_last=False, pin_memory=True
     )
 
-    criterion = LocationLoss(**cfg.camera_args)
+    criterion = LocationLoss(CROP_SIZE)
 
-    coord_converter = CoordConverter(**cfg.camera_args)
+    coord_converter = CoordConverter(**cfg.policy.camera_args)
 
     lbc_policy = LBCImagePolicy(cfg.policy)
 
@@ -327,10 +328,10 @@ def main(cfg):
     _epoch = 0
 
     if cfg.policy.model.resume:
-        log_dir = Path('./log/{}/'.format(cfg.exp_name))
+        log_dir = Path('./log/{}/'.format(cfg.phase0_name))
         checkpoints = list(log_dir.glob('model-*.th'))
         checkpoint = str(checkpoints[-1])
-        _epoch = int(checkpoint[24:-3])
+        _epoch = int(checkpoint[-4])
         print(f'loading {checkpoint}')
         lbc_policy.learn_mode.load_state_dict(torch.load(checkpoint))
 

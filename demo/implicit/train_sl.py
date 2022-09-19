@@ -29,7 +29,7 @@ config = dict(
     ),
     data=dict(
         dataset_dir='./dataset',
-        batch_size=12,
+        batch_size=48,
         num_workers=8,
         crop_sky=True,
     ),
@@ -188,7 +188,7 @@ def train(config):
         train_or_eval(criterion, net, data_train, optim, True, config, epoch, writter)
         train_or_eval(criterion, net, data_val, None, False, config, epoch, writter)
 
-        torch.save(net.state_dict(), str(Path(config['learner']['log_dir']) / ('model-%d.pth.tar' % epoch)))
+        torch.save(net.module.state_dict(), str(Path(config['learner']['log_dir']) / ('model-%d.pth.tar' % epoch)))
         scheduler.step()
 
 

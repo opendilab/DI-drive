@@ -5,6 +5,7 @@ from enum import Enum
 from pathlib import Path
 from collections import deque, namedtuple, OrderedDict
 
+import gym
 import numpy as np
 import carla
 import torch
@@ -31,6 +32,7 @@ class ImplicitCarlaEnv(BaseDriveEnv):
         self._simulator_cfg = self.args.simulator
         self.weather_list = self.args.weather_list
         self.town = self.args.town
+        self.reward_space = gym.spaces.Box(low=-5, high=2, dtype=np.float32, shape=(1,))
 
         self.n_vehicles = self.args.n_vehicles
         self.n_pedestrians = self.args.n_pedestrians

@@ -21,7 +21,7 @@ class CILRSEnvWrapper(DriveEnvWrapper):
             'speed': np.float32(obs['speed'] / self._cfg.speed_factor),
             'tick': obs['tick'],
         }
-        rgb = obs['rgb']
+        rgb = obs['rgb'].astype(np.unit8)
         im = PIL.Image.fromarray(rgb)
         (width, height) = (int(im.width // self._cfg.scale), int(im.height // self._cfg.scale))
         im_resized = im.resize((width, height))

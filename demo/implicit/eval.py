@@ -13,7 +13,7 @@ from ding.utils.default_helper import deep_merge_dicts
 
 eval_config = dict(
     env=dict(
-        env_num=8,
+        env_num=1,
         simulator=dict(
             verbose=False,
             planner=dict(type='basic', resolution=2.0, min_distance=1.5),
@@ -37,7 +37,7 @@ eval_config = dict(
         ),
     ),
     server=[
-        dict(carla_host='localhost', carla_ports=[9000, 9016, 2]),
+        dict(carla_host='localhost', carla_ports=[2000, 2002, 2]),
     ],
     eval=dict(
         episodes_per_suite=50,

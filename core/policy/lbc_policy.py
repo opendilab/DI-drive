@@ -155,7 +155,7 @@ class LBCBirdviewPolicy(BaseCarlaPolicy):
 
         data = default_collate(list(data.values()))
 
-        birdview = to_dtype(data['birdview'], dtype=torch.float32).permute(0, 3, 1, 2)
+        birdview = to_dtype(data['birdview'], dtype=torch.float32)
         speed = data['speed']
         command_index = [i.item() - 1 for i in data['command']]
         command = self._one_hot[command_index]
@@ -249,7 +249,7 @@ class LBCBirdviewPolicy(BaseCarlaPolicy):
         :Returns:
             Dict: information about training loss.
         """
-        birdview = to_dtype(data['birdview'], dtype=torch.float32).permute(0, 3, 1, 2)
+        birdview = to_dtype(data['birdview'], dtype=torch.float32)
         speed = to_dtype(data['speed'], dtype=torch.float32)
         command_index = [i.item() - 1 for i in data['command']]
         command = self._one_hot[command_index]
@@ -459,7 +459,7 @@ class LBCImagePolicy(BaseCarlaPolicy):
 
         data = default_collate(list(data.values()))
 
-        rgb = to_dtype(data['rgb'], dtype=torch.float32).permute(0, 3, 1, 2)
+        rgb = to_dtype(data['rgb'], dtype=torch.float32)
 
         speed = data['speed']
         command_index = [i.item() - 1 for i in data['command']]
@@ -550,7 +550,6 @@ class LBCImagePolicy(BaseCarlaPolicy):
         :Returns:
             Dict: information about training loss.
         """
-        # rgb = to_dtype(data['rgb'], dtype=torch.float32).permute(0, 3, 1, 2)
         rgb = to_dtype(data['rgb'], dtype=torch.float32)
         speed = to_dtype(data['speed'], dtype=torch.float32)
         command_index = [i.item() - 1 for i in data['command']]
