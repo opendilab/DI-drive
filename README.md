@@ -202,7 +202,7 @@ We appreciate all contributions to improve DI-drive, both algorithms and system 
 
 <div align=center><img width="250" height="250" src="./docs/figs/qr.png" alt="qr"/></div>
 
-Or you can contact us with [slack](https://opendilab.slack.com/join/shared_invite/zt-v9tmv4fp-nUBAQEH1_Kuyu_q4plBssQ#/shared-invite/email) or email (opendilab.contact@gmail.com).
+Or you can contact us with [slack](https://opendilab.slack.com/join/shared_invite/zt-v9tmv4fp-nUBAQEH1_Kuyu_q4plBssQ#/shared-invite/email) or email (opendilab@pjlab.org.cn).
 
 ## License
 
