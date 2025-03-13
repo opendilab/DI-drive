@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -23,9 +23,6 @@
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
     
@@ -235,14 +232,14 @@ a <cite>.json</cite> file with the same file name as the route file.</p>
 <cite>xml</cite> files. Each type of scenario possess sevaral cases at a specific location and a name saved in the <cite>xml</cite> file.
 Details of all routes and scenarios are shown in
 <a class="reference external" href="https://github.com/opendilab/DI-drive/blob/main/docs/casezoo_instruction.md">Casezoo instruction</a>.</p>
-<p>DI-drive defines <code class="xref py py-class docutils literal notranslate"><span class="pre">ScenarioCarlaEnv</span></code>, which uses
+<p>DI-drive defines <a class="reference internal" href="../api_doc/envs.html#core.envs.ScenarioCarlaEnv" title="core.envs.scenario_carla_env.ScenarioCarlaEnv"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScenarioCarlaEnv</span></code></a>, which uses
 <code class="xref py py-class docutils literal notranslate"><span class="pre">ScenarioSimulator</span></code> to run Casezoo.
 You need to parse the scenario files and get a configuration instance, then pass the configuration into
 the <code class="docutils literal notranslate"><span class="pre">reset</span></code> method of a <code class="docutils literal notranslate"><span class="pre">ScenarioEnv</span></code>. The environment is able to get the scenario type by itself
 and create map, NPCs, behaviors and criteria in the environments. The environment can then be used as
 common RL environments to train and evaluate.</p>
 <p>Simple usage of route scenario is shown follow:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">core.simulators.srunner.tools.route_parser</span> <span class="kn">import</span> <span class="n">RouteParser</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">core.simulators.srunner.tools.route_parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">RouteParser</span>
 
 <span class="n">route_file</span> <span class="o">=</span> <span class="s1">&#39;xxx.xml&#39;</span>
 <span class="n">config_file</span> <span class="o">=</span> <span class="s1">&#39;xxx.json&#39;</span>
@@ -253,7 +250,7 @@ common RL environments to train and evaluate.</p>
 </pre></div>
 </div>
 <p>Simple usage of single scenario is shown follow:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">core.simulators.srunner.tools.scenario_parser</span> <span class="kn">import</span> <span class="n">ScenarioConfigurationParser</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">core.simulators.srunner.tools.scenario_parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">ScenarioConfigurationParser</span>
 
 <span class="n">scenario_name</span> <span class="o">=</span> <span class="s1">&#39;xxx&#39;</span>
 <span class="n">config</span> <span class="o">=</span> <span class="n">ScenarioConfigurationParser</span><span class="o">.</span><span class="n">parse_scenario_configuration</span><span class="p">(</span><span class="n">scenario_name</span><span class="p">)</span>

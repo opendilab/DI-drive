@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -23,9 +23,6 @@
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
     
@@ -205,7 +202,7 @@ steer, throttle and brake under certain navigation command, together with a spee
 <section id="datasets-collection">
 <span id="header-n14"></span><h2>Datasets collection<a class="headerlink" href="#datasets-collection" title="Permalink to this heading">¶</a></h2>
 <p>To collect expert data, the first step is to start Carla servers</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>./CarlaUE4.sh -fps<span class="o">=</span><span class="m">10</span> -benchmark -world-port<span class="o">=[</span>PORT NUM<span class="o">]</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>./CarlaUE4.sh<span class="w"> </span>-fps<span class="o">=</span><span class="m">10</span><span class="w"> </span>-benchmark<span class="w"> </span>-world-port<span class="o">=[</span>PORT<span class="w"> </span>NUM<span class="o">]</span>
 </pre></div>
 </div>
 <p>To customize your training datasets, please refer to the configuration and entry demo in
@@ -226,7 +223,7 @@ For this tutorial, you need to change the suite name, dataset path and Carla ser
 </pre></div>
 </div>
 <p>Then you can use the python scrips to collect the data.</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python cilrs_data_collect.py
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>cilrs_data_collect.py
 </pre></div>
 </div>
 <p>This collecting process of 100 episodes may cost ~7 hours and ~12 G storage with
@@ -274,7 +271,7 @@ learning rates, please modify the config in <code class="docutils literal notran
 <span id="header-n35"></span><h2>Model evaluation<a class="headerlink" href="#model-evaluation" title="Permalink to this heading">¶</a></h2>
 <p>We provide benchmark evaluation and close-loop test in environment (mostly for visualization) for
 a trained CILRS model with <strong>DI-drive</strong>. To evaluate your trained model, just run</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python cilrs_eval.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>cilrs_eval.py
 </pre></div>
 </div>
 <p>Note that you may need to change the checkpoint path and Carla server host/port in <code class="docutils literal notranslate"><span class="pre">cilrs_eval.py</span></code>.</p>

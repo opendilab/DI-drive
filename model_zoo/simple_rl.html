@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -23,9 +23,6 @@
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
     
@@ -219,12 +216,12 @@ them. All these policies are implemented from <strong>DI-engine</strong> standar
 <p>The simple RL experiments use the environment instance <code class="docutils literal notranslate"><span class="pre">SimpleCarlaEnv</span></code> which is well defined with
 specified inputs and outputs.  The standard usage to customize the env interfaces is to add <code class="docutils literal notranslate"><span class="pre">EnvWrapper</span></code>
 and change the input, output, reward of Env. For example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">DiscreteEnvWrapper</span><span class="p">(</span><span class="n">gym</span><span class="o">.</span><span class="n">Wrapper</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">DiscreteEnvWrapper</span><span class="p">(</span><span class="n">gym</span><span class="o">.</span><span class="n">Wrapper</span><span class="p">):</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">_acc_list</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.75</span><span class="p">,</span> <span class="mi">0</span><span class="p">),]</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_steer_list</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.8</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
         <span class="n">obs</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">obs_out</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;birdview&#39;</span><span class="p">:</span> <span class="n">obs</span><span class="p">[</span><span class="s1">&#39;birdview&#39;</span><span class="p">][</span><span class="o">...</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">]],</span>
@@ -232,7 +229,7 @@ and change the input, output, reward of Env. For example:</p>
         <span class="p">}</span>
         <span class="k">return</span> <span class="n">obs_out</span>
 
-    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
             <span class="nb">id</span> <span class="o">=</span> <span class="nb">id</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
         <span class="nb">id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
@@ -283,8 +280,8 @@ method has different <code class="docutils literal notranslate"><span class="pre
 </pre></div>
 </div>
 <p>On-policy collection:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">on_policy_collect</span><span class="p">(</span><span class="n">collector</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">_collect</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">on_policy_collect</span><span class="p">(</span><span class="n">collector</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_collect</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
         <span class="n">ctx</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;train_iter&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">new_data</span> <span class="o">=</span> <span class="n">collector</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">train_iter</span><span class="o">=</span><span class="n">ctx</span><span class="o">.</span><span class="n">train_iter</span><span class="p">)</span>
         <span class="n">unpack_birdview</span><span class="p">(</span><span class="n">new_data</span><span class="p">)</span>
@@ -294,8 +291,8 @@ method has different <code class="docutils literal notranslate"><span class="pre
 </pre></div>
 </div>
 <p>Off-policy collection:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">off_policy_collect</span><span class="p">(</span><span class="n">epsilon_greedy</span><span class="p">,</span> <span class="n">collector</span><span class="p">,</span> <span class="n">replay_buffer</span><span class="p">,</span> <span class="n">cfg</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">_collect</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">off_policy_collect</span><span class="p">(</span><span class="n">epsilon_greedy</span><span class="p">,</span> <span class="n">collector</span><span class="p">,</span> <span class="n">replay_buffer</span><span class="p">,</span> <span class="n">cfg</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_collect</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
         <span class="n">ctx</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;train_iter&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">epsilon_greedy</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">eps</span> <span class="o">=</span> <span class="n">epsilon_greedy</span><span class="p">(</span><span class="n">collector</span><span class="o">.</span><span class="n">envstep</span><span class="p">)</span>
@@ -309,8 +306,8 @@ method has different <code class="docutils literal notranslate"><span class="pre
 </pre></div>
 </div>
 <p>Other procedures:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">evaluator</span><span class="p">,</span> <span class="n">learner</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">_evaluate</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">evaluator</span><span class="p">,</span> <span class="n">learner</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_evaluate</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
         <span class="n">ctx</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;envstep&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># Avoid attribute not existing</span>
         <span class="k">if</span> <span class="n">evaluator</span><span class="o">.</span><span class="n">should_eval</span><span class="p">(</span><span class="n">learner</span><span class="o">.</span><span class="n">train_iter</span><span class="p">):</span>
             <span class="n">stop</span><span class="p">,</span> <span class="n">rate</span> <span class="o">=</span> <span class="n">evaluator</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">learner</span><span class="o">.</span><span class="n">save_checkpoint</span><span class="p">,</span> <span class="n">learner</span><span class="o">.</span><span class="n">train_iter</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">envstep</span><span class="p">)</span>
@@ -319,8 +316,8 @@ method has different <code class="docutils literal notranslate"><span class="pre
                 <span class="k">return</span>
     <span class="k">return</span> <span class="n">_evaluate</span>
 
-<span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="n">learner</span><span class="p">,</span> <span class="n">replay_buffer</span><span class="p">,</span> <span class="n">cfg</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">_train</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">train</span><span class="p">(</span><span class="n">learner</span><span class="p">,</span> <span class="n">replay_buffer</span><span class="p">,</span> <span class="n">cfg</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_train</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
         <span class="n">ctx</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;envstep&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">if</span> <span class="s1">&#39;new_data&#39;</span> <span class="ow">in</span> <span class="n">ctx</span><span class="p">:</span>
             <span class="n">learner</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">new_data</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">envstep</span><span class="p">)</span>

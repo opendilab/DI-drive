@@ -1,0 +1,1097 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>core.envs.md_traj_env &mdash; DI-drive 0.3.4 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> DI-drive
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/index.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/index.html">Tutorial</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../features/index.html">Features</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../model_zoo/index.html">Model Zoo</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_doc/index.html">API Doc</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../faq/index.html">FAQ</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DI-drive</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>core.envs.md_traj_env</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for core.envs.md_traj_env</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">gym</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gym</span><span class="w"> </span><span class="kn">import</span> <span class="n">spaces</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">AnyStr</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">ding.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">ENV_REGISTRY</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">core.utils.simulator_utils.md_utils.discrete_policy</span><span class="w"> </span><span class="kn">import</span> <span class="n">DiscreteMetaAction</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">core.utils.simulator_utils.md_utils.agent_manager_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrajAgentManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">core.utils.simulator_utils.md_utils.engine_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrajEngine</span><span class="p">,</span> <span class="n">initialize_engine</span><span class="p">,</span> <span class="n">close_engine</span><span class="p">,</span> \
+     <span class="n">engine_initialized</span><span class="p">,</span> <span class="n">set_global_random_seed</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">core.utils.simulator_utils.md_utils.traffic_manager_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrafficMode</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">metadrive.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">RENDER_MODE_NONE</span><span class="p">,</span> <span class="n">DEFAULT_AGENT</span><span class="p">,</span> <span class="n">REPLAY_DONE</span><span class="p">,</span> <span class="n">TerminationState</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">metadrive.envs.base_env</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseEnv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">metadrive.component.map.base_map</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseMap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">metadrive.component.map.pg_map</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_map_config</span><span class="p">,</span> <span class="n">MapGenerateMethod</span>
+<span class="c1"># from metadrive.manager.traffic_manager import TrafficMode</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">metadrive.component.pgblock.first_block</span><span class="w"> </span><span class="kn">import</span> <span class="n">FirstPGBlock</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">metadrive.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span><span class="p">,</span> <span class="n">merge_dicts</span><span class="p">,</span> <span class="n">get_np_random</span><span class="p">,</span> <span class="n">clip</span><span class="p">,</span> <span class="n">concat_step_infos</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">metadrive.envs.base_env</span><span class="w"> </span><span class="kn">import</span> <span class="n">BASE_DEFAULT_CONFIG</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">metadrive.obs.top_down_obs_multi_channel</span><span class="w"> </span><span class="kn">import</span> <span class="n">TopDownMultiChannel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">metadrive.engine.base_engine</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseEngine</span>
+
+<span class="n">DIDRIVE_DEFAULT_CONFIG</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="c1"># ===== Generalization =====</span>
+    <span class="n">start_seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">use_render</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">environment_num</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+
+    <span class="c1"># ===== Map Config =====</span>
+    <span class="nb">map</span><span class="o">=</span><span class="s1">&#39;SSSSSSSSSS&#39;</span><span class="p">,</span>  <span class="c1"># int or string: an easy way to fill map_config</span>
+    <span class="n">random_lane_width</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">random_lane_num</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">map_config</span><span class="o">=</span><span class="p">{</span>
+        <span class="n">BaseMap</span><span class="o">.</span><span class="n">GENERATE_TYPE</span><span class="p">:</span> <span class="n">MapGenerateMethod</span><span class="o">.</span><span class="n">BIG_BLOCK_SEQUENCE</span><span class="p">,</span>
+        <span class="n">BaseMap</span><span class="o">.</span><span class="n">GENERATE_CONFIG</span><span class="p">:</span> <span class="s1">&#39;SSSSSSSSSS&#39;</span><span class="p">,</span>  <span class="c1"># None,  # it can be a file path / block num / block ID sequence</span>
+        <span class="n">BaseMap</span><span class="o">.</span><span class="n">LANE_WIDTH</span><span class="p">:</span> <span class="mf">3.5</span><span class="p">,</span>
+        <span class="n">BaseMap</span><span class="o">.</span><span class="n">LANE_NUM</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="s2">&quot;exit_length&quot;</span><span class="p">:</span> <span class="mi">70</span><span class="p">,</span>
+    <span class="p">},</span>
+
+    <span class="c1"># ===== Traffic =====</span>
+    <span class="n">traffic_density</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+    <span class="n">on_screen</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">rgb_clip</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">need_inverse_traffic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">traffic_mode</span><span class="o">=</span><span class="n">TrafficMode</span><span class="o">.</span><span class="n">Synch</span><span class="p">,</span>  <span class="c1"># &quot;Respawn&quot;, &quot;Trigger&quot;</span>
+    <span class="n">random_traffic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># Traffic is randomized at default.</span>
+    <span class="c1"># this will update the vehicle_config and set to traffic</span>
+    <span class="n">traffic_vehicle_config</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">show_navi_mark</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">show_dest_mark</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">enable_reverse</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">show_lidar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">show_lane_line_detector</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">show_side_detector</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">),</span>
+
+    <span class="c1"># ===== Object =====</span>
+    <span class="n">accident_prob</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>  <span class="c1"># accident may happen on each block with this probability, except multi-exits block</span>
+
+    <span class="c1"># ===== Others =====</span>
+    <span class="n">use_AI_protector</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">save_level</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">is_multi_agent</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">vehicle_config</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">spawn_lane_index</span><span class="o">=</span><span class="p">(</span><span class="n">FirstPGBlock</span><span class="o">.</span><span class="n">NODE_1</span><span class="p">,</span> <span class="n">FirstPGBlock</span><span class="o">.</span><span class="n">NODE_2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span>
+
+    <span class="c1"># ===== Agent =====</span>
+    <span class="n">target_vehicle_configs</span><span class="o">=</span><span class="p">{</span>
+        <span class="n">DEFAULT_AGENT</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="n">use_special_color</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">spawn_lane_index</span><span class="o">=</span><span class="p">(</span><span class="n">FirstPGBlock</span><span class="o">.</span><span class="n">NODE_1</span><span class="p">,</span> <span class="n">FirstPGBlock</span><span class="o">.</span><span class="n">NODE_2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="p">},</span>
+
+    <span class="c1"># ===== Reward Scheme =====</span>
+    <span class="c1"># See: https://github.com/decisionforce/metadrive/issues/283</span>
+    <span class="n">success_reward</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span>  <span class="c1"># 10.0,</span>
+    <span class="n">out_of_road_penalty</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>  <span class="c1"># 5.0,</span>
+    <span class="n">crash_vehicle_penalty</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>  <span class="c1"># 1.0,</span>
+    <span class="n">crash_object_penalty</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>  <span class="c1"># 5.0,</span>
+    <span class="n">run_out_of_time_penalty</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>  <span class="c1"># 5.0,</span>
+
+    <span class="c1"># Transition reward</span>
+    <span class="n">driving_reward</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>  <span class="c1"># 0.1</span>
+    <span class="n">speed_reward</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>  <span class="c1"># 0.2</span>
+    <span class="n">heading_reward</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+    <span class="n">jerk_bias</span><span class="o">=</span><span class="mf">15.0</span><span class="p">,</span>
+    <span class="n">jerk_dominator</span><span class="o">=</span><span class="mf">45.0</span><span class="p">,</span>  <span class="c1"># 50.0</span>
+    <span class="n">jerk_importance</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span>  <span class="c1"># 0.6</span>
+
+    <span class="c1"># ===== Reward Switch =====</span>
+    <span class="c1"># whether to use a reward option or not</span>
+    <span class="n">use_speed_reward</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">use_heading_reward</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">use_jerk_reward</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">use_lateral</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">lateral_scale</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span>
+
+    <span class="c1"># ===== Cost Scheme =====</span>
+    <span class="n">crash_vehicle_cost</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">crash_object_cost</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">out_of_road_cost</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+
+    <span class="c1"># ===== Termination Scheme =====</span>
+    <span class="n">out_of_route_done</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">physics_world_step_size</span><span class="o">=</span><span class="mf">1e-1</span><span class="p">,</span>
+    <span class="n">const_episode_max_step</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">episode_max_step</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span>
+    <span class="n">avg_speed</span><span class="o">=</span><span class="mf">6.5</span><span class="p">,</span>
+
+    <span class="c1"># ===== Trajectory length =====</span>
+    <span class="n">seq_traj_len</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">show_seq_traj</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+
+    <span class="c1"># ===== traj_control_mode = &#39;acc&#39;, # another type is &#39;jerk&#39;  =====</span>
+    <span class="c1"># if we choose traj_control_mode = &#39;acc&#39;, then the current state is [0,0,0,v] and the control signal</span>
+    <span class="c1"># is throttle and steer</span>
+    <span class="c1"># If not, we will use jerk control, the current state we have vel, acc, current steer, and the control</span>
+    <span class="c1"># signal is jerk and steer rate (delta_steer)</span>
+    <span class="n">traj_control_mode</span><span class="o">=</span><span class="s1">&#39;acc&#39;</span><span class="p">,</span>
+
+    <span class="c1"># ===== Expert data saving =====</span>
+    <span class="n">save_expert_data</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">expert_data_folder</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="MetaDriveTrajEnv"><a class="viewcode-back" href="../../../api_doc/envs.html#core.envs.MetaDriveTrajEnv">[docs]</a><span class="nd">@ENV_REGISTRY</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">&quot;md_traj&quot;</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MetaDriveTrajEnv</span><span class="p">(</span><span class="n">BaseEnv</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    MetaDrive single-agent trajectory env. The agent is controlled by a trajectory</span>
+<span class="sd">    (a list of waypoints) of a time period. Its length determines the times of env steps</span>
+<span class="sd">    the agent will track it. The vehicle will execute actions along the trajectory by &#39;move_to&#39;</span>
+<span class="sd">    method of the simulator rather than physical controlling. The position is calculated</span>
+<span class="sd">    from the trajectory with kinematic constraints before the vehicle is transmitted.</span>
+<span class="sd">    The observation is a 5-channel top-down view image and a vector of structure</span>
+<span class="sd">    information by default. This env is registered and can be used via `gym.make`.</span>
+
+<span class="sd">    :Arguments:</span>
+<span class="sd">        - config (Dict): Env config dict.</span>
+
+<span class="sd">    :Interfaces: reset, step, close, render, seed</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">default_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Config&quot;</span><span class="p">:</span>
+        <span class="c1">#config = super(MetaDriveTrajEnv, cls).default_config()</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">BASE_DEFAULT_CONFIG</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">DIDRIVE_DEFAULT_CONFIG</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">register_type</span><span class="p">(</span><span class="s2">&quot;map&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;map_config&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">register_type</span><span class="p">(</span><span class="s2">&quot;config&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">config</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">merged_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_merge_extra_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">global_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post_process_config</span><span class="p">(</span><span class="n">merged_config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">global_config</span>
+
+        <span class="c1"># if self.config[&quot;seq_traj_len&quot;] == 1:</span>
+        <span class="c1">#     self.config[&quot;episode_max_step&quot;] = self.config[&quot;episode_max_step&quot;] * 10</span>
+        <span class="c1"># if self.config[&quot;seq_traj_len&quot;] == 20:</span>
+        <span class="c1">#     self.config[&quot;episode_max_step&quot;] = self.config[&quot;episode_max_step&quot;] // 2</span>
+
+        <span class="c1"># agent check</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_agents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;num_agents&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_multi_agent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;is_multi_agent&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_multi_agent</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_agents</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_agents</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_agents</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_agents</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># observation and action space</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent_manager</span> <span class="o">=</span> <span class="n">TrajAgentManager</span><span class="p">(</span>
+            <span class="n">init_observations</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_observations</span><span class="p">(),</span> <span class="n">init_action_space</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_action_space</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_type</span> <span class="o">=</span> <span class="n">DiscreteMetaAction</span><span class="p">()</span>
+        <span class="c1">#self.action_space = self.action_type.space()</span>
+
+        <span class="c1"># lazy initialization, create the main vehicle in the lazy_init() func</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BaseEngine</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_top_down_renderer</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">episode_steps</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># self.current_seed = None</span>
+
+        <span class="c1"># In MARL envs with respawn mechanism, varying episode lengths might happen.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dones</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">episode_rewards</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">episode_lengths</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_seed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;start_seed&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env_num</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;environment_num&quot;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">step_num</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">episode_rwd</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vel_speed</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">z_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">avg_speed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;avg_speed&quot;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">episode_max_step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;episode_max_step&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;save_expert_data&quot;</span><span class="p">]:</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;expert_data_folder&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">single_transition_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># define a action type, and execution style</span>
+    <span class="c1"># Now only one action will be taken, cosin function, and we set dt equals self.engine.dt</span>
+    <span class="c1"># now that in this situation, we directly set trajectory len equals to simulation frequency</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">episode_steps</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">macro_actions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preprocess_macro_waypoints</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
+        <span class="n">step_infos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_step_macro_simulator</span><span class="p">(</span><span class="n">macro_actions</span><span class="p">)</span>
+        <span class="n">o</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_step_return</span><span class="p">(</span><span class="n">actions</span><span class="p">,</span> <span class="n">step_infos</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">step_num</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">step_num</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">episode_rwd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">episode_rwd</span> <span class="o">+</span> <span class="n">r</span>
+        <span class="c1">#print(&#39;step number is: {}&#39;.format(self.step_num))</span>
+        <span class="c1">#o = o.transpose((2,0,1))</span>
+        <span class="k">return</span> <span class="n">o</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">i</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_pen_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">):</span>
+        <span class="n">vehicle</span><span class="o">.</span><span class="n">pen_state</span><span class="p">[</span><span class="s1">&#39;position&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">vehicle</span><span class="o">.</span><span class="n">prev_state</span><span class="p">[</span><span class="s1">&#39;position&#39;</span><span class="p">])</span>
+        <span class="n">vehicle</span><span class="o">.</span><span class="n">pen_state</span><span class="p">[</span><span class="s1">&#39;yaw&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">vehicle</span><span class="o">.</span><span class="n">prev_state</span><span class="p">[</span><span class="s1">&#39;yaw&#39;</span><span class="p">])</span>
+        <span class="n">vehicle</span><span class="o">.</span><span class="n">pen_state</span><span class="p">[</span><span class="s1">&#39;speed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">vehicle</span><span class="o">.</span><span class="n">prev_state</span><span class="p">[</span><span class="s1">&#39;speed&#39;</span><span class="p">])</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_jerk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">):</span>
+        <span class="n">v_t0</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">pen_state</span><span class="p">[</span><span class="s1">&#39;speed&#39;</span><span class="p">]</span>
+        <span class="n">theta_t0</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">pen_state</span><span class="p">[</span><span class="s1">&#39;yaw&#39;</span><span class="p">]</span>
+        <span class="n">v_t1</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">prev_state</span><span class="p">[</span><span class="s1">&#39;speed&#39;</span><span class="p">]</span>
+        <span class="n">theta_t1</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">prev_state</span><span class="p">[</span><span class="s1">&#39;yaw&#39;</span><span class="p">]</span>
+        <span class="n">v_t2</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">curr_state</span><span class="p">[</span><span class="s1">&#39;speed&#39;</span><span class="p">]</span>
+        <span class="n">theta_t2</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">curr_state</span><span class="p">[</span><span class="s1">&#39;yaw&#39;</span><span class="p">]</span>
+        <span class="n">t_inverse</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;physics_world_step_size&#39;</span><span class="p">]</span>
+        <span class="n">jerk_x</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">v_t2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_t2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">v_t1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_t1</span><span class="p">)</span> <span class="o">+</span> <span class="n">v_t0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_t0</span><span class="p">)</span>
+        <span class="p">)</span> <span class="o">*</span> <span class="n">t_inverse</span> <span class="o">*</span> <span class="n">t_inverse</span>
+        <span class="n">jerk_y</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">v_t2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta_t2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">v_t1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta_t1</span><span class="p">)</span> <span class="o">+</span> <span class="n">v_t0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta_t0</span><span class="p">)</span>
+        <span class="p">)</span> <span class="o">*</span> <span class="n">t_inverse</span> <span class="o">*</span> <span class="n">t_inverse</span>
+        <span class="n">jerk_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">jerk_x</span><span class="p">,</span> <span class="n">jerk_y</span><span class="p">])</span>
+        <span class="n">jerk</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">jerk_array</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">jerk</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">calc_onestep_reward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">):</span>
+        <span class="c1"># vehicle.curr_state[&#39;position&#39;] = vehicle.position</span>
+        <span class="c1"># vehicle.curr_state[&#39;yaw&#39;] = vehicle.heading_theta</span>
+        <span class="c1"># vehicle.curr_state[&#39;speed&#39;] = vehicle.speed / 3.6</span>
+
+        <span class="k">if</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">lane</span> <span class="ow">in</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">navigation</span><span class="o">.</span><span class="n">current_ref_lanes</span><span class="p">:</span>
+            <span class="n">current_lane</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">lane</span>
+            <span class="n">positive_road</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">current_lane</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">navigation</span><span class="o">.</span><span class="n">current_ref_lanes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">current_road</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">navigation</span><span class="o">.</span><span class="n">current_road</span>
+            <span class="n">positive_road</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">current_road</span><span class="o">.</span><span class="n">is_negative_road</span><span class="p">()</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="n">long_last</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">current_lane</span><span class="o">.</span><span class="n">local_coordinates</span><span class="p">(</span><span class="n">vehicle</span><span class="o">.</span><span class="n">prev_state</span><span class="p">[</span><span class="s1">&#39;position&#39;</span><span class="p">])</span>
+        <span class="n">long_now</span><span class="p">,</span> <span class="n">lateral_now</span> <span class="o">=</span> <span class="n">current_lane</span><span class="o">.</span><span class="n">local_coordinates</span><span class="p">(</span><span class="n">vehicle</span><span class="o">.</span><span class="n">position</span><span class="p">)</span>
+
+        <span class="c1"># reward for lane keeping, without it vehicle can learn to overtake but fail to keep in lane</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;use_lateral&quot;</span><span class="p">]:</span>
+            <span class="n">lateral_factor</span> <span class="o">=</span> <span class="n">clip</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">lateral_now</span><span class="p">)</span> <span class="o">/</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">navigation</span><span class="o">.</span><span class="n">get_current_lane_width</span><span class="p">(),</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">lateral_factor</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+        <span class="n">reward</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="c1">#lateral_factor</span>
+        <span class="n">reward</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;driving_reward&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">long_now</span> <span class="o">-</span> <span class="n">long_last</span><span class="p">)</span> <span class="o">*</span> <span class="n">lateral_factor</span> <span class="o">*</span> <span class="n">positive_road</span>
+        <span class="n">max_spd</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">reward</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;speed_reward&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">vehicle</span><span class="o">.</span><span class="n">curr_state</span><span class="p">[</span><span class="s1">&#39;speed&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">max_spd</span><span class="p">)</span> <span class="o">*</span> <span class="n">positive_road</span>
+        <span class="n">speed_rwd</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.06</span> <span class="k">if</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">curr_state</span><span class="p">[</span><span class="s1">&#39;speed&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">avg_speed</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="n">reward</span> <span class="o">+=</span> <span class="n">speed_rwd</span>
+
+        <span class="n">v_t0</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">pen_state</span><span class="p">[</span><span class="s1">&#39;speed&#39;</span><span class="p">]</span>
+        <span class="n">theta_t0</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">pen_state</span><span class="p">[</span><span class="s1">&#39;yaw&#39;</span><span class="p">]</span>
+        <span class="n">v_t1</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">prev_state</span><span class="p">[</span><span class="s1">&#39;speed&#39;</span><span class="p">]</span>
+        <span class="n">theta_t1</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">prev_state</span><span class="p">[</span><span class="s1">&#39;yaw&#39;</span><span class="p">]</span>
+        <span class="n">v_t2</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">curr_state</span><span class="p">[</span><span class="s1">&#39;speed&#39;</span><span class="p">]</span>
+        <span class="n">theta_t2</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">curr_state</span><span class="p">[</span><span class="s1">&#39;yaw&#39;</span><span class="p">]</span>
+        <span class="n">t_inverse</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;physics_world_step_size&#39;</span><span class="p">]</span>
+        <span class="n">jerk_x</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">v_t2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_t2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">v_t1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_t1</span><span class="p">)</span> <span class="o">+</span> <span class="n">v_t0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_t0</span><span class="p">)</span>
+        <span class="p">)</span> <span class="o">*</span> <span class="n">t_inverse</span> <span class="o">*</span> <span class="n">t_inverse</span>
+        <span class="n">jerk_y</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">v_t2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta_t2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">v_t1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta_t1</span><span class="p">)</span> <span class="o">+</span> <span class="n">v_t0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta_t0</span><span class="p">)</span>
+        <span class="p">)</span> <span class="o">*</span> <span class="n">t_inverse</span> <span class="o">*</span> <span class="n">t_inverse</span>
+        <span class="n">jerk_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">jerk_x</span><span class="p">,</span> <span class="n">jerk_y</span><span class="p">])</span>
+        <span class="n">jerk</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">jerk_array</span><span class="p">)</span>
+        <span class="c1">#jerk_penalty = np.tanh( (jerk)/ 50)</span>
+        <span class="n">jerk_penalty</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">((</span><span class="n">jerk</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;jerk_bias&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;jerk_dominator&quot;</span><span class="p">]),</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">jerk_penalty</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;jerk_importance&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">jerk_penalty</span>
+        <span class="n">reward</span> <span class="o">-=</span> <span class="n">jerk_penalty</span>
+
+        <span class="k">if</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">arrive_destination</span><span class="p">:</span>
+            <span class="n">reward</span> <span class="o">=</span> <span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;success_reward&quot;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">macro_succ</span><span class="p">:</span>
+            <span class="n">reward</span> <span class="o">=</span> <span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;success_reward&quot;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_out_of_road</span><span class="p">(</span><span class="n">vehicle</span><span class="p">):</span>
+            <span class="n">reward</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;out_of_road_penalty&quot;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">crash_vehicle</span><span class="p">:</span>
+            <span class="n">reward</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;crash_vehicle_penalty&quot;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">macro_crash</span><span class="p">:</span>
+            <span class="n">reward</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;crash_vehicle_penalty&quot;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">crash_object</span><span class="p">:</span>
+            <span class="n">reward</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;crash_object_penalty&quot;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">step_num</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">episode_max_step</span><span class="p">:</span>
+            <span class="n">reward</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;run_out_of_time_penalty&quot;</span><span class="p">]</span>
+        <span class="c1">#print(&#39;reward: {}&#39;.format(reward))</span>
+        <span class="k">return</span> <span class="n">reward</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_merge_extra_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="s2">&quot;Config&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;Config&quot;</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_config</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">allow_add_new_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;vehicle_config&quot;</span><span class="p">][</span><span class="s2">&quot;lidar&quot;</span><span class="p">][</span><span class="s2">&quot;distance&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">50</span><span class="p">:</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;max_distance&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;vehicle_config&quot;</span><span class="p">][</span><span class="s2">&quot;lidar&quot;</span><span class="p">][</span><span class="s2">&quot;distance&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">config</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_post_process_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">MetaDriveTrajEnv</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_post_process_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;rgb_clip&quot;</span><span class="p">]:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;You have set rgb_clip = False, which means the observation will be uint8 values in [0, 255]. &quot;</span>
+                <span class="s2">&quot;Please make sure you have parsed them later before feeding them to network!&quot;</span>
+            <span class="p">)</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;map_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parse_map_config</span><span class="p">(</span>
+            <span class="n">easy_map_config</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;map&quot;</span><span class="p">],</span> <span class="n">new_map_config</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;map_config&quot;</span><span class="p">],</span> <span class="n">default_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">default_config</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;vehicle_config&quot;</span><span class="p">][</span><span class="s2">&quot;rgb_clip&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;rgb_clip&quot;</span><span class="p">]</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;vehicle_config&quot;</span><span class="p">][</span><span class="s2">&quot;random_agent_model&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;random_agent_model&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;gaussian_noise&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;vehicle_config&quot;</span><span class="p">][</span><span class="s2">&quot;lidar&quot;</span><span class="p">][</span><span class="s2">&quot;gaussian_noise&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;You already provide config!&quot;</span>
+            <span class="k">assert</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;vehicle_config&quot;</span><span class="p">][</span><span class="s2">&quot;side_detector&quot;</span><span class="p">][</span><span class="s2">&quot;gaussian_noise&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;You already provide config!&quot;</span>
+            <span class="k">assert</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;vehicle_config&quot;</span><span class="p">][</span><span class="s2">&quot;lane_line_detector&quot;</span><span class="p">][</span><span class="s2">&quot;gaussian_noise&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;You already provide config!&quot;</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;vehicle_config&quot;</span><span class="p">][</span><span class="s2">&quot;lidar&quot;</span><span class="p">][</span><span class="s2">&quot;gaussian_noise&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;gaussian_noise&quot;</span><span class="p">]</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;vehicle_config&quot;</span><span class="p">][</span><span class="s2">&quot;side_detector&quot;</span><span class="p">][</span><span class="s2">&quot;gaussian_noise&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;gaussian_noise&quot;</span><span class="p">]</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;vehicle_config&quot;</span><span class="p">][</span><span class="s2">&quot;lane_line_detector&quot;</span><span class="p">][</span><span class="s2">&quot;gaussian_noise&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;gaussian_noise&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dropout_prob&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;vehicle_config&quot;</span><span class="p">][</span><span class="s2">&quot;lidar&quot;</span><span class="p">][</span><span class="s2">&quot;dropout_prob&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;You already provide config!&quot;</span>
+            <span class="k">assert</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;vehicle_config&quot;</span><span class="p">][</span><span class="s2">&quot;side_detector&quot;</span><span class="p">][</span><span class="s2">&quot;dropout_prob&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;You already provide config!&quot;</span>
+            <span class="k">assert</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;vehicle_config&quot;</span><span class="p">][</span><span class="s2">&quot;lane_line_detector&quot;</span><span class="p">][</span><span class="s2">&quot;dropout_prob&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;You already provide config!&quot;</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;vehicle_config&quot;</span><span class="p">][</span><span class="s2">&quot;lidar&quot;</span><span class="p">][</span><span class="s2">&quot;dropout_prob&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;dropout_prob&quot;</span><span class="p">]</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;vehicle_config&quot;</span><span class="p">][</span><span class="s2">&quot;side_detector&quot;</span><span class="p">][</span><span class="s2">&quot;dropout_prob&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;dropout_prob&quot;</span><span class="p">]</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;vehicle_config&quot;</span><span class="p">][</span><span class="s2">&quot;lane_line_detector&quot;</span><span class="p">][</span><span class="s2">&quot;dropout_prob&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;dropout_prob&quot;</span><span class="p">]</span>
+        <span class="n">target_v_config</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;vehicle_config&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;is_multi_agent&quot;</span><span class="p">]:</span>
+            <span class="n">target_v_config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;target_vehicle_configs&quot;</span><span class="p">][</span><span class="n">DEFAULT_AGENT</span><span class="p">])</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;target_vehicle_configs&quot;</span><span class="p">][</span><span class="n">DEFAULT_AGENT</span><span class="p">]</span> <span class="o">=</span> <span class="n">target_v_config</span>
+        <span class="k">return</span> <span class="n">config</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_observations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">DEFAULT_AGENT</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_single_observation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;vehicle_config&quot;</span><span class="p">])}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">done_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vehicle_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">vehicle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="p">[</span><span class="n">vehicle_id</span><span class="p">]</span>
+        <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">done_info</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">crash_vehicle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">crash_object</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">crash_building</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">out_of_road</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">arrive_dest</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">arrive_destination</span><span class="p">:</span>
+            <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Episode ended! Reason: arrive_dest.&quot;</span><span class="p">)</span>
+            <span class="n">done_info</span><span class="p">[</span><span class="n">TerminationState</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">vehicle</span><span class="p">,</span> <span class="s1">&#39;macro_succ&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">macro_succ</span><span class="p">:</span>
+            <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Episode ended! Reason: arrive_dest.&quot;</span><span class="p">)</span>
+            <span class="n">done_info</span><span class="p">[</span><span class="n">TerminationState</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">vehicle</span><span class="p">,</span> <span class="s1">&#39;macro_crash&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">macro_crash</span><span class="p">:</span>
+            <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Episode ended! Reason: crash vehicle &quot;</span><span class="p">)</span>
+            <span class="n">done_info</span><span class="p">[</span><span class="n">TerminationState</span><span class="o">.</span><span class="n">CRASH_VEHICLE</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_out_of_road</span><span class="p">(</span><span class="n">vehicle</span><span class="p">):</span>
+            <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Episode ended! Reason: out_of_road.&quot;</span><span class="p">)</span>
+            <span class="n">done_info</span><span class="p">[</span><span class="n">TerminationState</span><span class="o">.</span><span class="n">OUT_OF_ROAD</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">crash_vehicle</span><span class="p">:</span>
+            <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Episode ended! Reason: crash vehicle &quot;</span><span class="p">)</span>
+            <span class="n">done_info</span><span class="p">[</span><span class="n">TerminationState</span><span class="o">.</span><span class="n">CRASH_VEHICLE</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">crash_object</span><span class="p">:</span>
+            <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">done_info</span><span class="p">[</span><span class="n">TerminationState</span><span class="o">.</span><span class="n">CRASH_OBJECT</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Episode ended! Reason: crash object &quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">crash_building</span><span class="p">:</span>
+            <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">done_info</span><span class="p">[</span><span class="n">TerminationState</span><span class="o">.</span><span class="n">CRASH_BUILDING</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Episode ended! Reason: crash building &quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">step_num</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">episode_max_step</span><span class="p">:</span>
+            <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">done_info</span><span class="p">[</span><span class="n">TerminationState</span><span class="o">.</span><span class="n">CRASH_BUILDING</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Episode ended! Reason: crash building &quot;</span><span class="p">)</span>
+
+        <span class="c1"># for compatibility</span>
+        <span class="c1"># crash almost equals to crashing with vehicles</span>
+        <span class="n">done_info</span><span class="p">[</span><span class="n">TerminationState</span><span class="o">.</span><span class="n">CRASH</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">done_info</span><span class="p">[</span><span class="n">TerminationState</span><span class="o">.</span><span class="n">CRASH_VEHICLE</span><span class="p">]</span> <span class="ow">or</span> <span class="n">done_info</span><span class="p">[</span><span class="n">TerminationState</span><span class="o">.</span><span class="n">CRASH_OBJECT</span><span class="p">]</span>
+            <span class="ow">or</span> <span class="n">done_info</span><span class="p">[</span><span class="n">TerminationState</span><span class="o">.</span><span class="n">CRASH_BUILDING</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">done_info</span><span class="p">[</span><span class="s1">&#39;complete_ratio&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">clip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">already_go_dist</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">navi_distance</span> <span class="o">+</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">done_info</span><span class="p">[</span><span class="s1">&#39;seq_traj_len&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;seq_traj_len&#39;</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">done</span><span class="p">,</span> <span class="n">done_info</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">cost_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vehicle_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">vehicle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="p">[</span><span class="n">vehicle_id</span><span class="p">]</span>
+        <span class="n">step_info</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">step_info</span><span class="p">[</span><span class="s2">&quot;cost&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_out_of_road</span><span class="p">(</span><span class="n">vehicle</span><span class="p">):</span>
+            <span class="n">step_info</span><span class="p">[</span><span class="s2">&quot;cost&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;out_of_road_cost&quot;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">crash_vehicle</span><span class="p">:</span>
+            <span class="n">step_info</span><span class="p">[</span><span class="s2">&quot;cost&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;crash_vehicle_cost&quot;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">crash_object</span><span class="p">:</span>
+            <span class="n">step_info</span><span class="p">[</span><span class="s2">&quot;cost&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;crash_object_cost&quot;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">step_num</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;episode_max_step&quot;</span><span class="p">]:</span>
+            <span class="n">step_info</span><span class="p">[</span><span class="s1">&#39;cost&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">step_info</span><span class="p">[</span><span class="s1">&#39;cost&#39;</span><span class="p">],</span> <span class="n">step_info</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_is_out_of_road</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">):</span>
+        <span class="c1"># A specified function to determine whether this vehicle should be done.</span>
+        <span class="c1"># return vehicle.on_yellow_continuous_line or (not vehicle.on_lane) or vehicle.crash_sidewalk</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">on_yellow_continuous_line</span> <span class="ow">or</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">on_white_continuous_line</span> <span class="ow">or</span> \
+              <span class="p">(</span><span class="ow">not</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">on_lane</span><span class="p">)</span> <span class="ow">or</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">crash_sidewalk</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;out_of_route_done&quot;</span><span class="p">]:</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="n">ret</span> <span class="ow">or</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">out_of_route</span>
+        <span class="k">return</span> <span class="n">ret</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">reward_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vehicle_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Override this func to get a new reward function</span>
+<span class="sd">        :param vehicle_id: id of BaseVehicle</span>
+<span class="sd">        :return: reward</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vehicle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="p">[</span><span class="n">vehicle_id</span><span class="p">]</span>
+        <span class="n">step_info</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_navi_dist</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">navi_distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_navigation_len</span><span class="p">(</span><span class="n">vehicle</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;const_episode_max_step&#39;</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">episode_max_step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_episode_max_step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">navi_distance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">avg_speed</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_compute_navi_dist</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1">#self.update_current_state(vehicle)</span>
+        <span class="c1"># Reward for moving forward in current lane</span>
+        <span class="k">if</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">lane</span> <span class="ow">in</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">navigation</span><span class="o">.</span><span class="n">current_ref_lanes</span><span class="p">:</span>
+            <span class="n">current_lane</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">lane</span>
+            <span class="n">positive_road</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">current_lane</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">navigation</span><span class="o">.</span><span class="n">current_ref_lanes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">current_road</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">navigation</span><span class="o">.</span><span class="n">current_road</span>
+            <span class="n">positive_road</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">current_road</span><span class="o">.</span><span class="n">is_negative_road</span><span class="p">()</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="n">long_last</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">current_lane</span><span class="o">.</span><span class="n">local_coordinates</span><span class="p">(</span><span class="n">vehicle</span><span class="o">.</span><span class="n">last_macro_position</span><span class="p">)</span>
+        <span class="n">long_now</span><span class="p">,</span> <span class="n">lateral_now</span> <span class="o">=</span> <span class="n">current_lane</span><span class="o">.</span><span class="n">local_coordinates</span><span class="p">(</span><span class="n">vehicle</span><span class="o">.</span><span class="n">position</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">already_go_dist</span> <span class="o">+=</span> <span class="p">(</span><span class="n">long_now</span> <span class="o">-</span> <span class="n">long_last</span><span class="p">)</span>
+        <span class="c1">#print(&#39;already_go_dist: {}&#39;.format(self.already_go_dist))</span>
+        <span class="n">avg_lateral_cum</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_avg_lateral_cum</span><span class="p">(</span><span class="n">vehicle</span><span class="p">,</span> <span class="n">current_lane</span><span class="p">)</span>
+        <span class="c1"># use_lateral_penalty = False</span>
+        <span class="c1"># # reward for lane keeping, without it vehicle can learn to overtake but fail to keep in lane</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;use_lateral&quot;</span><span class="p">]:</span>
+            <span class="n">lateral_factor</span> <span class="o">=</span> <span class="n">clip</span><span class="p">(</span>
+                <span class="mi">1</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">avg_lateral_cum</span><span class="p">)</span> <span class="o">/</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">navigation</span><span class="o">.</span><span class="n">get_current_lane_width</span><span class="p">(),</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span>
+            <span class="p">)</span>
+            <span class="c1">#lateral_factor = clip(1 - 2 * abs(lateral_now) / vehicle.navigation.get_current_lane_width(), 0.0, 1.0)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">lateral_factor</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="c1">#     use_lateral_penalty = True</span>
+        <span class="n">reward</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">driving_reward</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">speed_reward</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">heading_reward</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">jerk_reward</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="c1"># Generally speaking, driving reward is a necessity</span>
+        <span class="n">driving_reward</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;driving_reward&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">long_now</span> <span class="o">-</span> <span class="n">long_last</span><span class="p">)</span> <span class="o">*</span> <span class="n">lateral_factor</span> <span class="o">*</span> <span class="n">positive_road</span>
+        <span class="c1"># # Speed reward</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;use_speed_reward&quot;</span><span class="p">]:</span>
+            <span class="n">max_spd</span> <span class="o">=</span> <span class="mi">10</span>
+            <span class="n">speed_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_speed_list</span><span class="p">(</span><span class="n">vehicle</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">speed</span> <span class="ow">in</span> <span class="n">speed_list</span><span class="p">:</span>
+                <span class="n">speed_reward</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;speed_reward&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">speed</span> <span class="o">/</span> <span class="n">max_spd</span><span class="p">)</span> <span class="o">*</span> <span class="n">positive_road</span>
+                <span class="k">if</span> <span class="n">speed</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">avg_speed</span><span class="p">:</span>
+                    <span class="c1">#speed_reward -= 0.00 #0.06</span>
+                    <span class="n">speed_reward</span> <span class="o">=</span> <span class="n">speed_reward</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;use_heading_reward&quot;</span><span class="p">]:</span>
+            <span class="c1"># Heading Reward</span>
+            <span class="n">heading_error_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_heading_error_list</span><span class="p">(</span><span class="n">vehicle</span><span class="p">,</span> <span class="n">current_lane</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">heading_error</span> <span class="ow">in</span> <span class="n">heading_error_list</span><span class="p">:</span>
+                <span class="n">heading_reward</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;heading_reward&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">0</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">heading_error</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;use_jerk_reward&quot;</span><span class="p">]:</span>
+            <span class="n">jerk_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_jerk_list</span><span class="p">(</span><span class="n">vehicle</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">jerk</span> <span class="ow">in</span> <span class="n">jerk_list</span><span class="p">:</span>
+                <span class="c1">#jerk_reward += (0.03 - 0.6 * np.tanh(jerk / 100.0))</span>
+                <span class="c1">#jerk_reward += (0.03 - self.config[&quot;jerk_importance&quot;] * np.tanh(jerk / self.config[&quot;jerk_dominator&quot;]))</span>
+                <span class="n">jerk_penalty</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">((</span><span class="n">jerk</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;jerk_bias&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;jerk_dominator&quot;</span><span class="p">]),</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">jerk_penalty</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;jerk_importance&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">jerk_penalty</span>
+                <span class="n">jerk_reward</span> <span class="o">-=</span> <span class="n">jerk_penalty</span>
+        <span class="n">reward</span> <span class="o">=</span> <span class="n">driving_reward</span> <span class="o">+</span> <span class="n">speed_reward</span> <span class="o">+</span> <span class="n">heading_reward</span> <span class="o">+</span> <span class="n">jerk_reward</span>
+        <span class="c1"># print(&#39;driving reward: {}&#39;.format(driving_reward))</span>
+        <span class="c1"># print(&#39;speed reward: {}&#39;.format(speed_reward))</span>
+        <span class="c1"># print(&#39;heading reward: {}&#39;.format(heading_reward))</span>
+        <span class="c1"># print(&#39;jerk reward: {}&#39;.format(jerk_reward))</span>
+        <span class="n">step_info</span><span class="p">[</span><span class="s2">&quot;step_reward&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">reward</span>
+        <span class="k">if</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">arrive_destination</span><span class="p">:</span>
+            <span class="n">reward</span> <span class="o">=</span> <span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;success_reward&quot;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">macro_succ</span><span class="p">:</span>
+            <span class="n">reward</span> <span class="o">=</span> <span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;success_reward&quot;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_out_of_road</span><span class="p">(</span><span class="n">vehicle</span><span class="p">):</span>
+            <span class="n">reward</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;out_of_road_penalty&quot;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">crash_vehicle</span><span class="p">:</span>
+            <span class="n">reward</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;crash_vehicle_penalty&quot;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">macro_crash</span><span class="p">:</span>
+            <span class="n">reward</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;crash_vehicle_penalty&quot;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">crash_object</span><span class="p">:</span>
+            <span class="n">reward</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;crash_object_penalty&quot;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">step_num</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">episode_max_step</span><span class="p">:</span>
+            <span class="n">reward</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;run_out_of_time_penalty&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">reward</span><span class="p">,</span> <span class="n">step_info</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_navigation_len</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">):</span>
+        <span class="n">checkpoints</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">navigation</span><span class="o">.</span><span class="n">checkpoints</span>
+        <span class="n">road_network</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">navigation</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">road_network</span>
+        <span class="n">total_dist</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">checkpoints</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span>
+        <span class="k">for</span> <span class="n">check_num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">checkpoints</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">front_node</span> <span class="o">=</span> <span class="n">checkpoints</span><span class="p">[</span><span class="n">check_num</span><span class="p">]</span>
+            <span class="n">end_node</span> <span class="o">=</span> <span class="n">checkpoints</span><span class="p">[</span><span class="n">check_num</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">cur_lanes</span> <span class="o">=</span> <span class="n">road_network</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">front_node</span><span class="p">][</span><span class="n">end_node</span><span class="p">]</span>
+            <span class="n">target_lane_num</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cur_lanes</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">target_lane</span> <span class="o">=</span> <span class="n">cur_lanes</span><span class="p">[</span><span class="n">target_lane_num</span><span class="p">]</span>
+            <span class="n">target_lane_length</span> <span class="o">=</span> <span class="n">target_lane</span><span class="o">.</span><span class="n">length</span>
+            <span class="n">total_dist</span> <span class="o">+=</span> <span class="n">target_lane_length</span>
+        <span class="k">return</span> <span class="n">total_dist</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_jerk_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">):</span>
+        <span class="n">jerk_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1">#vehicle = self.vehicles[vehicle_id]</span>
+        <span class="n">v_t0</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">penultimate_state</span><span class="p">[</span><span class="s1">&#39;speed&#39;</span><span class="p">]</span>
+        <span class="n">theta_t0</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">penultimate_state</span><span class="p">[</span><span class="s1">&#39;yaw&#39;</span><span class="p">]</span>
+        <span class="n">v_t1</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">traj_wp_list</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;speed&#39;</span><span class="p">]</span>
+        <span class="n">theta_t1</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">traj_wp_list</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;yaw&#39;</span><span class="p">]</span>
+        <span class="n">v_t2</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">traj_wp_list</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;speed&#39;</span><span class="p">]</span>
+        <span class="n">theta_t2</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">traj_wp_list</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;yaw&#39;</span><span class="p">]</span>
+        <span class="n">t_inverse</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;physics_world_step_size&#39;</span><span class="p">]</span>
+        <span class="n">first_point_jerk_x</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">v_t2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_t2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">v_t1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_t1</span><span class="p">)</span> <span class="o">+</span> <span class="n">v_t0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_t0</span><span class="p">)</span>
+        <span class="p">)</span> <span class="o">*</span> <span class="n">t_inverse</span> <span class="o">*</span> <span class="n">t_inverse</span>
+        <span class="n">first_point_jerk_y</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">v_t2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta_t2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">v_t1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta_t1</span><span class="p">)</span> <span class="o">+</span> <span class="n">v_t0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta_t0</span><span class="p">)</span>
+        <span class="p">)</span> <span class="o">*</span> <span class="n">t_inverse</span> <span class="o">*</span> <span class="n">t_inverse</span>
+        <span class="n">jerk_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">first_point_jerk_x</span><span class="p">,</span> <span class="n">first_point_jerk_y</span><span class="p">]))</span>
+        <span class="c1"># plus one because we store the current value as first, which means the whole trajectory is seq_traj_len + 1</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;seq_traj_len&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">v_t0</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">traj_wp_list</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">2</span><span class="p">][</span><span class="s1">&#39;speed&#39;</span><span class="p">]</span>
+            <span class="n">theta_t0</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">traj_wp_list</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">2</span><span class="p">][</span><span class="s1">&#39;yaw&#39;</span><span class="p">]</span>
+            <span class="n">v_t1</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">traj_wp_list</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="s1">&#39;speed&#39;</span><span class="p">]</span>
+            <span class="n">theta_t1</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">traj_wp_list</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="s1">&#39;yaw&#39;</span><span class="p">]</span>
+            <span class="n">v_t2</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">traj_wp_list</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;speed&#39;</span><span class="p">]</span>
+            <span class="n">theta_t2</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">traj_wp_list</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;yaw&#39;</span><span class="p">]</span>
+            <span class="n">point_jerk_x</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">v_t2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_t2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">v_t1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_t1</span><span class="p">)</span> <span class="o">+</span> <span class="n">v_t0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_t0</span><span class="p">)</span>
+            <span class="p">)</span> <span class="o">*</span> <span class="n">t_inverse</span> <span class="o">*</span> <span class="n">t_inverse</span>
+            <span class="n">point_jerk_y</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">v_t2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta_t2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">v_t1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta_t1</span><span class="p">)</span> <span class="o">+</span> <span class="n">v_t0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta_t0</span><span class="p">)</span>
+            <span class="p">)</span> <span class="o">*</span> <span class="n">t_inverse</span> <span class="o">*</span> <span class="n">t_inverse</span>
+            <span class="n">jerk_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">point_jerk_x</span><span class="p">,</span> <span class="n">point_jerk_y</span><span class="p">]))</span>
+        <span class="c1">#final_jerk_value = 0</span>
+        <span class="n">step_jerk_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">jerk</span> <span class="ow">in</span> <span class="n">jerk_list</span><span class="p">:</span>
+            <span class="c1">#final_jerk_value += np.linalg.norm(jerk)</span>
+            <span class="n">step_jerk_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">jerk</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">step_jerk_list</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_current_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vehicle_id</span><span class="p">):</span>
+        <span class="n">vehicle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="p">[</span><span class="n">vehicle_id</span><span class="p">]</span>
+        <span class="n">t_inverse</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;physics_world_step_size&#39;</span><span class="p">]</span>
+        <span class="n">theta_t1</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">traj_wp_list</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">][</span><span class="s1">&#39;yaw&#39;</span><span class="p">]</span>
+        <span class="n">theta_t2</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">traj_wp_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;yaw&#39;</span><span class="p">]</span>
+        <span class="n">v_t1</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">traj_wp_list</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">][</span><span class="s1">&#39;speed&#39;</span><span class="p">]</span>
+        <span class="n">v_t2</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">traj_wp_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;speed&#39;</span><span class="p">]</span>
+        <span class="n">v_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+        <span class="n">v_state</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">v_t2</span>
+        <span class="n">v_state</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">v_t2</span> <span class="o">-</span> <span class="n">v_t1</span><span class="p">)</span> <span class="o">*</span> <span class="n">t_inverse</span>
+        <span class="n">theta_dot</span> <span class="o">=</span> <span class="p">(</span><span class="n">theta_t2</span> <span class="o">-</span> <span class="n">theta_t1</span><span class="p">)</span> <span class="o">*</span> <span class="n">t_inverse</span>
+        <span class="n">v_state</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="mf">2.5</span> <span class="o">*</span> <span class="n">theta_dot</span> <span class="o">/</span> <span class="n">v_t2</span><span class="p">)</span> <span class="k">if</span> <span class="n">v_t2</span> <span class="o">&gt;</span> <span class="mf">0.001</span> <span class="k">else</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">z_state</span> <span class="o">=</span> <span class="n">v_state</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_heading_error_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">,</span> <span class="n">lane</span><span class="p">):</span>
+        <span class="n">heading_error_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;seq_traj_len&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">theta</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">traj_wp_list</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;yaw&#39;</span><span class="p">]</span>
+            <span class="n">long_now</span><span class="p">,</span> <span class="n">lateral_now</span> <span class="o">=</span> <span class="n">lane</span><span class="o">.</span><span class="n">local_coordinates</span><span class="p">(</span><span class="n">vehicle</span><span class="o">.</span><span class="n">traj_wp_list</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;position&#39;</span><span class="p">])</span>
+            <span class="n">road_heading_theta</span> <span class="o">=</span> <span class="n">lane</span><span class="o">.</span><span class="n">heading_theta_at</span><span class="p">(</span><span class="n">long_now</span><span class="p">)</span>
+            <span class="n">theta_error</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wrap_angle</span><span class="p">(</span><span class="n">theta</span> <span class="o">-</span> <span class="n">road_heading_theta</span><span class="p">)</span>
+            <span class="n">heading_error_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">theta_error</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">heading_error_list</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_speed_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">):</span>
+        <span class="n">speed_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;seq_traj_len&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">speed</span> <span class="o">=</span> <span class="n">vehicle</span><span class="o">.</span><span class="n">traj_wp_list</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;speed&#39;</span><span class="p">]</span>
+            <span class="n">speed_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">speed</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">speed_list</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_avg_lateral_cum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">,</span> <span class="n">lane</span><span class="p">):</span>
+        <span class="c1"># Compute lateral distance for each wp</span>
+        <span class="c1"># average the factor by seq traj len</span>
+        <span class="c1"># For example, if traj len is 10, then i = 1, 2, ... 10</span>
+        <span class="n">lateral_cum</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;seq_traj_len&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">long_now</span><span class="p">,</span> <span class="n">lateral_now</span> <span class="o">=</span> <span class="n">lane</span><span class="o">.</span><span class="n">local_coordinates</span><span class="p">(</span><span class="n">vehicle</span><span class="o">.</span><span class="n">traj_wp_list</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;position&#39;</span><span class="p">])</span>
+            <span class="n">lateral_cum</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">lateral_now</span><span class="p">)</span>
+        <span class="n">avg_lateral_cum</span> <span class="o">=</span> <span class="n">lateral_cum</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;seq_traj_len&#39;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">avg_lateral_cum</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">switch_to_third_person_view</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_camera</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_camera</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;prefer_track_agent&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;prefer_track_agent&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">new_v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;prefer_track_agent&quot;</span><span class="p">]]</span>
+            <span class="n">current_track_vehicle</span> <span class="o">=</span> <span class="n">new_v</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_camera</span><span class="o">.</span><span class="n">is_bird_view_camera</span><span class="p">():</span>
+                <span class="n">current_track_vehicle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_track_vehicle</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">vehicles</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vehicles</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">return</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_track_vehicle</span> <span class="ow">in</span> <span class="n">vehicles</span><span class="p">:</span>
+                    <span class="n">vehicles</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_track_vehicle</span><span class="p">)</span>
+                <span class="n">new_v</span> <span class="o">=</span> <span class="n">get_np_random</span><span class="p">()</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">vehicles</span><span class="p">)</span>
+                <span class="n">current_track_vehicle</span> <span class="o">=</span> <span class="n">new_v</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_camera</span><span class="o">.</span><span class="n">track</span><span class="p">(</span><span class="n">current_track_vehicle</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">switch_to_top_down_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_camera</span><span class="o">.</span><span class="n">stop_track</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_step_return</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">engine_info</span><span class="p">):</span>
+        <span class="c1"># update obs, dones, rewards, costs, calculate done at first !</span>
+        <span class="n">obses</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">done_infos</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">cost_infos</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">reward_infos</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">rewards</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">v_id</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">o</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observations</span><span class="p">[</span><span class="n">v_id</span><span class="p">]</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_current_state</span><span class="p">(</span><span class="n">v_id</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vel_speed</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">last_spd</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;traj_control_mode&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;jerk&#39;</span><span class="p">:</span>
+                <span class="n">o_dict</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">o_dict</span><span class="p">[</span><span class="s1">&#39;birdview&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">o</span>
+                <span class="c1"># v_state = np.zeros(4)</span>
+                <span class="c1"># v_state[3] = v.last_spd</span>
+                <span class="n">v_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">z_state</span>
+                <span class="n">o_dict</span><span class="p">[</span><span class="s1">&#39;vehicle_state&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">v_state</span>
+                <span class="c1">#o_dict[&#39;speed&#39;] = v.last_spd</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;traj_control_mode&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;acc&#39;</span><span class="p">:</span>
+                <span class="n">o_dict</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">o_dict</span><span class="p">[</span><span class="s1">&#39;birdview&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">o</span>
+                <span class="c1"># v_state = np.zeros(4)</span>
+                <span class="c1"># v_state[3] = v.last_spd</span>
+                <span class="n">v_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">z_state</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span>
+                <span class="n">o_dict</span><span class="p">[</span><span class="s1">&#39;vehicle_state&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">v_state</span>
+                <span class="c1">#o_dict[&#39;speed&#39;] = v.last_spd</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">o_dict</span> <span class="o">=</span> <span class="n">o</span>
+            <span class="n">obses</span><span class="p">[</span><span class="n">v_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">o_dict</span>
+
+            <span class="n">done_function_result</span><span class="p">,</span> <span class="n">done_infos</span><span class="p">[</span><span class="n">v_id</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">done_function</span><span class="p">(</span><span class="n">v_id</span><span class="p">)</span>
+            <span class="n">rewards</span><span class="p">[</span><span class="n">v_id</span><span class="p">],</span> <span class="n">reward_infos</span><span class="p">[</span><span class="n">v_id</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_function</span><span class="p">(</span><span class="n">v_id</span><span class="p">)</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">cost_infos</span><span class="p">[</span><span class="n">v_id</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost_function</span><span class="p">(</span><span class="n">v_id</span><span class="p">)</span>
+            <span class="n">done</span> <span class="o">=</span> <span class="n">done_function_result</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">dones</span><span class="p">[</span><span class="n">v_id</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dones</span><span class="p">[</span><span class="n">v_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">done</span>
+
+        <span class="n">should_done</span> <span class="o">=</span> <span class="n">engine_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">REPLAY_DONE</span><span class="p">,</span> <span class="kc">False</span>
+                                      <span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;horizon&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">episode_steps</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;horizon&quot;</span><span class="p">])</span>
+        <span class="c1">#termination_infos = self.for_each_vehicle(self.auto_termination, should_done)</span>
+
+        <span class="n">step_infos</span> <span class="o">=</span> <span class="n">concat_step_infos</span><span class="p">([</span>
+            <span class="n">engine_info</span><span class="p">,</span>
+            <span class="n">done_infos</span><span class="p">,</span>
+            <span class="n">reward_infos</span><span class="p">,</span>
+            <span class="n">cost_infos</span><span class="p">,</span>
+            <span class="c1">#termination_infos,</span>
+        <span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">should_done</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dones</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dones</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">dones</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">dones</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
+        <span class="k">for</span> <span class="n">v_id</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rewards</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">episode_rewards</span><span class="p">[</span><span class="n">v_id</span><span class="p">]</span> <span class="o">+=</span> <span class="n">r</span>
+            <span class="n">step_infos</span><span class="p">[</span><span class="n">v_id</span><span class="p">][</span><span class="s2">&quot;episode_reward&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">episode_rewards</span><span class="p">[</span><span class="n">v_id</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">episode_lengths</span><span class="p">[</span><span class="n">v_id</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">step_infos</span><span class="p">[</span><span class="n">v_id</span><span class="p">][</span><span class="s2">&quot;episode_length&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">episode_lengths</span><span class="p">[</span><span class="n">v_id</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_multi_agent</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wrap_as_single_agent</span><span class="p">(</span><span class="n">obses</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wrap_as_single_agent</span><span class="p">(</span><span class="n">rewards</span><span class="p">),</span> \
+                   <span class="bp">self</span><span class="o">.</span><span class="n">_wrap_as_single_agent</span><span class="p">(</span><span class="n">dones</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wrap_as_single_agent</span><span class="p">(</span><span class="n">step_infos</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">obses</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">dones</span><span class="p">,</span> <span class="n">step_infos</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_engine</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MetaDriveTrajEnv</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">setup_engine</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">accept</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">switch_to_top_down_view</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">accept</span><span class="p">(</span><span class="s2">&quot;q&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">switch_to_third_person_view</span><span class="p">)</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">core.utils.simulator_utils.md_utils.traffic_manager_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">MacroTrafficManager</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">core.utils.simulator_utils.md_utils.map_manager_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">MacroMapManager</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">register_manager</span><span class="p">(</span><span class="s2">&quot;map_manager&quot;</span><span class="p">,</span> <span class="n">MacroMapManager</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">register_manager</span><span class="p">(</span><span class="s2">&quot;traffic_manager&quot;</span><span class="p">,</span> <span class="n">MacroTrafficManager</span><span class="p">())</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_reset_global_seed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force_seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">current_seed</span> <span class="o">=</span> <span class="n">force_seed</span> <span class="k">if</span> <span class="n">force_seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> \
+            <span class="n">get_np_random</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_DEBUG_RANDOM_SEED</span><span class="p">)</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start_seed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_seed</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">env_num</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">current_seed</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_preprocess_macro_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]])</span> \
+            <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_multi_agent</span><span class="p">:</span>
+            <span class="c1"># print(&#39;action.dtype: {}&#39;.format(type(actions)))</span>
+            <span class="c1">#print(&#39;action: {}&#39;.format(actions))</span>
+            <span class="n">actions</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
+            <span class="n">actions</span> <span class="o">=</span> <span class="p">{</span><span class="n">v_id</span><span class="p">:</span> <span class="n">actions</span> <span class="k">for</span> <span class="n">v_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;vehicle_config&quot;</span><span class="p">][</span><span class="s2">&quot;action_check&quot;</span><span class="p">]:</span>
+                <span class="c1"># Check whether some actions are not provided.</span>
+                <span class="n">given_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">actions</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+                <span class="n">have_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+                <span class="k">assert</span> <span class="n">given_keys</span> <span class="o">==</span> <span class="n">have_keys</span><span class="p">,</span> <span class="s2">&quot;The input actions: </span><span class="si">{}</span><span class="s2"> have incompatible keys with existing </span><span class="si">{}</span><span class="s2">!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">given_keys</span><span class="p">,</span> <span class="n">have_keys</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># That would be OK if extra actions is given. This is because, when evaluate a policy with naive</span>
+                <span class="c1"># implementation, the &quot;termination observation&quot; will still be given in T=t-1. And at T=t, when you</span>
+                <span class="c1"># collect action from policy(last_obs) without masking, then the action for &quot;termination observation&quot;</span>
+                <span class="c1"># will still be computed. We just filter it out here.</span>
+                <span class="n">actions</span> <span class="o">=</span> <span class="p">{</span><span class="n">v_id</span><span class="p">:</span> <span class="n">actions</span><span class="p">[</span><span class="n">v_id</span><span class="p">]</span> <span class="k">for</span> <span class="n">v_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
+        <span class="k">return</span> <span class="n">actions</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_preprocess_macro_waypoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">waypoint_list</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]])</span> \
+            <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_multi_agent</span><span class="p">:</span>
+            <span class="c1"># print(&#39;action.dtype: {}&#39;.format(type(actions)))</span>
+            <span class="c1">#print(&#39;action: {}&#39;.format(actions))</span>
+            <span class="n">actions</span> <span class="o">=</span> <span class="n">waypoint_list</span>
+            <span class="n">actions</span> <span class="o">=</span> <span class="p">{</span><span class="n">v_id</span><span class="p">:</span> <span class="n">actions</span> <span class="k">for</span> <span class="n">v_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
+        <span class="k">return</span> <span class="n">actions</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_step_macro_simulator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">):</span>
+        <span class="c1">#simulation_frequency = 30  # 60 80</span>
+        <span class="n">simulation_frequency</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;seq_traj_len&#39;</span><span class="p">]</span>
+        <span class="n">policy_frequency</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">frames</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">simulation_frequency</span> <span class="o">/</span> <span class="n">policy_frequency</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">wps</span> <span class="o">=</span> <span class="n">actions</span>
+        <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">frames</span><span class="p">):</span>
+            <span class="c1"># we use frame to update robot position, and use wps to represent the whole trajectory</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="o">.</span><span class="n">items</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span>
+            <span class="n">onestep_o</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">v_id</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">onestep_o</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observations</span><span class="p">[</span><span class="n">v_id</span><span class="p">]</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_update_pen_state</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="n">scene_manager_before_step_infos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">before_step_traj</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">wps</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+            <span class="n">onestep_a</span> <span class="o">=</span> <span class="n">scene_manager_before_step_infos</span><span class="p">[</span><span class="s1">&#39;default_agent&#39;</span><span class="p">][</span><span class="s1">&#39;raw_action&#39;</span><span class="p">]</span>
+            <span class="n">onestep_rwd</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">v_id</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">onestep_rwd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_onestep_reward</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="n">single_transition</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;state&#39;</span><span class="p">:</span> <span class="n">onestep_o</span><span class="p">,</span> <span class="s1">&#39;action&#39;</span><span class="p">:</span> <span class="n">onestep_a</span><span class="p">,</span> <span class="s1">&#39;reward&#39;</span><span class="p">:</span> <span class="n">onestep_rwd</span><span class="p">}</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;save_expert_data&quot;</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">single_transition_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">single_transition</span><span class="p">)</span>
+            <span class="n">scene_manager_after_step_infos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">after_step</span><span class="p">()</span>
+        <span class="c1">#scene_manager_after_step_infos = self.engine.after_step()</span>
+        <span class="k">return</span> <span class="n">merge_dicts</span><span class="p">(</span>
+            <span class="n">scene_manager_after_step_infos</span><span class="p">,</span> <span class="n">scene_manager_before_step_infos</span><span class="p">,</span> <span class="n">allow_new_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">without_copy</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_reset_return</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">after_step</span><span class="p">()</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">o_reset</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;episode reward: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">episode_rwd</span><span class="p">))</span>
+        <span class="c1">#self.episode_rwd = 0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">step_num</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">v_id</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">observations</span><span class="p">[</span><span class="n">v_id</span><span class="p">]</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+            <span class="n">ret</span><span class="p">[</span><span class="n">v_id</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observations</span><span class="p">[</span><span class="n">v_id</span><span class="p">]</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="n">o</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observations</span><span class="p">[</span><span class="n">v_id</span><span class="p">]</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;save_expert_data&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">single_transition_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">50</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;success: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">macro_succ</span><span class="p">))</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;traj len: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">single_transition_list</span><span class="p">)))</span>
+                <span class="n">folder_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;expert_data_folder&quot;</span><span class="p">]</span>
+                <span class="n">file_num</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">folder_name</span><span class="p">))</span>
+                <span class="n">new_file_name</span> <span class="o">=</span> <span class="s2">&quot;expert_data_</span><span class="si">%02i</span><span class="s2">.pickle&quot;</span> <span class="o">%</span> <span class="n">file_num</span>
+                <span class="n">new_file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder_name</span><span class="p">,</span> <span class="n">new_file_name</span><span class="p">)</span>
+                <span class="n">traj_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;transition_list&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">single_transition_list</span><span class="p">,</span> <span class="s2">&quot;episode_rwd&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">episode_rwd</span><span class="p">}</span>
+                <span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">new_file_path</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+                    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">traj_dict</span><span class="p">,</span> <span class="n">fp</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_current_state</span><span class="p">(</span><span class="n">v_id</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vel_speed</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;traj_control_mode&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;jerk&#39;</span><span class="p">:</span>
+                <span class="n">o_dict</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">o_dict</span><span class="p">[</span><span class="s1">&#39;birdview&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">o</span>
+                <span class="c1"># v_state = np.zeros(4)</span>
+                <span class="c1"># v_state[3] = v.last_spd</span>
+                <span class="n">v_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">z_state</span>
+                <span class="n">o_dict</span><span class="p">[</span><span class="s1">&#39;vehicle_state&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">v_state</span>
+                <span class="c1">#o_dict[&#39;speed&#39;] = v.last_spd</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;traj_control_mode&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;acc&#39;</span><span class="p">:</span>
+                <span class="n">o_dict</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">o_dict</span><span class="p">[</span><span class="s1">&#39;birdview&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">o</span>
+                <span class="c1"># v_state = np.zeros(4)</span>
+                <span class="c1"># v_state[3] = v.last_spd</span>
+                <span class="n">v_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">z_state</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span>
+                <span class="n">o_dict</span><span class="p">[</span><span class="s1">&#39;vehicle_state&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">v_state</span>
+                <span class="c1">#o_dict[&#39;speed&#39;] = v.last_spd</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">o_dict</span> <span class="o">=</span> <span class="n">o</span>
+            <span class="n">o_reset</span> <span class="o">=</span> <span class="n">o_dict</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="s1">&#39;macro_succ&#39;</span><span class="p">):</span>
+                <span class="n">v</span><span class="o">.</span><span class="n">reset_state_stack</span><span class="p">()</span>
+                <span class="n">v</span><span class="o">.</span><span class="n">macro_succ</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="s1">&#39;macro_crash&#39;</span><span class="p">):</span>
+                <span class="n">v</span><span class="o">.</span><span class="n">macro_crash</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">v</span><span class="o">.</span><span class="n">penultimate_state</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">v</span><span class="o">.</span><span class="n">penultimate_state</span><span class="p">[</span><span class="s1">&#39;position&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+            <span class="n">v</span><span class="o">.</span><span class="n">penultimate_state</span><span class="p">[</span><span class="s1">&#39;yaw&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">v</span><span class="o">.</span><span class="n">penultimate_state</span><span class="p">[</span><span class="s1">&#39;speed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">v</span><span class="o">.</span><span class="n">traj_wp_list</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">v</span><span class="o">.</span><span class="n">traj_wp_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">penultimate_state</span><span class="p">))</span>
+            <span class="n">v</span><span class="o">.</span><span class="n">traj_wp_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">penultimate_state</span><span class="p">))</span>
+            <span class="n">v</span><span class="o">.</span><span class="n">last_spd</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;save_expert_data&quot;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">single_transition_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">episode_rwd</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">already_go_dist</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_compute_navi_dist</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">navi_distance</span> <span class="o">=</span> <span class="mf">100.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">remove_init_stop</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">episode_max_step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;episode_max_step&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove_init_stop</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">o_reset</span>
+        <span class="k">return</span> <span class="n">o_reset</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">lazy_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Only init once in runtime, variable here exists till the close_env is called</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># It is the true init() func to create the main vehicle and its module, to avoid incompatible with ray</span>
+        <span class="k">if</span> <span class="n">engine_initialized</span><span class="p">():</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span> <span class="o">=</span> <span class="n">initialize_engine</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+        <span class="c1"># engine setup</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setup_engine</span><span class="p">()</span>
+        <span class="c1"># other optional initialization</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_after_lazy_init</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_single_observation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="n">TopDownMultiChannel</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;vehicle_config&quot;</span><span class="p">],</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;on_screen&quot;</span><span class="p">],</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;rgb_clip&quot;</span><span class="p">],</span>
+            <span class="n">frame_stack</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+            <span class="n">post_stack</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+            <span class="n">frame_skip</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">resolution</span><span class="o">=</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">),</span>
+            <span class="n">max_distance</span><span class="o">=</span><span class="mi">50</span>
+        <span class="p">)</span>
+        <span class="c1">#o = TopDownMultiChannel(vehicle_config, self, False)</span>
+        <span class="k">return</span> <span class="n">o</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">wrap_angle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">angle_in_rad</span><span class="p">):</span>
+        <span class="c1">#angle_in_rad = angle_in_degree / 180.0 * np.pi</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">angle_in_rad</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">):</span>
+            <span class="n">angle_in_rad</span> <span class="o">-=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">angle_in_rad</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">):</span>
+            <span class="n">angle_in_rad</span> <span class="o">+=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="k">return</span> <span class="n">angle_in_rad</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_episode_max_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">average_speed</span><span class="o">=</span><span class="mf">6.5</span><span class="p">):</span>
+        <span class="n">average_dist_per_step</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;seq_traj_len&#39;</span><span class="p">]</span>
+                                      <span class="p">)</span> <span class="o">*</span> <span class="n">average_speed</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;physics_world_step_size&#39;</span><span class="p">]</span>
+        <span class="n">max_step</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">distance</span> <span class="o">/</span> <span class="n">average_dist_per_step</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">max_step</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">close_engine</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_top_down_renderer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_top_down_renderer</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, OpenDILab
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

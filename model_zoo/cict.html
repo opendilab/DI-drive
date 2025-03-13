@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -23,9 +23,6 @@
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
     
@@ -269,7 +266,7 @@ in default config before running.</p>
 </pre></div>
 </div>
 <p>Collecting and post processing:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python collect_data.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>collect_data.py
 </pre></div>
 </div>
 </section>
@@ -338,7 +335,7 @@ You may need to change the dataset path and pre-train model path.</p>
 </pre></div>
 </div>
 <p>Training the first stage:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python cict_train_GAN.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>cict_train_GAN.py
 </pre></div>
 </div>
 <p>Default Configuration of the second stage:</p>
@@ -383,7 +380,7 @@ You may need to change the dataset path and pre-train model path.</p>
 </pre></div>
 </div>
 <p>Training the second stage:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python cict_train_traj.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>cict_train_traj.py
 </pre></div>
 </div>
 </section>
@@ -435,7 +432,7 @@ Also you may need to change the dataset path and pre-train weights path.</p>
 </pre></div>
 </div>
 <p>Evaluating the first stage:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python cict_eval_GAN.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>cict_eval_GAN.py
 </pre></div>
 </div>
 <p>Default configuration of the second stage:</p>
@@ -472,7 +469,7 @@ Also you may need to change the dataset path and pre-train weights path.</p>
 </pre></div>
 </div>
 <p>Evaluating the second stage:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python cict_eval_traj.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>cict_eval_traj.py
 </pre></div>
 </div>
 </section>
@@ -597,7 +594,7 @@ change the environment num, server IP and port and suite’s name in config.</p>
 </pre></div>
 </div>
 <p>Evaluating on the Carla Benchmark:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python cict_eval.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>cict_eval.py
 </pre></div>
 </div>
 <p>Testing with visualization:</p>

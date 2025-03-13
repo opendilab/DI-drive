@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -23,9 +23,6 @@
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
     
@@ -221,7 +218,7 @@ same performance as in single-lane maps.</p>
 <li><p>Start one or more CARLA server instances</p></li>
 <li><p>Prepare dataset for supervised leanring</p>
 <blockquote>
-<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python collect_data.py
+<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>collect_data.py
 </pre></div>
 </div>
 <p>Something you need to modify in the config of <code class="docutils literal notranslate"><span class="pre">collect_data.py</span></code>:</p>
@@ -234,7 +231,7 @@ same performance as in single-lane maps.</p>
 </li>
 <li><p>Pre-train the encoder in a supervised way</p>
 <blockquote>
-<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python train_sl.py
+<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>train_sl.py
 </pre></div>
 </div>
 <p>Something you need to modify in <code class="docutils literal notranslate"><span class="pre">train_sl.py</span></code>:</p>
@@ -247,7 +244,7 @@ same performance as in single-lane maps.</p>
 </li>
 <li><p>Train the agent with reinforcement Learning, the log and models will be saved in <code class="docutils literal notranslate"><span class="pre">./log</span></code></p>
 <blockquote>
-<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python train_rl.py --supervised_model_path /path/to/supervised_model.pth <span class="se">\</span>
+<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>train_rl.py<span class="w"> </span>--supervised_model_path<span class="w"> </span>/path/to/supervised_model.pth<span class="w"> </span><span class="se">\</span>
 --crop-sky
 </pre></div>
 </div>
@@ -267,16 +264,16 @@ same performance as in single-lane maps.</p>
 <ol class="arabic simple">
 <li><p>Make dirs</p></li>
 </ol>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir <span class="o">[</span>MODEL_PATH<span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">cd</span> <span class="o">[</span>MODEL_PATH<span class="o">]</span>
-mkdir model_supervised
-mkdir model_RL
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span><span class="o">[</span>MODEL_PATH<span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="o">[</span>MODEL_PATH<span class="o">]</span>
+mkdir<span class="w"> </span>model_supervised
+mkdir<span class="w"> </span>model_RL
 </pre></div>
 </div>
 <ol class="arabic" start="2">
 <li><p>Copy the pre-train model into <code class="docutils literal notranslate"><span class="pre">[MODEL_PATH]/model_supervised</span></code> and copy the rl model into <code class="docutils literal notranslate"><span class="pre">[MODEL_PATH]/model_RL</span></code></p></li>
 <li><p>Run</p>
 <blockquote>
-<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python eval.py --crop-sky --path-folder-model <span class="o">[</span>MODEL_PATH<span class="o">]</span>
+<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>eval.py<span class="w"> </span>--crop-sky<span class="w"> </span>--path-folder-model<span class="w"> </span><span class="o">[</span>MODEL_PATH<span class="o">]</span>
 </pre></div>
 </div>
 <p>Something you need to modify in <code class="docutils literal notranslate"><span class="pre">eval.py</span></code>:</p>
@@ -295,33 +292,33 @@ mkdir model_RL
 <h3>Running CARLA Server<a class="headerlink" href="#running-carla-server" title="Permalink to this heading">¶</a></h3>
 <section id="with-display">
 <h4>With Display<a class="headerlink" href="#with-display" title="Permalink to this heading">¶</a></h4>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>./CarlaUE4.sh --world-port<span class="o">=</span><span class="m">2000</span> -opengl <span class="c1"># If you run multiple servers at one time, you should modify the world port</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>./CarlaUE4.sh<span class="w"> </span>--world-port<span class="o">=</span><span class="m">2000</span><span class="w"> </span>-opengl<span class="w"> </span><span class="c1"># If you run multiple servers at one time, you should modify the world port</span>
 </pre></div>
 </div>
 </section>
 <section id="without-display">
 <h4>Without Display<a class="headerlink" href="#without-display" title="Permalink to this heading">¶</a></h4>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">SDL_VIDEODRIVER</span><span class="o">=</span>offscreen <span class="nv">SDL_HINT_CUDA_DEVICE</span><span class="o">=</span><span class="m">0</span> ./CarlaUE4.sh --world-port<span class="o">=</span><span class="m">2000</span> -opengl
- <span class="c1"># If you run multiple servers at one time, you should modify the world port</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">SDL_VIDEODRIVER</span><span class="o">=</span>offscreen<span class="w"> </span><span class="nv">SDL_HINT_CUDA_DEVICE</span><span class="o">=</span><span class="m">0</span><span class="w"> </span>./CarlaUE4.sh<span class="w"> </span>--world-port<span class="o">=</span><span class="m">2000</span><span class="w"> </span>-opengl
+<span class="w"> </span><span class="c1"># If you run multiple servers at one time, you should modify the world port</span>
 </pre></div>
 </div>
 </section>
 </section>
 <section id="evaluation-for-town01">
 <h3>Evaluation for Town01<a class="headerlink" href="#evaluation-for-town01" title="Permalink to this heading">¶</a></h3>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> demo/implicit
-wget http://opendilab.org/download/DI-drive/implicit/models_town01.tar.gz
-tar xvf models_town01.tar.gz
-python eval.py --crop-sky --path-folder-model models_town01
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>demo/implicit
+wget<span class="w"> </span>http://opendilab.org/download/DI-drive/implicit/models_town01.tar.gz
+tar<span class="w"> </span>xvf<span class="w"> </span>models_town01.tar.gz
+python<span class="w"> </span>eval.py<span class="w"> </span>--crop-sky<span class="w"> </span>--path-folder-model<span class="w"> </span>models_town01
 </pre></div>
 </div>
 </section>
 <section id="evaluation-for-town04">
 <h3>Evaluation for Town04<a class="headerlink" href="#evaluation-for-town04" title="Permalink to this heading">¶</a></h3>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> demo/implicit
-wget http://opendilab.org/download/DI-drive/implicit/models_town04.tar.gz
-tar xvf models_town04.tar.gz
-python eval.py --crop-sky --path-folder-model models_town04 <span class="c1">#</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>demo/implicit
+wget<span class="w"> </span>http://opendilab.org/download/DI-drive/implicit/models_town04.tar.gz
+tar<span class="w"> </span>xvf<span class="w"> </span>models_town04.tar.gz
+python<span class="w"> </span>eval.py<span class="w"> </span>--crop-sky<span class="w"> </span>--path-folder-model<span class="w"> </span>models_town04<span class="w"> </span><span class="c1">#</span>
 </pre></div>
 </div>
 <p>Something you need to modify in <code class="docutils literal notranslate"><span class="pre">eval.py</span></code>:</p>

@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -23,9 +23,6 @@
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
     
@@ -184,47 +181,125 @@
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="simulators.html">simulators</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="simulators.html#basesimulator">BaseSimulator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="simulators.html#carlasimulator">CarlaSimulator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="simulators.html#carlascenariosimulator">CarlaScenarioSimulator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulators.html#basesimulator">BaseSimulator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="simulators.html#core.simulators.base_simulator.BaseSimulator"><code class="docutils literal notranslate"><span class="pre">BaseSimulator</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="simulators.html#carlasimulator">CarlaSimulator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="simulators.html#core.simulators.CarlaSimulator"><code class="docutils literal notranslate"><span class="pre">CarlaSimulator</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="simulators.html#carlascenariosimulator">CarlaScenarioSimulator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="simulators.html#core.simulators.CarlaScenarioSimulator"><code class="docutils literal notranslate"><span class="pre">CarlaScenarioSimulator</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="envs.html">envs</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="envs.html#basedriveenv">BaseDriveEnv</a></li>
-<li class="toctree-l2"><a class="reference internal" href="envs.html#simplecarlaenv">SimpleCarlaEnv</a></li>
-<li class="toctree-l2"><a class="reference internal" href="envs.html#scenariocarlaenv">ScenarioCarlaEnv</a></li>
-<li class="toctree-l2"><a class="reference internal" href="envs.html#metadrivemacroenv">MetaDriveMacroEnv</a></li>
-<li class="toctree-l2"><a class="reference internal" href="envs.html#metadrivetrajenv">MetaDriveTrajEnv</a></li>
-<li class="toctree-l2"><a class="reference internal" href="envs.html#driveenvwrapper">DriveEnvWrapper</a></li>
-<li class="toctree-l2"><a class="reference internal" href="envs.html#benchmarkenvwrapper">BenchmarkEnvWrapper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="envs.html#basedriveenv">BaseDriveEnv</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="envs.html#core.envs.BaseDriveEnv"><code class="docutils literal notranslate"><span class="pre">BaseDriveEnv</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="envs.html#simplecarlaenv">SimpleCarlaEnv</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="envs.html#core.envs.SimpleCarlaEnv"><code class="docutils literal notranslate"><span class="pre">SimpleCarlaEnv</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="envs.html#scenariocarlaenv">ScenarioCarlaEnv</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="envs.html#core.envs.ScenarioCarlaEnv"><code class="docutils literal notranslate"><span class="pre">ScenarioCarlaEnv</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="envs.html#metadrivemacroenv">MetaDriveMacroEnv</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="envs.html#core.envs.MetaDriveMacroEnv"><code class="docutils literal notranslate"><span class="pre">MetaDriveMacroEnv</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="envs.html#metadrivetrajenv">MetaDriveTrajEnv</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="envs.html#core.envs.MetaDriveTrajEnv"><code class="docutils literal notranslate"><span class="pre">MetaDriveTrajEnv</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="envs.html#driveenvwrapper">DriveEnvWrapper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="envs.html#core.envs.DriveEnvWrapper"><code class="docutils literal notranslate"><span class="pre">DriveEnvWrapper</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="envs.html#benchmarkenvwrapper">BenchmarkEnvWrapper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="envs.html#core.envs.BenchmarkEnvWrapper"><code class="docutils literal notranslate"><span class="pre">BenchmarkEnvWrapper</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="policy.html">policy</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="policy.html#basecarlapolicy">BaseCarlaPolicy</a></li>
-<li class="toctree-l2"><a class="reference internal" href="policy.html#autopidpolicy">AutoPIDPolicy</a></li>
-<li class="toctree-l2"><a class="reference internal" href="policy.html#autompcpolicy">AutoMPCPolicy</a></li>
-<li class="toctree-l2"><a class="reference internal" href="policy.html#cilrspolicy">CILRSPolicy</a></li>
-<li class="toctree-l2"><a class="reference internal" href="policy.html#lbcbirdviewpolicy">LBCBirdviewPolicy</a></li>
-<li class="toctree-l2"><a class="reference internal" href="policy.html#lbcimagepolicy">LBCImagePolicy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="policy.html#basecarlapolicy">BaseCarlaPolicy</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="policy.html#core.policy.base_carla_policy.BaseCarlaPolicy"><code class="docutils literal notranslate"><span class="pre">BaseCarlaPolicy</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="policy.html#autopidpolicy">AutoPIDPolicy</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="policy.html#core.policy.AutoPIDPolicy"><code class="docutils literal notranslate"><span class="pre">AutoPIDPolicy</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="policy.html#autompcpolicy">AutoMPCPolicy</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="policy.html#core.policy.AutoMPCPolicy"><code class="docutils literal notranslate"><span class="pre">AutoMPCPolicy</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="policy.html#cilrspolicy">CILRSPolicy</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="policy.html#core.policy.CILRSPolicy"><code class="docutils literal notranslate"><span class="pre">CILRSPolicy</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="policy.html#lbcbirdviewpolicy">LBCBirdviewPolicy</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="policy.html#core.policy.LBCBirdviewPolicy"><code class="docutils literal notranslate"><span class="pre">LBCBirdviewPolicy</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="policy.html#lbcimagepolicy">LBCImagePolicy</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="policy.html#core.policy.LBCImagePolicy"><code class="docutils literal notranslate"><span class="pre">LBCImagePolicy</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="models.html">models</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="models.html#bevspeedconvencoder">BEVSpeedConvEncoder</a></li>
-<li class="toctree-l2"><a class="reference internal" href="models.html#vanillavae">VanillaVAE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="models.html#vehiclepidcontroller">VehiclePIDController</a></li>
-<li class="toctree-l2"><a class="reference internal" href="models.html#mpccontroller">MPCController</a></li>
-<li class="toctree-l2"><a class="reference internal" href="models.html#steernoisewrapper">SteerNoiseWrapper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html#bevspeedconvencoder">BEVSpeedConvEncoder</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="models.html#core.models.BEVSpeedConvEncoder"><code class="docutils literal notranslate"><span class="pre">BEVSpeedConvEncoder</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="models.html#vanillavae">VanillaVAE</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="models.html#core.models.vae_model.VanillaVAE"><code class="docutils literal notranslate"><span class="pre">VanillaVAE</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="models.html#vehiclepidcontroller">VehiclePIDController</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="models.html#core.models.VehiclePIDController"><code class="docutils literal notranslate"><span class="pre">VehiclePIDController</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="models.html#mpccontroller">MPCController</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="models.html#core.models.MPCController"><code class="docutils literal notranslate"><span class="pre">MPCController</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="models.html#steernoisewrapper">SteerNoiseWrapper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="models.html#core.models.model_wrappers.SteerNoiseWrapper"><code class="docutils literal notranslate"><span class="pre">SteerNoiseWrapper</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="data.html">data</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="data.html#carlabenchmarkcollector">CarlaBenchmarkCollector</a></li>
-<li class="toctree-l2"><a class="reference internal" href="data.html#benchmarkdatasetsaver">BenchmarkDatasetSaver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.html#carlabenchmarkcollector">CarlaBenchmarkCollector</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="data.html#core.data.carla_benchmark_collector.CarlaBenchmarkCollector"><code class="docutils literal notranslate"><span class="pre">CarlaBenchmarkCollector</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="data.html#benchmarkdatasetsaver">BenchmarkDatasetSaver</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="data.html#core.data.benchmark_dataset_saver.BenchmarkDatasetSaver"><code class="docutils literal notranslate"><span class="pre">BenchmarkDatasetSaver</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="eval.html">eval</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="eval.html#carlabenchmarkevaluator">CarlaBenchmarkEvaluator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eval.html#singlecarlaevaluator">SingleCarlaEvaluator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eval.html#serialevaluator">SerialEvaluator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eval.html#carlabenchmarkevaluator">CarlaBenchmarkEvaluator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="eval.html#core.eval.CarlaBenchmarkEvaluator"><code class="docutils literal notranslate"><span class="pre">CarlaBenchmarkEvaluator</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="eval.html#singlecarlaevaluator">SingleCarlaEvaluator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="eval.html#core.eval.SingleCarlaEvaluator"><code class="docutils literal notranslate"><span class="pre">SingleCarlaEvaluator</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="eval.html#serialevaluator">SerialEvaluator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="eval.html#core.eval.SerialEvaluator"><code class="docutils literal notranslate"><span class="pre">SerialEvaluator</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="utils.html">utils</a><ul>

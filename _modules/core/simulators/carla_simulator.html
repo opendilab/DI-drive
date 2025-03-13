@@ -1,0 +1,971 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>core.simulators.carla_simulator &mdash; DI-drive 0.3.4 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> DI-drive
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/index.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/index.html">Tutorial</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../features/index.html">Features</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../model_zoo/index.html">Model Zoo</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_doc/index.html">API Doc</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../faq/index.html">FAQ</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DI-drive</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>core.simulators.carla_simulator</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for core.simulators.carla_simulator</h1><div class="highlight"><pre>
+<span></span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Copyright 2021 OpenDILab. All Rights Reserved:</span>
+<span class="sd">Description: Carla simulator.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">distutils.version</span><span class="w"> </span><span class="kn">import</span> <span class="n">LooseVersion</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pkg_resources</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.base_simulator</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseSimulator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">core.utils.simulator_utils.sensor_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">SensorHelper</span><span class="p">,</span> <span class="n">CollisionSensor</span><span class="p">,</span> <span class="n">TrafficLightHelper</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">core.utils.simulator_utils.map_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeVWrapper</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">core.simulators.carla_data_provider</span><span class="w"> </span><span class="kn">import</span> <span class="n">CarlaDataProvider</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">core.utils.simulator_utils.carla_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">control_to_signal</span><span class="p">,</span> <span class="n">get_birdview</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">core.utils.planner</span><span class="w"> </span><span class="kn">import</span> <span class="n">BasicPlanner</span><span class="p">,</span> <span class="n">BehaviorPlanner</span><span class="p">,</span> <span class="n">LBCPlannerNew</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">core.utils.others.tcp_helper</span><span class="w"> </span><span class="kn">import</span> <span class="n">find_traffic_manager_port</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">carla</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">carla</span><span class="w"> </span><span class="kn">import</span> <span class="n">WeatherParameters</span>
+
+<span class="n">PRESET_WEATHERS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">1</span><span class="p">:</span> <span class="n">WeatherParameters</span><span class="o">.</span><span class="n">ClearNoon</span><span class="p">,</span>
+    <span class="mi">2</span><span class="p">:</span> <span class="n">WeatherParameters</span><span class="o">.</span><span class="n">CloudyNoon</span><span class="p">,</span>
+    <span class="mi">3</span><span class="p">:</span> <span class="n">WeatherParameters</span><span class="o">.</span><span class="n">WetNoon</span><span class="p">,</span>
+    <span class="mi">4</span><span class="p">:</span> <span class="n">WeatherParameters</span><span class="o">.</span><span class="n">WetCloudyNoon</span><span class="p">,</span>
+    <span class="mi">5</span><span class="p">:</span> <span class="n">WeatherParameters</span><span class="o">.</span><span class="n">MidRainyNoon</span><span class="p">,</span>
+    <span class="mi">6</span><span class="p">:</span> <span class="n">WeatherParameters</span><span class="o">.</span><span class="n">HardRainNoon</span><span class="p">,</span>
+    <span class="mi">7</span><span class="p">:</span> <span class="n">WeatherParameters</span><span class="o">.</span><span class="n">SoftRainNoon</span><span class="p">,</span>
+    <span class="mi">8</span><span class="p">:</span> <span class="n">WeatherParameters</span><span class="o">.</span><span class="n">ClearSunset</span><span class="p">,</span>
+    <span class="mi">9</span><span class="p">:</span> <span class="n">WeatherParameters</span><span class="o">.</span><span class="n">CloudySunset</span><span class="p">,</span>
+    <span class="mi">10</span><span class="p">:</span> <span class="n">WeatherParameters</span><span class="o">.</span><span class="n">WetSunset</span><span class="p">,</span>
+    <span class="mi">11</span><span class="p">:</span> <span class="n">WeatherParameters</span><span class="o">.</span><span class="n">WetCloudySunset</span><span class="p">,</span>
+    <span class="mi">12</span><span class="p">:</span> <span class="n">WeatherParameters</span><span class="o">.</span><span class="n">MidRainSunset</span><span class="p">,</span>
+    <span class="mi">13</span><span class="p">:</span> <span class="n">WeatherParameters</span><span class="o">.</span><span class="n">HardRainSunset</span><span class="p">,</span>
+    <span class="mi">14</span><span class="p">:</span> <span class="n">WeatherParameters</span><span class="o">.</span><span class="n">SoftRainSunset</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">VEHICLE_NAME</span> <span class="o">=</span> <span class="s1">&#39;vehicle.tesla.model3&#39;</span>
+<span class="n">ROLE_NAME</span> <span class="o">=</span> <span class="s1">&#39;hero&#39;</span>
+<span class="n">OBS_TYPE_LIST</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">,</span> <span class="s1">&#39;depth&#39;</span><span class="p">,</span> <span class="s1">&#39;rgb&#39;</span><span class="p">,</span> <span class="s1">&#39;segmentation&#39;</span><span class="p">,</span> <span class="s1">&#39;bev&#39;</span><span class="p">,</span> <span class="s1">&#39;lidar&#39;</span><span class="p">,</span> <span class="s1">&#39;gnss&#39;</span><span class="p">]</span>
+
+<span class="n">PLANNER_DICT</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;basic&#39;</span><span class="p">:</span> <span class="n">BasicPlanner</span><span class="p">,</span>
+    <span class="s1">&#39;behavior&#39;</span><span class="p">:</span> <span class="n">BehaviorPlanner</span><span class="p">,</span>
+    <span class="s1">&#39;lbc&#39;</span><span class="p">:</span> <span class="n">LBCPlannerNew</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="CarlaSimulator"><a class="viewcode-back" href="../../../api_doc/simulators.html#core.simulators.CarlaSimulator">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">CarlaSimulator</span><span class="p">(</span><span class="n">BaseSimulator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Common Carla Simulator.</span>
+<span class="sd">    The simulator creates a client to Carla server, and is able to get observation, send</span>
+<span class="sd">    control signals to the hero vehicle and record essential data from the simulated world.</span>
+<span class="sd">    In the initialization period, the simulator may change the environment parameters including</span>
+<span class="sd">    maps and weathers and can add actors (including NPC vehicles, pedestrians as well as sensors</span>
+<span class="sd">    mounted on the hero vehicle),</span>
+<span class="sd">    During the running period the simulator will achieve running state and information about</span>
+<span class="sd">    the hero vehicle (such as running speed, angle, navigation goal and reference path), data</span>
+<span class="sd">    from the sensors (such as camera images, lidar points) as well as running status(including</span>
+<span class="sd">    collision, running off road, red light, distance and timeout to end waypoint).</span>
+
+<span class="sd">    Once it is created, it will set up Carla client and set the parameters in the configuration</span>
+<span class="sd">    dict as its default. When actually calling the ``init`` method to start an episode, some of</span>
+<span class="sd">    the configurations may be changed by the input arguments while others remain by default.</span>
+
+<span class="sd">    The simulator stores and gets some information from a static class ``CarlaDataProvider``</span>
+<span class="sd">    to avoid frequently sending message to Carla server and speed up.</span>
+
+<span class="sd">    Up to now, it uses Carla version higher than 0.9.9.</span>
+
+<span class="sd">    If no traffic manager port is provided, it will find random free port in system.</span>
+
+<span class="sd">    :Arguments:</span>
+<span class="sd">        - cfg (Dict): Config Dict.</span>
+<span class="sd">        - client (carla.Client, optional): Already established Carla client. Defaults to None.</span>
+<span class="sd">        - host (str, optional): TCP host Carla client link to. Defaults to &#39;localhost&#39;.</span>
+<span class="sd">        - port (int, optional): TCP port Carla client link to. Defaults to 9000.</span>
+<span class="sd">        - tm_port (int, optional): Traffic manager port Carla client link to. Defaults to None.</span>
+<span class="sd">        - timeout (float, optional): Carla client link timeout. Defaults to 60.0.</span>
+
+<span class="sd">    :Interfaces:</span>
+<span class="sd">        init, get_state, get_sensor_data, get_navigation, get_information, apply_planner,</span>
+<span class="sd">        apply_control, run_step, clean_up</span>
+
+<span class="sd">    :Properties:</span>
+<span class="sd">        - town_name (str): Current town name.</span>
+<span class="sd">        - hero_player (carla.Actor): hero actor in simulation.</span>
+<span class="sd">        - collided (bool): Whether collided in current episode.</span>
+<span class="sd">        - ran_light (bool): Whether ran light in current frame.</span>
+<span class="sd">        - off_road (bool): Whether ran off road in current frame.</span>
+<span class="sd">        - wrong_direction (bool): Whether ran in wrong direction in current frame.</span>
+<span class="sd">        - end_distance (float): Distance to target in current frame.</span>
+<span class="sd">        - end_timeout (float): Timeout for entire route provided by planner.</span>
+<span class="sd">        - total_distance (float): Distance for entire route provided by planner.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">town</span><span class="o">=</span><span class="s1">&#39;Town01&#39;</span><span class="p">,</span>
+        <span class="n">weather</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">,</span>
+        <span class="n">sync_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">delta_seconds</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+        <span class="n">no_rendering</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">auto_pilot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">n_vehicles</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">n_pedestrians</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">disable_two_wheels</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">col_threshold</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span>
+        <span class="n">waypoint_num</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+        <span class="n">obs</span><span class="o">=</span><span class="nb">list</span><span class="p">(),</span>
+        <span class="n">planner</span><span class="o">=</span><span class="nb">dict</span><span class="p">(),</span>
+        <span class="n">aug</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">cfg</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+            <span class="n">client</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">carla</span><span class="o">.</span><span class="n">Client</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;localhost&#39;</span><span class="p">,</span>
+            <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">9000</span><span class="p">,</span>
+            <span class="n">tm_port</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">60.0</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Init Carla simulator.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
+        <span class="c1"># Check Carla API version</span>
+        <span class="n">dist</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">get_distribution</span><span class="p">(</span><span class="s2">&quot;carla&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">LooseVersion</span><span class="p">(</span><span class="n">dist</span><span class="o">.</span><span class="n">version</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">LooseVersion</span><span class="p">(</span><span class="s1">&#39;0.9.8&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;CARLA version 0.9.8 or newer required. CARLA version found: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dist</span><span class="p">))</span>
+
+        <span class="c1"># Create the client that will send the requests to the simulator</span>
+        <span class="k">if</span> <span class="n">client</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_client</span> <span class="o">=</span> <span class="n">carla</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_client</span> <span class="o">=</span> <span class="n">client</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_client_timeout</span> <span class="o">=</span> <span class="n">timeout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">set_timeout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client_timeout</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tm_port</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[SIMULATOR] Not providing TM port, try finding free&quot;</span><span class="p">)</span>
+            <span class="n">max_retry</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">tm_port</span> <span class="o">=</span> <span class="n">find_traffic_manager_port</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_tm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">get_trafficmanager</span><span class="p">(</span><span class="n">tm_port</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[SIMULATOR] Using TM port:&quot;</span><span class="p">,</span> <span class="n">tm_port</span><span class="p">)</span>
+                    <span class="k">break</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">max_retry</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">if</span> <span class="n">max_retry</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="n">e</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">get_trafficmanager</span><span class="p">(</span><span class="n">tm_port</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tm</span><span class="o">.</span><span class="n">set_global_distance_to_leading_vehicle</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tm</span><span class="o">.</span><span class="n">set_hybrid_physics_mode</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_world</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_map</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sync_mode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">sync_mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_no_rendering</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">no_rendering</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_delta_seconds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">delta_seconds</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_apply_world_setting</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_col_threshold</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">col_threshold</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_waypoint_num</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">waypoint_num</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_obs_cfg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">obs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_planner_cfg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">planner</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_camera_aug_cfg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">aug</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_verbose</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">verbose</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tick</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_timestamp</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_end_location</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_collided</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ran_light</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_off_road</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wrong_direction</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_end_distance</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_end_timeout</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hero_actor</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_start_location</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sensor_helper</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bev_wrapper</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_planner</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_collision_sensor</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_traffic_light_helper</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_actor_map</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_debug</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">debug</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_apply_world_setting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">world_param</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">world_param</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">world_param</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;town&#39;</span> <span class="ow">in</span> <span class="n">world_param</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_town_name</span> <span class="o">=</span> <span class="n">world_param</span><span class="p">[</span><span class="s1">&#39;town&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s1">&#39;weather&#39;</span> <span class="ow">in</span> <span class="n">world_param</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_weather</span> <span class="o">=</span> <span class="n">world_param</span><span class="p">[</span><span class="s1">&#39;weather&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s1">&#39;n_vehicles&#39;</span> <span class="ow">in</span> <span class="n">world_param</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_n_vehicles</span> <span class="o">=</span> <span class="n">world_param</span><span class="p">[</span><span class="s1">&#39;n_vehicles&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s1">&#39;n_pedestrians&#39;</span> <span class="ow">in</span> <span class="n">world_param</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_n_pedestrians</span> <span class="o">=</span> <span class="n">world_param</span><span class="p">[</span><span class="s1">&#39;n_pedestrians&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s1">&#39;autopilot&#39;</span> <span class="ow">in</span> <span class="n">world_param</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_autopilot</span> <span class="o">=</span> <span class="n">world_param</span><span class="p">[</span><span class="s1">&#39;autopilot&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s1">&#39;disable_two_wheels&#39;</span> <span class="ow">in</span> <span class="n">world_param</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_disable_two_wheels</span> <span class="o">=</span> <span class="n">world_param</span><span class="p">[</span><span class="s1">&#39;disable_two_wheels&#39;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="CarlaSimulator.init"><a class="viewcode-back" href="../../../api_doc/simulators.html#core.simulators.CarlaSimulator.init">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">end</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Init simulator episode with provided args.</span>
+<span class="sd">        This method takes start and end waypoint indexes to set a navigation goal, and will use planner to build a route</span>
+<span class="sd">        to generate target waypoint and road options in each tick. It will set world, map, vehicles, pedestrians dut to</span>
+<span class="sd">        default config, and provided args, which will be stored to replace old config.</span>
+<span class="sd">        If no collision happens when creating actors, the init will end and return.</span>
+
+<span class="sd">        :Arguments:</span>
+<span class="sd">            - start (int, optional): Index of start waypoint. Defaults to 0.</span>
+<span class="sd">            - end (int, optional): Index of end waypoint. Defaults to 1.</span>
+
+<span class="sd">        :Optional arguments: town, weather, n_vehicles, n_pedestrians, autopilot, disable_two_wheels</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_apply_world_setting</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_town</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_town_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_weather</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_weather</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_blueprints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">get_blueprint_library</span><span class="p">()</span>
+
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">clean_up</span><span class="p">()</span>
+
+            <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">set_client</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="p">)</span>
+            <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">set_world</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="p">)</span>
+            <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">set_traffic_manager_port</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tm</span><span class="o">.</span><span class="n">get_port</span><span class="p">())</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_spawn_hero_vehicle</span><span class="p">(</span><span class="n">start_pos</span><span class="o">=</span><span class="n">start</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_observations</span><span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_spawn_vehicles</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_spawn_pedestrians</span><span class="p">()</span>
+
+            <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">on_carla_tick</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">apply_planner</span><span class="p">(</span><span class="n">end</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_collided</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ran_light</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_off_road</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_wrong_direction</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ready</span><span class="p">():</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_debug</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_count_actors</span><span class="p">()</span>
+                <span class="k">break</span></div>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_set_town</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">town</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_world</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_world</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">load_world</span><span class="p">(</span><span class="n">town</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="n">town</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_world</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">load_world</span><span class="p">(</span><span class="n">town</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_world</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">get_world</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">get_snapshot</span><span class="p">()</span><span class="o">.</span><span class="n">timestamp</span><span class="o">.</span><span class="n">frame</span> <span class="o">&gt;</span> <span class="mf">1e6</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_world</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">load_world</span><span class="p">(</span><span class="n">town</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">get_map</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_sync_mode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sync_mode</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delta_seconds</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_set_sync_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sync</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">delta_seconds</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">settings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">get_settings</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">synchronous_mode</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">sync</span><span class="p">:</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">synchronous_mode</span> <span class="o">=</span> <span class="n">sync</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">fixed_delta_seconds</span> <span class="o">=</span> <span class="n">delta_seconds</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">no_rendering_mode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_no_rendering</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">apply_settings</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span>
+            <span class="c1">#self._tm.set_synchronous_mode(True)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_set_weather</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weather_string</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;[SIMULATOR] Setting weather: &#39;</span><span class="p">,</span> <span class="n">weather_string</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">weather_string</span> <span class="o">==</span> <span class="s1">&#39;random&#39;</span><span class="p">:</span>
+            <span class="n">weather</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">PRESET_WEATHERS</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">weather</span> <span class="o">=</span> <span class="n">PRESET_WEATHERS</span><span class="p">[</span><span class="n">weather_string</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">set_weather</span><span class="p">(</span><span class="n">weather</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_spawn_hero_vehicle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_pos</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">start_waypoint</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">get_spawn_point</span><span class="p">(</span><span class="n">start_pos</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_start_location</span> <span class="o">=</span> <span class="n">start_waypoint</span><span class="o">.</span><span class="n">location</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hero_actor</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">request_new_actor</span><span class="p">(</span><span class="n">VEHICLE_NAME</span><span class="p">,</span> <span class="n">start_waypoint</span><span class="p">,</span> <span class="n">ROLE_NAME</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_spawn_vehicles</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">blueprints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_blueprints</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s1">&#39;vehicle.*&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_disable_two_wheels</span><span class="p">:</span>
+            <span class="n">blueprints</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">blueprints</span> <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="s1">&#39;number_of_wheels&#39;</span><span class="p">))</span> <span class="o">==</span> <span class="mi">4</span><span class="p">]</span>
+        <span class="n">spawn_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map</span><span class="o">.</span><span class="n">get_spawn_points</span><span class="p">()</span>
+        <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">spawn_points</span><span class="p">)</span>
+
+        <span class="n">SpawnActor</span> <span class="o">=</span> <span class="n">carla</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">SpawnActor</span>
+        <span class="n">SetAutopilot</span> <span class="o">=</span> <span class="n">carla</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">SetAutopilot</span>
+        <span class="n">FutureActor</span> <span class="o">=</span> <span class="n">carla</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">FutureActor</span>
+
+        <span class="n">batch</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">transform</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">spawn_points</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_vehicles</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="n">blueprint</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">blueprints</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">blueprint</span><span class="o">.</span><span class="n">has_attribute</span><span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">):</span>
+                <span class="n">color</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">blueprint</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">recommended_values</span><span class="p">)</span>
+                <span class="n">blueprint</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">,</span> <span class="n">color</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">blueprint</span><span class="o">.</span><span class="n">has_attribute</span><span class="p">(</span><span class="s1">&#39;driver_id&#39;</span><span class="p">):</span>
+                <span class="n">driver_id</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">blueprint</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="s1">&#39;driver_id&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">recommended_values</span><span class="p">)</span>
+                <span class="n">blueprint</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s1">&#39;driver_id&#39;</span><span class="p">,</span> <span class="n">driver_id</span><span class="p">)</span>
+            <span class="n">blueprint</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s1">&#39;role_name&#39;</span><span class="p">,</span> <span class="s1">&#39;autopilot&#39;</span><span class="p">)</span>
+
+            <span class="c1"># spawn the cars and set their autopilot and light state all together</span>
+            <span class="n">batch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SpawnActor</span><span class="p">(</span><span class="n">blueprint</span><span class="p">,</span> <span class="n">transform</span><span class="p">)</span><span class="o">.</span><span class="n">then</span><span class="p">(</span><span class="n">SetAutopilot</span><span class="p">(</span><span class="n">FutureActor</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tm</span><span class="o">.</span><span class="n">get_port</span><span class="p">())))</span>
+
+        <span class="k">for</span> <span class="n">response</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">apply_batch_sync</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">error</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;[SIMULATOR]&#39;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">error</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">register_actor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">get_actor</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">actor_id</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_spawn_pedestrians</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">blueprints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_blueprints</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s1">&#39;walker.pedestrian.*&#39;</span><span class="p">)</span>
+        <span class="n">SpawnActor</span> <span class="o">=</span> <span class="n">carla</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">SpawnActor</span>
+
+        <span class="n">pedestrians_running</span> <span class="o">=</span> <span class="mf">30.0</span>  <span class="c1"># how many pedestrians will run</span>
+        <span class="n">pedestrians_crossing</span> <span class="o">=</span> <span class="mf">30.0</span>
+
+        <span class="n">peds_spawned</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">walkers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">controllers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">walker_speed</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">while</span> <span class="n">peds_spawned</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_pedestrians</span><span class="p">:</span>
+            <span class="n">spawn_points</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">_walkers</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">_controllers</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">_walker_speed</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="c1"># 1. take all the random locations to spawn</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_pedestrians</span> <span class="o">-</span> <span class="n">peds_spawned</span><span class="p">):</span>
+                <span class="n">spawn_point</span> <span class="o">=</span> <span class="n">carla</span><span class="o">.</span><span class="n">Transform</span><span class="p">()</span>
+                <span class="n">loc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">get_random_location_from_navigation</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="n">loc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">spawn_point</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">loc</span>
+                    <span class="n">spawn_points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">spawn_point</span><span class="p">)</span>
+
+            <span class="c1"># 2. spawn the walker object</span>
+            <span class="n">batch</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">spawn_point</span> <span class="ow">in</span> <span class="n">spawn_points</span><span class="p">:</span>
+                <span class="n">walker_bp</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">blueprints</span><span class="p">)</span>
+                <span class="c1"># set as not invincible</span>
+                <span class="k">if</span> <span class="n">walker_bp</span><span class="o">.</span><span class="n">has_attribute</span><span class="p">(</span><span class="s1">&#39;is_invincible&#39;</span><span class="p">):</span>
+                    <span class="n">walker_bp</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s1">&#39;is_invincible&#39;</span><span class="p">,</span> <span class="s1">&#39;false&#39;</span><span class="p">)</span>
+                <span class="c1"># set the max speed</span>
+                <span class="k">if</span> <span class="n">walker_bp</span><span class="o">.</span><span class="n">has_attribute</span><span class="p">(</span><span class="s1">&#39;speed&#39;</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">pedestrians_running</span><span class="p">:</span>
+                        <span class="c1"># walking</span>
+                        <span class="n">_walker_speed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">walker_bp</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="s1">&#39;speed&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">recommended_values</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># running</span>
+                        <span class="n">_walker_speed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">walker_bp</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="s1">&#39;speed&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">recommended_values</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_verbose</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[SIMULATOR] Walker has no speed&quot;</span><span class="p">)</span>
+                    <span class="n">_walker_speed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+                <span class="n">batch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SpawnActor</span><span class="p">(</span><span class="n">walker_bp</span><span class="p">,</span> <span class="n">spawn_point</span><span class="p">))</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">apply_batch_sync</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+            <span class="n">_walker_speed2</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">results</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">error</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_verbose</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;[SIMULATOR] Walker &#39;</span><span class="p">,</span> <span class="n">results</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">error</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">peds_spawned</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">_walkers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">actor_id</span><span class="p">)</span>
+                    <span class="n">_walker_speed2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_walker_speed</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">_walker_speed</span> <span class="o">=</span> <span class="n">_walker_speed2</span>
+
+            <span class="c1"># 3. spawn the walker controller</span>
+            <span class="n">walker_controller_bp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_blueprints</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;controller.ai.walker&#39;</span><span class="p">)</span>
+            <span class="n">batch</span> <span class="o">=</span> <span class="p">[</span><span class="n">SpawnActor</span><span class="p">(</span><span class="n">walker_controller_bp</span><span class="p">,</span> <span class="n">carla</span><span class="o">.</span><span class="n">Transform</span><span class="p">(),</span> <span class="n">walker</span><span class="p">)</span> <span class="k">for</span> <span class="n">walker</span> <span class="ow">in</span> <span class="n">_walkers</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">apply_batch_sync</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">error</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_verbose</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;[SIMULATOR] Walker controller &#39;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">error</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">_controllers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">actor_id</span><span class="p">)</span>
+
+            <span class="c1"># 4. add peds and controllers into actor dict</span>
+            <span class="n">controllers</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">_controllers</span><span class="p">)</span>
+            <span class="n">walkers</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">_walkers</span><span class="p">)</span>
+            <span class="n">walker_speed</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">_walker_speed</span><span class="p">)</span>
+
+        <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">register_actors</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">get_actors</span><span class="p">(</span><span class="n">walkers</span><span class="p">))</span>
+        <span class="c1"># CarlaDataProvider.register_actors(self._world.get_actors(controllers))</span>
+
+        <span class="c1"># wait for a tick to ensure client receives the last transform of the walkers we have just created</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">tick</span><span class="p">()</span>
+
+        <span class="c1"># 5. initialize each controller and set target to walk to (list is [controller, actor, controller, actor ...])</span>
+        <span class="c1"># set how many pedestrians can cross the road</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">set_pedestrians_cross_factor</span><span class="p">(</span><span class="n">pedestrians_crossing</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">controller_id</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">controllers</span><span class="p">):</span>
+            <span class="n">controller</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">get_actor</span><span class="p">(</span><span class="n">controller_id</span><span class="p">)</span>
+            <span class="c1">#controller = CarlaDataProvider.get_actor_by_id(controller_id)</span>
+            <span class="n">controller</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+            <span class="n">controller</span><span class="o">.</span><span class="n">go_to_location</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">get_random_location_from_navigation</span><span class="p">())</span>
+            <span class="n">controller</span><span class="o">.</span><span class="n">set_max_speed</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">walker_speed</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_actor_map</span><span class="p">[</span><span class="s1">&#39;walker_controller&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">controller</span><span class="p">)</span>
+
+        <span class="c1"># example of how to use parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tm</span><span class="o">.</span><span class="n">global_percentage_speed_difference</span><span class="p">(</span><span class="mf">30.0</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">tick</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_prepare_observations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sensor_helper</span> <span class="o">=</span> <span class="n">SensorHelper</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_obs_cfg</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_camera_aug_cfg</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sensor_helper</span><span class="o">.</span><span class="n">setup_sensors</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hero_actor</span><span class="p">)</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sensor_helper</span><span class="o">.</span><span class="n">all_sensors_ready</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">tick</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">obs_item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obs_cfg</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">obs_item</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;bev&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_bev_wrapper</span> <span class="o">=</span> <span class="n">BeVWrapper</span><span class="p">(</span><span class="n">obs_item</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_bev_wrapper</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hero_actor</span><span class="p">)</span>
+
+        <span class="n">planner_cls</span> <span class="o">=</span> <span class="n">PLANNER_DICT</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_planner_cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;basic&#39;</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_planner</span> <span class="o">=</span> <span class="n">planner_cls</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_planner_cfg</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_collision_sensor</span> <span class="o">=</span> <span class="n">CollisionSensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_actor</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_col_threshold</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_traffic_light_helper</span> <span class="o">=</span> <span class="n">TrafficLightHelper</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_actor</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ticks</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ticks</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">run_step</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_state</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tick</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_timestamp</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collided</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_count_actors</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">vehicles</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">traffic_lights</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">speed_limits</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">walkers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">sensors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">others</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">actors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">get_actors</span><span class="p">()</span>
+        <span class="n">actors_with_transforms</span> <span class="o">=</span> <span class="p">[(</span><span class="n">actor</span><span class="p">,</span> <span class="n">actor</span><span class="o">.</span><span class="n">get_transform</span><span class="p">())</span> <span class="k">for</span> <span class="n">actor</span> <span class="ow">in</span> <span class="n">actors</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">actor_with_transform</span> <span class="ow">in</span> <span class="n">actors_with_transforms</span><span class="p">:</span>
+            <span class="n">actor</span> <span class="o">=</span> <span class="n">actor_with_transform</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s1">&#39;vehicle&#39;</span> <span class="ow">in</span> <span class="n">actor</span><span class="o">.</span><span class="n">type_id</span><span class="p">:</span>
+                <span class="n">vehicles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">actor_with_transform</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="s1">&#39;traffic_light&#39;</span> <span class="ow">in</span> <span class="n">actor</span><span class="o">.</span><span class="n">type_id</span><span class="p">:</span>
+                <span class="n">traffic_lights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">actor_with_transform</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="s1">&#39;speed_limit&#39;</span> <span class="ow">in</span> <span class="n">actor</span><span class="o">.</span><span class="n">type_id</span><span class="p">:</span>
+                <span class="n">speed_limits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">actor_with_transform</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="s1">&#39;walker.pedestrian&#39;</span> <span class="ow">in</span> <span class="n">actor</span><span class="o">.</span><span class="n">type_id</span><span class="p">:</span>
+                <span class="n">walkers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">actor_with_transform</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="s1">&#39;sensor&#39;</span> <span class="ow">in</span> <span class="n">actor</span><span class="o">.</span><span class="n">type_id</span><span class="p">:</span>
+                <span class="n">sensors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">actor_with_transform</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">others</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">actor_with_transform</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[SIMULATOR] vehicles:&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">veh</span> <span class="ow">in</span> <span class="n">vehicles</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">veh</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">veh</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">type_id</span><span class="p">,</span> <span class="n">veh</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">attributes</span><span class="p">[</span><span class="s1">&#39;role_name&#39;</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[SIMULATOR] walkers:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">walkers</span><span class="p">))</span>
+        <span class="c1">#print(&quot;[SIMULATOR] lights:&quot;, len(traffic_lights))</span>
+        <span class="c1">#print(&quot;[SIMULATOR] speed limits:&quot;, len(speed_limits))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[SIMULATOR] sensors:&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ss</span> <span class="ow">in</span> <span class="n">sensors</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">ss</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[SIMULATOR] others:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">others</span><span class="p">))</span>
+
+<div class="viewcode-block" id="CarlaSimulator.apply_planner"><a class="viewcode-back" href="../../../api_doc/simulators.html#core.simulators.CarlaSimulator.apply_planner">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">apply_planner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">end_idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Apply goal waypoint to planner in simulator. The start point is set to current hero vehicle waypoint.</span>
+
+<span class="sd">        :Arguments:</span>
+<span class="sd">            - end_idx (int): Index of end waypoint.</span>
+
+<span class="sd">        :Returns:</span>
+<span class="sd">            Dict: [description]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_location</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_end_location</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">get_spawn_point</span><span class="p">(</span><span class="n">end_idx</span><span class="p">)</span><span class="o">.</span><span class="n">location</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_planner</span><span class="o">.</span><span class="n">set_destination</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_start_location</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_end_location</span><span class="p">,</span> <span class="n">clean</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_total_distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_planner</span><span class="o">.</span><span class="n">distance_to_goal</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_end_timeout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_planner</span><span class="o">.</span><span class="n">timeout</span></div>
+
+<div class="viewcode-block" id="CarlaSimulator.get_state"><a class="viewcode-back" href="../../../api_doc/simulators.html#core.simulators.CarlaSimulator.get_state">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get running state from current world. It contains location, orientation, speed, acc,</span>
+<span class="sd">        and the state of surrounding road info such as traffic light and junction.</span>
+
+<span class="sd">        :Returns:</span>
+<span class="sd">            Dict: State dict.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">speed</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">get_speed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_actor</span><span class="p">)</span> <span class="o">*</span> <span class="mf">3.6</span>
+        <span class="n">transform</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">get_transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_actor</span><span class="p">)</span>
+        <span class="n">location</span> <span class="o">=</span> <span class="n">transform</span><span class="o">.</span><span class="n">location</span>
+        <span class="n">forward_vector</span> <span class="o">=</span> <span class="n">transform</span><span class="o">.</span><span class="n">get_forward_vector</span><span class="p">()</span>
+        <span class="n">acceleration</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">get_acceleration</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_actor</span><span class="p">)</span>
+        <span class="n">angular_velocity</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">get_angular_velocity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_actor</span><span class="p">)</span>
+        <span class="n">velocity</span> <span class="o">=</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">get_speed_vector</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hero_actor</span><span class="p">)</span>
+
+        <span class="n">light_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_traffic_light_helper</span><span class="o">.</span><span class="n">active_light_state</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">drive_waypoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map</span><span class="o">.</span><span class="n">get_waypoint</span><span class="p">(</span>
+            <span class="n">location</span><span class="p">,</span>
+            <span class="n">project_to_road</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">is_junction</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">drive_waypoint</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">is_junction</span> <span class="o">=</span> <span class="n">drive_waypoint</span><span class="o">.</span><span class="n">is_junction</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_off_road</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_off_road</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">lane_waypoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map</span><span class="o">.</span><span class="n">get_waypoint</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">project_to_road</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lane_type</span><span class="o">=</span><span class="n">carla</span><span class="o">.</span><span class="n">LaneType</span><span class="o">.</span><span class="n">Driving</span><span class="p">)</span>
+        <span class="n">lane_location</span> <span class="o">=</span> <span class="n">lane_waypoint</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">location</span>
+        <span class="n">lane_forward_vector</span> <span class="o">=</span> <span class="n">lane_waypoint</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">get_forward_vector</span><span class="p">()</span>
+
+        <span class="n">state</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;speed&#39;</span><span class="p">:</span> <span class="n">speed</span><span class="p">,</span>
+            <span class="s1">&#39;location&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">location</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">location</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">location</span><span class="o">.</span><span class="n">z</span><span class="p">]),</span>
+            <span class="s1">&#39;forward_vector&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">forward_vector</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">forward_vector</span><span class="o">.</span><span class="n">y</span><span class="p">]),</span>
+            <span class="s1">&#39;acceleration&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">acceleration</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">acceleration</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">acceleration</span><span class="o">.</span><span class="n">z</span><span class="p">]),</span>
+            <span class="s1">&#39;velocity&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">velocity</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">velocity</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">velocity</span><span class="o">.</span><span class="n">z</span><span class="p">]),</span>
+            <span class="s1">&#39;angular_velocity&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">angular_velocity</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">angular_velocity</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">angular_velocity</span><span class="o">.</span><span class="n">z</span><span class="p">]),</span>
+            <span class="s1">&#39;rotation&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">pitch</span><span class="p">,</span> <span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">yaw</span><span class="p">,</span> <span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">roll</span><span class="p">]),</span>
+            <span class="s1">&#39;is_junction&#39;</span><span class="p">:</span> <span class="n">is_junction</span><span class="p">,</span>
+            <span class="s1">&#39;lane_location&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">lane_location</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">lane_location</span><span class="o">.</span><span class="n">y</span><span class="p">]),</span>
+            <span class="s1">&#39;lane_forward&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">lane_forward_vector</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">lane_forward_vector</span><span class="o">.</span><span class="n">y</span><span class="p">]),</span>
+            <span class="s1">&#39;tl_state&#39;</span><span class="p">:</span> <span class="n">light_state</span><span class="p">,</span>
+            <span class="s1">&#39;tl_dis&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_traffic_light_helper</span><span class="o">.</span><span class="n">active_light_dis</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">lane_waypoint</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">state</span><span class="p">[</span><span class="s1">&#39;lane_forward&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">lane_forward_vector</span> <span class="o">=</span> <span class="n">lane_waypoint</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">get_forward_vector</span><span class="p">()</span>
+            <span class="n">state</span><span class="p">[</span><span class="s1">&#39;lane_forward&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">lane_forward_vector</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">lane_forward_vector</span><span class="o">.</span><span class="n">y</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">state</span></div>
+
+<div class="viewcode-block" id="CarlaSimulator.get_sensor_data"><a class="viewcode-back" href="../../../api_doc/simulators.html#core.simulators.CarlaSimulator.get_sensor_data">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_sensor_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get all sensor data and bird-eye view data if exist in current world. Bird-eye view will be</span>
+<span class="sd">        converted to an multi-channel image.</span>
+
+<span class="sd">        :Returns:</span>
+<span class="sd">            Dict: Sensor and Bev data dict.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sensor_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sensor_helper</span><span class="o">.</span><span class="n">get_sensors_data</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">obs_item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obs_cfg</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">obs_item</span><span class="o">.</span><span class="n">type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">OBS_TYPE_LIST</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;observation type </span><span class="si">%s</span><span class="s2"> not implemented&quot;</span> <span class="o">%</span> <span class="n">obs_item</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">obs_item</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;bev&#39;</span><span class="p">:</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="n">obs_item</span><span class="o">.</span><span class="n">name</span>
+                <span class="n">sensor_data</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">key</span><span class="p">:</span> <span class="n">get_birdview</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bev_wrapper</span><span class="o">.</span><span class="n">get_bev_data</span><span class="p">())})</span>
+
+        <span class="k">return</span> <span class="n">sensor_data</span></div>
+
+<div class="viewcode-block" id="CarlaSimulator.get_information"><a class="viewcode-back" href="../../../api_doc/simulators.html#core.simulators.CarlaSimulator.get_information">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_information</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get running information including time and ran light counts in current world.</span>
+
+<span class="sd">        :Returns:</span>
+<span class="sd">            Dict: Information dict.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">information</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;tick&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tick</span><span class="p">,</span>
+            <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timestamp</span><span class="p">,</span>
+            <span class="s1">&#39;total_lights&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_traffic_light_helper</span><span class="o">.</span><span class="n">total_lights</span><span class="p">,</span>
+            <span class="s1">&#39;total_lights_ran&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_traffic_light_helper</span><span class="o">.</span><span class="n">total_lights_ran</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">information</span></div>
+
+<div class="viewcode-block" id="CarlaSimulator.get_navigation"><a class="viewcode-back" href="../../../api_doc/simulators.html#core.simulators.CarlaSimulator.get_navigation">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_navigation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get navigation info in current world. Most of the contains come from planner.</span>
+
+<span class="sd">        :Returns:</span>
+<span class="sd">            Dict: Navigation dict.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_planner</span><span class="o">.</span><span class="n">node_road_option</span>
+        <span class="n">node_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_planner</span><span class="o">.</span><span class="n">node_waypoint</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">location</span>
+        <span class="n">node_forward</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_planner</span><span class="o">.</span><span class="n">node_waypoint</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">get_forward_vector</span><span class="p">()</span>
+        <span class="n">target_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_planner</span><span class="o">.</span><span class="n">target_waypoint</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">location</span>
+        <span class="n">target_forward</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_planner</span><span class="o">.</span><span class="n">target_waypoint</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">get_forward_vector</span><span class="p">()</span>
+        <span class="n">waypoint_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_planner</span><span class="o">.</span><span class="n">get_waypoints_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_waypoint_num</span><span class="p">)</span>
+        <span class="n">direction_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_planner</span><span class="o">.</span><span class="n">get_direction_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_waypoint_num</span><span class="p">)</span>
+        <span class="n">agent_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_planner</span><span class="o">.</span><span class="n">agent_state</span>
+        <span class="n">speed_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_planner</span><span class="o">.</span><span class="n">speed_limit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_end_distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_planner</span><span class="o">.</span><span class="n">distance_to_goal</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_end_timeout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_planner</span><span class="o">.</span><span class="n">timeout</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bev_wrapper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_bev_wrapper</span><span class="o">.</span><span class="n">update_waypoints</span><span class="p">(</span><span class="n">waypoint_list</span><span class="p">)</span>
+
+        <span class="n">waypoint_location_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">wp</span> <span class="ow">in</span> <span class="n">waypoint_list</span><span class="p">:</span>
+            <span class="n">wp_loc</span> <span class="o">=</span> <span class="n">wp</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">location</span>
+            <span class="n">wp_vec</span> <span class="o">=</span> <span class="n">wp</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">get_forward_vector</span><span class="p">()</span>
+            <span class="n">waypoint_location_list</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">wp_loc</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">wp_loc</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">wp_vec</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">wp_vec</span><span class="o">.</span><span class="n">y</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_off_road</span><span class="p">:</span>
+            <span class="n">current_waypoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_planner</span><span class="o">.</span><span class="n">current_waypoint</span>
+            <span class="n">node_waypoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_planner</span><span class="o">.</span><span class="n">node_waypoint</span>
+
+            <span class="c1"># Lanes and roads are too chaotic at junctions</span>
+            <span class="k">if</span> <span class="n">current_waypoint</span><span class="o">.</span><span class="n">is_junction</span> <span class="ow">or</span> <span class="n">node_waypoint</span><span class="o">.</span><span class="n">is_junction</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_wrong_direction</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">node_yaw</span> <span class="o">=</span> <span class="n">node_waypoint</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">yaw</span> <span class="o">%</span> <span class="mi">360</span>
+                <span class="n">cur_yaw</span> <span class="o">=</span> <span class="n">current_waypoint</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">yaw</span> <span class="o">%</span> <span class="mi">360</span>
+
+                <span class="n">wp_angle</span> <span class="o">=</span> <span class="p">(</span><span class="n">node_yaw</span> <span class="o">-</span> <span class="n">cur_yaw</span><span class="p">)</span> <span class="o">%</span> <span class="mi">360</span>
+
+                <span class="k">if</span> <span class="mi">150</span> <span class="o">&lt;=</span> <span class="n">wp_angle</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="mi">360</span> <span class="o">-</span> <span class="mi">150</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_wrong_direction</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Changing to a lane with the same direction</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_wrong_direction</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="n">navigation</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;agent_state&#39;</span><span class="p">:</span> <span class="n">agent_state</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="s1">&#39;command&#39;</span><span class="p">:</span> <span class="n">command</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="s1">&#39;node&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">node_location</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">node_location</span><span class="o">.</span><span class="n">y</span><span class="p">]),</span>
+            <span class="s1">&#39;node_forward&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">node_forward</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">node_forward</span><span class="o">.</span><span class="n">y</span><span class="p">]),</span>
+            <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">target_location</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">target_location</span><span class="o">.</span><span class="n">y</span><span class="p">]),</span>
+            <span class="s1">&#39;target_forward&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">target_forward</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">target_forward</span><span class="o">.</span><span class="n">y</span><span class="p">]),</span>
+            <span class="s1">&#39;waypoint_list&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">waypoint_location_list</span><span class="p">),</span>
+            <span class="s1">&#39;speed_limit&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">speed_limit</span><span class="p">),</span>
+            <span class="s1">&#39;direction_list&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">direction_list</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">navigation</span></div>
+
+<div class="viewcode-block" id="CarlaSimulator.run_step"><a class="viewcode-back" href="../../../api_doc/simulators.html#core.simulators.CarlaSimulator.run_step">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">run_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run one step simulation.</span>
+<span class="sd">        This will tick Carla world and update information for all sensors and measurement.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">tick</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tick</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">world_snapshot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">get_snapshot</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_timestamp</span> <span class="o">=</span> <span class="n">world_snapshot</span><span class="o">.</span><span class="n">timestamp</span><span class="o">.</span><span class="n">elapsed_seconds</span>
+
+        <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">on_carla_tick</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_planner</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_planner</span><span class="o">.</span><span class="n">run_step</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_collided</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collision_sensor</span><span class="o">.</span><span class="n">collided</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_traffic_light_helper</span><span class="o">.</span><span class="n">tick</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ran_light</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_traffic_light_helper</span><span class="o">.</span><span class="n">ran_light</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bev_wrapper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">_hero_vehicle_route</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_bev_wrapper</span><span class="o">.</span><span class="n">tick</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="CarlaSimulator.apply_control"><a class="viewcode-back" href="../../../api_doc/simulators.html#core.simulators.CarlaSimulator.apply_control">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">apply_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">control</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Apply control signal for hero player in simulator.</span>
+<span class="sd">        This will send message to the client and the control takes effect in next tick</span>
+
+<span class="sd">        :Arguments:</span>
+<span class="sd">            - control (dict, optional): Control signal dict. Default to None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">control</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">control_signal</span> <span class="o">=</span> <span class="n">control_to_signal</span><span class="p">(</span><span class="n">control</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hero_actor</span><span class="o">.</span><span class="n">apply_control</span><span class="p">(</span><span class="n">control_signal</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CarlaSimulator.clean_up"><a class="viewcode-back" href="../../../api_doc/simulators.html#core.simulators.CarlaSimulator.clean_up">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">clean_up</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Destroy all actors and sensors in current world. Clear all messages saved in simulator and data provider.</span>
+<span class="sd">        This will NOT destroy the Carla client, so simulator can use same carla client to start next episode.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">actor</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_actor_map</span><span class="p">[</span><span class="s1">&#39;walker_controller&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">actor</span><span class="o">.</span><span class="n">is_alive</span><span class="p">:</span>
+                <span class="n">actor</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+                <span class="n">actor</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_actor_map</span><span class="p">[</span><span class="s1">&#39;walker_controller&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_actor_map</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sensor_helper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sensor_helper</span><span class="o">.</span><span class="n">clean_up</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bev_wrapper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_bev_wrapper</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collision_sensor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_collision_sensor</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_planner</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_planner</span><span class="o">.</span><span class="n">clean_up</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tick</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_timestamp</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_collided</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ran_light</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_off_road</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wrong_direction</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_end_distance</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_end_timeout</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+
+        <span class="n">CarlaDataProvider</span><span class="o">.</span><span class="n">clean_up</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_debug</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;after&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_count_actors</span><span class="p">()</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">town_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_town_name</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">hero_player</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">carla</span><span class="o">.</span><span class="n">Actor</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hero_actor</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">collided</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collided</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ran_light</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ran_light</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">off_road</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_off_road</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">wrong_direction</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wrong_direction</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">end_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_end_distance</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">end_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_end_timeout</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">total_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_total_distance</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, OpenDILab
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

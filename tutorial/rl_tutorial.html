@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -23,9 +23,6 @@
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
     
@@ -211,8 +208,8 @@ current speed as input, and directly outputs control signals.</p>
 All the code can be found in <code class="docutils literal notranslate"><span class="pre">demo/simple_rl</span></code>, including training, evaluating and testing.</p>
 <p>Here we show how to run the DQN demo. It follows the standard deployment of a DI-engine RL entry.
 Other RL policies run in same way.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> demo/simple_rl
-python simple_rl_train.py -p dqn
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>demo/simple_rl
+python<span class="w"> </span>simple_rl_train.py<span class="w"> </span>-p<span class="w"> </span>dqn
 </pre></div>
 </div>
 <p>The config part defines the env and policy settings. Notes that you need to change the Carla server
@@ -242,7 +239,7 @@ model.</p>
 </figure>
 <p>In the process of training, you can use the tensorboard as a monitor,
 the default log path is in your working directory.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tensorboard --logdir<span class="o">=</span><span class="s1">&#39;./log&#39;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tensorboard<span class="w"> </span>--logdir<span class="o">=</span><span class="s1">&#39;./log&#39;</span>
 </pre></div>
 </div>
 <p>After running for about 24 hours, you will get:</p>
@@ -253,7 +250,7 @@ the default log path is in your working directory.</p>
 <section id="evaluate-and-test-the-trained-model">
 <h3>Evaluate and test the trained model<a class="headerlink" href="#evaluate-and-test-the-trained-model" title="Permalink to this heading">¶</a></h3>
 <p>After training, you can evaluate the trained model on a benchmark suite. Simply run the following code.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python simple_rl_eval.py -p dqn -c PATH_TO_YOUR_CKPT
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>simple_rl_eval.py<span class="w"> </span>-p<span class="w"> </span>dqn<span class="w"> </span>-c<span class="w"> </span>PATH_TO_YOUR_CKPT
 </pre></div>
 </div>
 <p>You may need to change Carla server numbers and settints, change the suite you want to evaluate, and add
@@ -285,7 +282,7 @@ your pre-trained weights in policy’s config.</p>
 <p>The default DQN policy can have nice probability to complete navigation in <cite>FullTown02-v2</cite>, with traffic lights
 ignored.</p>
 <p>Also, you can test the policy in a town route with a visualized screen. Simply run the following code.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python simple_rl_test.py -p dqn -c PATH_TO_YOUR_CKPT
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>simple_rl_test.py<span class="w"> </span>-p<span class="w"> </span>dqn<span class="w"> </span>-c<span class="w"> </span>PATH_TO_YOUR_CKPT
 </pre></div>
 </div>
 <p>You may need to change Carla server settints, switch on/off visualization or save a replay gif/video
@@ -324,8 +321,8 @@ and add your pre-trained weights in policy’s config.</p>
 <h2>MetaDrive RL Tutorial<a class="headerlink" href="#metadrive-rl-tutorial" title="Permalink to this heading">¶</a></h2>
 <p>DI-drive provide a simple entry that can run MetaDrive default environments
 with DI-engine policies. The training entry can be found in <cite>demo/metadrive</cite></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> demo/metadrive
-python basic_env_train.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>demo/metadrive
+python<span class="w"> </span>basic_env_train.py
 </pre></div>
 </div>
 <p>MetaDrive has standard <cite>gym</cite> environments. Adding an <code class="docutils literal notranslate"><span class="pre">EnvWrapper</span></code> together with

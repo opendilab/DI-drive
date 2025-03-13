@@ -1,0 +1,496 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>core.data.carla_benchmark_collector &mdash; DI-drive 0.3.4 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> DI-drive
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/index.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/index.html">Tutorial</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../features/index.html">Features</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../model_zoo/index.html">Model Zoo</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_doc/index.html">API Doc</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../faq/index.html">FAQ</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DI-drive</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>core.data.carla_benchmark_collector</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for core.data.carla_benchmark_collector</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">deque</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">product</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.base_collector</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseCollector</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">core.data.benchmark</span><span class="w"> </span><span class="kn">import</span> <span class="n">ALL_SUITES</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">core.data.benchmark.benchmark_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_suites_list</span><span class="p">,</span> <span class="n">read_pose_txt</span><span class="p">,</span> <span class="n">get_benchmark_dir</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ding.envs</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseEnvManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ding.torch_utils.data_helper</span><span class="w"> </span><span class="kn">import</span> <span class="n">to_ndarray</span>
+
+
+<div class="viewcode-block" id="CarlaBenchmarkCollector"><a class="viewcode-back" href="../../../api_doc/data.html#core.data.carla_benchmark_collector.CarlaBenchmarkCollector">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">CarlaBenchmarkCollector</span><span class="p">(</span><span class="n">BaseCollector</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Collector to collect Carla benchmark data with envs. It uses several environments in ``EnvManager`` to</span>
+<span class="sd">    collect data. It will automatically get params to reset environments. For every suite provided by user,</span>
+<span class="sd">    collector will find all available reset params from benchmark files and store them in a list. When</span>
+<span class="sd">    collecting data, the collector will collect each suite in average and store the index of each suite,</span>
+<span class="sd">    to make sure each reset param is collected once and only once. The collected data are stored in a</span>
+<span class="sd">    trajectory list, with observations, actions and reset param of the episode.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        Env manager must run WITHOUT auto reset.</span>
+
+<span class="sd">    :Arguments:</span>
+<span class="sd">        - cfg (Dict): Config dict.</span>
+<span class="sd">        - env (BaseEnvManager): Env manager used to collect data.</span>
+<span class="sd">        - policy (Any): Policy used to collect data. Must have ``forward`` method.</span>
+
+<span class="sd">    :Interfaces: reset, collect, close</span>
+
+<span class="sd">    :Properties:</span>
+<span class="sd">        - env (BaseEnvManager): Env manager with several environments used to sample data.</span>
+<span class="sd">        - policy (Any): Policy instance to interact with envs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">benchmark_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="c1"># suite name, can be str or list</span>
+        <span class="n">suite</span><span class="o">=</span><span class="s1">&#39;FullTown01-v0&#39;</span><span class="p">,</span>
+        <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="c1"># whether make seed of each env different</span>
+        <span class="n">dynamic_seed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="c1"># manually set weathers rather than read from suite</span>
+        <span class="n">weathers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="c1"># whether apply hard failure judgement in suite</span>
+        <span class="c1"># by default in benchmark, collided will not cause failure</span>
+        <span class="n">nocrash</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="c1"># whether shuffle env setting in suite</span>
+        <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">cfg</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+            <span class="n">env</span><span class="p">:</span> <span class="n">BaseEnvManager</span><span class="p">,</span>
+            <span class="n">policy</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">policy</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_benchmark_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">benchmark_dir</span>
+        <span class="n">suite</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">suite</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_seed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">seed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dynamic_seed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">dynamic_seed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_weathers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">weathers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_shuffle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">shuffle</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_benchmark_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_benchmark_dir</span> <span class="o">=</span> <span class="n">get_benchmark_dir</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_list</span> <span class="o">=</span> <span class="n">get_suites_list</span><span class="p">(</span><span class="n">suite</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;[COLLECTOR] Find suites:&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_suite_num</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_close_flag</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_reset_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_index_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_traj_cache</span> <span class="o">=</span> <span class="p">{</span><span class="n">env_id</span><span class="p">:</span> <span class="n">deque</span><span class="p">()</span> <span class="k">for</span> <span class="n">env_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_env_num</span><span class="p">)}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_obs_cache</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_env_num</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_actions_cache</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_env_num</span><span class="p">)]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_generate_suite_reset_params</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">env</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseEnvManager</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env_manager</span>
+
+    <span class="nd">@env</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">env</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_env_manager</span><span class="p">:</span> <span class="n">BaseEnvManager</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="n">_env_manager</span><span class="o">.</span><span class="n">_auto_reset</span><span class="p">,</span> <span class="s2">&quot;auto reset for env manager should be closed!&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_end_flag</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_env_manager</span> <span class="o">=</span> <span class="n">_env_manager</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_env_manager</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_env_num</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env_manager</span><span class="o">.</span><span class="n">env_num</span>
+
+<div class="viewcode-block" id="CarlaBenchmarkCollector.close"><a class="viewcode-back" href="../../../api_doc/data.html#core.data.carla_benchmark_collector.CarlaBenchmarkCollector.close">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Close collector and env manager if not closed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_end_flag</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_reset_params</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_index_dict</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_env_manager</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_end_flag</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_suite_reset_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">suite</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_list</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_reset_params</span><span class="p">[</span><span class="n">suite</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_index_dict</span><span class="p">[</span><span class="n">suite</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="n">ALL_SUITES</span><span class="p">[</span><span class="n">suite</span><span class="p">]</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+            <span class="n">reset_params</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">poses_txt</span> <span class="o">=</span> <span class="n">reset_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;poses_txt&#39;</span><span class="p">)</span>
+            <span class="n">weathers</span> <span class="o">=</span> <span class="n">reset_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;weathers&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_weathers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">weathers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_weathers</span>
+            <span class="n">pose_pairs</span> <span class="o">=</span> <span class="n">read_pose_txt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_benchmark_dir</span><span class="p">,</span> <span class="n">poses_txt</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">weather</span><span class="p">,</span> <span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="n">weathers</span><span class="p">,</span> <span class="n">pose_pairs</span><span class="p">):</span>
+                <span class="n">param</span> <span class="o">=</span> <span class="n">reset_params</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="n">param</span><span class="p">[</span><span class="s1">&#39;start&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">start</span>
+                <span class="n">param</span><span class="p">[</span><span class="s1">&#39;end&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">end</span>
+                <span class="n">param</span><span class="p">[</span><span class="s1">&#39;weather&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">weather</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cfg</span><span class="o">.</span><span class="n">nocrash</span><span class="p">:</span>
+                    <span class="n">param</span><span class="p">[</span><span class="s1">&#39;col_is_failure&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_reset_params</span><span class="p">[</span><span class="n">suite</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shuffle</span><span class="p">:</span>
+                <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_reset_params</span><span class="p">[</span><span class="n">suite</span><span class="p">])</span>
+
+<div class="viewcode-block" id="CarlaBenchmarkCollector.reset"><a class="viewcode-back" href="../../../api_doc/data.html#core.data.carla_benchmark_collector.CarlaBenchmarkCollector.reset">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suite</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reset collector and policies. Clear data cache storing data trajectories. If &#39;suite&#39; is provided</span>
+<span class="sd">        in arguments, the collector will change its collected suites and generate reset params again.</span>
+
+<span class="sd">        :Arguments:</span>
+<span class="sd">            - suite (Union[List, str], optional): Collected suites after reset. Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">env_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_env_num</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_traj_cache</span><span class="p">[</span><span class="n">env_id</span><span class="p">]</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_policy</span><span class="o">.</span><span class="n">reset</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_env_num</span><span class="p">)])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_end_flag</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="n">suite</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_reset_params</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_index_dict</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_list</span> <span class="o">=</span> <span class="n">get_suites_list</span><span class="p">(</span><span class="n">suite</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;[COLLECTOR] Find suites:&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_list</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_suite_num</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_list</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_generate_suite_reset_params</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="CarlaBenchmarkCollector.collect"><a class="viewcode-back" href="../../../api_doc/data.html#core.data.carla_benchmark_collector.CarlaBenchmarkCollector.collect">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">collect</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">n_episode</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+            <span class="n">policy_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Collect data from policy and env manager. It will collect each benchmark suite in average</span>
+<span class="sd">        according to &#39;n_episode&#39;.</span>
+
+<span class="sd">        :Arguments:</span>
+<span class="sd">            - n_episode (int): Num of episodes to collect.</span>
+<span class="sd">            - policy_kwargs (Dict, optional): Additional arguments in policy forward. Defaults to None.</span>
+
+<span class="sd">        :Returns:</span>
+<span class="sd">            List: List of collected data. Each elem stores an episode trajectory.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">policy_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">policy_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_list</span>
+
+        <span class="k">if</span> <span class="n">n_episode</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env_num</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[WARNING] Number of envs larger than number of episodes. May waste resource&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">env_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_env_num</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_traj_cache</span><span class="p">[</span><span class="n">env_id</span><span class="p">]</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_policy</span><span class="o">.</span><span class="n">reset</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_env_num</span><span class="p">)])</span>
+
+        <span class="n">running_env_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">running_envs</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">prepare_enough</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">prepare_enough</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">suite</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_list</span><span class="p">:</span>
+                <span class="n">suite_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_index_dict</span><span class="p">[</span><span class="n">suite</span><span class="p">]</span>
+                <span class="n">suite_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_reset_params</span><span class="p">[</span><span class="n">suite</span><span class="p">]</span>
+                <span class="n">reset_param</span> <span class="o">=</span> <span class="n">suite_params</span><span class="p">[</span><span class="n">suite_index</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">running_envs</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env_num</span> <span class="ow">and</span> <span class="n">running_envs</span> <span class="o">&lt;</span> <span class="n">n_episode</span><span class="p">:</span>
+                    <span class="n">running_env_params</span><span class="p">[</span><span class="n">running_envs</span><span class="p">]</span> <span class="o">=</span> <span class="n">reset_param</span>
+                    <span class="n">running_envs</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_index_dict</span><span class="p">[</span><span class="n">suite</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_index_dict</span><span class="p">[</span><span class="n">suite</span><span class="p">]</span> <span class="o">%=</span> <span class="nb">len</span><span class="p">(</span><span class="n">suite_params</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">prepare_enough</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">break</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># dynamic seed: different seed for each env</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dynamic_seed</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_env_manager</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_seed</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">env_id</span> <span class="ow">in</span> <span class="n">running_env_params</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_env_manager</span><span class="o">.</span><span class="n">seed</span><span class="p">({</span><span class="n">env_id</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_seed</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_env_manager</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">running_env_params</span><span class="p">)</span>
+
+        <span class="n">return_data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">env_fail_times</span> <span class="o">=</span> <span class="p">{</span><span class="n">env_id</span><span class="p">:</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">env_id</span> <span class="ow">in</span> <span class="n">running_env_params</span><span class="p">}</span>
+        <span class="n">collected_episodes</span> <span class="o">=</span> <span class="n">running_envs</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">collected_samples</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timer</span><span class="p">:</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">obs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env_manager</span><span class="o">.</span><span class="n">ready_obs</span>
+                <span class="n">env_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+                <span class="k">for</span> <span class="n">env_id</span> <span class="ow">in</span> <span class="n">env_ids</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">env_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">running_env_params</span><span class="p">:</span>
+                        <span class="n">obs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">env_id</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">break</span>
+                <span class="n">policy_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_policy</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="o">**</span><span class="n">policy_kwargs</span><span class="p">)</span>
+                <span class="n">actions</span> <span class="o">=</span> <span class="p">{</span><span class="n">env_id</span><span class="p">:</span> <span class="n">output</span><span class="p">[</span><span class="s1">&#39;action&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">env_id</span><span class="p">,</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">policy_output</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+                <span class="n">actions</span> <span class="o">=</span> <span class="n">to_ndarray</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">env_id</span> <span class="ow">in</span> <span class="n">actions</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_obs_cache</span><span class="p">[</span><span class="n">env_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">obs</span><span class="p">[</span><span class="n">env_id</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_actions_cache</span><span class="p">[</span><span class="n">env_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">actions</span><span class="p">[</span><span class="n">env_id</span><span class="p">]</span>
+                <span class="n">timesteps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env_manager</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">env_id</span><span class="p">,</span> <span class="n">timestep</span> <span class="ow">in</span> <span class="n">timesteps</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">timestep</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;abnormal&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+                        <span class="c1"># If there is an abnormal timestep, reset all the related variables(including this env).</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_traj_cache</span><span class="p">[</span><span class="n">env_id</span><span class="p">]</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_policy</span><span class="o">.</span><span class="n">reset</span><span class="p">([</span><span class="n">timestep</span><span class="p">])</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_env_manager</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">reset_param</span><span class="o">=</span><span class="p">{</span><span class="n">env_id</span><span class="p">:</span> <span class="n">running_env_params</span><span class="p">[</span><span class="n">env_id</span><span class="p">]})</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;[COLLECTOR] env_id abnormal step&#39;</span><span class="p">,</span> <span class="n">env_id</span><span class="p">,</span> <span class="n">timestep</span><span class="o">.</span><span class="n">info</span><span class="p">)</span>
+                        <span class="k">continue</span>
+                    <span class="n">transition</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_policy</span><span class="o">.</span><span class="n">process_transition</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_obs_cache</span><span class="p">[</span><span class="n">env_id</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_actions_cache</span><span class="p">[</span><span class="n">env_id</span><span class="p">],</span> <span class="n">timestep</span>
+                    <span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_traj_cache</span><span class="p">[</span><span class="n">env_id</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">transition</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">timestep</span><span class="o">.</span><span class="n">done</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">timestep</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;success&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_traj_cache</span><span class="p">[</span><span class="n">env_id</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">50</span><span class="p">:</span>
+                            <span class="n">env_fail_times</span><span class="p">[</span><span class="n">env_id</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                            <span class="n">env_param</span> <span class="o">=</span> <span class="n">running_env_params</span><span class="p">[</span><span class="n">env_id</span><span class="p">]</span>
+                            <span class="n">episode_data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;env_param&#39;</span><span class="p">:</span> <span class="n">env_param</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_traj_cache</span><span class="p">[</span><span class="n">env_id</span><span class="p">])}</span>
+                            <span class="n">return_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">episode_data</span><span class="p">)</span>
+                            <span class="n">collected_samples</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_traj_cache</span><span class="p">[</span><span class="n">env_id</span><span class="p">])</span>
+                            <span class="n">collected_episodes</span> <span class="o">+=</span> <span class="mi">1</span>
+                            <span class="k">if</span> <span class="n">collected_episodes</span> <span class="o">&lt;</span> <span class="n">n_episode</span><span class="p">:</span>
+                                <span class="n">suite_index</span> <span class="o">=</span> <span class="n">collected_episodes</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_suite_num</span>
+                                <span class="n">next_suite</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_list</span><span class="p">[</span><span class="n">suite_index</span><span class="p">]</span>
+                                <span class="n">reset_param_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_index_dict</span><span class="p">[</span><span class="n">next_suite</span><span class="p">]</span>
+                                <span class="n">reset_param</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_reset_params</span><span class="p">[</span><span class="n">next_suite</span><span class="p">][</span><span class="n">reset_param_index</span><span class="p">]</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_index_dict</span><span class="p">[</span><span class="n">next_suite</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_index_dict</span><span class="p">[</span><span class="n">next_suite</span><span class="p">]</span> <span class="o">%=</span> <span class="nb">len</span><span class="p">(</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_reset_params</span><span class="p">[</span><span class="n">next_suite</span><span class="p">]</span>
+                                <span class="p">)</span>
+                                <span class="n">running_env_params</span><span class="p">[</span><span class="n">env_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">reset_param</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_env_manager</span><span class="o">.</span><span class="n">reset</span><span class="p">({</span><span class="n">env_id</span><span class="p">:</span> <span class="n">reset_param</span><span class="p">})</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">env_fail_times</span><span class="p">[</span><span class="n">env_id</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                            <span class="n">info</span> <span class="o">=</span> <span class="n">timestep</span><span class="o">.</span><span class="n">info</span>
+                            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">info</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                                <span class="k">if</span> <span class="s1">&#39;reward&#39;</span> <span class="ow">in</span> <span class="n">k</span><span class="p">:</span>
+                                    <span class="n">info</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]:</span>
+                                    <span class="n">info</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;[COLLECTOR] env_id </span><span class="si">{}</span><span class="s1"> not success&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">env_id</span><span class="p">),</span> <span class="n">info</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">env_fail_times</span><span class="p">[</span><span class="n">env_id</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">:</span>
+                                <span class="c1"># not reach max fail times, continue reset param</span>
+                                <span class="n">reset_param</span> <span class="o">=</span> <span class="n">running_env_params</span><span class="p">[</span><span class="n">env_id</span><span class="p">]</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="c1"># reach max fail times, skip to next reset param</span>
+                                <span class="n">env_fail_times</span><span class="p">[</span><span class="n">env_id</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                                <span class="n">suite_index</span> <span class="o">=</span> <span class="n">collected_episodes</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_suite_num</span>
+                                <span class="n">next_suite</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_list</span><span class="p">[</span><span class="n">suite_index</span><span class="p">]</span>
+                                <span class="n">reset_param_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_index_dict</span><span class="p">[</span><span class="n">next_suite</span><span class="p">]</span>
+                                <span class="n">reset_param</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_reset_params</span><span class="p">[</span><span class="n">next_suite</span><span class="p">][</span><span class="n">reset_param_index</span><span class="p">]</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_index_dict</span><span class="p">[</span><span class="n">next_suite</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_index_dict</span><span class="p">[</span><span class="n">next_suite</span><span class="p">]</span> <span class="o">%=</span> <span class="nb">len</span><span class="p">(</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">_collect_suite_reset_params</span><span class="p">[</span><span class="n">next_suite</span><span class="p">]</span>
+                                <span class="p">)</span>
+                            <span class="n">running_env_params</span><span class="p">[</span><span class="n">env_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">reset_param</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_env_manager</span><span class="o">.</span><span class="n">reset</span><span class="p">({</span><span class="n">env_id</span><span class="p">:</span> <span class="n">reset_param</span><span class="p">})</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_traj_cache</span><span class="p">[</span><span class="n">env_id</span><span class="p">]</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_policy</span><span class="o">.</span><span class="n">reset</span><span class="p">([</span><span class="n">env_id</span><span class="p">])</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env_manager</span><span class="o">.</span><span class="n">done</span><span class="p">:</span>
+                    <span class="k">break</span>
+
+        <span class="n">duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timer</span><span class="o">.</span><span class="n">value</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[COLLECTOR] Finish collection, time cost: </span><span class="si">{:.2f}</span><span class="s2">s, total frames: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="n">collected_samples</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">return_data</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, OpenDILab
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

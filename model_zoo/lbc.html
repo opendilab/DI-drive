@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -23,9 +23,6 @@
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
     
@@ -245,7 +242,7 @@ dataset path, collection suites, planner configs and noise args etc.</p>
 </pre></div>
 </div>
 <p>You may need to change the Carla server numbers and ports, and dataset path to yours.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python collect_data.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>collect_data.py
 </pre></div>
 </div>
 </section>
@@ -286,8 +283,8 @@ to yours.</p>
 <p>Pretrain weights:
 <a class="reference external" href="http://opendilab.org/download/DI-drive/lbc/birdview/model-256.th">bev</a>,
 <a class="reference external" href="http://opendilab.org/download/DI-drive/lbc/rgb/model-20.th">image</a></p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python lbc_bev_eval.py
-python lbc_image_eval.py
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>lbc_bev_eval.py
+python<span class="w"> </span>lbc_image_eval.py
 </pre></div>
 </div>
 <p>Then you will get the performance table.</p>
@@ -297,8 +294,8 @@ python lbc_image_eval.py
 <p>DI-drive provides a simple entry for testing LBC models in a benchmark or Casezoo
 environment and visualize the running. You may need to change the Carla server settings
 to yours.</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python lbc_bev_test.py
-python lbc_image_test.py
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>lbc_bev_test.py
+python<span class="w"> </span>lbc_image_test.py
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@inproceedings</span><span class="p">{</span><span class="n">chen2019lbc</span><span class="p">,</span>

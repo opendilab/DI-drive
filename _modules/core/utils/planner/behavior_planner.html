@@ -22,9 +22,6 @@
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
         <script src="../../../../_static/sphinx_highlight.js"></script>
     
@@ -166,19 +163,19 @@
            <div itemprop="articleBody">
             
   <h1>Source code for core.utils.planner.behavior_planner</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
-<span class="kn">import</span> <span class="nn">carla</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">carla</span>
 
-<span class="kn">from</span> <span class="nn">.basic_planner</span> <span class="kn">import</span> <span class="n">AgentState</span><span class="p">,</span> <span class="n">BasicPlanner</span><span class="p">,</span> <span class="n">RoadOption</span>
-<span class="kn">from</span> <span class="nn">core.utils.simulator_utils.carla_agents.navigation.types_behavior</span> <span class="kn">import</span> <span class="n">Cautious</span><span class="p">,</span> <span class="n">Aggressive</span><span class="p">,</span> <span class="n">Normal</span>
-<span class="kn">from</span> <span class="nn">core.simulators.carla_data_provider</span> <span class="kn">import</span> <span class="n">CarlaDataProvider</span>
-<span class="kn">from</span> <span class="nn">core.utils.simulator_utils.carla_agents.tools.misc</span> <span class="kn">import</span> <span class="n">is_within_distance</span><span class="p">,</span> <span class="n">compute_distance</span><span class="p">,</span> <span class="n">positive</span>
-<span class="kn">from</span> <span class="nn">core.utils.planner.planner_utils</span> <span class="kn">import</span> <span class="n">get_next_until_junction</span><span class="p">,</span> <span class="n">generate_change_lane_route</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.basic_planner</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentState</span><span class="p">,</span> <span class="n">BasicPlanner</span><span class="p">,</span> <span class="n">RoadOption</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">core.utils.simulator_utils.carla_agents.navigation.types_behavior</span><span class="w"> </span><span class="kn">import</span> <span class="n">Cautious</span><span class="p">,</span> <span class="n">Aggressive</span><span class="p">,</span> <span class="n">Normal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">core.simulators.carla_data_provider</span><span class="w"> </span><span class="kn">import</span> <span class="n">CarlaDataProvider</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">core.utils.simulator_utils.carla_agents.tools.misc</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_within_distance</span><span class="p">,</span> <span class="n">compute_distance</span><span class="p">,</span> <span class="n">positive</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">core.utils.planner.planner_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_next_until_junction</span><span class="p">,</span> <span class="n">generate_change_lane_route</span>
 
 
-<div class="viewcode-block" id="BehaviorPlanner"><a class="viewcode-back" href="../../../../api_doc/utils.html#core.utils.planner.behavior_planner.BehaviorPlanner">[docs]</a><span class="k">class</span> <span class="nc">BehaviorPlanner</span><span class="p">(</span><span class="n">BasicPlanner</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="BehaviorPlanner"><a class="viewcode-back" href="../../../../api_doc/utils.html#core.utils.planner.behavior_planner.BehaviorPlanner">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">BehaviorPlanner</span><span class="p">(</span><span class="n">BasicPlanner</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Behavior local planner for Carla simulator. It can set route the same way as ``BasicPlanner``. BehaviorPlanner can</span>
 <span class="sd">    check the speed limitations, traffic lights in evironment, and also take nearby vehicles into account.</span>
 <span class="sd">    Lane changing</span>
@@ -202,7 +199,7 @@
         <span class="n">min_speed</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_speed</span> <span class="o">=</span> <span class="mi">0</span>
@@ -226,7 +223,7 @@
                 <span class="s1">&#39;behavior must in [&quot;normal&quot;, &quot;aggresive&quot;, and &quot;cautious&quot;], got </span><span class="si">{}</span><span class="s1"> instead.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">behavior</span><span class="p">)</span>
             <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_behavior_is_vehicle_hazard</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_behavior_is_vehicle_hazard</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">vehicle_list</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span>
             <span class="n">proximity_th</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -268,7 +265,7 @@
 
         <span class="k">return</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">change_route_in_current_road</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">route</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">change_route_in_current_road</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">route</span><span class="p">):</span>
         <span class="n">route_end</span> <span class="o">=</span> <span class="n">route</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">find_in_buffer</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">wpt_index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
@@ -309,8 +306,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_route_in_front</span><span class="p">(</span><span class="n">link_route</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_route_in_front</span><span class="p">(</span><span class="n">route</span><span class="p">)</span>
 
-<div class="viewcode-block" id="BehaviorPlanner.run_step"><a class="viewcode-back" href="../../../../api_doc/utils.html#core.utils.planner.behavior_planner.BehaviorPlanner.run_step">[docs]</a>    <span class="k">def</span> <span class="nf">run_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="BehaviorPlanner.run_step"><a class="viewcode-back" href="../../../../api_doc/utils.html#core.utils.planner.behavior_planner.BehaviorPlanner.run_step">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">run_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run one step of local planner. It will update node and target waypoint and road option, and check agent</span>
 <span class="sd">        states. Besides, it may have some behavior like overtaking, tailgating, safe distance keeping and so on</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -457,8 +454,8 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">speed_limit</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">max_speed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_limit</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">behavior</span><span class="o">.</span><span class="n">speed_lim_dist</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_traffic_light_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_traffic_light_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This method is in charge of behaviors for red lights and stops.</span>
 
 <span class="sd">        WARNING: What follows is a proxy to avoid having a car brake after running a yellow light.</span>
@@ -480,8 +477,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_light_id_to_ignore</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
         <span class="k">return</span> <span class="mi">0</span>
 
-    <span class="k">def</span> <span class="nf">_pedestrian_avoid_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">carla</span><span class="o">.</span><span class="n">Actor</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_pedestrian_avoid_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">carla</span><span class="o">.</span><span class="n">Actor</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This module is in charge of warning in case of a collision</span>
 <span class="sd">        with any pedestrian.</span>
 <span class="sd">            :return vehicle_state: True if there is a walker nearby, False if not</span>
@@ -491,7 +488,7 @@
 
         <span class="n">walker_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">get_actors</span><span class="p">()</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s2">&quot;*walker.pedestrian*&quot;</span><span class="p">)</span>
 
-        <span class="k">def</span> <span class="nf">dist</span><span class="p">(</span><span class="n">w</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">dist</span><span class="p">(</span><span class="n">w</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">w</span><span class="o">.</span><span class="n">get_location</span><span class="p">()</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">location</span><span class="p">)</span>
 
         <span class="n">walker_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">walker_list</span> <span class="k">if</span> <span class="n">dist</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">]</span>
@@ -517,8 +514,8 @@
 
         <span class="k">return</span> <span class="n">walker_state</span><span class="p">,</span> <span class="n">walker</span><span class="p">,</span> <span class="n">distance</span>
 
-    <span class="k">def</span> <span class="nf">_collision_and_car_avoid_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">carla</span><span class="o">.</span><span class="n">Actor</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_collision_and_car_avoid_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">carla</span><span class="o">.</span><span class="n">Actor</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This module is in charge of warning in case of a collision</span>
 <span class="sd">        and managing possible overtaking or tailgating chances.</span>
 
@@ -529,7 +526,7 @@
 
         <span class="n">vehicle_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_world</span><span class="o">.</span><span class="n">get_actors</span><span class="p">()</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s2">&quot;*vehicle*&quot;</span><span class="p">)</span>
 
-        <span class="k">def</span> <span class="nf">dist</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">dist</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">v</span><span class="o">.</span><span class="n">get_location</span><span class="p">()</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">location</span><span class="p">)</span>
 
         <span class="n">vehicle_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vehicle_list</span> <span class="k">if</span> <span class="n">dist</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">45</span> <span class="ow">and</span> <span class="n">v</span><span class="o">.</span><span class="n">id</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hero_vehicle</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
@@ -570,8 +567,8 @@
 
         <span class="k">return</span> <span class="n">vehicle_state</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">,</span> <span class="n">distance</span>
 
-    <span class="k">def</span> <span class="nf">_overtake</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vehicle_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">carla</span><span class="o">.</span><span class="n">Actor</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_overtake</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vehicle_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">carla</span><span class="o">.</span><span class="n">Actor</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This method is in charge of overtaking behaviors.</span>
 
 <span class="sd">            :param vehicle_list: list of all the nearby vehicles</span>
@@ -614,8 +611,8 @@
                     <span class="n">right_plan</span> <span class="o">=</span> <span class="n">generate_change_lane_route</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_waypoint</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">right_end_dis</span> <span class="o">-</span> <span class="mi">20</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">change_route_in_current_road</span><span class="p">(</span><span class="n">right_plan</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_tailgating</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vehicle_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">carla</span><span class="o">.</span><span class="n">Actor</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_tailgating</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vehicle_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">carla</span><span class="o">.</span><span class="n">Actor</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This method is in charge of tailgating behaviors.</span>
 
 <span class="sd">            :param location: current location of the agent</span>

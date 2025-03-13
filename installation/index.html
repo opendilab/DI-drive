@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -23,9 +23,6 @@
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
     
@@ -200,32 +197,32 @@
 <section id="get-and-install-di-drive">
 <h2>Get and install DI-drive<a class="headerlink" href="#get-and-install-di-drive" title="Permalink to this heading">¶</a></h2>
 <p>First get and download the official repository with the following command line.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/opendilab/DI-drive.git
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/opendilab/DI-drive.git
 </pre></div>
 </div>
 <p>You can also look up tags and checkout corresponding historical version.</p>
 <p>Install DI-drive</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># install for use</span>
 <span class="c1"># Note: use `--user` option to install the related packages in the user own directory(e.g.: ~/.local)</span>
-pip install . --user
+pip<span class="w"> </span>install<span class="w"> </span>.<span class="w"> </span>--user
 
 <span class="c1"># install for development(if you want to modify DI-drive)</span>
-pip install -e . --user
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.<span class="w"> </span>--user
 
 <span class="c1"># install for automatically add MetaDrive simulator</span>
-pip install <span class="s1">&#39;.[metadrive]&#39;</span> --user
+pip<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;.[metadrive]&#39;</span><span class="w"> </span>--user
 </pre></div>
 </div>
 <p>DI-drive uses <strong>DI-engine</strong> —— distributed Reinforcement Learning system to train and evaluate RL agent.
 If any questions raised when install DI-engine, please follow
 <a class="reference external" href="https://opendilab.github.io/DI-engine/installation/index.html">DI-engine installation</a> for help.
 Or try to install manually via PyPI:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install di-engine --user
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>di-engine<span class="w"> </span>--user
 </pre></div>
 </div>
 <p>DI-drive supports both <strong>Carla</strong> and <strong>MetaDrive</strong>. If you want to use Carla, refer to the next section.
 If you want to use MetaDrive, you can install DI-drive like above, or manually install via <code class="docutils literal notranslate"><span class="pre">pip</span></code>.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install metadrive-simulator --user
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>metadrive-simulator<span class="w"> </span>--user
 </pre></div>
 </div>
 <div class="admonition note">
@@ -244,23 +241,23 @@ If you have any problem dealing with Carla, we record some common problem you ma
 <ul class="simple">
 <li><p>download Carla released pack</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wget https://carla-releases.s3.eu-west-3.amazonaws.com/Linux/CARLA_0.9.10.1.tar.gz
-mkdir carla_0910
-tar -xvzf CARLA_0.9.10.1.tar.gz -C carla_0910
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wget<span class="w"> </span>https://carla-releases.s3.eu-west-3.amazonaws.com/Linux/CARLA_0.9.10.1.tar.gz
+mkdir<span class="w"> </span>carla_0910
+tar<span class="w"> </span>-xvzf<span class="w"> </span>CARLA_0.9.10.1.tar.gz<span class="w"> </span>-C<span class="w"> </span>carla_0910
 </pre></div>
 </div>
 <ul class="simple">
 <li><p>install Carla Python API</p></li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># install compiled Carla 0910 python api, then you can import Carla in python scripts</span>
-<span class="nb">cd</span> PythonAPI/carla/dist
-easy_install --user carla-0.9.10-py3.7-linux-x86_64.egg
+<span class="nb">cd</span><span class="w"> </span>PythonAPI/carla/dist
+easy_install<span class="w"> </span>--user<span class="w"> </span>carla-0.9.10-py3.7-linux-x86_64.egg
 </pre></div>
 </div>
 <ul class="simple">
 <li><p>check import</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -c <span class="s1">&#39;import carla&#39;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;import carla&#39;</span>
 </pre></div>
 </div>
 <p>Then everything will be ok if no error raised.</p>
@@ -271,18 +268,18 @@ easy_install --user carla-0.9.10-py3.7-linux-x86_64.egg
 <ul class="simple">
 <li><p>run a Carla server</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> carla_099
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>carla_099
 <span class="c1"># Ubuntu</span>
-./CarlaUE4.sh --carla-world-port<span class="o">=</span>N
+./CarlaUE4.sh<span class="w"> </span>--carla-world-port<span class="o">=</span>N
 <span class="c1"># Windows</span>
-CarlaUE4.exe --carla-world-port<span class="o">=</span>N
+CarlaUE4.exe<span class="w"> </span>--carla-world-port<span class="o">=</span>N
 </pre></div>
 </div>
 <p><em>N</em> is the rpc port of Carla server, the default data port is <em>N + 1</em>.
 You will see:</p>
 <img alt="installation_1" src="../_images/installation_1.png" />
 <p>You can check whether Carla server is running or not:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lsof -i:N
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lsof<span class="w"> </span>-i:N
 </pre></div>
 </div>
 <p>If running successfully, you will see:</p>

@@ -80,4 +80,4 @@ DDQN:
     # Test and visualize
     python latent_dqn_test.py
 
-Pending
+`latent_rl.ckpt <https://huggingface.co/OpenDILabCommunity/DI-drive/resolve/main/latent_rl.ckpt?download=true>`_

@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -23,9 +23,6 @@
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
     
@@ -191,7 +188,7 @@
 <dt class="field-odd">A1<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">easy_install</span></code> is used in old version of <code class="docutils literal notranslate"><span class="pre">setuptools</span></code>, and may not be added in conda/pyenv by
 default. You may need to install by yourself.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install <span class="nv">setuptools</span><span class="o">==</span><span class="m">50</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="nv">setuptools</span><span class="o">==</span><span class="m">50</span>
 </pre></div>
 </div>
 </dd>
@@ -216,16 +213,16 @@ the <code class="docutils literal notranslate"><span class="pre">./bin</span></c
 Install them manually if error shows.</p>
 <p>png:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># in system</span>
-sudo apt-get install libpng16
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>libpng16
 <span class="c1"># in conda env</span>
-conda install libpng -c anaconda
+conda<span class="w"> </span>install<span class="w"> </span>libpng<span class="w"> </span>-c<span class="w"> </span>anaconda
 </pre></div>
 </div>
 <p>jpeg:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># in system</span>
-sudo apt-get install libjpeg-dev
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>libjpeg-dev
 <span class="c1"># in conda env</span>
-conda install <span class="nv">jpeg</span><span class="o">=</span>8d -c conda-forge
+conda<span class="w"> </span>install<span class="w"> </span><span class="nv">jpeg</span><span class="o">=</span>8d<span class="w"> </span>-c<span class="w"> </span>conda-forge
 </pre></div>
 </div>
 </dd>
@@ -257,7 +254,7 @@ into a new line of <code class="docutils literal notranslate"><span class="pre">
 <dt>In Windows:</dt><dd><p>Reinstall shapely with geos from published wheels at
 <a class="reference external" href="https://www.lfd.uci.edu/~gohlke/pythonlibs/#shapely">https://www.lfd.uci.edu/~gohlke/pythonlibs/#shapely</a>.</p>
 </dd>
-<dt>In Ubuntu:</dt><dd><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install libgeos-dev
+<dt>In Ubuntu:</dt><dd><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>libgeos-dev
 </pre></div>
 </div>
 </dd>
