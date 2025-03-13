@@ -83,4 +83,4 @@ After training, you can visualize the performance by running the following scrip
 You may need to change the checkpoint path in config. Here we provide a pre-trained
 DQN weights as example.
 
-`iteration_40000.pth.tar <http://opendilab.org/download/DI-drive/metadrive/iteration_40000.pth.tar>`_
+`iteration_40000.pth.tar <https://huggingface.co/OpenDILabCommunity/DI-drive/resolve/main/macro_iter_40k.pth.tar?download=true>`_
