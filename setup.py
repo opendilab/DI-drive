@@ -61,7 +61,7 @@ setup(
     extras_require={
         'doc': [
             'protobuf<=3.20.1',
-            'sphinx>=2.2.1',
+            'sphinx>=2.2.1,<7',
             'sphinx_rtd_theme~=0.4.3',
             'enum_tools',
             'sphinx-toolbox',
